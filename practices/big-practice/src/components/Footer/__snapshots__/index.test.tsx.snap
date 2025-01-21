@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer Component matches snapshot for default state 1`] = `
+<div>
+  <footer
+    class="bg-gradient-to-r from-gray-800 via-blue-900 to-gray-900 text-white shrink-0 h-16 flex items-center justify-center"
+  >
+    Footer content
+  </footer>
+</div>
+`;

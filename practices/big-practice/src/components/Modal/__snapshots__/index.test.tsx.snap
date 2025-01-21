@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Modal Component matches snapshot for default state 1`] = `
+<div>
+  <div
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    data-testid="modal-overlay"
+  >
+    <div
+      class="bg-white w-full max-w-lg rounded-lg shadow-lg relative"
+      data-testid="modal-content"
+    >
+      <div
+        class="bg-blue-600 text-white p-4 rounded-t-lg"
+      >
+        <h2
+          class="text-lg font-semibold"
+        >
+          Test Modal Title
+        </h2>
+      </div>
+      <div
+        class="p-4"
+      >
+        <p>
+          Test Modal Content
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;

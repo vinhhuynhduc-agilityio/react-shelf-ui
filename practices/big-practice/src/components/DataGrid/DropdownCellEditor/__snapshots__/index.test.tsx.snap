@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DropdownCellEditor matches snapshot for default state 1`] = `
+<div>
+  <div
+    class="bg-white border border-gray-300 shadow-lg rounded z-1000 overflow-y-auto max-h-[314px]"
+    style="position: fixed; top: 0px; left: 0px; width: 200px;"
+  >
+    <div
+      aria-label="Support"
+      class="flex items-center p-1.5 cursor-pointer border-b text-black border-gray-300 hover:bg-gray-200"
+      role="option"
+    >
+      <div
+        class="ml-3 truncate"
+      >
+        Support
+      </div>
+    </div>
+    <div
+      aria-label="Failure Testing"
+      class="flex items-center p-1.5 cursor-pointer border-b text-black border-gray-300 hover:bg-gray-200 bg-blue-100"
+      role="option"
+    >
+      <div
+        class="ml-3 truncate"
+      >
+        Failure Testing
+      </div>
+    </div>
+    <div
+      aria-label="Quality Management"
+      class="flex items-center p-1.5 cursor-pointer border-b text-black border-gray-300 hover:bg-gray-200"
+      role="option"
+    >
+      <div
+        class="ml-3 truncate"
+      >
+        Quality Management
+      </div>
+    </div>
+    <div
+      aria-label="Data Quality"
+      class="flex items-center p-1.5 cursor-pointer border-b text-black border-gray-300 hover:bg-gray-200"
+      role="option"
+    >
+      <div
+        class="ml-3 truncate"
+      >
+        Data Quality
+      </div>
+    </div>
+    <div
+      aria-label="Test"
+      class="flex items-center p-1.5 cursor-pointer border-b text-black border-gray-300 hover:bg-gray-200"
+      role="option"
+    >
+      <div
+        class="ml-3 truncate"
+      >
+        Test
+      </div>
+    </div>
+  </div>
+</div>
+`;

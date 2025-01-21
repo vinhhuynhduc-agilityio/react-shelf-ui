@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ChartIndividualEmployeeProgress Component does not crash if there are no users 1`] = `
+<div>
+  <div
+    aria-label="Chart showing progress of unknown employee"
+    class="flex-1 mr-4 bg-white border border-customBorder"
+    id="chart-employee-progress-unknown"
+    role="figure"
+  >
+    <div
+      data-testid="employee-progress-chart"
+    />
+  </div>
+</div>
+`;
+
+exports[`ChartIndividualEmployeeProgress Component renders the chart component 1`] = `
+<div>
+  <div
+    aria-label="Chart showing progress of John Doe"
+    class="flex-1 mr-4 bg-white border border-customBorder"
+    id="chart-employee-progress-d290f1ee-6c54-4b01-90e6-d701748f0851"
+    role="figure"
+  >
+    <div
+      data-testid="employee-progress-chart"
+    />
+  </div>
+</div>
+`;

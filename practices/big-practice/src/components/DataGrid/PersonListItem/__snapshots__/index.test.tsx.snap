@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PersonListItem component matches snapshot for default state 1`] = `
+<div>
+  <div
+    aria-label="Joe Bloggs"
+    class="flex items-center py-2"
+    data-testid="person-list-item"
+  >
+    <img
+      alt="User Avatar"
+      aria-label=""
+      class="rounded-full object-cover w-14 h-14"
+      src="https://i.pravatar.cc/150?img=1"
+    />
+    <div
+      class="flex flex-col ml-4"
+    >
+      <div
+        class="text-base font-medium text-[#313131]"
+      >
+        Joe Bloggs
+      </div>
+      <div
+        class="text-base font-normal text-[#475466]"
+      >
+        $5000
+      </div>
+    </div>
+  </div>
+</div>
+`;
