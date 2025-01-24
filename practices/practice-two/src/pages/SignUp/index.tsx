@@ -1,21 +1,25 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link } from "react-router-dom";
-
-// Components
 import { TextField } from "@/components/TextField";
 
-interface LoginFormValues {
+interface RegisterFormValues {
+  username: string;
   email: string;
   password: string;
+  confirmPassword: string;
+  agreeToTerms: boolean;
 }
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>();
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
-    console.log("Login data:", data);
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<RegisterFormValues>();
+  const password = watch("password", "");
+
+  const onSubmit: SubmitHandler<RegisterFormValues> = (data) => {
+    console.log("Register data:", data);
   };
 
   return (
@@ -30,15 +34,30 @@ const LoginPage: React.FC = () => {
             className="w-[120px] h-[60px] sm:w-[150px] sm:h-[75px] md:w-[180px] md:h-[90px]"
           />
         </div>
+
         {/* Title */}
         <h1 className="text-center text-[18px] sm:text-[20px] font-normal leading-[24px] mb-2 sm:mb-4">
-          Welcome Back!
+          Create an Account
         </h1>
         <p className="text-center text-gray-500 text-sm sm:text-base mb-6">
-          Sign in to continue to your Digital Library
+          Sign up to access your Digital Library
         </p>
+
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 flex-grow">
+          <TextField
+            name="username"
+            label="Username"
+            type="text"
+            placeholder="Your Username"
+            register={register}
+            validation={{
+              required: "Username is required",
+              minLength: { value: 3, message: "Username must be at least 3 characters" },
+            }}
+            error={errors.username?.message}
+            vertical={true}
+          />
           <TextField
             name="email"
             label="Email"
@@ -71,36 +90,54 @@ const LoginPage: React.FC = () => {
             isPasswordVisible={showPassword}
             togglePasswordVisibility={() => setShowPassword(!showPassword)}
           />
-          <div className="flex justify-between items-center text-sm sm:text-base md:text-lg">
-            <label className="flex items-center text-gray-600">
+          <TextField
+            name="confirmPassword"
+            label="Confirm Password"
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="******"
+            register={register}
+            validation={{
+              required: "Confirm password is required",
+              validate: (value) => value === password || "Passwords don't match",
+            }}
+            error={errors.confirmPassword?.message}
+            vertical={true}
+            showPasswordToggle={true}
+            isPasswordVisible={showConfirmPassword}
+            togglePasswordVisibility={() => setShowConfirmPassword(!showConfirmPassword)}
+          />
+
+          {/* Terms and Conditions */}
+          <div className="flex flex-col items-start">
+            <label className="flex items-center text-gray-600 text-sm sm:text-base md:text-lg">
               <input
                 type="checkbox"
                 className="mr-2"
+                {...register("agreeToTerms", { required: "You must agree to the terms and conditions" })}
               />
-              Remember me
+              I agree to the terms and conditions
             </label>
-            <a
-              href="#"
-              className="text-right text-[#4D4D4D] underline"
-            >
-              Forgot password?
-            </a>
+            {errors.agreeToTerms && (
+              <p className="text-red-500 text-xs sm:text-sm md:text-base mt-1">
+                {errors.agreeToTerms.message}
+              </p>
+            )}
           </div>
+
+          {/* Submit Button */}
           <button
             type="submit"
             className="bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] mt-4"
           >
-            Login
+            Register
           </button>
         </form>
+
         {/* Footer */}
-        <p className="text-center text-sm sm:text-base md:text-lg text-[#4D4D4D] mt-6">
-          New User?{" "}
-          <Link
-            to="/register"
-            className="underline text-sm sm:text-base md:text-lg"
-          >
-            Register Here
+        <p className="text-center text-sm sm:text-base text-[#4D4D4D] mt-6">
+          Already have an account?{" "}
+          <Link to="/login" className="underline">
+            Login Here
           </Link>
         </p>
       </div>
@@ -108,4 +145,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
