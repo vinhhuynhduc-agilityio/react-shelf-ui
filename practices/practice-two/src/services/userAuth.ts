@@ -35,3 +35,17 @@ export const registerUser = async (newUser: {
     return { data: null, error: error as Error };
   }
 };
+
+export const fetchUserByEmail = async (email: string): Promise<User | null> => {
+  try {
+    const data = await apiRequest<null, User[]>(
+      "GET",
+      `${API_BASE_URL}${API_USERS.LOGIN}?email=${email}`
+    );
+
+    return data.length > 0 ? data[0] : null;
+  } catch (error) {
+    console.error("Failed to fetch user by email:", error);
+    throw error;
+  }
+};

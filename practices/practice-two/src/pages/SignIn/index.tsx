@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 
-// Components
+// services
+import { fetchUserByEmail } from "@/services/userAuth";
+
+// components
 import { TextField } from "@/components/TextField";
 
 interface LoginFormValues {
@@ -12,10 +15,29 @@ interface LoginFormValues {
 
 const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>();
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>();
 
-  const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
-    console.log("Login data:", data);
+  const onSubmit = async (data: LoginFormValues) => {
+    try {
+      const user = await fetchUserByEmail(data.email);
+
+      if (user && user.password === data.password) {
+        alert("Login successful!");
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        navigate("/home");
+      } else {
+        setErrorMessage("Invalid email or password");
+      }
+    } catch (error) {
+      setErrorMessage("An error occurred. Please try again.");
+      console.error(error);
+    }
   };
 
   return (
@@ -37,6 +59,11 @@ const LoginPage: React.FC = () => {
         <p className="text-center text-gray-500 text-sm sm:text-base mb-6">
           Sign in to continue to your Digital Library
         </p>
+
+        {errorMessage && (
+          <p className="text-red-500 text-center mb-4">{errorMessage}</p>
+        )}
+
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 flex-grow">
           <TextField
