@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+// services
+import { registerUser } from "@/services/userAuth";
+
+// components
 import { TextField } from "@/components/TextField";
 
 interface RegisterFormValues {
@@ -12,21 +17,49 @@ interface RegisterFormValues {
 }
 
 const RegisterPage: React.FC = () => {
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<RegisterFormValues>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<RegisterFormValues>();
   const password = watch("password", "");
 
-  const onSubmit: SubmitHandler<RegisterFormValues> = (data) => {
-    console.log("Register data:", data);
+  const onSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
+    setLoading(true);
+    setErrorMessage("");
+
+    try {
+      const response = await registerUser({
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      });
+
+      if (response.error) {
+        setErrorMessage(response.error.message || "Registration failed");
+      } else {
+        alert("Registration successful!");
+        navigate("/login");
+      }
+    } catch (error) {
+      setErrorMessage("An error occurred. Please try again.");
+      console.error("Failed to register:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-[#FA7C54] to-[#EC2C5A] p-4 sm:p-6 md:p-8">
-      {/* Form Container */}
-      <div className="bg-white shadow-lg rounded-lg p-6 sm:p-8 w-[320px] h-[90%] sm:w-[500px] sm:h-[80%] md:w-[565px] md:h-[70%] flex flex-col overflow-auto">
-        {/* Logo */}
+      <div className="bg-white shadow-lg rounded-lg p-6 sm:p-8 w-[320px] sm:w-[450px] md:w-[480px] lg:w-[500px] max-w-full h-auto max-h-screen flex flex-col overflow-auto">
         <div className="flex justify-center mb-4 sm:mb-6">
           <img
             src="https://i.ibb.co/0Yx3BN3/Book-Shelf.png"
@@ -39,9 +72,11 @@ const RegisterPage: React.FC = () => {
         <h1 className="text-center text-[18px] sm:text-[20px] font-normal leading-[24px] mb-2 sm:mb-4">
           Create an Account
         </h1>
-        <p className="text-center text-gray-500 text-sm sm:text-base mb-6">
+        <p className="text-center text-gray-500 text-sm sm:text-base mb-4">
           Sign up to access your Digital Library
         </p>
+
+        {errorMessage && <p className="text-red-500 text-center mb-4">{errorMessage}</p>}
 
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 flex-grow">
@@ -113,7 +148,9 @@ const RegisterPage: React.FC = () => {
               <input
                 type="checkbox"
                 className="mr-2"
-                {...register("agreeToTerms", { required: "You must agree to the terms and conditions" })}
+                {...register("agreeToTerms", {
+                  required: "You must agree to the terms and conditions",
+                })}
               />
               I agree to the terms and conditions
             </label>
@@ -127,14 +164,16 @@ const RegisterPage: React.FC = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] mt-4"
+            disabled={loading}
+            className={`bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] mt-2 ${loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
         {/* Footer */}
-        <p className="text-center text-sm sm:text-base text-[#4D4D4D] mt-6">
+        <p className="text-center text-sm sm:text-base text-[#4D4D4D] mt-4">
           Already have an account?{" "}
           <Link to="/login" className="underline">
             Login Here

@@ -1,11 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+// constants
+import { ROUTE } from '@/constants/userRoutes';
+
 // components
 import LoginPage from '@/pages/SignIn';
 import RegisterPage from '@/pages/SignUp';
-
-// constants
-import { ROUTE } from '@/constants/urls';
+import BookShelfHome from '@/pages/BookShelfHome';
 
 const App: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const App: React.FC = () => {
         {/* Define Login Page route */}
         <Route path={ROUTE.LOGIN} element={<LoginPage />} />
         <Route path={ROUTE.REGISTER} element={<RegisterPage />} />
+        <Route path="/home" element={<BookShelfHome />} />
       </Routes>
     </Router>
   );
