@@ -8,6 +8,9 @@ import { fetchUserByEmail } from "@/services/userAuth";
 // components
 import { TextField } from "@/components/TextField";
 
+// stores
+import { useUserStore } from "@/stores/userStore";
+
 interface LoginFormValues {
   email: string;
   password: string;
@@ -17,6 +20,7 @@ const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const signIn = useUserStore((state) => state.signIn);
   const {
     register,
     handleSubmit,
@@ -26,10 +30,12 @@ const LoginPage: React.FC = () => {
   const onSubmit = async (data: LoginFormValues) => {
     try {
       const user = await fetchUserByEmail(data.email);
-
       if (user && user.password === data.password) {
         alert("Login successful!");
-        localStorage.setItem("currentUser", JSON.stringify(user));
+
+        // Save login state with Zustand (persist automatically saves to sessionStorage)
+        signIn(user);
+
         navigate("/home");
       } else {
         setErrorMessage("Invalid email or password");

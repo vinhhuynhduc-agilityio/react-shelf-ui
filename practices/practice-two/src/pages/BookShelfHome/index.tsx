@@ -1,7 +1,16 @@
-const BookShelfHome: React.FC = () => {
+import { useUserStore } from "@/stores/userStore";
+
+const BookShelfHome = () => {
+  const currentUser = useUserStore((state) => state.currentUser);
 
   return (
-    <h1>Welcome</h1>
+    <div>
+      {currentUser ? (
+        <h1>Welcome back, {currentUser.username}!</h1>
+      ) : (
+        <h1>Please login</h1>
+      )}
+    </div>
   );
 };
 
