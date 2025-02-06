@@ -1,6 +1,9 @@
 export const ROUTE = {
   LOGIN: '/login',
-  REGISTER: '/register'
+  REGISTER: '/register',
+  HOME: '/home',
+  FAVOURITE: '/favourite',
+  PROFILE: '/profile',
 };
 
 export const API_USERS = {

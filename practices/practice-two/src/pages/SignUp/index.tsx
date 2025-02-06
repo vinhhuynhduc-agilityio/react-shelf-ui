@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
 // services
-import { registerUser } from "@/services/userAuth";
+import { registerUser } from "@/services";
 
 // components
 import { TextField } from "@/components/TextField";

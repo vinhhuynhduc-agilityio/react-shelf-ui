@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 // config
 import { API_BASE_URL } from "@/config";
 
@@ -5,7 +7,7 @@ import { API_BASE_URL } from "@/config";
 import { API_USERS } from "@/constants/userRoutes";
 
 // services
-import { apiRequest } from "@/services/apiRequest";
+import { apiRequest } from "@/services";
 
 // types
 import { User } from "@/types/user";
@@ -18,6 +20,8 @@ export const registerUser = async (newUser: {
   try {
     const userWithDefaults = {
       ...newUser,
+      id: uuidv4(),
+      avatarUrl: "",
       shelf: [],
       favourites: [],
       recentReadings: [],
