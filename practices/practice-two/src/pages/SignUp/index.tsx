@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "@/services";
 
 // components
-import { TextField } from "@/components/TextField";
+import { TextField } from "@/components";
 
 interface RegisterFormValues {
   username: string;
@@ -14,7 +14,7 @@ interface RegisterFormValues {
   password: string;
   confirmPassword: string;
   agreeToTerms: boolean;
-}
+};
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -46,7 +46,6 @@ const RegisterPage: React.FC = () => {
       if (response.error) {
         setErrorMessage(response.error.message || "Registration failed");
       } else {
-        alert("Registration successful!");
         navigate("/login");
       }
     } catch (error) {

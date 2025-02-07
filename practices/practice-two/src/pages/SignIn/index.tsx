@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { fetchUserByEmail } from "@/services";
 
 // components
-import { TextField } from "@/components/TextField";
+import { TextField } from "@/components";
 
 // stores
 import { useUserStore } from "@/stores/userStore";
@@ -31,7 +31,6 @@ const LoginPage: React.FC = () => {
     try {
       const user = await fetchUserByEmail(data.email);
       if (user && user.password === data.password) {
-        alert("Login successful!");
 
         // Save login state with Zustand (persist automatically saves to sessionStorage)
         signIn(user);

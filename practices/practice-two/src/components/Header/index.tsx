@@ -26,7 +26,7 @@ const Header = () => {
     <header className="flex justify-between items-center p-4 relative">
       {/* Search Bar */}
       <div
-        className="relative flex items-center bg-white border border-gray-300 rounded-full h-[40px] w-full max-w-[300px] sm:max-w-[380px] md:max-w-[450px] lg:max-w-[550px] overflow-hidden"
+        className="relative flex items-center bg-white border border-gray-300 rounded-full h-[40px] w-full max-w-[280px] sm:max-w-[300px] md:max-w-[350px] overflow-hidden"
         ref={filterButtonRef}
       >
         <button
@@ -67,10 +67,10 @@ const Header = () => {
 
       {/* User Profile */}
       <div
-        className="relative flex items-center bg-white border border-gray-300 rounded-full overflow-hidden h-[40px] px-2 w-auto"
+        className="relative flex items-center bg-white border border-gray-300 rounded-full overflow-hidden h-[40px] px-2 w-auto sm:max-w-[150px] md:max-w-[150px]"
         ref={profileButtonRef}
       >
-        <div className="w-[34px] h-[34px] rounded-full overflow-hidden flex-shrink-0 border border-gray-300 ml-[-5px]">
+        <div className="w-[30px] h-[30px] md:w-[34px] md:h-[34px] sm:w-[34px] rounded-full overflow-hidden flex-shrink-0 border border-gray-300 ml-[-5px]">
           <img
             src={currentUser?.avatarUrl || DEFAULT_AVATAR}
             alt="User"
@@ -79,9 +79,9 @@ const Header = () => {
         </div>
         <button
           onClick={() => setProfileMenuOpen(!isProfileMenuOpen)}
-          className="flex items-center gap-1 px-2 max-w-[120px] truncate overflow-hidden"
+          className="flex items-center gap-1 px-2 max-w-[90px] sm:max-w-[120px] md:max-w-[120px] truncate overflow-hidden"
         >
-          <span className="truncate">{currentUser?.username || "Guest"}</span>
+          <span className="hidden sm:block truncate">{currentUser?.username || "Guest"}</span>
           <svg
             className="ml-1 flex-shrink-0"
             width="13"
