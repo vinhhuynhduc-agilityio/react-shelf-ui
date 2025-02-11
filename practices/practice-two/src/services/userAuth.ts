@@ -10,46 +10,41 @@ import { API_USERS } from "@/constants/userRoutes";
 import { apiRequest } from "@/services";
 
 // types
-import { User } from "@/types/user";
+import { User } from '@/types/user';
 
-export const registerUser = async (newUser: {
+export interface RegisterUserData {
   username: string;
   email: string;
   password: string;
-}): Promise<{ data: User | null; error: Error | null }> => {
-  try {
-    const userWithDefaults = {
-      ...newUser,
-      id: uuidv4(),
-      avatarUrl: "",
-      shelf: [],
-      favourites: [],
-      recentReadings: [],
-    };
+}
 
-    const data = await apiRequest<typeof userWithDefaults, User>(
-      "POST",
-      `${API_BASE_URL}${API_USERS.REGISTER}`,
-      userWithDefaults
-    );
+export interface RegisterResponse {
+  message: string;
+  userId: string;
+}
 
-    return { data, error: null };
-  } catch (error) {
-    console.error("Failed to register:", error);
-    return { data: null, error: error as Error };
-  }
+export const registerUser = async (newUser: RegisterUserData): Promise<User> => {
+  const userWithDefaults = {
+    ...newUser,
+    id: uuidv4(),
+    avatarUrl: "",
+    shelf: [],
+    favourites: [],
+    recentReadings: [],
+  };
+
+  return apiRequest<typeof userWithDefaults, User>(
+    "POST",
+    `${API_BASE_URL}${API_USERS.REGISTER}`,
+    userWithDefaults
+  );
 };
 
 export const fetchUserByEmail = async (email: string): Promise<User | null> => {
-  try {
-    const data = await apiRequest<null, User[]>(
-      "GET",
-      `${API_BASE_URL}${API_USERS.LOGIN}?email=${email}`
-    );
+  const data = await apiRequest<null, User[]>(
+    "GET",
+    `${API_BASE_URL}${API_USERS.LOGIN}?email=${email}`
+  );
 
-    return data.length > 0 ? data[0] : null;
-  } catch (error) {
-    console.error("Failed to fetch user by email:", error);
-    throw error;
-  }
+  return data.length > 0 ? data[0] : null;
 };

@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
 // services
-import { registerUser } from "@/services";
+import { useRegisterUser } from "@/hooks";
 
 // components
 import { TextField } from "@/components";
@@ -21,7 +21,6 @@ const RegisterPage: React.FC = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const {
@@ -32,33 +31,29 @@ const RegisterPage: React.FC = () => {
   } = useForm<RegisterFormValues>();
   const password = watch("password", "");
 
-  const onSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
-    setLoading(true);
-    setErrorMessage("");
+  // React Query mutation for registration
+  const mutation = useRegisterUser();
 
-    try {
-      const response = await registerUser({
+  const onSubmit: SubmitHandler<RegisterFormValues> = (data) => {
+    mutation.mutate(
+      {
         username: data.username,
         email: data.email,
         password: data.password,
-      });
-
-      if (response.error) {
-        setErrorMessage(response.error.message || "Registration failed");
-      } else {
-        navigate("/login");
+      },
+      {
+        onSuccess: () => navigate("/login"),
+        onError: (error) => {
+          setErrorMessage("An error occurred. Please try again.");
+          console.error("Failed to register:", error);
+        },
       }
-    } catch (error) {
-      setErrorMessage("An error occurred. Please try again.");
-      console.error("Failed to register:", error);
-    } finally {
-      setLoading(false);
-    }
+    );
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-[#FA7C54] to-[#EC2C5A] p-4 sm:p-6 md:p-8">
-      <div className="bg-white shadow-lg rounded-lg p-6 sm:p-8 w-[320px] sm:w-[450px] md:w-[480px] lg:w-[500px] max-w-full h-auto max-h-screen flex flex-col overflow-auto">
+      <div className="bg-white shadow-lg rounded-lg p-6 sm:p-8 w-[320px] sm:w-[450px] md:w-[480px] max-w-full h-auto max-h-screen flex flex-col overflow-auto">
         <div className="flex justify-center mb-4 sm:mb-6">
           <img
             src="https://i.ibb.co/0Yx3BN3/Book-Shelf.png"
@@ -163,11 +158,10 @@ const RegisterPage: React.FC = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading}
-            className={`bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] mt-2 ${loading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+            disabled={mutation.isPending}
+            className={`bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] mt-2 ${mutation.isPending ? "opacity-50 cursor-not-allowed" : ""}`}
           >
-            {loading ? "Registering..." : "Register"}
+            {mutation.isPending ? "Registering..." : "Register"}
           </button>
         </form>
 

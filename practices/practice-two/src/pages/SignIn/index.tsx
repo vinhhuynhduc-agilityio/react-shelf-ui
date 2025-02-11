@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 
 // services
 import { fetchUserByEmail } from "@/services";
@@ -21,24 +22,28 @@ const LoginPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const signIn = useUserStore((state) => state.signIn);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormValues>();
 
+  const { mutateAsync: fetchUser, isPending } = useMutation({
+    mutationFn: (email: string) => fetchUserByEmail(email),
+  });
+
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      const user = await fetchUserByEmail(data.email);
-      if (user && user.password === data.password) {
+      const user = await fetchUser(data.email);
 
-        // Save login state with Zustand (persist automatically saves to sessionStorage)
-        signIn(user);
-
-        navigate("/home");
-      } else {
+      if (!user || user.password !== data.password) {
         setErrorMessage("Invalid email or password");
+        return;
       }
+
+      signIn(user);
+      navigate("/home");
     } catch (error) {
       setErrorMessage("An error occurred. Please try again.");
       console.error(error);
@@ -121,8 +126,9 @@ const LoginPage: React.FC = () => {
           <button
             type="submit"
             className="bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] mt-4"
+            disabled={isPending}
           >
-            Login
+            {isPending ? "Checking..." : "Login"}
           </button>
         </form>
         {/* Footer */}
