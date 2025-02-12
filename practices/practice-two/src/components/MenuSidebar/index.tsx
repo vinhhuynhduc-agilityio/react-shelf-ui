@@ -5,7 +5,7 @@ import { menuItems } from "@/constants";
 
 const MenuSidebar = () => {
   return (
-    <aside className="bg-[#F5F5F5] h-screen w-16 md:w-48 px-2 md:px-6 pt-12 md:pt-24 flex flex-col shadow-lg transition-all duration-300">
+    <aside className="bg-[#F5F5F5] h-screen w-16 md:min-w-[12rem] d:max-w-[12rem] px-2 md:px-6 pt-12 md:pt-24 flex flex-col shadow-lg transition-all duration-300">
       {/* Logo */}
       <div className="flex justify-center mb-16">
         <img

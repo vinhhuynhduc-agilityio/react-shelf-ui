@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
-import { useUserStore } from "@/stores/userStore";
 import { useNavigate } from "react-router-dom";
+
+// stores
+import { useUserStore } from "@/stores/userStore";
 
 // constants
 import { DEFAULT_AVATAR, profileOptions, searchOptions } from "@/constants";
@@ -8,9 +10,12 @@ import { DEFAULT_AVATAR, profileOptions, searchOptions } from "@/constants";
 // components
 import Dropdown from "@/components/Dropdown";
 
-const Header = () => {
+// hooks
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+
+const Header: React.FC = () => {
   const navigate = useNavigate();
-  const currentUser = useUserStore((state) => state.currentUser);
+  const currentUser = useCurrentUser();
   const logout = useUserStore((state) => state.logout);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -103,6 +108,7 @@ const Header = () => {
           onSelect={(option) => {
             if (option.key === "logout") {
               logout();
+              navigate("/login");
             } else {
               navigate(`/${option.key}`);
             }

@@ -30,7 +30,7 @@ const App: React.FC = () => {
                   <MenuSidebar />
                   <div className="flex flex-col flex-1">
                     <Header />
-                    <main className="flex-grow p-4 sm:p-6 md:p-10">
+                    <main className="flex-grow p-4">
                       <Routes>
                         <Route path={ROUTE.HOME} element={<Home />} />
                         <Route path={ROUTE.FAVOURITE} element={<Favourite />} />
