@@ -25,9 +25,9 @@ const HomePage: React.FC = () => {
     .slice(0, 8) || [];
 
   return (
-    <div className="p-4">
+    <div>
       <TodayQuote />
-      <h1 className="mb-2 text-[35px] font-semibold text-gray-700">Good Morning</h1>
+      <h1 className="mb-4 mt-10 text-[35px] font-semibold text-gray-600">Good Morning</h1>
       <BookList title="Recommended for You" books={recommendedBooks} />
       {recentReadings.length > 0 ? (
         <BookList title="Recent Readings" books={recentReadings} />

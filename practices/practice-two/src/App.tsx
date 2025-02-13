@@ -25,10 +25,10 @@ const App: React.FC = () => {
           <Route
             path="*"
             element={
-              <div className="flex min-h-screen bg-gradient-to-r from-[#FA7C54] to-[#EC2C5A] p-2 sm:p-4">
+              <div className="flex min-h-screen bg-gradient-to-r from-[#FA7C54] to-[#EC2C5A] p-6">
                 <div className="flex w-full min-h-screen bg-[#F5F5F5] rounded-lg shadow-md overflow-hidden">
                   <MenuSidebar />
-                  <div className="flex flex-col flex-1">
+                  <div className="flex flex-col flex-1 w-full overflow-hidden">
                     <Header />
                     <main className="flex-grow p-4">
                       <Routes>
