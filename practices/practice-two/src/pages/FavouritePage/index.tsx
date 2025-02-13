@@ -1,4 +1,4 @@
-const Favourite = () => {
+const FavouritePage = () => {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-semibold">Favourite Page</h1>
@@ -6,4 +6,4 @@ const Favourite = () => {
   );
 };
 
-export default Favourite;
+export default FavouritePage;

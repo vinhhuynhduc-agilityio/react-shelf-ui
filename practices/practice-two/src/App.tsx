@@ -7,10 +7,9 @@ import { ROUTE } from '@/constants/userRoutes';
 // components
 import LoginPage from '@/pages/SignIn';
 import RegisterPage from '@/pages/SignUp';
-import Home from '@/pages/Home';
-import Favourite from '@/pages/Favourite';
-import Profile from '@/pages/Profile';
+import Home from '@/pages/HomePage';
 import { MenuSidebar, Header } from '@/components';
+import { FavouritePage, ProfilePage } from '@/pages';
 
 const App: React.FC = () => {
   const queryClient = new QueryClient();
@@ -33,8 +32,8 @@ const App: React.FC = () => {
                     <main className="flex-grow p-4">
                       <Routes>
                         <Route path={ROUTE.HOME} element={<Home />} />
-                        <Route path={ROUTE.FAVOURITE} element={<Favourite />} />
-                        <Route path={ROUTE.PROFILE} element={<Profile />} />
+                        <Route path={ROUTE.FAVOURITE} element={<FavouritePage />} />
+                        <Route path={ROUTE.PROFILE} element={<ProfilePage />} />
                       </Routes>
                     </main>
                   </div>
