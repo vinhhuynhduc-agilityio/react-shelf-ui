@@ -9,7 +9,8 @@ import LoginPage from '@/pages/SignIn';
 import RegisterPage from '@/pages/SignUp';
 import Home from '@/pages/HomePage';
 import { MenuSidebar, Header } from '@/components';
-import { FavouritePage, ProfilePage } from '@/pages';
+import { FavouritePage, ProfilePage, SearchPage } from '@/pages';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App: React.FC = () => {
   const queryClient = new QueryClient();
@@ -31,9 +32,38 @@ const App: React.FC = () => {
                     <Header />
                     <main className="flex-grow p-4">
                       <Routes>
-                        <Route path={ROUTE.HOME} element={<Home />} />
-                        <Route path={ROUTE.FAVOURITE} element={<FavouritePage />} />
-                        <Route path={ROUTE.PROFILE} element={<ProfilePage />} />
+                        <Route
+                          path={ROUTE.HOME}
+                          element={
+                            <ProtectedRoute>
+                              <Home />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path={ROUTE.FAVOURITE}
+                          element={
+                            <ProtectedRoute>
+                              <FavouritePage />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path={ROUTE.PROFILE}
+                          element={
+                            <ProtectedRoute>
+                              <ProfilePage />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path={ROUTE.SEARCH}
+                          element={
+                            <ProtectedRoute>
+                              <SearchPage />
+                            </ProtectedRoute>
+                          }
+                        />
                       </Routes>
                     </main>
                   </div>

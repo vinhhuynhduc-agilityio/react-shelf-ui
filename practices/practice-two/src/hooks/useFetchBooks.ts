@@ -1,11 +1,33 @@
-// hooks/useFetchBooks.ts
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { fetchBooks } from "@/services/bookService";
-import { Book } from "@/types/books";
+import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-export const useFetchBooks = (): UseQueryResult<Book[], Error> => {
-  return useQuery({
+// services
+import { fetchBooks } from "@/services/bookService";
+
+// stores
+import { useBookStore } from "@/stores/bookStore";
+
+export const useFetchBooks = () => {
+  const hasFetched = useBookStore(state => state.hasFetched);
+  const setBooks = useBookStore(state => state.setBooks);
+  const books = useBookStore(state => state.books);
+
+  const query = useQuery({
     queryKey: ["books"],
     queryFn: fetchBooks,
+    enabled: !hasFetched,
   });
+
+  useEffect(() => {
+    if (query.isSuccess && !hasFetched && query.data && query.data.length > 0) {
+      setBooks(query.data || []);
+    }
+  }, [query.isSuccess, query.data, hasFetched, setBooks]);
+
+  return {
+    books: query.data || books,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+  };
 };

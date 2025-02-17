@@ -5,3 +5,7 @@ export { default as Dropdown } from './Dropdown';
 export { default as TodayQuote } from './TodayQuote';
 export { default as BookItem } from './BookItem';
 export { default as BookList } from './BookList';
+export { default as ProtectedRoute } from './ProtectedRoute';
+export { default as Button } from './Button';
+export { default as StatusBadge } from './StatusBadge';
+export { default as HeartIcon } from './HeartIcon';

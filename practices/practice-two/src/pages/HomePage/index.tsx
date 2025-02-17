@@ -3,6 +3,7 @@ import { useFetchBooks } from "@/hooks/useFetchBooks";
 
 // stores
 import { useUserStore } from "@/stores/userStore";
+import { useBookStore } from "@/stores/bookStore";
 
 // components
 import { TodayQuote } from "@/components";
@@ -12,17 +13,27 @@ import BookList from "@/components/BookList";
 import { Book } from "@/types/books";
 
 const HomePage: React.FC = () => {
-  const { data: books, isLoading, isError, error } = useFetchBooks();
+  const { isLoading, isError, error } = useFetchBooks();
+
+  const books = useBookStore((state) => state.books);
   const currentUser = useUserStore((state) => state.currentUser);
 
-  if (isLoading) return <p>Loading books...</p>;
-  if (isError) return <p>Error loading books: {error.message}</p>;
+  if (isLoading && books.length === 0) {
+    return <p>Loading books...</p>;
+  }
 
-  const recommendedBooks = books?.slice(0, 8) || [];
+  if (isError) {
+    return <p className="text-red-500">Error loading books: {error?.message}</p>;
+  }
 
+  if (!books.length) {
+    return <p className="text-gray-600">No books available.</p>;
+  }
+
+  const recommendedBooks = books.slice(0, 8);
   const recentReadings: Book[] = books
-    ?.filter((book) => currentUser?.recentReadings?.includes(book.id))
-    .slice(0, 8) || [];
+    .filter(book => currentUser?.recentReadings?.includes(book.id))
+    .slice(0, 8);
 
   return (
     <div>

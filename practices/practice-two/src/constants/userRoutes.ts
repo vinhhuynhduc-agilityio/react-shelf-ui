@@ -4,6 +4,7 @@ export const ROUTE = {
   HOME: '/home',
   FAVOURITE: '/favourite',
   PROFILE: '/profile',
+  SEARCH: '/search',
 };
 
 export const API_USERS = {

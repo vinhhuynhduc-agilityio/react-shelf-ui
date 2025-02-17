@@ -2,7 +2,7 @@
 export interface Author {
   name: string;
   bio?: string;
-}
+};
 
 export interface Book {
   id: string;
@@ -12,4 +12,6 @@ export interface Book {
   publishedYear: number;
   rating: number;
   imageUrl: string;
-}
+  status?: boolean;
+  isFavorite?: boolean;
+};
