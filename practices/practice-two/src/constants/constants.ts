@@ -3,7 +3,6 @@ const DEFAULT_AVATAR = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/sv
 const searchOptions = [
   { label: "Title", key: "title" },
   { label: "Author", key: "author" },
-  { label: "Text", key: "text" },
   { label: "Subjects", key: "subjects" },
 ];
 const profileOptions = [
