@@ -8,9 +8,8 @@ import { ROUTE } from '@/constants/userRoutes';
 import LoginPage from '@/pages/SignIn';
 import RegisterPage from '@/pages/SignUp';
 import Home from '@/pages/HomePage';
-import { MenuSidebar, Header } from '@/components';
+import { MenuSidebar, Header, BookPreview, ProtectedRoute } from '@/components';
 import { FavouritePage, ProfilePage, SearchPage } from '@/pages';
-import ProtectedRoute from './components/ProtectedRoute';
 
 const App: React.FC = () => {
   const queryClient = new QueryClient();
@@ -61,6 +60,14 @@ const App: React.FC = () => {
                           element={
                             <ProtectedRoute>
                               <SearchPage />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path={ROUTE.BOOK_PREVIEW}
+                          element={
+                            <ProtectedRoute>
+                              <BookPreview />
                             </ProtectedRoute>
                           }
                         />

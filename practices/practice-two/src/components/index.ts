@@ -9,3 +9,5 @@ export { default as ProtectedRoute } from './ProtectedRoute';
 export { default as Button } from './Button';
 export { default as StatusBadge } from './StatusBadge';
 export { default as HeartIcon } from './HeartIcon';
+export { default as BookPreview } from './BookPreview';
+export { default as RatingStars } from './RatingStars';

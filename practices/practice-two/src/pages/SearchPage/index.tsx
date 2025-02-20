@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 // hooks
 import { useFetchBooks } from '@/hooks/useFetchBooks';
 
@@ -9,7 +11,14 @@ import HeartIcon from '@/components/HeartIcon';
 import StatusBadge from '@/components/StatusBadge';
 import Button from '@/components/Button';
 
+// types
+import { Book } from '@/types';
+
+// helpers
+import { isBookInShelf } from '@/helpers';
+
 const SearchPage: React.FC = () => {
+  const navigate = useNavigate();
   const { isLoading, isError, error } = useFetchBooks();
   const books = useBookStore(state => state.books);
   const currentUser = useUserStore(state => state.currentUser);
@@ -35,6 +44,8 @@ const SearchPage: React.FC = () => {
   if (isError) return <p className="text-red-500">Error loading books: {error?.message}</p>;
   if (!books.length) return <p className="text-gray-600">No books available.</p>;
 
+  const handleCLickPreview = (book: Book) => navigate(`/book-preview/${book.id}`, { state: { book } })
+
   return (
     <div className="overflow-x-auto text-[#4D4D4D]">
       {/* Header */}
@@ -53,7 +64,7 @@ const SearchPage: React.FC = () => {
           <p className="text-xl font-semibold  text-red-400 mt-9 ml-8">No books found.</p>
         ) : (
           filteredBooks.map((book) => {
-            const isInShelf = currentUser?.shelf.some((s) => s.bookId === book.id);
+            const isInShelf = isBookInShelf(book.id, currentUser?.shelf ?? []);
             const isFavorite = currentUser?.favourites?.includes(book.id) ?? false;
 
             return (
@@ -87,7 +98,12 @@ const SearchPage: React.FC = () => {
                   <HeartIcon filled={isFavorite} className="w-6 h-6" />
                 </div>
                 <div className="text-center">
-                  <Button variant="outline">Preview</Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleCLickPreview(book)}
+                  >
+                    Preview
+                  </Button>
                 </div>
               </div>
             );

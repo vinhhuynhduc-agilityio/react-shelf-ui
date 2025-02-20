@@ -11,4 +11,10 @@ export interface User {
   }[];
   favourites: string[];
   recentReadings: string[];
-}
+};
+
+export interface ShelfBooks {
+  bookId: string;
+  borrowedDate: string;
+  returnDate: string | null;
+};

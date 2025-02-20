@@ -5,6 +5,7 @@ export const ROUTE = {
   FAVOURITE: '/favourite',
   PROFILE: '/profile',
   SEARCH: '/search',
+  BOOK_PREVIEW: '/book-preview/:bookId',
 };
 
 export const API_USERS = {
