@@ -38,7 +38,7 @@ const Header: React.FC = () => {
 
   // Reset searchTerm and valueSearch when changing pages
   useEffect(() => {
-    if (location.pathname !== '/search') {
+    if (location.pathname !== '/search' && !location.pathname.includes('/book-preview')) {
       setSearchTerm('');
       setValueSearch('');
     }
