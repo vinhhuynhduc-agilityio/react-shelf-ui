@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
 type HeartIconProps = {
-  filled: boolean; // true nếu là trái tim màu đỏ
-  className?: string; // className để tùy chỉnh kích thước hoặc màu sắc
+  filled: boolean;
+  className?: string;
 };
 
 const HeartIcon: React.FC<HeartIconProps> = ({ filled, className }) => {
