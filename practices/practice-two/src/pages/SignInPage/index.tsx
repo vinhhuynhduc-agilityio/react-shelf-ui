@@ -17,7 +17,7 @@ interface LoginFormValues {
   password: string;
 }
 
-const LoginPage: React.FC = () => {
+const SignInPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -146,4 +146,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default SignInPage;

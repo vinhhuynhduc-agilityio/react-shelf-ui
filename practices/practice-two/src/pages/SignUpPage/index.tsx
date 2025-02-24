@@ -16,7 +16,7 @@ interface RegisterFormValues {
   agreeToTerms: boolean;
 };
 
-const RegisterPage: React.FC = () => {
+const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -177,4 +177,4 @@ const RegisterPage: React.FC = () => {
   );
 };
 
-export default RegisterPage;
+export default SignUpPage;

@@ -5,11 +5,19 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ROUTE } from '@/constants/userRoutes';
 
 // components
-import LoginPage from '@/pages/SignIn';
-import RegisterPage from '@/pages/SignUp';
-import Home from '@/pages/HomePage';
-import { MenuSidebar, Header, BookPreview, ProtectedRoute } from '@/components';
-import { FavouritePage, MyShelfPage, ProfilePage, SearchPage } from '@/pages';
+import { MenuSidebar, Header, ProtectedRoute } from '@/components';
+
+// pages
+import {
+  BookPreviewPage,
+  FavouritePage,
+  HomePage,
+  MyShelfPage,
+  ProfilePage,
+  SearchPage,
+  SignInPage,
+  SignUpPage
+} from '@/pages';
 
 const App: React.FC = () => {
   const queryClient = new QueryClient();
@@ -18,9 +26,9 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <Router>
         <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path={ROUTE.LOGIN} element={<LoginPage />} />
-          <Route path={ROUTE.REGISTER} element={<RegisterPage />} />
+          <Route path="/" element={<SignInPage />} />
+          <Route path={ROUTE.LOGIN} element={<SignInPage />} />
+          <Route path={ROUTE.REGISTER} element={<SignUpPage />} />
           <Route
             path="*"
             element={
@@ -35,7 +43,7 @@ const App: React.FC = () => {
                           path={ROUTE.HOME}
                           element={
                             <ProtectedRoute>
-                              <Home />
+                              <HomePage />
                             </ProtectedRoute>
                           }
                         />
@@ -67,7 +75,7 @@ const App: React.FC = () => {
                           path={ROUTE.BOOK_PREVIEW}
                           element={
                             <ProtectedRoute>
-                              <BookPreview />
+                              <BookPreviewPage />
                             </ProtectedRoute>
                           }
                         />

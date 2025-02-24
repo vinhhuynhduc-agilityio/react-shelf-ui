@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { checkmarkIcon, notesIcon, reviewIcon, shareIcon } from "@/constants";
 
 // components
-import { RatingStars, StatusBadge, Button } from "@/components";
+import { RatingStars, StatusBadge, Button, BackToResultButton } from "@/components";
 
 // stores
 import { useUserStore } from "@/stores";
@@ -18,7 +18,7 @@ import { useBorrowBook } from "@/hooks";
 // types
 import { User } from "@/types";
 
-const BookPreview = () => {
+const BookPreviewPage = () => {
   const location = useLocation();
   const book = location.state?.book;
   const navigate = useNavigate();
@@ -59,20 +59,16 @@ const BookPreview = () => {
   };
 
   const handleClickBackToResult = () => {
-    navigate("/search")
+    const from = location.state?.from || "/search";
+    navigate(from);
   };
 
   return (
     <>
-      <button
+      <BackToResultButton
         onClick={handleClickBackToResult}
-        className="flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4"
-      >
-        <svg className="mr-2.5" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M13.25 7L0.75 7M0.75 7L6.375 12.625M0.75 7L6.375 1.375" stroke="#4D4D4D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-        Back to Results
-      </button>
+        title="Back to results"
+      />
       <div className="flex xl:flex-row flex-col justify-between xl:space-x-6">
         <div className="flex md:flex-row flex-col justify-start mb-16">
           {/* Column 1 */}
@@ -150,4 +146,4 @@ const BookPreview = () => {
   );
 };
 
-export default BookPreview;
+export default BookPreviewPage;
