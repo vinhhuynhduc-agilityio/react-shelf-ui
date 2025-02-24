@@ -1,23 +1,16 @@
-import React from "react";
-import BookItem from "@/components/BookItem";
 
-interface Book {
-  id: string;
-  title: string;
-  author: {
-    name: string;
-  };
-  publishedYear: number;
-  rating: number;
-  imageUrl: string;
-}
+// components
+import { BookItem } from "@/components";
+
+// types
+import { Book } from "@/types";
 
 interface BookListProps {
   books: Book[];
   title: string;
-}
+};
 
-const BookList: React.FC<BookListProps> = ({ books, title }) => {
+const BookHomeList: React.FC<BookListProps> = ({ books, title }) => {
   return (
     <div className="mb-6 w-full">
       <h2 className="text-[22px] sm:text-[24px] md:text-[25px]  text-gray-500 mb-4 font-normal">
@@ -36,4 +29,4 @@ const BookList: React.FC<BookListProps> = ({ books, title }) => {
   );
 };
 
-export default BookList;
+export default BookHomeList;

@@ -9,7 +9,7 @@ import LoginPage from '@/pages/SignIn';
 import RegisterPage from '@/pages/SignUp';
 import Home from '@/pages/HomePage';
 import { MenuSidebar, Header, BookPreview, ProtectedRoute } from '@/components';
-import { FavouritePage, ProfilePage, SearchPage } from '@/pages';
+import { FavouritePage, MyShelfPage, ProfilePage, SearchPage } from '@/pages';
 
 const App: React.FC = () => {
   const queryClient = new QueryClient();
@@ -29,7 +29,7 @@ const App: React.FC = () => {
                   <MenuSidebar />
                   <div className="flex flex-col flex-1 w-full overflow-hidden">
                     <Header />
-                    <main className="flex-grow p-4">
+                    <main className="flex-grow p-6">
                       <Routes>
                         <Route
                           path={ROUTE.HOME}
@@ -68,6 +68,14 @@ const App: React.FC = () => {
                           element={
                             <ProtectedRoute>
                               <BookPreview />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path={ROUTE.MY_SHELF}
+                          element={
+                            <ProtectedRoute>
+                              <MyShelfPage />
                             </ProtectedRoute>
                           }
                         />

@@ -69,7 +69,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="flex justify-between items-center p-4 relative">
+    <header className="flex justify-between items-center p-6 relative">
       {/* Search Bar */}
       <div
         className="relative flex items-center bg-white border border-gray-300 rounded-full h-[40px] w-full max-w-[280px] sm:max-w-[300px] md:max-w-[450px] overflow-hidden"

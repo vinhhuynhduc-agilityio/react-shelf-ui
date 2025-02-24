@@ -1,29 +1,22 @@
-interface Book {
-  id: string;
-  title: string;
-  author: {
-    name: string;
-  };
-  publishedYear: number;
-  rating: number;
-  imageUrl: string;
-}
+import { Book } from "@/types";
 
 interface BookItemProps {
   book: Book;
-}
+};
 
 const BookItem: React.FC<BookItemProps> = ({ book }) => {
+  const { title, author, publishedYear, rating, imageUrl } = book;
+
   return (
-    <div className="w-full bg-white p-3 rounded-lg shadow-sm">
+    <div className="w-full bg-white p-3 rounded-lg shadow-sm h-[260px]">
       <img
-        src={book.imageUrl}
-        alt={book.title}
-        className="w-full h-[200px] object-cover rounded-lg"
+        src={imageUrl}
+        alt={title}
+        className="w-[123px] h-[170px] object-cover rounded-lg"
       />
-      <h3 className="text-sm sm:text-base font-medium mt-2 truncate text-gray-600">{book.title}</h3>
-      <p className="text-xs sm:text-sm text-gray-500">{book.author.name}, {book.publishedYear}</p>
-      <p className="text-xs sm:text-sm font-semibold text-gray-600">⭐ {book.rating}/5</p>
+      <h3 className="text-sm sm:text-base font-medium mt-2 truncate text-[#4D4D4D]">{title}</h3>
+      <p className="text-xs sm:text-sm text-[#4D4D4D]">{author.name}, {publishedYear}</p>
+      <p className="text-[12px] sm:text-[14px] text-[#4D4D4D]">{rating}<span className="text-[#A7A7A7]">/5</span></p>
     </div>
   );
 };

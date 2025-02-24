@@ -2,12 +2,10 @@
 import { useFetchBooks } from "@/hooks/useFetchBooks";
 
 // stores
-import { useUserStore } from "@/stores/userStore";
-import { useBookStore } from "@/stores/bookStore";
+import { useBookStore, useUserStore } from "@/stores";
 
 // components
-import { TodayQuote } from "@/components";
-import BookList from "@/components/BookList";
+import { BookHomeList, TodayQuote } from "@/components";
 
 // types
 import { Book } from "@/types/books";
@@ -39,9 +37,9 @@ const HomePage: React.FC = () => {
     <div>
       <TodayQuote />
       <h1 className="mb-4 mt-10 text-[35px] font-semibold text-gray-600">Good Morning</h1>
-      <BookList title="Recommended for You" books={recommendedBooks} />
+      <BookHomeList title="Recommended for You" books={recommendedBooks} />
       {recentReadings.length > 0 ? (
-        <BookList title="Recent Readings" books={recentReadings} />
+        <BookHomeList title="Recent Readings" books={recentReadings} />
       ) : (
         <p className="mt-4 text-gray-600">You have no recent readings yet. Start reading to see them here!</p>
       )}

@@ -38,7 +38,7 @@ export const menuItems = [
         </defs>
       </svg>
     ),
-    path: "/shelf",
+    path: "/my-shelf",
   },
 ];
 

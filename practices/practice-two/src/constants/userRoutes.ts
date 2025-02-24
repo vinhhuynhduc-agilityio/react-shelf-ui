@@ -6,6 +6,7 @@ export const ROUTE = {
   PROFILE: '/profile',
   SEARCH: '/search',
   BOOK_PREVIEW: '/book-preview/:bookId',
+  MY_SHELF: '/my-shelf',
 };
 
 export const API_USERS = {
