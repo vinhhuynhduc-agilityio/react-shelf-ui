@@ -7,9 +7,20 @@ import { Book } from "@/types";
 import { User } from "@/types";
 
 export const fetchBooks = async (): Promise<Book[]> => {
-  return apiRequest<null, Book[]>("GET", `${API_BASE_URL}/books`);
+  const url = `${API_BASE_URL}/books`;
+
+  return apiRequest<null, Book[]>(
+    "GET",
+    url
+  );
 };
 
 export const updateUser = async (user: User): Promise<User> => {
-  return apiRequest("PUT", `${API_BASE_URL}/users/${user.id}`, user);
+  const url = `${API_BASE_URL}/users/${user.id}`;
+
+  return apiRequest(
+    "PUT",
+    url,
+    user
+  );
 };

@@ -45,7 +45,6 @@ const BookPreview = () => {
     const borrowedBook = {
       bookId: book.id,
       borrowedDate: formatBorrowedDate(),
-      returnDate: null,
     };
 
     const updatedUser = {

@@ -7,7 +7,6 @@ export interface User {
   shelf: {
     bookId: string;
     borrowedDate: string;
-    returnDate: string | null;
   }[];
   favourites: string[];
   recentReadings: string[];
@@ -16,5 +15,4 @@ export interface User {
 export interface ShelfBooks {
   bookId: string;
   borrowedDate: string;
-  returnDate: string | null;
 };

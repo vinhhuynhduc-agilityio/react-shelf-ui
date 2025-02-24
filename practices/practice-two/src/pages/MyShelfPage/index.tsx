@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 // hooks
-import { useFetchBooks } from "@/hooks/useFetchBooks";
+import { useFetchBooks, useReturnBook } from "@/hooks";
 
 // stores
 import { useBookStore, useUserStore } from "@/stores";
@@ -15,7 +15,6 @@ import { getBorrowedDate } from "./helpers";
 // types
 import { User } from "@/types";
 
-
 const MyShelfPage: React.FC = () => {
   const navigate = useNavigate();
   const { isLoading, isError, error } = useFetchBooks();
@@ -23,6 +22,9 @@ const MyShelfPage: React.FC = () => {
   // store
   const books = useBookStore(state => state.books);
   const currentUser = useUserStore(state => state.currentUser);
+  const setUser = useUserStore(state => state.setUser);
+
+  const mutation = useReturnBook();
 
   if (isLoading && books.length === 0) return <p>Loading books...</p>;
   if (isError) return <p className="text-red-500">Error loading books: {error?.message}</p>;
@@ -32,7 +34,21 @@ const MyShelfPage: React.FC = () => {
     currentUser?.shelf?.some(shelfBook => shelfBook.bookId === book.id)
   );
 
-  const handleReturnBook = () => { };
+  const handleReturnBook = (bookId: string) => {
+    if (!currentUser) return;
+
+    const updatedShelf = currentUser.shelf.filter(shelfBook => shelfBook.bookId !== bookId);
+    const updatedUser = { ...currentUser, shelf: updatedShelf } as User;
+
+    mutation.mutate(updatedUser, {
+      onSuccess: (newUser) => {
+        setUser(newUser);
+      },
+      onError: (error) => {
+        console.error("Failed to return book:", error);
+      },
+    });
+  };
 
   return (
     <div className="">
