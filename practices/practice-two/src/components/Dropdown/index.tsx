@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-type DropdownOption = {
-  key: string;
-  label: string;
-};
+// types
+import { DropdownOption } from "@/types";
 
 interface DropdownProps {
   options: DropdownOption[];

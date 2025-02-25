@@ -6,7 +6,7 @@ const searchOptions = [
   { label: "Subjects", key: "subjects" },
 ];
 const profileOptions = [
-  { label: "Profile", key: "profile" },
+  { label: "Profile", key: "account-setting" },
   { label: "Favourite", key: "favourite" },
   { label: "Logout", key: "logout" }
 ];

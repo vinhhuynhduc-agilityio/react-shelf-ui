@@ -13,6 +13,9 @@ import Dropdown from "@/components/Dropdown";
 // hooks
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 
+// types
+import { DropdownOption } from "@/types";
+
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -67,6 +70,17 @@ const Header: React.FC = () => {
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueSearch(e.target.value);
   };
+
+  const handleProfileMenuSelection = (option: DropdownOption) => {
+    if (option.key === "logout") {
+      logout();
+      navigate("/login");
+    } else {
+      navigate(`/${option.key}`);
+    }
+
+    setProfileMenuOpen(false);
+  }
 
   return (
     <header className="flex justify-between items-center p-6 relative">
@@ -150,15 +164,7 @@ const Header: React.FC = () => {
         {/* Dropdown for Profile Menu */}
         <Dropdown
           options={profileOptions}
-          onSelect={(option) => {
-            if (option.key === "logout") {
-              logout();
-              navigate("/login");
-            } else {
-              navigate(`/${option.key}`);
-            }
-            setProfileMenuOpen(false);
-          }}
+          onSelect={handleProfileMenuSelection}
           isOpen={isProfileMenuOpen}
           setIsOpen={setProfileMenuOpen}
           triggerRef={profileButtonRef}

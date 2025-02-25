@@ -9,11 +9,11 @@ import { MenuSidebar, Header, ProtectedRoute } from '@/components';
 
 // pages
 import {
+  AccountSettingPage,
   BookPreviewPage,
   FavouritePage,
   HomePage,
   MyShelfPage,
-  ProfilePage,
   SearchPage,
   SignInPage,
   SignUpPage
@@ -56,10 +56,10 @@ const App: React.FC = () => {
                           }
                         />
                         <Route
-                          path={ROUTE.PROFILE}
+                          path={ROUTE.ACCOUNT_SETTING}
                           element={
                             <ProtectedRoute>
-                              <ProfilePage />
+                              <AccountSettingPage />
                             </ProtectedRoute>
                           }
                         />
