@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 // hooks
-import { useFetchBooks } from '@/hooks/useFetchBooks';
+import { useFetchBooks, useHandleFavoriteClick } from '@/hooks';
 
 // stores
 import { useBookStore, useFilterStore, useSearchStore, useUserStore } from '@/stores';
@@ -17,7 +17,12 @@ import { BookRow, HeaderRow } from '@/components';
 
 const SearchPage: React.FC = () => {
   const navigate = useNavigate();
+
+  // hooks
   const { isLoading, isError, error } = useFetchBooks();
+  const handleFavoriteClick = useHandleFavoriteClick();
+
+  // store
   const books = useBookStore(state => state.books);
   const currentUser = useUserStore(state => state.currentUser);
   const searchFromSidebar = useSearchStore(state => state.searchFromSidebar);
@@ -70,6 +75,7 @@ const SearchPage: React.FC = () => {
                 isInShelf={isInShelf}
                 isFavorite={isFavorite}
                 onClickPreview={handleCLickPreview}
+                handleFavoriteClick={() => handleFavoriteClick(book)}
               />
             );
           })

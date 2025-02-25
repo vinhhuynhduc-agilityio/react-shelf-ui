@@ -13,7 +13,7 @@ import { useUserStore } from "@/stores";
 import { formatBorrowedDate, isBookInShelf } from "@/helpers";
 
 // hooks
-import { useBorrowBook } from "@/hooks";
+import { useUpdateUserBooks } from "@/hooks";
 
 // types
 import { User } from "@/types";
@@ -28,7 +28,7 @@ const BookPreviewPage = () => {
   const setUser = useUserStore(state => state.setUser);
 
   // hooks
-  const mutation = useBorrowBook();
+  const mutation = useUpdateUserBooks();
 
   if (!book) {
     return <p className="text-red-500">No book data available.</p>;

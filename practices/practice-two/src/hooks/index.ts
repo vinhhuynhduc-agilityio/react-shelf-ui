@@ -1,4 +1,4 @@
 export * from "./useAuth";
 export * from "./useFetchBooks";
-export * from "./useBorrowBook";
-export * from "./useReturnBook";
+export * from "./useUpdateUserBooks";
+export * from "./useHandleFavoriteClick";

@@ -9,9 +9,16 @@ interface RowBookProps {
   isInShelf: boolean;
   isFavorite: boolean;
   onClickPreview: (book: Book) => void;
+  handleFavoriteClick: () => void;
 };
 
-const BookRow: React.FC<RowBookProps> = ({ book, isInShelf, isFavorite, onClickPreview }) => {
+const BookRow: React.FC<RowBookProps> = ({
+  book,
+  isInShelf,
+  isFavorite,
+  onClickPreview,
+  handleFavoriteClick
+}) => {
   return (
     <div className="grid xl:grid-cols-[340px_100px_130px_130px_60px_auto] lg:grid-cols-[300px_60px_80px_85px_20px_auto] md:grid-cols-[110px_80px_100px_100px_40px_auto] grid-cols-[95px_80px_30px_auto] gap-4 p-4 border border-gray-200 rounded-[10px] shadow-sm bg-white items-center sm:grid-cols-[95px_80px_90px_30px_auto]">
       <div className="flex items-center space-x-3">
@@ -36,9 +43,13 @@ const BookRow: React.FC<RowBookProps> = ({ book, isInShelf, isFavorite, onClickP
       <div className="text-left">
         <StatusBadge status={isInShelf ? "In-Shelf" : "None"} />
       </div>
-      <div className="text-center">
+      <button
+        className="hover:scale-110 transition-all"
+        onClick={handleFavoriteClick}
+        aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+      >
         <HeartIcon filled={isFavorite} className="w-6 h-6" />
-      </div>
+      </button>
       <div className="text-center">
         <Button
           variant="outline"

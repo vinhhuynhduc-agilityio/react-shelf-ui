@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 // hooks
-import { useFetchBooks, useReturnBook } from "@/hooks";
+import { useFetchBooks, useUpdateUserBooks } from "@/hooks";
 
 // stores
 import { useBookStore, useUserStore } from "@/stores";
@@ -24,7 +24,7 @@ const MyShelfPage: React.FC = () => {
   const currentUser = useUserStore(state => state.currentUser);
   const setUser = useUserStore(state => state.setUser);
 
-  const mutation = useReturnBook();
+  const mutation = useUpdateUserBooks();
 
   if (isLoading && books.length === 0) return <p>Loading books...</p>;
   if (isError) return <p className="text-red-500">Error loading books: {error?.message}</p>;
@@ -39,11 +39,8 @@ const MyShelfPage: React.FC = () => {
 
     const updatedShelf = currentUser.shelf.filter(shelfBook => shelfBook.bookId !== bookId);
     const updatedUser = { ...currentUser, shelf: updatedShelf } as User;
-
+    setUser(updatedUser);
     mutation.mutate(updatedUser, {
-      onSuccess: (newUser) => {
-        setUser(newUser);
-      },
       onError: (error) => {
         console.error("Failed to return book:", error);
       },

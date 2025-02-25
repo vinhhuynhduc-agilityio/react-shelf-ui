@@ -6,7 +6,7 @@ import { updateUser } from "@/services";
 // types
 import { User } from "@/types";
 
-export const useBorrowBook = (): UseMutationResult<User, Error, User> => {
+export const useUpdateUserBooks = (): UseMutationResult<User, Error, User> => {
   return useMutation({
     mutationFn: (updatedUser) => updateUser(updatedUser),
   });
