@@ -1,6 +1,6 @@
 export interface User {
   id: string;
-  username: string;
+  fullName: string;
   email: string;
   password: string;
   avatarUrl: string,
@@ -10,6 +10,9 @@ export interface User {
   }[];
   favourites: string[];
   recentReadings: string[];
+  registerNumber: string;
+  phoneNumber: string;
+  bio: string;
 };
 
 export interface ShelfBooks {

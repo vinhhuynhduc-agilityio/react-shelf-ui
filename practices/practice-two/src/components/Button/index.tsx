@@ -6,6 +6,7 @@ type ButtonProps = {
   onClick?: () => void;
   className?: string;
   disabled?: boolean;
+  type?: 'button' | 'submit'
 };
 
 const Button: React.FC<ButtonProps> =
@@ -14,7 +15,8 @@ const Button: React.FC<ButtonProps> =
     variant = 'primary',
     onClick,
     disabled = false,
-    className
+    className,
+    type = 'button',
   }) => {
     const baseStyles = 'flex items-center justify-center focus:outline-none focus:ring-2 transition-all font-normal';
     const variants = {
@@ -33,6 +35,7 @@ const Button: React.FC<ButtonProps> =
         )}
         onClick={onClick}
         disabled={disabled}
+        type={type}
       >
         {children}
       </button>

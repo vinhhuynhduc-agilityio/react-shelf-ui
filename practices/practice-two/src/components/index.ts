@@ -14,3 +14,4 @@ export { default as MyShelfBookCard } from './MyShelfBookCard';
 export { default as BookRow } from './BookRow';
 export { default as HeaderRow } from './HeaderRow';
 export { default as BackToResultButton } from './BackToResultButton';
+export { default as Avatar } from './Avatar';

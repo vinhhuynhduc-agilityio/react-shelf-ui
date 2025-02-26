@@ -118,7 +118,7 @@ const SignInPage: React.FC = () => {
             </label>
             <a
               href="#"
-              className="text-right text-[#4D4D4D] underline"
+              className="text-right text-[#4D4D4D] underline underline-offset-[4.335px]"
             >
               Forgot password?
             </a>
@@ -136,7 +136,7 @@ const SignInPage: React.FC = () => {
           New User?{" "}
           <Link
             to="/register"
-            className="underline text-sm sm:text-base md:text-lg"
+            className="underline underline-offset-[4.335px] text-sm sm:text-base md:text-lg"
           >
             Register Here
           </Link>

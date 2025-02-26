@@ -9,7 +9,7 @@ import { useRegisterUser } from "@/hooks";
 import { TextField } from "@/components";
 
 interface RegisterFormValues {
-  username: string;
+  fullName: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -37,7 +37,7 @@ const SignUpPage: React.FC = () => {
   const onSubmit: SubmitHandler<RegisterFormValues> = (data) => {
     mutation.mutate(
       {
-        username: data.username,
+        fullName: data.fullName,
         email: data.email,
         password: data.password,
       },
@@ -75,7 +75,7 @@ const SignUpPage: React.FC = () => {
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 flex-grow">
           <TextField
-            name="username"
+            name="fullName"
             label="Username"
             type="text"
             placeholder="Your Username"
@@ -84,14 +84,14 @@ const SignUpPage: React.FC = () => {
               required: "Username is required",
               minLength: { value: 3, message: "Username must be at least 3 characters" },
             }}
-            error={errors.username?.message}
+            error={errors.fullName?.message}
             vertical={true}
           />
           <TextField
             name="email"
             label="Email"
             type="email"
-            placeholder="username@collegename.ac.in"
+            placeholder="fullName@collegename.ac.in"
             register={register}
             validation={{
               required: "Email is required",
@@ -168,7 +168,7 @@ const SignUpPage: React.FC = () => {
         {/* Footer */}
         <p className="text-center text-sm sm:text-base text-[#4D4D4D] mt-4">
           Already have an account?{" "}
-          <Link to="/login" className="underline">
+          <Link to="/login" className="underline underline-offset-[4.335px]">
             Login Here
           </Link>
         </p>

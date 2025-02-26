@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { API_BASE_URL } from "@/config";
 
 // constants
-import { API_USERS } from "@/constants/userRoutes";
+import { API_USERS } from "@/constants";
 
 // services
 import { apiRequest } from "@/services";
@@ -13,7 +13,7 @@ import { apiRequest } from "@/services";
 import { User } from '@/types/user';
 
 export interface RegisterUserData {
-  username: string;
+  fullName: string;
   email: string;
   password: string;
 }
