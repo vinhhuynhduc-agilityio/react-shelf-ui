@@ -27,7 +27,7 @@ export const useHandleFavoriteClick = () => {
     mutation.mutate(updatedUser, {
       onError: (error) => {
         console.error("Failed to update favourites:", error);
-        useUserStore.setState({ currentUser: prevUser });
+        setUser(prevUser);
       },
     });
   };

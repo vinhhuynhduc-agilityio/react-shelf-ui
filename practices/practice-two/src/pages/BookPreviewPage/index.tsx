@@ -42,6 +42,7 @@ const BookPreviewPage = () => {
       return;
     }
 
+    const prevUser = { ...currentUser };
     const borrowedBook = {
       bookId: book.id,
       borrowedDate: formatBorrowedDate(),
@@ -51,10 +52,13 @@ const BookPreviewPage = () => {
       ...currentUser,
       shelf: [...currentUser?.shelf ?? [], borrowedBook]
     } as User;
+    setUser(updatedUser);
 
     mutation.mutate(updatedUser, {
-      onSuccess: (newUser) => setUser(newUser),
-      onError: (error) => console.error("Failed to borrow book:", error),
+      onError: (error) => {
+        console.error("Failed to update favourites:", error);
+        setUser(prevUser);
+      },
     });
   };
 

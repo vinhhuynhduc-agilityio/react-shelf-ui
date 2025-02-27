@@ -1,56 +1,77 @@
 import React, { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
+import { useForm, SubmitHandler, FieldErrors } from 'react-hook-form';
 
 // components
-import { Avatar, Button, TextField } from '@/components';
+import { Avatar, Button, PhoneNumberField, TextField } from '@/components';
 
 // hooks
 import { useUpdateUserBooks } from '@/hooks';
 
 // constants
-import { DEFAULT_AVATAR, editIcon } from '@/constants';
+import { cancelIcon, DEFAULT_AVATAR, editIcon } from '@/constants';
 
 // helpers
 import { readFileAsBase64 } from './helpers';
 
-interface AccountFormValues {
-  fullName: string;
-  collegeEmail: string;
-  registerNumber: string;
-  phoneNumber: string;
-  bio: string;
-  avatar: string;
-}
+// types
+import { AccountFormValues, User } from '@/types';
+
+// stores
+import { useUserStore } from '@/stores';
 
 const AccountSettingPage: React.FC = () => {
-  const navigate = useNavigate();
-  const [avatarUrl, setAvatarPreview] = useState<string>('');
+
+  // stores
+  const currentUser = useUserStore(state => state.currentUser);
+  const setUser = useUserStore(state => state.setUser);
+
+  // states
+  const [avatarUrl, setAvatarPreview] = useState<string>(currentUser?.avatarUrl || DEFAULT_AVATAR);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<AccountFormValues>();
+  } = useForm<AccountFormValues>({
+    defaultValues: currentUser || {} as AccountFormValues,
+  });
 
   const mutation = useUpdateUserBooks();
 
   const onSubmit: SubmitHandler<AccountFormValues> = (data) => {
-    // mutation.mutate(
-    //   {
-    //     fullName: data.fullName,
-    //     collegeEmail: data.collegeEmail,
-    //     registerNumber: data.registerNumber,
-    //     phoneNumber: data.phoneNumber,
-    //     bio: data.bio,
-    //     avatarUrl: avatarUrl,
-    //   },
-    //   {
-    //     onError: (error) => {
-    //       console.error("Failed to update profile:", error);
-    //     },
-    //   }
-    // );
+    if (!currentUser) {
+      console.error("No user data available.");
+      return;
+    }
+
+    const prevUser = { ...currentUser };
+    const updatedUser = {
+      ...currentUser,
+      fullName: data.fullName,
+      email: data.email,
+      registerNumber: data.registerNumber,
+      countryCode: data.countryCode,
+      phoneNumber: data.phoneNumber,
+      bio: data.bio,
+      avatarUrl: avatarUrl,
+    } as User;
+    setUser(updatedUser);
+
+    mutation.mutate(updatedUser, {
+      onSuccess: () => {
+        toggleEdit();
+      },
+      onError: (error) => {
+        console.error("Failed to update user:", error);
+        setUser(prevUser);
+      },
+    });
+  };
+
+  const toggleEdit = () => {
+    setIsEditing(!isEditing);
   };
 
   const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,7 +109,10 @@ const AccountSettingPage: React.FC = () => {
             />
             <label
               htmlFor="avatar-upload"
-              className="cursor-pointer items-center underline underline-offset-4 text-[#909090] text-[10px] font-medium"
+              className={clsx(
+                "cursor-pointer items-center underline underline-offset-4 text-[#909090] text-[10px] font-medium",
+                !isEditing && "pointer-events-none"
+              )}
             >
               Upload new photo
             </label>
@@ -96,10 +120,11 @@ const AccountSettingPage: React.FC = () => {
         </div>
         <div className="flex flex-row-reverse">
           <button
-            type='button'
-            className="border-2 border-gray-50 p-3 rounded-full"
+            type="button"
+            className="border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition"
+            onClick={toggleEdit}
           >
-            {editIcon}
+            {isEditing ? cancelIcon : editIcon}
           </button>
         </div>
         {/* Profile Fields */}
@@ -109,28 +134,42 @@ const AccountSettingPage: React.FC = () => {
             label="Full Name"
             type="text"
             placeholder="Your Full Name"
+            disabled={!isEditing}
             register={register}
             validation={{
-              required: "Full name is required",
+              required: "Full Name is required",
+              minLength: {
+                value: 3,
+                message: "Full Name must be at least 3 characters long",
+              },
+              maxLength: {
+                value: 50,
+                message: "Full Name cannot exceed 30 characters",
+              },
+              pattern: {
+                value: /^[a-zA-Z\s]+$/,
+                message: "Full Name can only contain letters and spaces",
+              },
             }}
             error={errors.fullName?.message}
             vertical
             className="flex-1"
           />
           <TextField
-            name="collegeEmail"
+            name="email"
             label="College Email ID"
             type="email"
             placeholder="username@college.com"
+            disabled={!isEditing}
             register={register}
             validation={{
-              required: "Email is required",
+              required: 'Email is required',
               pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Invalid email address",
+                value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                message: 'Invalid email format',
               },
             }}
-            error={errors.collegeEmail?.message}
+            error={errors.email?.message}
             vertical
             className="flex-1"
           />
@@ -141,26 +180,24 @@ const AccountSettingPage: React.FC = () => {
             label="Register Number"
             type="text"
             placeholder="Your Register Number"
+            disabled={!isEditing}
             register={register}
+            maxLength={7}
             validation={{
               required: "Register number is required",
+              pattern: {
+                value: /^[1-9][0-9]{6}$/,
+                message: "Register Number must be exactly 7 digits and cannot start with 0",
+              },
             }}
             error={errors.registerNumber?.message}
             vertical
             className="flex-1"
           />
-          <TextField
-            name="phoneNumber"
-            label="Phone Number"
-            type="text"
-            placeholder="Your Phone Number"
+          <PhoneNumberField
             register={register}
-            validation={{
-              required: "Phone number is required",
-            }}
-            error={errors.phoneNumber?.message}
-            vertical
-            className="flex-1"
+            errors={errors as FieldErrors<AccountFormValues>}
+            isEditing={isEditing}
           />
         </div>
         <TextField
@@ -172,13 +209,13 @@ const AccountSettingPage: React.FC = () => {
           error={errors.bio?.message}
           vertical
           className="w-full resize-none"
+          disabled={!isEditing}
         />
         {/* Submit Button */}
         <Button
           className="mt-4"
-          variant='primary'
-          // disabled={isInShelf}
-          // onClick={}
+          variant={!isEditing ? 'disabledPrimary' : 'primary'}
+          disabled={!isEditing}
           type="submit"
         >
           Update Profile

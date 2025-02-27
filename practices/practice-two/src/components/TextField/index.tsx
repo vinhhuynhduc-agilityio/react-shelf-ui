@@ -19,7 +19,9 @@ interface TextFieldProps<T extends FieldValues> {
   isPasswordVisible?: boolean;
   togglePasswordVisibility?: () => void;
   className?: string;
-}
+  maxLength?: number;
+  disabled?: boolean;
+};
 
 export const TextField = <T extends FieldValues>({
   name,
@@ -35,6 +37,8 @@ export const TextField = <T extends FieldValues>({
   isPasswordVisible = false,
   togglePasswordVisibility,
   className = '',
+  maxLength,
+  disabled = false
 }: TextFieldProps<T>) => {
   const validLabelWidths = ["w-30", "w-32"];
 
@@ -52,10 +56,11 @@ export const TextField = <T extends FieldValues>({
   });
 
   const inputClass = clsx(
-    "flex-1 p-2 border rounded-md bg-white text-black w-full pr-10",
+    "flex-1 p-2 border rounded-md text-[#4C535F] w-full pr-10",
     "text-sm sm:text-base md:text-lg",
     "placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px]",
-    "h-[40px] sm:h-[48px] md:h-[56px]"
+    "h-[40px] sm:h-[48px] md:h-[56px]",
+    disabled && "bg-gray-100 cursor-not-allowed"
   );
 
   return (
@@ -71,8 +76,11 @@ export const TextField = <T extends FieldValues>({
           <textarea
             id={name}
             placeholder={placeholder}
-            className="border rounded-md w-full resize-none h-[158px] placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] p-2"
+            className={clsx("border rounded-md w-full resize-none h-[158px] placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] p-2",
+              disabled && "bg-gray-100 cursor-not-allowed"
+            )}
             {...register(name, validation)}
+            disabled={disabled}
           />
         ) : (
           <input
@@ -81,6 +89,8 @@ export const TextField = <T extends FieldValues>({
             placeholder={placeholder}
             className={inputClass}
             {...register(name, validation)}
+            maxLength={maxLength ?? 255}
+            disabled={disabled}
           />
         )}
         {showPasswordToggle && (
