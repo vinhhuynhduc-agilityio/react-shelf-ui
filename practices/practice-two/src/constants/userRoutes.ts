@@ -1,15 +1,16 @@
 export const ROUTE = {
-  LOGIN: '/login',
-  REGISTER: '/register',
-  HOME: '/home',
-  FAVOURITE: '/favourite',
-  SEARCH: '/search',
-  BOOK_PREVIEW: '/book-preview/:bookId',
-  MY_SHELF: '/my-shelf',
-  ACCOUNT_SETTING: '/account-setting'
+	ACCOUNT_SETTING: "/account-setting",
+	BOOK_PREVIEW_BY_ID: "/book-preview/:bookId",
+	BOOK_PREVIEW: "/book-preview",
+	FAVOURITE: "/favourite",
+	HOME: "/home",
+	LOGIN: "/login",
+	MY_SHELF: "/my-shelf",
+	REGISTER: "/register",
+	SEARCH: "/search",
 };
 
 export const API_USERS = {
-  REGISTER: '/users',
-  LOGIN: '/users',
+	REGISTER: "/users",
+	LOGIN: "/users",
 };

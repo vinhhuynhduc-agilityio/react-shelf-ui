@@ -1,7 +1,13 @@
 import { useLocation, useNavigate } from "react-router-dom";
 
 // constants
-import { checkmarkIcon, notesIcon, reviewIcon, shareIcon } from "@/constants";
+import {
+	checkmarkIcon,
+	notesIcon,
+	reviewIcon,
+	ROUTE,
+	shareIcon,
+} from "@/constants";
 
 // components
 import {
@@ -71,7 +77,7 @@ const BookPreviewPage = () => {
 	};
 
 	const handleClickBackToResult = () => {
-		const from = location.state?.from || "/search";
+		const from = location.state?.from || ROUTE.SEARCH;
 		navigate(from);
 	};
 

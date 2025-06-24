@@ -3,14 +3,19 @@ import { Navigate } from "react-router-dom";
 // hooks
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const currentUser = useCurrentUser();
+// constants
+import { ROUTE } from "@/constants";
 
-  if (!currentUser) {
-    return <Navigate to="/login" replace />;
-  }
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
+	children,
+}) => {
+	const currentUser = useCurrentUser();
 
-  return <>{children}</>;
+	if (!currentUser) {
+		return <Navigate to={ROUTE.LOGIN} replace />;
+	}
+
+	return <>{children}</>;
 };
 
 export default ProtectedRoute;
