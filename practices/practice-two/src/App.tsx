@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ROUTE } from "@/constants/userRoutes";
 
 // components
-import { MenuSidebar, Header, ProtectedRoute } from "@/components";
+import { MenuSidebar, Header, ProtectedRoute, Toast } from "@/components";
 
 // pages
 import {
@@ -31,6 +31,7 @@ const App: React.FC = () => {
 
 	return (
 		<QueryClientProvider client={queryClient}>
+			<Toast />
 			<Router>
 				<Routes>
 					<Route
