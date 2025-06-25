@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useFetchBooks, useUpdateUserBooks } from "@/hooks";
 
 // stores
-import { useBookStore, useUserStore } from "@/stores";
+import { useBookStore, useToastStore, useUserStore } from "@/stores";
 
 // components
 import { MyShelfBookCard } from "@/components";
@@ -16,7 +16,7 @@ import { getBorrowedDate } from "./helpers";
 import { User } from "@/types";
 
 // constants
-import { ROUTE } from "@/constants";
+import { ERROR_MESSAGE, ROUTE } from "@/constants";
 
 const MyShelfPage: React.FC = () => {
 	const navigate = useNavigate();
@@ -26,6 +26,7 @@ const MyShelfPage: React.FC = () => {
 	const books = useBookStore((state) => state.books);
 	const currentUser = useUserStore((state) => state.currentUser);
 	const setUser = useUserStore((state) => state.setUser);
+	const showToast = useToastStore((state) => state.showToast);
 
 	const mutation = useUpdateUserBooks();
 
@@ -50,8 +51,8 @@ const MyShelfPage: React.FC = () => {
 		const updatedUser = { ...currentUser, shelf: updatedShelf } as User;
 		setUser(updatedUser);
 		mutation.mutate(updatedUser, {
-			onError: (error) => {
-				console.error("Failed to return book:", error);
+			onError: () => {
+				showToast(ERROR_MESSAGE.DEFAULT, "error");
 			},
 		});
 	};

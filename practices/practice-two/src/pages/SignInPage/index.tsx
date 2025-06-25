@@ -13,7 +13,8 @@ import { TextField } from "@/components";
 import { useUserStore } from "@/stores/userStore";
 
 // constants
-import { ROUTE } from "@/constants";
+import { ERROR_MESSAGE, ROUTE } from "@/constants";
+import { useToastStore } from "@/stores";
 
 interface LoginFormValues {
 	email: string;
@@ -25,6 +26,9 @@ const SignInPage: React.FC = () => {
 	const [errorMessage, setErrorMessage] = useState("");
 	const navigate = useNavigate();
 	const signIn = useUserStore((state) => state.signIn);
+
+	// stores
+	const showToast = useToastStore((state) => state.showToast);
 
 	const {
 		register,
@@ -47,9 +51,10 @@ const SignInPage: React.FC = () => {
 
 			signIn(user);
 			navigate(ROUTE.HOME);
-		} catch (error) {
-			setErrorMessage("An error occurred. Please try again.");
-			console.error(error);
+		} catch (error: unknown) {
+			const err = error as { response?: { data?: { error?: string } } };
+			const message = err.response?.data?.error || ERROR_MESSAGE.DEFAULT;
+			showToast(message, "error");
 		}
 	};
 

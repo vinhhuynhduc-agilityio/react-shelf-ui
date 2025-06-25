@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 // constants
 import {
 	checkmarkIcon,
+	ERROR_MESSAGE,
 	notesIcon,
 	reviewIcon,
 	ROUTE,
@@ -18,7 +19,7 @@ import {
 } from "@/components";
 
 // stores
-import { useUserStore } from "@/stores";
+import { useToastStore, useUserStore } from "@/stores";
 
 // helpers
 import { formatBorrowedDate, isBookInShelf } from "@/helpers";
@@ -37,6 +38,7 @@ const BookPreviewPage = () => {
 	// stores
 	const currentUser = useUserStore((state) => state.currentUser);
 	const setUser = useUserStore((state) => state.setUser);
+	const showToast = useToastStore((state) => state.showToast);
 
 	// hooks
 	const mutation = useUpdateUserBooks();
@@ -48,12 +50,7 @@ const BookPreviewPage = () => {
 	const isInShelf = isBookInShelf(book.id, currentUser?.shelf ?? []);
 
 	const handleBorrow = () => {
-		if (!currentUser) {
-			console.error("No user data available.");
-			return;
-		}
-
-		const prevUser = { ...currentUser };
+		const prevUser: User = { ...(currentUser as User) };
 		const borrowedBook = {
 			bookId: book.id,
 			borrowedDate: formatBorrowedDate(),
@@ -69,8 +66,8 @@ const BookPreviewPage = () => {
 		setUser(updatedUser);
 
 		mutation.mutate(updatedUser, {
-			onError: (error) => {
-				console.error("Failed to update favourites:", error);
+			onError: () => {
+				showToast(ERROR_MESSAGE.DEFAULT, "error");
 				setUser(prevUser);
 			},
 		});

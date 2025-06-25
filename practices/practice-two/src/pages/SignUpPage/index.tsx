@@ -9,7 +9,10 @@ import { useRegisterUser } from "@/hooks";
 import { TextField } from "@/components";
 
 // constants
-import { ROUTE } from "@/constants";
+import { ERROR_MESSAGE, ROUTE, SUCCESS_MESSAGE } from "@/constants";
+
+// stores
+import { useToastStore } from "@/stores";
 
 interface RegisterFormValues {
 	fullName: string;
@@ -21,10 +24,10 @@ interface RegisterFormValues {
 
 const SignUpPage: React.FC = () => {
 	const navigate = useNavigate();
+	const { showToast } = useToastStore();
 
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-	const [errorMessage, setErrorMessage] = useState("");
 
 	const {
 		register,
@@ -45,10 +48,12 @@ const SignUpPage: React.FC = () => {
 				password: data.password,
 			},
 			{
-				onSuccess: () => navigate(ROUTE.LOGIN),
-				onError: (error) => {
-					setErrorMessage("An error occurred. Please try again.");
-					console.error("Failed to register:", error);
+				onSuccess: () => {
+					showToast(SUCCESS_MESSAGE.REGISTRATION, "success");
+					navigate(ROUTE.LOGIN);
+				},
+				onError: () => {
+					showToast(ERROR_MESSAGE.DEFAULT, "error");
 				},
 			}
 		);
@@ -72,10 +77,6 @@ const SignUpPage: React.FC = () => {
 				<p className="text-center text-gray-500 text-sm sm:text-base mb-4">
 					Sign up to access your Digital Library
 				</p>
-
-				{errorMessage && (
-					<p className="text-red-500 text-center mb-4">{errorMessage}</p>
-				)}
 
 				{/* Form */}
 				<form
