@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+	BrowserRouter as Router,
+	Routes,
+	Route,
+	Navigate,
+} from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // constants
@@ -18,15 +23,26 @@ import {
 	SignInPage,
 	SignUpPage,
 } from "@/pages";
+import { useUserStore } from "@/stores";
 
 const App: React.FC = () => {
 	const queryClient = new QueryClient();
+	const currentUser = useUserStore((state) => state.currentUser);
 
 	return (
 		<QueryClientProvider client={queryClient}>
 			<Router>
 				<Routes>
-					<Route path="/" element={<SignInPage />} />
+					<Route
+						path="/"
+						element={
+							currentUser ? (
+								<Navigate to={ROUTE.HOME} replace />
+							) : (
+								<SignInPage />
+							)
+						}
+					/>
 					<Route path={ROUTE.LOGIN} element={<SignInPage />} />
 					<Route path={ROUTE.REGISTER} element={<SignUpPage />} />
 					<Route
