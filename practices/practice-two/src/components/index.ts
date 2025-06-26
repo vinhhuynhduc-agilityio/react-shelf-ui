@@ -13,7 +13,7 @@ export { default as BookHomeList } from "./BookHomeList";
 export { default as MyShelfBookCard } from "./MyShelfBookCard";
 export { default as BookRow } from "./BookRow";
 export { default as HeaderRow } from "./HeaderRow";
-export { default as BackToResultButton } from "./BackToResultButton";
+export { default as BackButton } from "./BackButton";
 export { default as Avatar } from "./Avatar";
 export { default as PhoneNumberField } from "./PhoneNumberField";
 export { default as Toast } from "./Toast";

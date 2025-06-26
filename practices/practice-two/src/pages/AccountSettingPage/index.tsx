@@ -9,12 +9,7 @@ import { Avatar, Button, PhoneNumberField, TextField } from "@/components";
 import { useUpdateUserBooks } from "@/hooks";
 
 // constants
-import {
-	cancelIcon,
-	DEFAULT_AVATAR,
-	editIcon,
-	ERROR_MESSAGE,
-} from "@/constants";
+import { cancelIcon, DEFAULT_AVATAR, editIcon } from "@/constants";
 
 // helpers
 import { readFileAsBase64 } from "./helpers";
@@ -23,13 +18,11 @@ import { readFileAsBase64 } from "./helpers";
 import { AccountFormValues, User } from "@/types";
 
 // stores
-import { useToastStore, useUserStore } from "@/stores";
+import { useUserStore } from "@/stores";
 
 const AccountSettingPage: React.FC = () => {
 	// stores
 	const currentUser = useUserStore((state) => state.currentUser);
-	const setUser = useUserStore((state) => state.setUser);
-	const showToast = useToastStore((state) => state.showToast);
 
 	// states
 	const [avatarUrl, setAvatarPreview] = useState<string>(
@@ -45,16 +38,14 @@ const AccountSettingPage: React.FC = () => {
 		defaultValues: currentUser || ({} as AccountFormValues),
 	});
 
-	const mutation = useUpdateUserBooks();
+	const { mutate: updateUserBookData, isPending } = useUpdateUserBooks();
 
 	const onSubmit: SubmitHandler<AccountFormValues> = (data) => {
 		if (!currentUser) {
-			showToast(ERROR_MESSAGE.NO_USER_DATA, "error");
 			return;
 		}
 
-		const prevUser = { ...currentUser };
-		const updatedUser = {
+		const userToUpdate = {
 			...currentUser,
 			fullName: data.fullName,
 			email: data.email,
@@ -64,16 +55,9 @@ const AccountSettingPage: React.FC = () => {
 			bio: data.bio,
 			avatarUrl: avatarUrl,
 		} as User;
-		setUser(updatedUser);
 
-		mutation.mutate(updatedUser, {
-			onSuccess: () => {
-				toggleEdit();
-			},
-			onError: () => {
-				showToast(ERROR_MESSAGE.DEFAULT, "error");
-				setUser(prevUser);
-			},
+		updateUserBookData(userToUpdate, {
+			onSuccess: () => toggleEdit(),
 		});
 	};
 
@@ -88,6 +72,8 @@ const AccountSettingPage: React.FC = () => {
 			readFileAsBase64(file, setAvatarPreview);
 		}
 	};
+
+	const isDisabled = !isEditing || isPending;
 
 	return (
 		<div className="bg-white shadow-lg rounded-lg p-6 max-w-full h-auto max-h-screen flex flex-col overflow-auto">
@@ -118,7 +104,7 @@ const AccountSettingPage: React.FC = () => {
 							htmlFor="avatar-upload"
 							className={clsx(
 								"cursor-pointer items-center underline underline-offset-4 text-[#909090] text-[10px] font-medium",
-								!isEditing && "pointer-events-none"
+								isDisabled && "pointer-events-none"
 							)}
 						>
 							Upload new photo
@@ -128,8 +114,12 @@ const AccountSettingPage: React.FC = () => {
 				<div className="flex flex-row-reverse">
 					<button
 						type="button"
-						className="border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition"
+						className={clsx(
+							"border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition",
+							isPending && "cursor-not-allowed opacity-50"
+						)}
 						onClick={toggleEdit}
+						disabled={isPending}
 					>
 						{isEditing ? cancelIcon : editIcon}
 					</button>
@@ -141,7 +131,7 @@ const AccountSettingPage: React.FC = () => {
 						label="Full Name"
 						type="text"
 						placeholder="Your Full Name"
-						disabled={!isEditing}
+						disabled={isDisabled}
 						register={register}
 						validation={{
 							required: "Full Name is required",
@@ -167,7 +157,7 @@ const AccountSettingPage: React.FC = () => {
 						label="College Email ID"
 						type="email"
 						placeholder="username@college.com"
-						disabled={!isEditing}
+						disabled={isDisabled}
 						register={register}
 						validation={{
 							required: "Email is required",
@@ -187,7 +177,7 @@ const AccountSettingPage: React.FC = () => {
 						label="Register Number"
 						type="text"
 						placeholder="Your Register Number"
-						disabled={!isEditing}
+						disabled={isDisabled}
 						register={register}
 						maxLength={7}
 						validation={{
@@ -217,13 +207,13 @@ const AccountSettingPage: React.FC = () => {
 					error={errors.bio?.message}
 					vertical
 					className="w-full resize-none"
-					disabled={!isEditing}
+					disabled={isDisabled}
 				/>
 				{/* Submit Button */}
 				<Button
 					className="mt-4"
-					variant={!isEditing ? "disabledPrimary" : "primary"}
-					disabled={!isEditing}
+					variant="primary"
+					disabled={isDisabled}
 					type="submit"
 				>
 					Update Profile

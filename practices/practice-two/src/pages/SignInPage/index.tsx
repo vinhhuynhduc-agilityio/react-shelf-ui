@@ -25,7 +25,7 @@ const SignInPage: React.FC = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
 	const navigate = useNavigate();
-	const signIn = useUserStore((state) => state.signIn);
+	const setUser = useUserStore((state) => state.setUser);
 
 	// stores
 	const showToast = useToastStore((state) => state.showToast);
@@ -46,14 +46,16 @@ const SignInPage: React.FC = () => {
 
 			if (!user || user.password !== data.password) {
 				setErrorMessage("Invalid email or password");
+
 				return;
 			}
 
-			signIn(user);
+			setUser(user);
 			navigate(ROUTE.HOME);
 		} catch (error: unknown) {
 			const err = error as { response?: { data?: { error?: string } } };
 			const message = err.response?.data?.error || ERROR_MESSAGE.DEFAULT;
+
 			showToast(message, "error");
 		}
 	};

@@ -5,23 +5,21 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { User } from "@/types/user";
 
 interface UserStore {
-  currentUser: User | null;
-  signIn: (user: User) => void;
-  logout: () => void;
-  setUser: (user: User) => void;
-};
+	currentUser: User | null;
+	logout: () => void;
+	setUser: (user: User) => void;
+}
 
 export const useUserStore = create(
-  persist<UserStore>(
-    (set) => ({
-      currentUser: null,
-      signIn: (user: User) => set({ currentUser: user }),
-      logout: () => set({ currentUser: null }),
-      setUser: (user) => set({ currentUser: user }),
-    }),
-    {
-      name: "user-storage",
-      storage: createJSONStorage(() => localStorage),
-    }
-  )
+	persist<UserStore>(
+		(set) => ({
+			currentUser: null,
+			logout: () => set({ currentUser: null }),
+			setUser: (user) => set({ currentUser: user }),
+		}),
+		{
+			name: "user-storage",
+			storage: createJSONStorage(() => localStorage),
+		}
+	)
 );

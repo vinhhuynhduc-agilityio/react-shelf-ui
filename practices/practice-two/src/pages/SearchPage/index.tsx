@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // hooks
@@ -28,7 +29,7 @@ const SearchPage: React.FC = () => {
 
 	// hooks
 	const { isLoading, isError, error } = useFetchBooks();
-	const handleFavoriteClick = useHandleFavoriteClick();
+	const { handleFavoriteClick, isPending } = useHandleFavoriteClick();
 
 	// store
 	const books = useBookStore((state) => state.books);
@@ -36,6 +37,7 @@ const SearchPage: React.FC = () => {
 	const searchFromSidebar = useSearchStore((state) => state.searchFromSidebar);
 	const searchTerm = useSearchStore((state) => state.searchTerm);
 	const selectedFilter = useFilterStore((state) => state.selectedFilter);
+	const [processingBookId, setProcessingBookId] = useState<string | null>(null);
 
 	const filteredBooks = searchFromSidebar
 		? books
@@ -71,6 +73,11 @@ const SearchPage: React.FC = () => {
 			},
 		});
 
+	const handleFavoriteClickWrapper = (book: Book) => {
+		setProcessingBookId(book.id);
+		handleFavoriteClick(book);
+	};
+
 	return (
 		<div className="overflow-x-auto text-[#4D4D4D]">
 			{/* Header */}
@@ -87,7 +94,7 @@ const SearchPage: React.FC = () => {
 						const isInShelf = isBookInShelf(book.id, currentUser?.shelf ?? []);
 						const isFavorite =
 							currentUser?.favourites?.includes(book.id) ?? false;
-
+						const isDisabled = isPending && processingBookId === book.id;
 						return (
 							<BookRow
 								key={book.id}
@@ -95,7 +102,8 @@ const SearchPage: React.FC = () => {
 								isInShelf={isInShelf}
 								isFavorite={isFavorite}
 								onClickPreview={handleCLickPreview}
-								handleFavoriteClick={() => handleFavoriteClick(book)}
+								handleFavoriteClick={() => handleFavoriteClickWrapper(book)}
+								disabled={isDisabled}
 							/>
 						);
 					})

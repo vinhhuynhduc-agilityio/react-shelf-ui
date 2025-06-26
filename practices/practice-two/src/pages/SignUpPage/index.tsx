@@ -9,10 +9,13 @@ import { useRegisterUser } from "@/hooks";
 import { TextField } from "@/components";
 
 // constants
-import { ERROR_MESSAGE, ROUTE, SUCCESS_MESSAGE } from "@/constants";
+import { ROUTE, SUCCESS_MESSAGE } from "@/constants";
 
 // stores
 import { useToastStore } from "@/stores";
+
+// helpers
+import { showDefaultErrorToast } from "@/helpers";
 
 interface RegisterFormValues {
 	fullName: string;
@@ -52,9 +55,7 @@ const SignUpPage: React.FC = () => {
 					showToast(SUCCESS_MESSAGE.REGISTRATION, "success");
 					navigate(ROUTE.LOGIN);
 				},
-				onError: () => {
-					showToast(ERROR_MESSAGE.DEFAULT, "error");
-				},
+				onError: () => showDefaultErrorToast(),
 			}
 		);
 	};

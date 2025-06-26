@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 // constants
 import {
 	checkmarkIcon,
-	ERROR_MESSAGE,
 	notesIcon,
 	reviewIcon,
 	ROUTE,
@@ -11,15 +10,10 @@ import {
 } from "@/constants";
 
 // components
-import {
-	RatingStars,
-	StatusBadge,
-	Button,
-	BackToResultButton,
-} from "@/components";
+import { RatingStars, StatusBadge, Button, BackButton } from "@/components";
 
 // stores
-import { useToastStore, useUserStore } from "@/stores";
+import { useUserStore } from "@/stores";
 
 // helpers
 import { formatBorrowedDate, isBookInShelf } from "@/helpers";
@@ -37,11 +31,9 @@ const BookPreviewPage = () => {
 
 	// stores
 	const currentUser = useUserStore((state) => state.currentUser);
-	const setUser = useUserStore((state) => state.setUser);
-	const showToast = useToastStore((state) => state.showToast);
 
 	// hooks
-	const mutation = useUpdateUserBooks();
+	const { mutate: updateUserBookData, isPending } = useUpdateUserBooks();
 
 	if (!book) {
 		return <p className="text-red-500">No book data available.</p>;
@@ -50,27 +42,20 @@ const BookPreviewPage = () => {
 	const isInShelf = isBookInShelf(book.id, currentUser?.shelf ?? []);
 
 	const handleBorrow = () => {
-		const prevUser: User = { ...(currentUser as User) };
 		const borrowedBook = {
 			bookId: book.id,
 			borrowedDate: formatBorrowedDate(),
 		};
 
-		const updatedUser = {
+		const userToUpdate = {
 			...currentUser,
 			recentReadings: currentUser?.recentReadings?.includes(book.id)
 				? currentUser.recentReadings
 				: [...(currentUser?.recentReadings ?? []), book.id],
 			shelf: [...(currentUser?.shelf ?? []), borrowedBook],
 		} as User;
-		setUser(updatedUser);
 
-		mutation.mutate(updatedUser, {
-			onError: () => {
-				showToast(ERROR_MESSAGE.DEFAULT, "error");
-				setUser(prevUser);
-			},
-		});
+		updateUserBookData(userToUpdate);
 	};
 
 	const handleClickBackToResult = () => {
@@ -80,9 +65,10 @@ const BookPreviewPage = () => {
 
 	return (
 		<>
-			<BackToResultButton
+			<BackButton
 				onClick={handleClickBackToResult}
 				title="Back to results"
+				disabled={isPending}
 			/>
 			<div className="flex xl:flex-row flex-col justify-between xl:space-x-6">
 				<div className="flex md:flex-row flex-col justify-start mb-16">
@@ -155,8 +141,8 @@ const BookPreviewPage = () => {
 						</div>
 						<Button
 							className="mt-10"
-							variant={isInShelf ? "disabledPrimary" : "primary"}
-							disabled={isInShelf}
+							variant="primary"
+							disabled={isInShelf || isPending}
 							onClick={handleBorrow}
 						>
 							{isInShelf ? "Already in shelf" : "Borrow"}
