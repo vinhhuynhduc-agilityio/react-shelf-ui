@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 
 // hooks
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useCurrentUser } from "@/hooks";
 
 // constants
 import { ROUTE } from "@/constants";

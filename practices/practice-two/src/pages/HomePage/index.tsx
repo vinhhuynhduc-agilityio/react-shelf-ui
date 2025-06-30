@@ -1,5 +1,5 @@
 // hooks
-import { useFetchBooks } from "@/hooks/useFetchBooks";
+import { useFetchBooks } from "@/hooks";
 
 // stores
 import { useBookStore, useUserStore } from "@/stores";

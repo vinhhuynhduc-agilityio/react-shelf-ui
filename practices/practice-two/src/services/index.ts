@@ -1,3 +1,6 @@
 export * from "./apiRequest";
-export * from "./userAuth";
+export * from "./authService";
 export * from "./bookService";
+export * from "./userService";
+export * from "./shelfService";
+export * from "./favouriteService";

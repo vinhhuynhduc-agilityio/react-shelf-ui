@@ -26,7 +26,14 @@ import {
 import { useUserStore } from "@/stores";
 
 const App: React.FC = () => {
-	const queryClient = new QueryClient();
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				staleTime: 1000 * 60, // 1 minute
+			},
+		},
+	});
+
 	const currentUser = useUserStore((state) => state.currentUser);
 
 	return (

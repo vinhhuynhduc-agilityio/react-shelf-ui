@@ -10,7 +10,11 @@ export const ROUTE = {
 	SEARCH: "/search",
 };
 
-export const API_USERS = {
+export const API_ENDPOINTS = {
 	REGISTER: "/users",
 	LOGIN: "/users",
+	BOOKS: "/books",
+	SHELVES: "/shelves",
+	FAVOURITES: "/favourites",
+	RECENT_READINGS: "/recentReadings",
 };

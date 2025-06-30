@@ -1,14 +1,21 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 
+// stores
+import { useProcessingStore } from "@/stores";
+import { useUserStore } from "@/stores/userStore";
+
+// types
+import { User } from "@/types/user";
+
 // services
 import { updateUser } from "@/services";
 
-// types
-import { User } from "@/types";
-import { showDefaultErrorToast } from "@/helpers/errorManager";
+// helpers
+import { showDefaultErrorToast } from "@/helpers";
 
-// stores
-import { useProcessingStore, useUserStore } from "@/stores";
+export const useCurrentUser = (): User | null => {
+	return useUserStore((state) => state.currentUser);
+};
 
 export const useUpdateUserBooks = (): UseMutationResult<User, Error, User> => {
 	const setUser = useUserStore((state) => state.setUser);

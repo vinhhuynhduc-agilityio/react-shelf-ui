@@ -1,3 +1,3 @@
-export * from "./bookStateHelpers";
+export * from "./shelf";
 export * from "./dateFormatter";
 export * from "./errorManager";

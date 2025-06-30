@@ -1,19 +1,26 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 // hooks
-import { useFetchBooks, useHandleFavoriteClick } from "@/hooks";
+import {
+	useAddFavouriteItem,
+	useFetchBooks,
+	useGetFavourites,
+	useGetMyShelf,
+	useRemoveFavouriteItem,
+} from "@/hooks";
 
 // stores
 import {
 	useBookStore,
 	useFilterStore,
+	usePendingFavouritesStore,
 	useSearchStore,
 	useUserStore,
 } from "@/stores";
 
 // types
-import { Book } from "@/types";
+import { Book, FavouriteItem } from "@/types";
 
 // helpers
 import { isBookInShelf } from "@/helpers";
@@ -29,7 +36,6 @@ const SearchPage: React.FC = () => {
 
 	// hooks
 	const { isLoading, isError, error } = useFetchBooks();
-	const { handleFavoriteClick, isPending } = useHandleFavoriteClick();
 
 	// store
 	const books = useBookStore((state) => state.books);
@@ -37,7 +43,16 @@ const SearchPage: React.FC = () => {
 	const searchFromSidebar = useSearchStore((state) => state.searchFromSidebar);
 	const searchTerm = useSearchStore((state) => state.searchTerm);
 	const selectedFilter = useFilterStore((state) => state.selectedFilter);
-	const [processingBookId, setProcessingBookId] = useState<string | null>(null);
+	const pendingFavouritesActions = usePendingFavouritesStore(
+		(state) => state.pendingFavouritesActions
+	);
+
+	const { data: favourites } = useGetFavourites(currentUser?.id || "");
+	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
+	const { mutate: addFavourite } = useAddFavouriteItem(currentUser?.id || "");
+	const { mutate: removeFavourite } = useRemoveFavouriteItem(
+		currentUser?.id || ""
+	);
 
 	const filteredBooks = searchFromSidebar
 		? books
@@ -73,9 +88,28 @@ const SearchPage: React.FC = () => {
 			},
 		});
 
-	const handleFavoriteClickWrapper = (book: Book) => {
-		setProcessingBookId(book.id);
-		handleFavoriteClick(book);
+	const handleFavoriteClick = (
+		book: Book,
+		isFavorite: boolean,
+		favouriteId?: string
+	) => {
+		const favouriteItem = !isFavorite
+			? ({
+					id: uuidv4(),
+					bookId: book.id,
+					userId: currentUser?.id || "",
+			  } as FavouriteItem)
+			: ({
+					bookId: book.id,
+					id: favouriteId || "",
+					userId: currentUser?.id || "",
+			  } as FavouriteItem);
+
+		if (!isFavorite) {
+			addFavourite(favouriteItem);
+		} else {
+			removeFavourite(favouriteItem);
+		}
 	};
 
 	return (
@@ -91,18 +125,25 @@ const SearchPage: React.FC = () => {
 					</p>
 				) : (
 					filteredBooks.map((book) => {
-						const isInShelf = isBookInShelf(book.id, currentUser?.shelf ?? []);
-						const isFavorite =
-							currentUser?.favourites?.includes(book.id) ?? false;
-						const isDisabled = isPending && processingBookId === book.id;
+						const isInShelf = isBookInShelf(book.id, shelves ?? []);
+						const isFavorite = favourites?.some(
+							(fav: FavouriteItem) => fav.bookId === book.id
+						);
+						const favouriteId = favourites?.find(
+							(fav: FavouriteItem) => fav.bookId === book.id
+						)?.id;
+						const isDisabled = pendingFavouritesActions.includes(book.id);
+
 						return (
 							<BookRow
 								key={book.id}
 								book={book}
 								isInShelf={isInShelf}
-								isFavorite={isFavorite}
+								isFavorite={!!isFavorite}
 								onClickPreview={handleCLickPreview}
-								handleFavoriteClick={() => handleFavoriteClickWrapper(book)}
+								handleFavoriteClick={() =>
+									handleFavoriteClick(book, !!isFavorite, favouriteId)
+								}
 								disabled={isDisabled}
 							/>
 						);

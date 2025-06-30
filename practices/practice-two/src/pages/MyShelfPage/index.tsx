@@ -1,37 +1,43 @@
 import clsx from "clsx";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // hooks
-import { useFetchBooks, useUpdateUserBooks } from "@/hooks";
+import { useFetchBooks, useGetMyShelf, useRemoveShelfItem } from "@/hooks";
 
 // stores
-import { useBookStore, useUserStore } from "@/stores";
+import { useBookStore, usePendingShelfStore, useUserStore } from "@/stores";
 
 // components
 import { MyShelfBookCard } from "@/components";
 
+// constants
+import { ROUTE } from "@/constants";
+
 // helpers
-import { getBorrowedDate } from "./helpers";
+import { filterBooksByShelves } from "@/helpers";
+import { getBorrowedDate } from "@/pages/MyShelfPage/helpers";
 
 // types
 import { User } from "@/types";
-
-// constants
-import { ROUTE } from "@/constants";
 
 const MyShelfPage: React.FC = () => {
 	const navigate = useNavigate();
 	const { isLoading, isError, error } = useFetchBooks();
 
-	// state
-	const [processingBookId, setProcessingBookId] = useState<string | null>(null);
-
 	// store
 	const books = useBookStore((state) => state.books);
 	const currentUser = useUserStore((state) => state.currentUser);
+	const { pendingShelfActions } = usePendingShelfStore();
 
-	const { mutate: updateUserBookData, isPending } = useUpdateUserBooks();
+	const { data: myShelf } = useGetMyShelf(currentUser?.id || "");
+	const { mutate: removeShelfItem } = useRemoveShelfItem(currentUser?.id || "");
+
+	const handleReturnBook = async (bookId: string) => {
+		const shelfItem = (myShelf ?? []).find((item) => item.bookId === bookId);
+		if (!shelfItem) return;
+
+		removeShelfItem(shelfItem);
+	};
 
 	if (isLoading && books.length === 0) return <p>Loading books...</p>;
 	if (isError)
@@ -41,22 +47,7 @@ const MyShelfPage: React.FC = () => {
 	if (!books.length)
 		return <p className="text-gray-600">No books available.</p>;
 
-	const filteredBooks = books.filter((book) =>
-		currentUser?.shelf?.some((shelfBook) => shelfBook.bookId === book.id)
-	);
-
-	const handleReturnBook = async (bookId: string) => {
-		setProcessingBookId(bookId);
-
-		if (!currentUser) return;
-
-		const updatedShelf = currentUser.shelf.filter(
-			(shelfBook) => shelfBook.bookId !== bookId
-		);
-		const userToUpdate = { ...currentUser, shelf: updatedShelf } as User;
-
-		updateUserBookData(userToUpdate);
-	};
+	const borrowedBooks = filterBooksByShelves(books, myShelf ?? []);
 
 	return (
 		<div className="">
@@ -66,32 +57,28 @@ const MyShelfPage: React.FC = () => {
 			<div className="flex space-x-16 pb-2 mb-6">
 				<button
 					className={clsx(
-						"font-medium text-[#4D4D4D] sm:text-[20px] text-[18px]",
-						isPending && "cursor-not-allowed text-gray-400"
+						"font-medium text-[#4D4D4D] sm:text-[20px] text-[18px]"
 					)}
-					disabled={isPending}
 				>
 					All Books
 				</button>
 				<button
 					className={clsx(
-						"text-[#868686] hover:text-[#bfbebe] transition sm:text-[20px] text-[18px] font-medium",
-						isPending && "cursor-not-allowed text-gray-400"
+						"text-[#868686] hover:text-[#bfbebe] transition sm:text-[20px] text-[18px] font-medium"
 					)}
 					onClick={() => navigate(ROUTE.FAVOURITE)}
-					disabled={isPending}
 				>
 					Favourite
 				</button>
 			</div>
 			<div className="flex flex-wrap gap-10 justify-center">
-				{filteredBooks.length === 0 ? (
+				{borrowedBooks.length === 0 ? (
 					<p className="text-xl font-semibold text-red-400">
 						No books in your shelf.
 					</p>
 				) : (
-					filteredBooks.map((book) => {
-						const disabled = isPending && processingBookId === book.id;
+					borrowedBooks.map((book) => {
+						const disabled = pendingShelfActions.includes(book.id);
 
 						return (
 							<div key={book.id} className="">

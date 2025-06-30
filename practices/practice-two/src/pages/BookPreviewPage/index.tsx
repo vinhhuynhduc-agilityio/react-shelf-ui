@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 // constants
 import {
@@ -13,16 +14,16 @@ import {
 import { RatingStars, StatusBadge, Button, BackButton } from "@/components";
 
 // stores
-import { useUserStore } from "@/stores";
+import { usePendingShelfStore, useUserStore } from "@/stores";
 
 // helpers
 import { formatBorrowedDate, isBookInShelf } from "@/helpers";
 
 // hooks
-import { useUpdateUserBooks } from "@/hooks";
+import { useAddShelfItem, useGetMyShelf } from "@/hooks";
 
 // types
-import { User } from "@/types";
+import { ShelfItem } from "@/types";
 
 const BookPreviewPage = () => {
 	const location = useLocation();
@@ -31,31 +32,27 @@ const BookPreviewPage = () => {
 
 	// stores
 	const currentUser = useUserStore((state) => state.currentUser);
+	const { pendingShelfActions } = usePendingShelfStore();
 
-	// hooks
-	const { mutate: updateUserBookData, isPending } = useUpdateUserBooks();
+	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
+	const { mutate: addShelf } = useAddShelfItem(currentUser?.id || "");
 
 	if (!book) {
 		return <p className="text-red-500">No book data available.</p>;
 	}
 
-	const isInShelf = isBookInShelf(book.id, currentUser?.shelf ?? []);
+	const isPendingBorrowedBook = pendingShelfActions.includes(book.id);
+	const isInShelf = isBookInShelf(book.id, shelves ?? []);
 
 	const handleBorrow = () => {
 		const borrowedBook = {
 			bookId: book.id,
 			borrowedDate: formatBorrowedDate(),
-		};
+			userId: currentUser?.id || "",
+			id: uuidv4(),
+		} as ShelfItem;
 
-		const userToUpdate = {
-			...currentUser,
-			recentReadings: currentUser?.recentReadings?.includes(book.id)
-				? currentUser.recentReadings
-				: [...(currentUser?.recentReadings ?? []), book.id],
-			shelf: [...(currentUser?.shelf ?? []), borrowedBook],
-		} as User;
-
-		updateUserBookData(userToUpdate);
+		addShelf(borrowedBook);
 	};
 
 	const handleClickBackToResult = () => {
@@ -68,7 +65,7 @@ const BookPreviewPage = () => {
 			<BackButton
 				onClick={handleClickBackToResult}
 				title="Back to results"
-				disabled={isPending}
+				disabled={isPendingBorrowedBook}
 			/>
 			<div className="flex xl:flex-row flex-col justify-between xl:space-x-6">
 				<div className="flex md:flex-row flex-col justify-start mb-16">
@@ -142,7 +139,7 @@ const BookPreviewPage = () => {
 						<Button
 							className="mt-10"
 							variant="primary"
-							disabled={isInShelf || isPending}
+							disabled={isInShelf || isPendingBorrowedBook}
 							onClick={handleBorrow}
 						>
 							{isInShelf ? "Already in shelf" : "Borrow"}

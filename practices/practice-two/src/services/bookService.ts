@@ -1,26 +1,17 @@
-// services/bookService.ts
+// services
 import { apiRequest } from "@/services";
+
+// config
 import { API_BASE_URL } from "@/config";
-import { Book } from "@/types";
 
 // types
-import { User } from "@/types";
+import { Book } from "@/types";
 
-export const fetchBooks = async (): Promise<Book[]> => {
-  const url = `${API_BASE_URL}/books`;
+// constants
+import { API_ENDPOINTS } from "@/constants";
 
-  return apiRequest<null, Book[]>(
-    "GET",
-    url
-  );
-};
+export const getBooks = (): Promise<Book[]> => {
+	const url = `${API_BASE_URL}${API_ENDPOINTS.BOOKS}`;
 
-export const updateUser = async (user: User): Promise<User> => {
-  const url = `${API_BASE_URL}/users/${user.id}`;
-
-  return apiRequest(
-    "PUT",
-    url,
-    user
-  );
+	return apiRequest<null, Book[]>("GET", url);
 };
