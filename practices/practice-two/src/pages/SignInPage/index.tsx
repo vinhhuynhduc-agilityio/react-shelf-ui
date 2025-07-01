@@ -1,20 +1,18 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-
-// services
-import { fetchUserByEmail } from "@/services";
 
 // components
-import { TextField } from "@/components";
+import { AuthButton, TextField } from "@/components";
 
 // stores
 import { useUserStore } from "@/stores/userStore";
 
 // constants
-import { ERROR_MESSAGE, ROUTE } from "@/constants";
-import { useToastStore } from "@/stores";
+import { ROUTE } from "@/constants";
+
+// hooks
+import { useGetUser } from "@/hooks";
 
 interface LoginFormValues {
 	email: string;
@@ -22,13 +20,14 @@ interface LoginFormValues {
 }
 
 const SignInPage: React.FC = () => {
+	const navigate = useNavigate();
+
+	// State
 	const [showPassword, setShowPassword] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
-	const navigate = useNavigate();
-	const setUser = useUserStore((state) => state.setUser);
 
-	// stores
-	const showToast = useToastStore((state) => state.showToast);
+	// Store actions
+	const setUser = useUserStore((state) => state.setUser);
 
 	const {
 		register,
@@ -36,28 +35,21 @@ const SignInPage: React.FC = () => {
 		formState: { errors },
 	} = useForm<LoginFormValues>();
 
-	const { mutateAsync: fetchUser, isPending } = useMutation({
-		mutationFn: (email: string) => fetchUserByEmail(email),
-	});
+	const { mutateAsync: fetchUser, isPending } = useGetUser();
 
+	// Handle form submission
 	const onSubmit = async (data: LoginFormValues) => {
-		try {
-			const user = await fetchUser(data.email);
+		fetchUser(data.email, {
+			onSuccess: (user) => {
+				if (!user || user.password !== data.password) {
+					setErrorMessage("Invalid email or password");
+					return;
+				}
 
-			if (!user || user.password !== data.password) {
-				setErrorMessage("Invalid email or password");
-
-				return;
-			}
-
-			setUser(user);
-			navigate(ROUTE.HOME);
-		} catch (error: unknown) {
-			const err = error as { response?: { data?: { error?: string } } };
-			const message = err.response?.data?.error || ERROR_MESSAGE.DEFAULT;
-
-			showToast(message, "error");
-		}
+				setUser(user);
+				navigate(ROUTE.HOME);
+			},
+		});
 	};
 
 	return (
@@ -136,13 +128,12 @@ const SignInPage: React.FC = () => {
 							Forgot password?
 						</a>
 					</div>
-					<button
-						type="submit"
-						className="bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] mt-4"
+					<AuthButton
 						disabled={isPending}
-					>
-						{isPending ? "Checking..." : "Login"}
-					</button>
+						label="Login"
+						pendingLabel="Checking..."
+						className="mt-4"
+					/>
 				</form>
 				{/* Footer */}
 				<p className="text-center text-sm sm:text-base md:text-lg text-[#4D4D4D] mt-6">

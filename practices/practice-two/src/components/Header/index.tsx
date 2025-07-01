@@ -154,7 +154,7 @@ const Header: React.FC = () => {
 
 			{/* User Profile */}
 			<div
-				className="relative flex items-center bg-white border border-gray-300 rounded-full overflow-hidden h-[40px] px-2 w-auto sm:max-w-[150px] md:min-w-[150px]"
+				className="relative flex items-center justify-between bg-white border border-gray-300 rounded-full overflow-hidden h-[40px] px-2 w-auto sm:max-w-[150px] md:min-w-[150px]"
 				ref={profileButtonRef}
 			>
 				<Avatar

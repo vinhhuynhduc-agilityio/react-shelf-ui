@@ -30,9 +30,6 @@ export const registerUser = async (
 		...newUser,
 		id: uuidv4(),
 		avatarUrl: "",
-		shelf: [],
-		favourites: [],
-		recentReadings: [],
 	};
 
 	return apiRequest<typeof userWithDefaults, User>(

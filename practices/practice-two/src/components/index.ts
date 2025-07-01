@@ -17,3 +17,4 @@ export { default as BackButton } from "./BackButton";
 export { default as Avatar } from "./Avatar";
 export { default as PhoneNumberField } from "./PhoneNumberField";
 export { default as Toast } from "./Toast";
+export { default as AuthButton } from "./AuthButton";

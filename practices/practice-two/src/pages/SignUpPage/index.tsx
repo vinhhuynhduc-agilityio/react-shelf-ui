@@ -6,16 +6,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRegisterUser } from "@/hooks";
 
 // components
-import { TextField } from "@/components";
+import { AuthButton, TextField } from "@/components";
 
 // constants
-import { ROUTE, SUCCESS_MESSAGE } from "@/constants";
-
-// stores
-import { useToastStore } from "@/stores";
-
-// helpers
-import { showDefaultErrorToast } from "@/helpers";
+import { ROUTE } from "@/constants";
 
 interface RegisterFormValues {
 	fullName: string;
@@ -27,8 +21,8 @@ interface RegisterFormValues {
 
 const SignUpPage: React.FC = () => {
 	const navigate = useNavigate();
-	const { showToast } = useToastStore();
 
+	// State
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -40,22 +34,19 @@ const SignUpPage: React.FC = () => {
 	} = useForm<RegisterFormValues>();
 	const password = watch("password", "");
 
-	// React Query mutation for registration
-	const mutation = useRegisterUser();
+	// Custom hooks
+	const { mutate: registerUser, isPending } = useRegisterUser();
 
+	// Handle form submission
 	const onSubmit: SubmitHandler<RegisterFormValues> = (data) => {
-		mutation.mutate(
+		registerUser(
 			{
 				fullName: data.fullName,
 				email: data.email,
 				password: data.password,
 			},
 			{
-				onSuccess: () => {
-					showToast(SUCCESS_MESSAGE.REGISTRATION, "success");
-					navigate(ROUTE.LOGIN);
-				},
-				onError: () => showDefaultErrorToast(),
+				onSuccess: () => navigate(ROUTE.LOGIN),
 			}
 		);
 	};
@@ -175,15 +166,12 @@ const SignUpPage: React.FC = () => {
 					</div>
 
 					{/* Submit Button */}
-					<button
-						type="submit"
-						disabled={mutation.isPending}
-						className={`bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] mt-2 ${
-							mutation.isPending ? "opacity-50 cursor-not-allowed" : ""
-						}`}
-					>
-						{mutation.isPending ? "Registering..." : "Register"}
-					</button>
+					<AuthButton
+						disabled={isPending}
+						label="Register"
+						pendingLabel="Registering..."
+						className="mt-2"
+					/>
 				</form>
 
 				{/* Footer */}
