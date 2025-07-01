@@ -47,6 +47,7 @@ const SearchPage: React.FC = () => {
 		(state) => state.pendingFavouritesActions
 	);
 
+	// API hooks
 	const { data: favourites } = useGetFavourites(currentUser?.id || "");
 	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
 	const { mutate: addFavourite } = useAddFavouriteItem(currentUser?.id || "");
@@ -54,6 +55,7 @@ const SearchPage: React.FC = () => {
 		currentUser?.id || ""
 	);
 
+	// Filter books based on search term and selected filter
 	const filteredBooks = searchFromSidebar
 		? books
 		: books.filter((book) => {
@@ -72,14 +74,19 @@ const SearchPage: React.FC = () => {
 				);
 		  });
 
+	// If loading or error, show appropriate messages
 	if (isLoading && books.length === 0) return <p>Loading books...</p>;
+
 	if (isError)
 		return (
 			<p className="text-red-500">Error loading books: {error?.message}</p>
 		);
+
+	// If no books found, show message
 	if (!books.length)
 		return <p className="text-gray-600">No books available.</p>;
 
+	// Navigate to book preview page with book details and from route
 	const handleCLickPreview = (book: Book) =>
 		navigate(`${ROUTE.BOOK_PREVIEW}/${book.id}`, {
 			state: {
@@ -88,6 +95,7 @@ const SearchPage: React.FC = () => {
 			},
 		});
 
+	// Handle favorite click to add/remove from favourites
 	const handleFavoriteClick = (
 		book: Book,
 		isFavorite: boolean,

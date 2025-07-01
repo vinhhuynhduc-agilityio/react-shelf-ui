@@ -22,6 +22,8 @@ import { User } from "@/types";
 
 const MyShelfPage: React.FC = () => {
 	const navigate = useNavigate();
+
+	// Fetch books from the API
 	const { isLoading, isError, error } = useFetchBooks();
 
 	// store
@@ -29,6 +31,7 @@ const MyShelfPage: React.FC = () => {
 	const currentUser = useUserStore((state) => state.currentUser);
 	const { pendingShelfActions } = usePendingShelfStore();
 
+	// API hooks
 	const { data: myShelf } = useGetMyShelf(currentUser?.id || "");
 	const { mutate: removeShelfItem } = useRemoveShelfItem(currentUser?.id || "");
 
@@ -39,15 +42,19 @@ const MyShelfPage: React.FC = () => {
 		removeShelfItem(shelfItem);
 	};
 
+	// Filter books by user's shelf
+	const borrowedBooks = filterBooksByShelves(books, myShelf ?? []);
+
+	// If loading or error, show appropriate messages
 	if (isLoading && books.length === 0) return <p>Loading books...</p>;
 	if (isError)
 		return (
 			<p className="text-red-500">Error loading books: {error?.message}</p>
 		);
+
+	// If no books found, show message
 	if (!books.length)
 		return <p className="text-gray-600">No books available.</p>;
-
-	const borrowedBooks = filterBooksByShelves(books, myShelf ?? []);
 
 	return (
 		<div className="">

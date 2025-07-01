@@ -1,5 +1,5 @@
 // hooks
-import { useFetchBooks } from "@/hooks";
+import { useFetchBooks, useGetMyShelf } from "@/hooks";
 
 // stores
 import { useBookStore, useUserStore } from "@/stores";
@@ -10,11 +10,19 @@ import { BookHomeList, TodayQuote } from "@/components";
 // types
 import { Book } from "@/types/books";
 
+// helpers
+import { filterBooksByShelves } from "@/helpers";
+
 const HomePage: React.FC = () => {
+	// Fetch books from the API
 	const { isLoading, isError, error } = useFetchBooks();
 
+	// store
 	const books = useBookStore((state) => state.books);
 	const currentUser = useUserStore((state) => state.currentUser);
+
+	// API hooks
+	const { data: myShelf } = useGetMyShelf(currentUser?.id || "");
 
 	if (isLoading && books.length === 0) {
 		return <p>Loading books...</p>;
@@ -31,9 +39,9 @@ const HomePage: React.FC = () => {
 	}
 
 	const recommendedBooks = books.slice(0, 8);
-	const recentReadings: Book[] = books
-		.filter((book) => currentUser?.recentReadings?.includes(book.id))
-		.slice(0, 8);
+
+	// Simulated recent readings display; no update feature yet.
+	const recentReadings: Book[] = filterBooksByShelves(books, myShelf ?? []);
 
 	return (
 		<div>
