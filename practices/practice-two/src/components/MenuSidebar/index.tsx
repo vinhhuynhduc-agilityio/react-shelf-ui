@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 // constants
 import { menuItems, ROUTE } from "@/constants";
@@ -7,6 +8,8 @@ import { menuItems, ROUTE } from "@/constants";
 import { useSearchStore } from "@/stores";
 
 const MenuSidebar = () => {
+	const location = useLocation();
+
 	// stores
 	const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
 	const setSearchFromSidebar = useSearchStore(
@@ -39,19 +42,31 @@ const MenuSidebar = () => {
 
 			{/* Menu Items */}
 			<nav className="flex flex-col gap-3 lg:gap-2">
-				{menuItems.map((item) => (
-					<Link
-						key={item.key}
-						to={item.path}
-						className="flex w-full items-center justify-center lg:justify-start text-gray-700 hover:text-black px-2 py-2 lg:py-3 rounded-lg hover:bg-gray-200 transition"
-						onClick={() => handleMenuItemClick(item.key)}
-					>
-						{item.icon}
-						<span className="text-base font-medium hidden lg:block ml-2">
-							{item.label}
-						</span>
-					</Link>
-				))}
+				{menuItems.map((item) => {
+					const isActive = location.pathname === item.path;
+					const iconColor = isActive ? "#4D4D4D" : "#8A8A8A";
+
+					return (
+						<Link
+							key={item.key}
+							to={item.path}
+							className={`flex w-full items-center justify-center lg:justify-start px-2 py-2 lg:py-3 rounded-lg transition
+                    ${isActive ? "text-[#4D4D4D]" : "text-[#8A8A8A]"}
+                    hover:text-black hover:bg-gray-200
+                `}
+							onClick={() => handleMenuItemClick(item.key)}
+						>
+							<span className="flex-shrink-0">
+								{typeof item.icon === "function"
+									? item.icon({ fill: iconColor })
+									: null}
+							</span>
+							<span className="text-base font-medium hidden lg:block ml-2">
+								{item.label}
+							</span>
+						</Link>
+					);
+				})}
 			</nav>
 		</aside>
 	);
