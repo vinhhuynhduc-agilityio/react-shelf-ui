@@ -24,6 +24,7 @@ const HomePage: React.FC = () => {
 	// API hooks
 	const { data: myShelf } = useGetMyShelf(currentUser?.id || "");
 
+	// If loading or error, show appropriate messages
 	if (isLoading && books.length === 0) {
 		return <p>Loading books...</p>;
 	}
@@ -34,6 +35,7 @@ const HomePage: React.FC = () => {
 		);
 	}
 
+	// If no books are available, show a message
 	if (!books.length) {
 		return <p className="text-gray-600">No books available.</p>;
 	}

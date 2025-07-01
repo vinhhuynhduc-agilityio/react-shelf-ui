@@ -12,7 +12,7 @@ import { useUpdateUserBooks } from "@/hooks";
 import { cancelIcon, DEFAULT_AVATAR, editIcon } from "@/constants";
 
 // helpers
-import { readFileAsBase64 } from "./helpers";
+import { readFileAsBase64 } from "@/helpers";
 
 // types
 import { AccountFormValues, User } from "@/types";

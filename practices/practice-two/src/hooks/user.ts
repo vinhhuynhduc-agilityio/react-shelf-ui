@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 
 // stores
-import { useProcessingStore, useToastStore, useUserStore } from "@/stores";
+import { useToastStore, useUserStore } from "@/stores";
 
 // types
 import { User } from "@/types/user";
@@ -34,7 +34,6 @@ export const useCurrentUser = (): User | null => {
 
 export const useUpdateUserBooks = (): UseMutationResult<User, Error, User> => {
 	const setUser = useUserStore((state) => state.setUser);
-	const setProcessing = useProcessingStore((state) => state.setProcessing);
 
 	return useMutation({
 		mutationFn: updateUser,
@@ -42,8 +41,5 @@ export const useUpdateUserBooks = (): UseMutationResult<User, Error, User> => {
 			setUser(userToUpdate);
 		},
 		onError: () => showDefaultErrorToast(),
-		onSettled: () => {
-			setProcessing(false);
-		},
 	});
 };
