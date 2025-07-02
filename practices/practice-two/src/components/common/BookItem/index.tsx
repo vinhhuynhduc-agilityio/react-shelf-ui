@@ -1,10 +1,11 @@
+import { memo } from "react";
 import { Book } from "@/types";
 
 interface BookItemProps {
 	book: Book;
 }
 
-const BookItem: React.FC<BookItemProps> = ({ book }) => {
+const BookItem: React.FC<BookItemProps> = memo(({ book }) => {
 	const { title, author, publishedYear, rating, imageUrl } = book;
 
 	return (
@@ -26,6 +27,6 @@ const BookItem: React.FC<BookItemProps> = ({ book }) => {
 			</p>
 		</div>
 	);
-};
+});
 
 export default BookItem;

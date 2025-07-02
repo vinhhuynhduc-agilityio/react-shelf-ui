@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
@@ -74,27 +75,17 @@ const SearchPage: React.FC = () => {
 				);
 		  });
 
-	// If loading or error, show appropriate messages
-	if (isLoading && books.length === 0) return <p>Loading books...</p>;
-
-	if (isError)
-		return (
-			<p className="text-red-500">Error loading books: {error?.message}</p>
-		);
-
-	// If no books found, show message
-	if (!books.length)
-		return <p className="text-gray-600">No books available.</p>;
-
 	// Navigate to book preview page with book details and from route
-	const handleCLickPreview = (book: Book) =>
-		navigate(`${ROUTE.BOOK_PREVIEW}/${book.id}`, {
-			state: {
-				book,
-				from: ROUTE.SEARCH,
-			},
-		});
-
+	const handleCLickPreview = useCallback(
+		(book: Book) =>
+			navigate(`${ROUTE.BOOK_PREVIEW}/${book.id}`, {
+				state: {
+					book,
+					from: ROUTE.SEARCH,
+				},
+			}),
+		[navigate]
+	);
 	// Handle favorite click to add/remove from favourites
 	const handleFavoriteClick = (
 		book: Book,
@@ -119,6 +110,18 @@ const SearchPage: React.FC = () => {
 			removeFavourite(favouriteItem);
 		}
 	};
+
+	// If loading or error, show appropriate messages
+	if (isLoading && books.length === 0) return <p>Loading books...</p>;
+
+	if (isError)
+		return (
+			<p className="text-red-500">Error loading books: {error?.message}</p>
+		);
+
+	// If no books found, show message
+	if (!books.length)
+		return <p className="text-gray-600">No books available.</p>;
 
 	return (
 		<div className="overflow-x-auto text-[#4D4D4D]">

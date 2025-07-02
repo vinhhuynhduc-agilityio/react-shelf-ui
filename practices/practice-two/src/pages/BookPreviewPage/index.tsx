@@ -11,7 +11,14 @@ import {
 } from "@/constants";
 
 // components
-import { RatingStars, StatusBadge, Button, BackButton } from "@/components";
+import {
+	RatingStars,
+	StatusBadge,
+	Button,
+	BackButton,
+	AuthorCard,
+	ActionIcon,
+} from "@/components";
 
 // stores
 import { usePendingShelfStore, useUserStore } from "@/stores";
@@ -21,9 +28,6 @@ import { formatBorrowedDate, isBookInShelf } from "@/helpers";
 
 // hooks
 import { useAddShelfItem, useGetMyShelf } from "@/hooks";
-
-// types
-import { ShelfItem } from "@/types";
 
 const BookPreviewPage = () => {
 	const location = useLocation();
@@ -37,20 +41,19 @@ const BookPreviewPage = () => {
 	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
 	const { mutate: addShelf } = useAddShelfItem(currentUser?.id || "");
 
-	if (!book) {
-		return <p className="text-red-500">No book data available.</p>;
-	}
-
 	const isPendingBorrowedBook = pendingShelfActions.includes(book.id);
 	const isInShelf = isBookInShelf(book.id, shelves ?? []);
 
+	if (!book) {
+		return <p className="text-red-500">No book data available.</p>;
+	}
 	const handleBorrow = () => {
 		const borrowedBook = {
 			bookId: book.id,
 			borrowedDate: formatBorrowedDate(),
 			userId: currentUser?.id || "",
 			id: uuidv4(),
-		} as ShelfItem;
+		};
 
 		addShelf(borrowedBook);
 	};
@@ -77,24 +80,9 @@ const BookPreviewPage = () => {
 							className="sm:w-[190px] sm:h-[280px] md:w-[209px] md:h-[277px] w-[170px] h-[260px] object-cover rounded-md shadow-lg mt-6"
 						/>
 						<div className="flex items-center space-x-6 mt-4">
-							<div className="flex flex-col items-center justify-center cursor-pointer space-y-2 hover:bg-gray-100 p-2 rounded-lg transition-all">
-								<div>{reviewIcon}</div>
-								<div className="text-center md:text-[13px] font-bold text-[#333333] sm:text-[11px] text-[10px]">
-									Review
-								</div>
-							</div>
-							<div className="flex flex-col items-center justify-center cursor-pointer space-y-2 hover:bg-gray-100 p-2 rounded-lg transition-all">
-								<div>{notesIcon}</div>
-								<div className="text-center md:text-[13px] font-bold text-[#333333] sm:text-[11px] text-[10px]">
-									Notes
-								</div>
-							</div>
-							<div className="flex flex-col items-center justify-center cursor-pointer space-y-2 hover:bg-gray-100 p-2 rounded-lg transition-all">
-								<div>{shareIcon}</div>
-								<div className="text-center md:text-[13px] font-bold text-[#333333] sm:text-[11px] text-[10px]">
-									Share
-								</div>
-							</div>
+							<ActionIcon icon={reviewIcon} label="Review" />
+							<ActionIcon icon={notesIcon} label="Notes" />
+							<ActionIcon icon={shareIcon} label="Share" />
 						</div>
 					</div>
 					{/* Column 2 */}
@@ -147,15 +135,7 @@ const BookPreviewPage = () => {
 					</div>
 				</div>
 				{/* Column 3 */}
-				<div className="xl:w-[445px] xl:h-[418px] bg-white p-6 rounded-[10px]">
-					<h3 className="text-[20px] font-semibold text-[#4D4D4D] mb-3">
-						<span className="text-[#F27851]">About</span> Author
-					</h3>
-					<h4 className="text-[20px] text-[#4D4D4D] mb-8">
-						{book.author.name}
-					</h4>
-					<p className="text-[13px] text-[#4D4D4D]">{book.author.bio}</p>
-				</div>
+				<AuthorCard name={book.author.name} bio={book.author.bio} />
 			</div>
 		</>
 	);

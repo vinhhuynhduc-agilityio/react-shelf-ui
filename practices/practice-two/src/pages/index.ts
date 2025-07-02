@@ -6,3 +6,4 @@ export { default as MyShelfPage } from "./MyShelfPage";
 export { default as BookPreviewPage } from "./BookPreviewPage";
 export { default as SignUpPage } from "./SignUpPage";
 export { default as SignInPage } from "./SignInPage";
+export { default as NotFoundPage } from "./NotFoundPage";

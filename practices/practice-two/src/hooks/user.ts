@@ -32,7 +32,7 @@ export const useCurrentUser = (): User | null => {
 	return useUserStore((state) => state.currentUser);
 };
 
-export const useUpdateUserBooks = (): UseMutationResult<User, Error, User> => {
+export const useUpdateUser = (): UseMutationResult<User, Error, User> => {
 	const setUser = useUserStore((state) => state.setUser);
 
 	return useMutation({

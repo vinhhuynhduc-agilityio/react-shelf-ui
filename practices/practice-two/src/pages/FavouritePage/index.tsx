@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 // stores
@@ -52,6 +53,35 @@ const FavouritePage: React.FC = () => {
 		return favourites?.some((favourite) => favourite.bookId === book.id);
 	});
 
+	// Navigate to book preview page with book details and from route
+	const handleCLickPreview = useCallback(
+		(book: Book) =>
+			navigate(`${ROUTE.BOOK_PREVIEW}/${book.id}`, {
+				state: {
+					book,
+					from: ROUTE.FAVOURITE,
+				},
+			}),
+		[navigate]
+	);
+
+	// Handle back navigation
+	const handleClickBack = () => navigate(ROUTE.MY_SHELF);
+
+	// Handle favorite click to remove from favourites
+	const handleFavoriteClick = useCallback(
+		(book: Book, favouriteId?: string) => {
+			const removeItem = {
+				bookId: book.id,
+				id: favouriteId || "",
+				userId: currentUser?.id || "",
+			};
+
+			removeFavourite(removeItem);
+		},
+		[currentUser, removeFavourite]
+	);
+
 	// If loading or error, show appropriate messages
 	if (isLoading && books.length === 0) return <p>Loading books...</p>;
 
@@ -63,29 +93,6 @@ const FavouritePage: React.FC = () => {
 	// If no books in favourites, show message
 	if (!filteredBooks.length)
 		return <p className="text-gray-600">No books in your favourites.</p>;
-
-	// Navigate to book preview page with book details and from route
-	const handleCLickPreview = (book: Book) =>
-		navigate(`${ROUTE.BOOK_PREVIEW}/${book.id}`, {
-			state: {
-				book,
-				from: ROUTE.FAVOURITE,
-			},
-		});
-
-	// Handle back navigation
-	const handleClickBack = () => navigate(ROUTE.MY_SHELF);
-
-	// Handle favorite click to remove from favourites
-	const handleFavoriteClick = (book: Book, favouriteId?: string) => {
-		const removeItem = {
-			bookId: book.id,
-			id: favouriteId || "",
-			userId: currentUser?.id || "",
-		} as FavouriteItem;
-
-		removeFavourite(removeItem);
-	};
 
 	return (
 		<>

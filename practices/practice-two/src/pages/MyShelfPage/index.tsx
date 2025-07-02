@@ -15,10 +15,9 @@ import { ROUTE } from "@/constants";
 
 // helpers
 import { filterBooksByShelves } from "@/helpers";
-import { getBorrowedDate } from "@/pages/MyShelfPage/helpers";
 
 // types
-import { User } from "@/types";
+import { ShelfItem } from "@/types";
 
 const MyShelfPage: React.FC = () => {
 	const navigate = useNavigate();
@@ -35,13 +34,9 @@ const MyShelfPage: React.FC = () => {
 	const { data: myShelf } = useGetMyShelf(currentUser?.id || "");
 	const { mutate: removeShelfItem } = useRemoveShelfItem(currentUser?.id || "");
 
-	const handleReturnBook = async (bookId: string) => {
-		const shelfItem = (myShelf ?? []).find((item) => item.bookId === bookId);
-		if (!shelfItem) return;
-
+	const handleReturnBook = (shelfItem: ShelfItem) => {
 		removeShelfItem(shelfItem);
 	};
-
 	// Filter books by user's shelf
 	const borrowedBooks = filterBooksByShelves(books, myShelf ?? []);
 
@@ -86,13 +81,16 @@ const MyShelfPage: React.FC = () => {
 				) : (
 					borrowedBooks.map((book) => {
 						const disabled = pendingShelfActions.includes(book.id);
+						const shelfItem = (myShelf ?? []).find(
+							(item) => item.bookId === book.id
+						);
 
 						return (
 							<div key={book.id} className="">
 								<MyShelfBookCard
 									book={book}
-									borrowedDate={getBorrowedDate(book.id, currentUser as User)}
-									onReturn={handleReturnBook}
+									borrowedDate={shelfItem?.borrowedDate ?? ""}
+									onReturn={() => shelfItem && handleReturnBook(shelfItem)}
 									disabled={disabled}
 								/>
 							</div>

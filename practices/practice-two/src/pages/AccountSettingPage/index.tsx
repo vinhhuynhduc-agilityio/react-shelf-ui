@@ -6,7 +6,7 @@ import { useForm, SubmitHandler, FieldErrors } from "react-hook-form";
 import { Avatar, Button, PhoneNumberField, TextField } from "@/components";
 
 // hooks
-import { useUpdateUserBooks } from "@/hooks";
+import { useUpdateUser } from "@/hooks";
 
 // constants
 import { cancelIcon, DEFAULT_AVATAR, editIcon } from "@/constants";
@@ -38,7 +38,7 @@ const AccountSettingPage: React.FC = () => {
 		defaultValues: currentUser || ({} as AccountFormValues),
 	});
 
-	const { mutate: updateUserBookData, isPending } = useUpdateUserBooks();
+	const { mutate: updateUserBookData, isPending } = useUpdateUser();
 
 	const onSubmit: SubmitHandler<AccountFormValues> = (data) => {
 		if (!currentUser) {

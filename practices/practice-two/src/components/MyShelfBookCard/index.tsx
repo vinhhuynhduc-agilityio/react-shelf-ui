@@ -11,12 +11,12 @@ interface BookCardProps {
 	disabled?: boolean;
 }
 
-const MyShelfBookCard: React.FC<BookCardProps> = ({
+const MyShelfBookCard = ({
 	book,
 	borrowedDate,
 	onReturn,
 	disabled = false,
-}) => {
+}: BookCardProps) => {
 	return (
 		<div className="flex items-center bg-white rounded-lg shadow-md p-4 w-[308px] h-[260px]">
 			<div className="w-3/5">

@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 // constants
@@ -8,7 +7,7 @@ import { menuItems, ROUTE } from "@/constants";
 import { useSearchStore } from "@/stores";
 
 const MenuSidebar = () => {
-	const location = useLocation();
+	const { pathname } = useLocation();
 
 	// stores
 	const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
@@ -43,7 +42,7 @@ const MenuSidebar = () => {
 			{/* Menu Items */}
 			<nav className="flex flex-col gap-3 lg:gap-2">
 				{menuItems.map((item) => {
-					const isActive = location.pathname === item.path;
+					const isActive = pathname === item.path;
 					const iconColor = isActive ? "#4D4D4D" : "#8A8A8A";
 
 					return (
