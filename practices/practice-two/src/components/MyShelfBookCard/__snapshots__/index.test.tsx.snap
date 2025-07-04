@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`MyShelfBookCard matches snapshot 1`] = `
+<div>
+  <div
+    class="flex items-center bg-white rounded-lg shadow-md p-4 w-[308px] h-[260px]"
+  >
+    <div
+      class="w-3/5"
+    >
+      <div
+        class="w-full bg-white p-3 rounded-lg shadow-sm h-[260px]"
+      >
+        <img
+          alt="Test Book"
+          class="w-[123px] h-[170px] object-cover rounded-lg"
+          src="img.jpg"
+        />
+        <h3
+          class="text-sm sm:text-base font-medium mt-2 truncate text-[#4D4D4D]"
+        >
+          Test Book
+        </h3>
+        <p
+          class="text-xs sm:text-sm text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden"
+        >
+          Author
+          , 
+          2020
+        </p>
+        <p
+          class="text-[12px] sm:text-[14px] text-[#4D4D4D]"
+        >
+          4
+          <span
+            class="text-[#A7A7A7]"
+          >
+            /5
+          </span>
+        </p>
+      </div>
+    </div>
+    <div
+      class="w-2/5 flex flex-col justify-between items-center h-full ml-2"
+    >
+      <div
+        class="flex flex-col items-center"
+      >
+        <p
+          class="md:text-[15px] text-[13px] text-[#4D4D4D]"
+        >
+          Borrowed on
+        </p>
+        <p
+          class="text-[10px] font-semibold text-[#747373]"
+        >
+          2025-07-04
+        </p>
+      </div>
+      <button
+        class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all font-normal w-[70px] h-[25px] border border-[#F76B56] text-[#F76B56] text-[12px] rounded-[5px] hover:bg-orange-100 md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px]  md:text-[14px]"
+        type="button"
+      >
+        Return
+      </button>
+    </div>
+  </div>
+</div>
+`;

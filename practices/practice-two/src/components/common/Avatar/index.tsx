@@ -22,6 +22,7 @@ const Avatar: React.FC<AvatarProps> = memo(
 
 		return (
 			<div
+				data-testid="avatar"
 				className={`${sizeClass} rounded-full overflow-hidden flex-shrink-0 border border-gray-300 ${className}`}
 			>
 				<img

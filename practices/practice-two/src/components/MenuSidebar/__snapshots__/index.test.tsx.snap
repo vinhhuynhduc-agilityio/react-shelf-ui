@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`MenuSidebar matches snapshot 1`] = `
+<div>
+  <aside
+    class="bg-[#F5F5F5] w-16 lg:min-w-[12rem] d:max-w-[12rem] px-2 lg:px-6 pt-12 lg:pt-24 flex flex-col shadow-lg"
+  >
+    <div
+      class="flex justify-center mb-16"
+    >
+      <a
+        data-discover="true"
+        href="/"
+      >
+        <img
+          alt="Book Shelf Logo"
+          class="w-[80px] lg:w-[120px] h-auto"
+          src="https://i.ibb.co/0Yx3BN3/Book-Shelf.png"
+        />
+      </a>
+    </div>
+    <nav
+      class="flex flex-col gap-3 lg:gap-2"
+    >
+      <a
+        class="flex w-full items-center justify-center lg:justify-start px-2 py-2 lg:py-3 rounded-lg transition
+                    text-[#4D4D4D]
+                    hover:text-black hover:bg-gray-200
+                "
+        data-discover="true"
+        href="/"
+      >
+        <span
+          class="flex-shrink-0"
+        />
+        <span
+          class="text-base font-medium hidden lg:block ml-2"
+        >
+          Home
+        </span>
+      </a>
+      <a
+        class="flex w-full items-center justify-center lg:justify-start px-2 py-2 lg:py-3 rounded-lg transition
+                    text-[#8A8A8A]
+                    hover:text-black hover:bg-gray-200
+                "
+        data-discover="true"
+        href="/search"
+      >
+        <span
+          class="flex-shrink-0"
+        />
+        <span
+          class="text-base font-medium hidden lg:block ml-2"
+        >
+          Search
+        </span>
+      </a>
+    </nav>
+  </aside>
+</div>
+`;

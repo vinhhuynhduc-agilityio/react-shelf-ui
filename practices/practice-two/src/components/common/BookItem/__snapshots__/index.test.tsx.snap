@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`BookItem matches snapshot 1`] = `
+<div>
+  <div
+    class="w-full bg-white p-3 rounded-lg shadow-sm h-[260px]"
+  >
+    <img
+      alt="Don't Make Me Think"
+      class="w-[123px] h-[170px] object-cover rounded-lg"
+      src="https://i.postimg.cc/qvgQxTNW/4aa430788b3938ca7d778a99fe0ff1587c81c67e.jpg"
+    />
+    <h3
+      class="text-sm sm:text-base font-medium mt-2 truncate text-[#4D4D4D]"
+    >
+      Don't Make Me Think
+    </h3>
+    <p
+      class="text-xs sm:text-sm text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden"
+    >
+      Steve Krug
+      , 
+      2000
+    </p>
+    <p
+      class="text-[12px] sm:text-[14px] text-[#4D4D4D]"
+    >
+      4.5
+      <span
+        class="text-[#A7A7A7]"
+      >
+        /5
+      </span>
+    </p>
+  </div>
+</div>
+`;

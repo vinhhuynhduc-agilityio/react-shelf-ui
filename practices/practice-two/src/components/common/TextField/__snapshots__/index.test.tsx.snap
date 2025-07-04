@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TextField matches snapshot 1`] = `
+<div>
+  <form>
+    <div
+      class="flex [object Object]"
+    >
+      <label
+        class="w-30 text-gray-700 font-semibold text-base md:text-lg"
+        for="username"
+      >
+        Username
+      </label>
+      <div
+        class="relative"
+      >
+        <input
+          class="flex-1 p-2 border rounded-md text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px]"
+          id="username"
+          maxlength="255"
+          name="username"
+          placeholder="Enter username"
+          type="text"
+        />
+      </div>
+    </div>
+  </form>
+</div>
+`;
