@@ -32,6 +32,7 @@ const PhoneNumberField = <T extends FieldValues>({
         <span className="text-[#4C535F] pl-2">+</span>
         <input
           id="countryCode"
+          data-testid="country-code-input"
           type="text"
           disabled={!isEditing}
           maxLength={2}
@@ -49,6 +50,7 @@ const PhoneNumberField = <T extends FieldValues>({
         <span className="border-r border-gray-300 h-5"></span>
         <input
           id="phoneNumber"
+          data-testid="phone-number-input"
           type="text"
           disabled={!isEditing}
           maxLength={7}

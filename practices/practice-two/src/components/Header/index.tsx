@@ -94,10 +94,11 @@ const Header: React.FC = () => {
 				className="relative flex items-center bg-white border border-gray-300 rounded-full h-[40px] w-full max-w-[280px] sm:max-w-[300px] md:max-w-[450px] overflow-hidden"
 				ref={filterButtonRef}
 			>
-				<button
-					onClick={() => setFilterMenuOpen(!isFilterMenuOpen)}
-					className="px-2 py-2 bg-[#F5F5F5] text-black border-r flex items-center gap-2 flex-shrink-0"
-				>
+			   <button
+				   data-testid="filter-btn"
+				   onClick={() => setFilterMenuOpen(!isFilterMenuOpen)}
+				   className="px-2 py-2 bg-[#F5F5F5] text-black border-r flex items-center gap-2 flex-shrink-0"
+			   >
 					{selectedFilter}
 					<svg
 						width="13"
@@ -162,10 +163,11 @@ const Header: React.FC = () => {
 					size="small"
 					className="ml-[-5px]"
 				/>
-				<button
-					onClick={() => setProfileMenuOpen(!isProfileMenuOpen)}
-					className="flex items-center gap-1 px-2 max-w-[90px] sm:max-w-[120px] md:max-w-[120px] truncate overflow-hidden"
-				>
+			   <button
+				   data-testid="profile-btn"
+				   onClick={() => setProfileMenuOpen(!isProfileMenuOpen)}
+				   className="flex items-center gap-1 px-2 max-w-[90px] sm:max-w-[120px] md:max-w-[120px] truncate overflow-hidden"
+			   >
 					<span className="hidden sm:block truncate">
 						{currentUser?.fullName || "Guest"}
 					</span>

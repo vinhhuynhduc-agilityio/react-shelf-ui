@@ -38,15 +38,13 @@ const BookPreviewPage = () => {
 	const currentUser = useUserStore((state) => state.currentUser);
 	const { pendingShelfActions } = usePendingShelfStore();
 
+	// hooks
 	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
 	const { mutate: addShelf } = useAddShelfItem(currentUser?.id || "");
 
-	const isPendingBorrowedBook = pendingShelfActions.includes(book.id);
-	const isInShelf = isBookInShelf(book.id, shelves ?? []);
+	const isPendingBorrowedBook = pendingShelfActions.includes(book?.id) || false;
+	const isInShelf = isBookInShelf(book?.id, shelves ?? []);
 
-	if (!book) {
-		return <p className="text-red-500">No book data available.</p>;
-	}
 	const handleBorrow = () => {
 		const borrowedBook = {
 			bookId: book.id,
@@ -62,6 +60,10 @@ const BookPreviewPage = () => {
 		const from = location.state?.from || ROUTE.SEARCH;
 		navigate(from);
 	};
+
+	if (!book) {
+		return <p className="text-red-500">No book data available.</p>;
+	}
 
 	return (
 		<>

@@ -1,89 +1,5 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`PhoneNumberField calls validation and shows error for invalid country code (not 2 digits) 1`] = `
-<div>
-  <div
-    class="flex flex-col gap-[6px] md:gap-[8px] flex-1"
-  >
-    <label
-      class="text-gray-700 font-semibold text-base md:text-lg"
-      for="countryCode"
-    >
-      Phone Number
-    </label>
-    <div
-      class="flex items-center border border-gray-300 rounded-md w-full"
-    >
-      <span
-        class="text-[#4C535F] pl-2"
-      >
-        +
-      </span>
-      <input
-        class="bg-transparent text-[#4C535F] text-sm sm:text-base md:text-lg w-6 pr-1 text-center outline-none"
-        id="countryCode"
-        maxlength="2"
-        name="countryCode"
-        type="text"
-      />
-      <span
-        class="border-r border-gray-300 h-5"
-      />
-      <input
-        class="flex-1 p-2 text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px]"
-        id="phoneNumber"
-        maxlength="7"
-        name="phoneNumber"
-        placeholder="Your Phone Number"
-        type="text"
-      />
-    </div>
-  </div>
-</div>
-`;
-
-exports[`PhoneNumberField calls validation and shows error for invalid phone number (not 7 digits) 1`] = `
-<div>
-  <div
-    class="flex flex-col gap-[6px] md:gap-[8px] flex-1"
-  >
-    <label
-      class="text-gray-700 font-semibold text-base md:text-lg"
-      for="countryCode"
-    >
-      Phone Number
-    </label>
-    <div
-      class="flex items-center border border-gray-300 rounded-md w-full"
-    >
-      <span
-        class="text-[#4C535F] pl-2"
-      >
-        +
-      </span>
-      <input
-        class="bg-transparent text-[#4C535F] text-sm sm:text-base md:text-lg w-6 pr-1 text-center outline-none"
-        id="countryCode"
-        maxlength="2"
-        name="countryCode"
-        type="text"
-      />
-      <span
-        class="border-r border-gray-300 h-5"
-      />
-      <input
-        class="flex-1 p-2 text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px]"
-        id="phoneNumber"
-        maxlength="7"
-        name="phoneNumber"
-        placeholder="Your Phone Number"
-        type="text"
-      />
-    </div>
-  </div>
-</div>
-`;
-
 exports[`PhoneNumberField matches snapshot (editing) 1`] = `
 <div>
   <div
@@ -105,6 +21,7 @@ exports[`PhoneNumberField matches snapshot (editing) 1`] = `
       </span>
       <input
         class="bg-transparent text-[#4C535F] text-sm sm:text-base md:text-lg w-6 pr-1 text-center outline-none"
+        data-testid="country-code-input"
         id="countryCode"
         maxlength="2"
         name="countryCode"
@@ -115,6 +32,7 @@ exports[`PhoneNumberField matches snapshot (editing) 1`] = `
       />
       <input
         class="flex-1 p-2 text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px]"
+        data-testid="phone-number-input"
         id="phoneNumber"
         maxlength="7"
         name="phoneNumber"
@@ -147,6 +65,7 @@ exports[`PhoneNumberField matches snapshot (not editing) 1`] = `
       </span>
       <input
         class="bg-transparent text-[#4C535F] text-sm sm:text-base md:text-lg w-6 pr-1 text-center outline-none bg-gray-100 cursor-not-allowed"
+        data-testid="country-code-input"
         disabled=""
         id="countryCode"
         maxlength="2"
@@ -158,49 +77,8 @@ exports[`PhoneNumberField matches snapshot (not editing) 1`] = `
       />
       <input
         class="flex-1 p-2 text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px] bg-gray-100 cursor-not-allowed"
+        data-testid="phone-number-input"
         disabled=""
-        id="phoneNumber"
-        maxlength="7"
-        name="phoneNumber"
-        placeholder="Your Phone Number"
-        type="text"
-      />
-    </div>
-  </div>
-</div>
-`;
-
-exports[`PhoneNumberField matches snapshot 1`] = `
-<div>
-  <div
-    class="flex flex-col gap-[6px] md:gap-[8px] flex-1"
-  >
-    <label
-      class="text-gray-700 font-semibold text-base md:text-lg"
-      for="countryCode"
-    >
-      Phone Number
-    </label>
-    <div
-      class="flex items-center border border-gray-300 rounded-md w-full"
-    >
-      <span
-        class="text-[#4C535F] pl-2"
-      >
-        +
-      </span>
-      <input
-        class="bg-transparent text-[#4C535F] text-sm sm:text-base md:text-lg w-6 pr-1 text-center outline-none"
-        id="countryCode"
-        maxlength="2"
-        name="countryCode"
-        type="text"
-      />
-      <span
-        class="border-r border-gray-300 h-5"
-      />
-      <input
-        class="flex-1 p-2 text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px]"
         id="phoneNumber"
         maxlength="7"
         name="phoneNumber"

@@ -1,4 +1,4 @@
-import { Book } from "@/types";
+import { Book, FavouriteItem, ShelfItem } from "@/types";
 
 export const MOCK_BOOKS: Book[] = [
 	{
@@ -26,5 +26,33 @@ export const MOCK_BOOKS: Book[] = [
 		rating: 4.5,
 		imageUrl:
 			"https://i.postimg.cc/Mp16pvwY/cc2b60105e5d1b5aeba05608803badb375872868.jpg",
+	},
+];
+
+export const MOCK_SHELVES: ShelfItem[] = [
+	{
+		id: "31400004-4d46-48a9-bd6b-b96acb651725",
+		bookId: "11",
+		borrowedDate: "01 Jul 2025 12:22 PM",
+		userId: "64cd240a-faf4-45b1-be5d-ec63ee9be41c",
+	},
+	{
+		id: "9655627c-4470-4fd8-bd3d-e5a07a0be9e5",
+		bookId: "21",
+		borrowedDate: "02 Jul 2025 05:02 PM",
+		userId: "8460d470-9e08-425b-8764-b76f643b63e3",
+	},
+];
+
+export const MOCK_FAVOURITES: FavouriteItem[] = [
+	{
+		id: "favourite-1",
+		bookId: "11",
+		userId: "1bf703cf-9d05-40ea-b069-16c592570f8c", // matches MOCK_USER.id
+	},
+	{
+		id: "favourite-2",
+		bookId: "21",
+		userId: "1bf703cf-9d05-40ea-b069-16c592570f8c",
 	},
 ];

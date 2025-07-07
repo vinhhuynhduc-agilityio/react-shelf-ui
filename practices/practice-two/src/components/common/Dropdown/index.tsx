@@ -70,7 +70,6 @@ const Dropdown: React.FC<DropdownProps> = ({
   }, [isOpen, setIsOpen, triggerRef, align]);
 
   if (!isOpen) return null;
-
   return createPortal(
     <ul
       ref={dropdownRef}
@@ -79,6 +78,8 @@ const Dropdown: React.FC<DropdownProps> = ({
         top: `${position.top}px`,
         ...(align === "right" ? { right: `${position.right}px` } : { left: `${position.left}px` }),
       }}
+      role="listbox"
+      data-testid="dropdown-listbox"
     >
       {options.map((option) => (
         <li

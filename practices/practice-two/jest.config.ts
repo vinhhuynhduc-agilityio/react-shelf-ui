@@ -8,16 +8,16 @@ const jestConfig: JestConfigWithTsJest = {
 	testEnvironment: "jsdom",
 	moduleDirectories: ["node_modules", "src"],
 	transform: {
-		"^.+\\.tsx?$": ["ts-jest", { useESM: true }],
+		"^.+\\.tsx?$": "ts-jest",
 	},
 	moduleNameMapper: {
 		"^@/(.*)$": "<rootDir>/src/$1",
 		"\\.(css|less|scss|sass)$": "identity-obj-proxy",
-		"^ag-grid-community/styles": "<rootDir>/__mocks__/styleMock.ts",
 		"^clsx$": "<rootDir>/__mocks__/clsx.ts",
 	},
-	transformIgnorePatterns: ["node_modules/(?!ag-grid-community)"],
 	setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
+
+	coveragePathIgnorePatterns: ["<rootDir>/src/constants/"],
 };
 
 export default jestConfig;

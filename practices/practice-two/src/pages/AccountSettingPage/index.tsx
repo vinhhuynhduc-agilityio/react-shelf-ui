@@ -112,17 +112,18 @@ const AccountSettingPage: React.FC = () => {
 					</div>
 				</div>
 				<div className="flex flex-row-reverse">
-					<button
-						type="button"
-						className={clsx(
-							"border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition",
-							isPending && "cursor-not-allowed opacity-50"
-						)}
-						onClick={toggleEdit}
-						disabled={isPending}
-					>
-						{isEditing ? cancelIcon : editIcon}
-					</button>
+			   <button
+				   type="button"
+				   data-testid="edit-profile-btn"
+				   className={clsx(
+					   "border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition",
+					   isPending && "cursor-not-allowed opacity-50"
+				   )}
+				   onClick={toggleEdit}
+				   disabled={isPending}
+			   >
+				   {isEditing ? cancelIcon : editIcon}
+			   </button>
 				</div>
 				{/* Profile Fields */}
 				<div className="flex md:flex-row flex-col gap-4">
