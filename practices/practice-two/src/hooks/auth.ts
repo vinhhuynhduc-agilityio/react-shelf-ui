@@ -1,10 +1,7 @@
-import { useMutation, UseMutationResult } from "@tanstack/react-query";
-
-// types
-import { User } from "@/types";
+import { useMutation } from "@tanstack/react-query";
 
 // services
-import { registerUser, RegisterUserData } from "@/services";
+import { registerUser } from "@/services";
 
 // helpers
 import { showDefaultErrorToast } from "@/helpers";
@@ -15,11 +12,7 @@ import { SUCCESS_MESSAGE } from "@/constants";
 // stores
 import { useToastStore } from "@/stores";
 
-export const useRegisterUser = (): UseMutationResult<
-	User,
-	Error,
-	RegisterUserData
-> => {
+export const useRegisterUser = () => {
 	const showToast = useToastStore((state) => state.showToast);
 
 	return useMutation({
