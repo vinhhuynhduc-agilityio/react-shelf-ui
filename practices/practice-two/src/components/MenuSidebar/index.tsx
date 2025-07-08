@@ -1,10 +1,41 @@
 import { Link, useLocation } from "react-router-dom";
 
 // constants
-import { menuItems, ROUTE } from "@/constants";
+import { ROUTE } from "@/constants";
 
 // stores
 import { useSearchStore } from "@/stores";
+
+// components
+import { HomeIcon, SearchIcon, ShelfIcon } from "@/components/icons";
+
+export interface MenuItem {
+	key: string;
+	label: string;
+	icon: (props: { fill: string }) => JSX.Element;
+	path: string;
+}
+
+const menuItems: MenuItem[] = [
+	{
+		key: "home",
+		label: "Home",
+		icon: (props) => <HomeIcon {...props} />,
+		path: ROUTE.HOME,
+	},
+	{
+		key: "search",
+		label: "Search",
+		icon: (props) => <SearchIcon {...props} />,
+		path: ROUTE.SEARCH,
+	},
+	{
+		key: "shelf",
+		label: "My Shelf",
+		icon: (props) => <ShelfIcon {...props} />,
+		path: ROUTE.MY_SHELF,
+	},
+];
 
 const MenuSidebar = () => {
 	const { pathname } = useLocation();
@@ -50,15 +81,13 @@ const MenuSidebar = () => {
 							key={item.key}
 							to={item.path}
 							className={`flex w-full items-center justify-center lg:justify-start px-2 py-2 lg:py-3 rounded-lg transition
-                    ${isActive ? "text-[#4D4D4D]" : "text-[#8A8A8A]"}
-                    hover:text-black hover:bg-gray-200
-                `}
+					${isActive ? "text-[#4D4D4D]" : "text-[#8A8A8A]"}
+					hover:text-black hover:bg-gray-200
+				`}
 							onClick={() => handleMenuItemClick(item.key)}
 						>
 							<span className="flex-shrink-0">
-								{typeof item.icon === "function"
-									? item.icon({ fill: iconColor })
-									: null}
+								{item.icon({ fill: iconColor })}
 							</span>
 							<span className="text-base font-medium hidden lg:block ml-2">
 								{item.label}

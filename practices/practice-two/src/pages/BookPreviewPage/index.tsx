@@ -2,13 +2,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 // constants
+import { ROUTE } from "@/constants";
 import {
-	checkmarkIcon,
-	notesIcon,
-	reviewIcon,
-	ROUTE,
-	shareIcon,
-} from "@/constants";
+	CheckmarkIcon,
+	NotesIcon,
+	ReviewIcon,
+	ShareIcon,
+} from "@/components/icons";
 
 // components
 import {
@@ -82,9 +82,9 @@ const BookPreviewPage = () => {
 							className="sm:w-[190px] sm:h-[280px] md:w-[209px] md:h-[277px] w-[170px] h-[260px] object-cover rounded-md shadow-lg mt-6"
 						/>
 						<div className="flex items-center space-x-6 mt-4">
-							<ActionIcon icon={reviewIcon} label="Review" />
-							<ActionIcon icon={notesIcon} label="Notes" />
-							<ActionIcon icon={shareIcon} label="Share" />
+							<ActionIcon icon={<ReviewIcon />} label="Review" />
+							<ActionIcon icon={<NotesIcon />} label="Notes" />
+							<ActionIcon icon={<ShareIcon />} label="Share" />
 						</div>
 					</div>
 					{/* Column 2 */}
@@ -106,15 +106,15 @@ const BookPreviewPage = () => {
 								</h3>
 								<ul className="space-y-2 lg:text-[14px] md:text-[13px]">
 									<li className="flex items-center gap-2">
-										{checkmarkIcon}
+										<CheckmarkIcon />
 										<span>Hard Copy</span>
 									</li>
 									<li className="flex items-center gap-2">
-										{checkmarkIcon}
+										<CheckmarkIcon />
 										<span>E-Book</span>
 									</li>
 									<li className="flex items-center gap-2">
-										{checkmarkIcon}
+										<CheckmarkIcon />
 										<span>Audio Book</span>
 									</li>
 								</ul>

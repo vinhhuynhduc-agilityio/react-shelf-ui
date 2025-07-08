@@ -2,11 +2,6 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { useForm } from "react-hook-form";
 import { TextField } from ".";
 
-jest.mock("@/constants", () => ({
-	eyeOffIcon: <span data-testid="eye-off">eye-off</span>,
-	eyeOnIcon: <span data-testid="eye-on">eye-on</span>,
-}));
-
 describe("TextField", () => {
 	const TestWrapper = (
 		props: Partial<React.ComponentProps<typeof TextField>>

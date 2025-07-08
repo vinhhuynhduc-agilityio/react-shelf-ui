@@ -3,8 +3,6 @@ export { default as MenuSidebar } from "./MenuSidebar";
 export { default as Header } from "./Header";
 export { default as TodayQuote } from "./TodayQuote";
 export { default as ProtectedRoute } from "./ProtectedRoute";
-export { default as HeartIcon } from "./HeartIcon";
-export { default as RatingStars } from "./RatingStars";
 export { default as BookHomeList } from "./BookHomeList";
 export { default as MyShelfBookCard } from "./MyShelfBookCard";
 export { default as PhoneNumberField } from "./PhoneNumberField";

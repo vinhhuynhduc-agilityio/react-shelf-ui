@@ -44,6 +44,7 @@ exports[`SignUpPage matches snapshot 1`] = `
           >
             <input
               class="flex-1 p-2 border rounded-md text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px]"
+              data-testid="textfield-input"
               id="fullName"
               maxlength="255"
               name="fullName"
@@ -66,6 +67,7 @@ exports[`SignUpPage matches snapshot 1`] = `
           >
             <input
               class="flex-1 p-2 border rounded-md text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px]"
+              data-testid="textfield-input"
               id="email"
               maxlength="255"
               name="email"
@@ -88,6 +90,7 @@ exports[`SignUpPage matches snapshot 1`] = `
           >
             <input
               class="flex-1 p-2 border rounded-md text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px]"
+              data-testid="textfield-input"
               id="password"
               maxlength="255"
               name="password"
@@ -96,9 +99,11 @@ exports[`SignUpPage matches snapshot 1`] = `
             />
             <button
               class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              data-testid="toggle-password-visibility"
               type="button"
             >
               <svg
+                data-testid="eye-on"
                 fill="none"
                 height="17"
                 viewBox="0 0 20 17"
@@ -127,6 +132,7 @@ exports[`SignUpPage matches snapshot 1`] = `
           >
             <input
               class="flex-1 p-2 border rounded-md text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px]"
+              data-testid="textfield-input"
               id="confirmPassword"
               maxlength="255"
               name="confirmPassword"
@@ -135,9 +141,11 @@ exports[`SignUpPage matches snapshot 1`] = `
             />
             <button
               class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              data-testid="toggle-password-visibility"
               type="button"
             >
               <svg
+                data-testid="eye-on"
                 fill="none"
                 height="17"
                 viewBox="0 0 20 17"

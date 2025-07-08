@@ -107,6 +107,7 @@ exports[`AccountSettingPage matches snapshot 1`] = `
           >
             <input
               class="flex-1 p-2 border rounded-md text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px] bg-gray-100 cursor-not-allowed"
+              data-testid="textfield-input"
               disabled=""
               id="fullName"
               maxlength="255"
@@ -130,6 +131,7 @@ exports[`AccountSettingPage matches snapshot 1`] = `
           >
             <input
               class="flex-1 p-2 border rounded-md text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px] bg-gray-100 cursor-not-allowed"
+              data-testid="textfield-input"
               disabled=""
               id="email"
               maxlength="255"
@@ -157,6 +159,7 @@ exports[`AccountSettingPage matches snapshot 1`] = `
           >
             <input
               class="flex-1 p-2 border rounded-md text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px] bg-gray-100 cursor-not-allowed"
+              data-testid="textfield-input"
               disabled=""
               id="registerNumber"
               maxlength="7"

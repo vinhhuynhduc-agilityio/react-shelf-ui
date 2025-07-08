@@ -9,7 +9,7 @@ import { Avatar, Button, PhoneNumberField, TextField } from "@/components";
 import { useUpdateUser } from "@/hooks";
 
 // constants
-import { cancelIcon, DEFAULT_AVATAR, editIcon } from "@/constants";
+import { DEFAULT_AVATAR } from "@/constants";
 
 // helpers
 import { readFileAsBase64 } from "@/helpers";
@@ -19,6 +19,7 @@ import { AccountFormValues, User } from "@/types";
 
 // stores
 import { useUserStore } from "@/stores";
+import { CancelIcon, EditIcon } from "@/components/icons";
 
 const AccountSettingPage: React.FC = () => {
 	// stores
@@ -112,18 +113,18 @@ const AccountSettingPage: React.FC = () => {
 					</div>
 				</div>
 				<div className="flex flex-row-reverse">
-			   <button
-				   type="button"
-				   data-testid="edit-profile-btn"
-				   className={clsx(
-					   "border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition",
-					   isPending && "cursor-not-allowed opacity-50"
-				   )}
-				   onClick={toggleEdit}
-				   disabled={isPending}
-			   >
-				   {isEditing ? cancelIcon : editIcon}
-			   </button>
+					<button
+						type="button"
+						data-testid="edit-profile-btn"
+						className={clsx(
+							"border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition",
+							isPending && "cursor-not-allowed opacity-50"
+						)}
+						onClick={toggleEdit}
+						disabled={isPending}
+					>
+						{isEditing ? <CancelIcon /> : <EditIcon />}
+					</button>
 				</div>
 				{/* Profile Fields */}
 				<div className="flex md:flex-row flex-col gap-4">
