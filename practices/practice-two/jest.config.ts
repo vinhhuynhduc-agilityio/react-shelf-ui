@@ -17,7 +17,10 @@ const jestConfig: JestConfigWithTsJest = {
 	},
 	setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
 
-	coveragePathIgnorePatterns: ["<rootDir>/src/constants/"],
+	coveragePathIgnorePatterns: [
+		"<rootDir>/src/constants/",
+		"<rootDir>/src/pages/index.ts",
+	],
 };
 
 export default jestConfig;
