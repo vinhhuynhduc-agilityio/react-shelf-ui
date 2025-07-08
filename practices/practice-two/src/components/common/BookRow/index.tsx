@@ -5,7 +5,8 @@ import clsx from "clsx";
 import { Book } from "@/types";
 
 // components
-import { Button, HeartIcon, StatusBadge } from "@/components";
+import { Button, StatusBadge } from "@/components";
+import { HeartIcon } from "@/components/icons";
 
 interface RowBookProps {
 	book: Book;
@@ -71,6 +72,7 @@ const BookRow: React.FC<RowBookProps> = memo(
 					<HeartIcon
 						filled={isFavorite}
 						className={clsx(
+							"lg:w-[20px] lg:h-[18px] w-[17px] h-[15px]",
 							"w-6 h-6",
 							disabled && "bg-gray-200 cursor-not-allowed"
 						)}

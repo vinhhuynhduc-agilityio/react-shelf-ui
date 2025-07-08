@@ -10,5 +10,4 @@ export { default as HeaderRow } from "./HeaderRow";
 export { default as StatusBadge } from "./StatusBadge";
 export { default as Toast } from "./Toast";
 export { default as ActionIcon } from "./ActionIcon";
-export { default as HeartIcon } from "./HeartIcon";
 export { default as RatingStars } from "./RatingStars";
