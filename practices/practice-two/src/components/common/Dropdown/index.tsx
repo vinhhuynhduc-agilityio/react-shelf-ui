@@ -39,18 +39,20 @@ const Dropdown: React.FC<DropdownProps> = ({
 			}
 		};
 
-		// Update position based on trigger button
+		// Update position based on trigger button (fixed to viewport, not affected by scroll)
 		const updatePosition = () => {
 			if (triggerRef.current) {
 				const rect = triggerRef.current.getBoundingClientRect();
 				const viewportWidth = document.documentElement.clientWidth;
+				const scrollX = window.scrollX || window.pageXOffset;
+				const scrollY = window.scrollY || window.pageYOffset;
 				const dropdownPosition =
 					align === "right"
-						? { right: viewportWidth - rect.right }
-						: { left: rect.left };
+						? { right: viewportWidth - rect.right + scrollX }
+						: { left: rect.left + scrollX };
 
 				setPosition({
-					top: rect.bottom,
+					top: rect.bottom + scrollY,
 					...dropdownPosition,
 				});
 			}
@@ -62,10 +64,12 @@ const Dropdown: React.FC<DropdownProps> = ({
 
 		document.addEventListener("mousedown", handleClickOutside);
 		window.addEventListener("resize", updatePosition);
+		window.addEventListener("scroll", updatePosition, true);
 
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 			window.removeEventListener("resize", updatePosition);
+			window.removeEventListener("scroll", updatePosition, true);
 		};
 	}, [isOpen, setIsOpen, triggerRef, align]);
 
@@ -76,6 +80,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 			ref={dropdownRef}
 			className="absolute bg-white shadow-md border border-gray-300 rounded-md z-50"
 			style={{
+				position: "absolute",
 				top: `${position.top}px`,
 				...(align === "right"
 					? { right: `${position.right}px` }
