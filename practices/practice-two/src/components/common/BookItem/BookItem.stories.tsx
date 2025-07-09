@@ -10,15 +10,7 @@ const meta: Meta<typeof BookItem> = {
 	},
 	decorators: [
 		(Story) => (
-			<div
-				style={{
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "center",
-				}}
-			>
-				{Story()}
-			</div>
+			<div className="flex items-center justify-center p-8">{Story()}</div>
 		),
 	],
 };
