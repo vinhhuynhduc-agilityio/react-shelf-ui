@@ -9,19 +9,19 @@ const BookItem: React.FC<BookItemProps> = memo(({ book }) => {
 	const { title, author, publishedYear, rating, imageUrl } = book;
 
 	return (
-		<div className="w-full bg-white p-3 rounded-lg shadow-sm h-[260px]">
+		<div className="w-[160px] bg-white p-4 rounded-lg shadow-sm h-[260px] flex flex-col items-center">
 			<img
 				src={imageUrl}
 				alt={title}
-				className="w-[123px] h-[170px] object-cover rounded-lg"
+				className="w-[130px] h-[170px] object-cover rounded-lg mx-auto"
 			/>
-			<h3 className="text-sm sm:text-base font-medium mt-2 truncate text-[#4D4D4D]">
+			<h3 className="w-[130px] text-[12px] font-normal mt-2 truncate text-[#4D4D4D] mx-auto">
 				{title}
 			</h3>
-			<p className="text-xs sm:text-sm text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden">
+			<p className="w-[130px] text-[10px] text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden mx-auto">
 				{author.name}, {publishedYear}
 			</p>
-			<p className="text-[12px] sm:text-[14px] text-[#4D4D4D]">
+			<p className="w-[130px] text-[10px] text-[#4D4D4D] mx-auto">
 				{rating}
 				<span className="text-[#A7A7A7]">/5</span>
 			</p>

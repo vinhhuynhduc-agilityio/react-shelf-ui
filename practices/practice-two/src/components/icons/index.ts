@@ -12,4 +12,3 @@ export { CancelIcon } from "./CancelIcon";
 export { ArrowBackIcon } from "./ArrowBackIcon";
 export { FilterDropdownIcon } from "./FilterDropdownIcon";
 export { SearchIconFilled } from "./SearchIconFilled";
-export { HeartIcon } from "./HeartIcon";

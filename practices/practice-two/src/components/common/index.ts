@@ -1,4 +1,4 @@
-export * from "./TextField";
+export { TextField } from "./TextField";
 export { default as AuthButton } from "./AuthButton";
 export { default as Button } from "./Button";
 export { default as Dropdown } from "./Dropdown";
@@ -11,3 +11,4 @@ export { default as StatusBadge } from "./StatusBadge";
 export { default as Toast } from "./Toast";
 export { default as ActionIcon } from "./ActionIcon";
 export { default as RatingStars } from "./RatingStars";
+export { HeartIcon } from "./HeartIcon";

@@ -6,7 +6,7 @@ import { Book } from "@/types";
 
 // components
 import { Button, StatusBadge } from "@/components";
-import { HeartIcon } from "@/components/icons";
+import { HeartIcon } from "@/components/common";
 
 interface RowBookProps {
 	book: Book;
@@ -71,10 +71,10 @@ const BookRow: React.FC<RowBookProps> = memo(
 				>
 					<HeartIcon
 						filled={isFavorite}
+						disabled={disabled}
 						className={clsx(
 							"lg:w-[20px] lg:h-[18px] w-[17px] h-[15px]",
-							"w-6 h-6",
-							disabled && "bg-gray-200 cursor-not-allowed"
+							"w-6 h-6"
 						)}
 					/>
 				</button>
