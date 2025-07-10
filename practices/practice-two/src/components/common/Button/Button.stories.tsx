@@ -45,6 +45,14 @@ export const Primary: Story = {
 	},
 };
 
+export const Disabled: Story = {
+	args: {
+		children: "Disabled Button",
+		variant: "primary",
+		disabled: true,
+	},
+};
+
 export const Outline: Story = {
 	args: {
 		children: "Outline",
@@ -58,13 +66,5 @@ export const Text: Story = {
 		children: "Text Button",
 		variant: "text",
 		disabled: false,
-	},
-};
-
-export const Disabled: Story = {
-	args: {
-		children: "Disabled Button",
-		variant: "primary",
-		disabled: true,
 	},
 };

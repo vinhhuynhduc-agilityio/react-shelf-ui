@@ -41,7 +41,7 @@ interface DropdownDemoProps {
 
 const DropdownDemo = (props: DropdownDemoProps) => {
 	const triggerRef = useRef<HTMLButtonElement>(null);
-	const [isOpen, setIsOpen] = useState(true);
+	const [isOpen, setIsOpen] = useState(false);
 	return (
 		<div style={{ position: "relative", height: 120 }}>
 			<button
