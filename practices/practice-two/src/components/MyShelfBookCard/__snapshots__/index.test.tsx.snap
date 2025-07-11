@@ -9,27 +9,27 @@ exports[`MyShelfBookCard matches snapshot 1`] = `
       class="w-3/5"
     >
       <div
-        class="w-full bg-white p-3 rounded-lg shadow-sm h-[260px]"
+        class="w-[160px] bg-white p-4 rounded-lg shadow-sm h-[260px] flex flex-col items-center"
       >
         <img
           alt="Test Book"
-          class="w-[123px] h-[170px] object-cover rounded-lg"
+          class="w-[130px] h-[170px] object-cover rounded-lg mx-auto"
           src="img.jpg"
         />
         <h3
-          class="text-sm sm:text-base font-medium mt-2 truncate text-[#4D4D4D]"
+          class="w-[130px] text-[12px] font-normal mt-2 truncate text-[#4D4D4D] mx-auto"
         >
           Test Book
         </h3>
         <p
-          class="text-xs sm:text-sm text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden"
+          class="w-[130px] text-[10px] text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden mx-auto"
         >
           Author
           , 
           2020
         </p>
         <p
-          class="text-[12px] sm:text-[14px] text-[#4D4D4D]"
+          class="w-[130px] text-[10px] text-[#4D4D4D] mx-auto"
         >
           4
           <span

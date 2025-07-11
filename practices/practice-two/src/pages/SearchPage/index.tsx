@@ -15,7 +15,7 @@ import {
 import {
 	useBookStore,
 	useFavouritesStore,
-	useFilterStore,
+	useSearchFilterStore,
 	usePendingFavouritesStore,
 	useSearchStore,
 	useUserStore,
@@ -41,7 +41,7 @@ const SearchPage: React.FC = () => {
 	const currentUser = useUserStore((state) => state.currentUser);
 	const searchFromSidebar = useSearchStore((state) => state.searchFromSidebar);
 	const searchTerm = useSearchStore((state) => state.searchTerm);
-	const selectedFilter = useFilterStore((state) => state.selectedFilter);
+	const selectedFilter = useSearchFilterStore((state) => state.selectedFilter);
 	const pendingFavouritesActions = usePendingFavouritesStore(
 		(state) => state.pendingFavouritesActions
 	);

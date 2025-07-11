@@ -7,12 +7,13 @@ import {
 	useBookStore,
 	useUserStore,
 	useSearchStore,
-	useFilterStore,
+	useSearchFilterStore,
 	usePendingFavouritesStore,
+	useFavouritesStore,
 } from "@/stores";
 import {
 	useFetchBooks,
-	useGetFavourites,
+	useFetchFavourites,
 	useGetMyShelf,
 	useAddFavouriteItem,
 	useRemoveFavouriteItem,
@@ -22,12 +23,13 @@ jest.mock("@/stores", () => ({
 	useBookStore: jest.fn(),
 	useUserStore: jest.fn(),
 	useSearchStore: jest.fn(),
-	useFilterStore: jest.fn(),
+	useSearchFilterStore: jest.fn(),
 	usePendingFavouritesStore: jest.fn(),
+	useFavouritesStore: jest.fn(),
 }));
 jest.mock("@/hooks", () => ({
 	useFetchBooks: jest.fn(),
-	useGetFavourites: jest.fn(),
+	useFetchFavourites: jest.fn(),
 	useGetMyShelf: jest.fn(),
 	useAddFavouriteItem: jest.fn(),
 	useRemoveFavouriteItem: jest.fn(),
@@ -36,14 +38,15 @@ jest.mock("@/hooks", () => ({
 const mockedUseBookStore = useBookStore as unknown as jest.Mock;
 const mockedUseUserStore = useUserStore as unknown as jest.Mock;
 const mockedUseSearchStore = useSearchStore as unknown as jest.Mock;
-const mockedUseFilterStore = useFilterStore as unknown as jest.Mock;
+const mockedUseFilterStore = useSearchFilterStore as unknown as jest.Mock;
 const mockedUsePendingFavouritesStore =
 	usePendingFavouritesStore as unknown as jest.Mock;
 const mockedUseFetchBooks = useFetchBooks as jest.Mock;
-const mockedUseGetFavourites = useGetFavourites as jest.Mock;
+const mockedUseFetchFavourites = useFetchFavourites as jest.Mock;
 const mockedUseGetMyShelf = useGetMyShelf as jest.Mock;
 const mockedUseAddFavouriteItem = useAddFavouriteItem as jest.Mock;
 const mockedUseRemoveFavouriteItem = useRemoveFavouriteItem as jest.Mock;
+const mockedUseFavouritesStore = useFavouritesStore as unknown as jest.Mock;
 
 describe("SearchPage", () => {
 	beforeEach(() => {
@@ -52,6 +55,9 @@ describe("SearchPage", () => {
 			isLoading: false,
 			isError: false,
 			error: null,
+		});
+		mockedUseFetchFavourites.mockReturnValue({
+			isError: false,
 		});
 		mockedUseBookStore.mockImplementation((cb) => cb({ books: [] }));
 		mockedUseUserStore.mockImplementation((cb) =>
@@ -66,10 +72,12 @@ describe("SearchPage", () => {
 		mockedUsePendingFavouritesStore.mockImplementation((cb) =>
 			cb({ pendingFavouritesActions: [] })
 		);
-		mockedUseGetFavourites.mockReturnValue({ data: [] });
 		mockedUseGetMyShelf.mockReturnValue({ data: [] });
 		mockedUseAddFavouriteItem.mockReturnValue({ mutate: jest.fn() });
 		mockedUseRemoveFavouriteItem.mockReturnValue({ mutate: jest.fn() });
+		mockedUseFavouritesStore.mockImplementation((cb) =>
+			cb({ favourites: [], setFavourites: jest.fn() })
+		);
 	});
 	afterEach(() => {
 		jest.clearAllMocks();
@@ -96,6 +104,9 @@ describe("SearchPage", () => {
 			isLoading: false,
 			isError: true,
 			error: { message: "fail" },
+		});
+		mockedUseFetchFavourites.mockReturnValue({
+			isError: true,
 		});
 		render(
 			<MemoryRouter>
@@ -151,6 +162,9 @@ describe("SearchPage", () => {
 		mockedUseSearchStore.mockImplementation((cb) =>
 			cb({ searchFromSidebar: false, searchTerm: "think" })
 		);
+		mockedUseFavouritesStore.mockImplementation((cb) =>
+			cb({ favourites: [], setFavourites: jest.fn() })
+		);
 		render(
 			<MemoryRouter>
 				<SearchPage />
@@ -159,8 +173,13 @@ describe("SearchPage", () => {
 		expect(screen.getByText(/don't make me think/i)).toBeInTheDocument();
 	});
 
-	it("calls addFavourite when favorite button clicked", () => {
-		const mutate = jest.fn();
+	it("calls addFavourite and updates favourites when favorite button clicked", () => {
+		const mutate = jest.fn((item, options) => {
+			if (options && options.onSuccess) {
+				options.onSuccess();
+			}
+		});
+		const setFavouritesMock = jest.fn();
 		mockedUseFetchBooks.mockReturnValue({
 			books: MOCK_BOOKS,
 			isLoading: false,
@@ -168,7 +187,9 @@ describe("SearchPage", () => {
 			error: null,
 		});
 		mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
-		mockedUseGetFavourites.mockReturnValue({ data: [] });
+		mockedUseFavouritesStore.mockImplementation((cb) =>
+			cb({ favourites: [], setFavourites: setFavouritesMock })
+		);
 		mockedUseAddFavouriteItem.mockReturnValue({ mutate });
 		render(
 			<MemoryRouter>
@@ -178,10 +199,16 @@ describe("SearchPage", () => {
 		const favButtons = screen.getAllByRole("button");
 		fireEvent.click(favButtons[0]);
 		expect(mutate).toHaveBeenCalled();
+		expect(setFavouritesMock).toHaveBeenCalled();
 	});
 
-	it("calls removeFavourite when favorite button clicked if already favorite", () => {
-		const mutate = jest.fn();
+	it("calls removeFavourite and updates favourites when favorite button clicked if already favorite", () => {
+		const mutate = jest.fn((item, options) => {
+			if (options && options.onSuccess) {
+				options.onSuccess();
+			}
+		});
+		const setFavouritesMock = jest.fn();
 		mockedUseFetchBooks.mockReturnValue({
 			books: MOCK_BOOKS,
 			isLoading: false,
@@ -189,7 +216,9 @@ describe("SearchPage", () => {
 			error: null,
 		});
 		mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
-		mockedUseGetFavourites.mockReturnValue({ data: MOCK_FAVOURITES });
+		mockedUseFavouritesStore.mockImplementation((cb) =>
+			cb({ favourites: MOCK_FAVOURITES, setFavourites: setFavouritesMock })
+		);
 		mockedUseRemoveFavouriteItem.mockReturnValue({ mutate });
 		render(
 			<MemoryRouter>
@@ -199,6 +228,7 @@ describe("SearchPage", () => {
 		const favButtons = screen.getAllByRole("button");
 		fireEvent.click(favButtons[0]);
 		expect(mutate).toHaveBeenCalled();
+		expect(setFavouritesMock).toHaveBeenCalled();
 	});
 
 	it("matches snapshot", () => {
@@ -209,7 +239,9 @@ describe("SearchPage", () => {
 			error: null,
 		});
 		mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
-		mockedUseGetFavourites.mockReturnValue({ data: MOCK_FAVOURITES });
+		mockedUseFavouritesStore.mockImplementation((cb) =>
+			cb({ favourites: MOCK_FAVOURITES, setFavourites: jest.fn() })
+		);
 		mockedUseGetMyShelf.mockReturnValue({ data: MOCK_SHELVES });
 		const { container } = render(
 			<MemoryRouter>

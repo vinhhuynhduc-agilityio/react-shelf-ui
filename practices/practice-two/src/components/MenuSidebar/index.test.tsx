@@ -21,7 +21,7 @@ jest.mock("@/stores", () => ({
 		}),
 }));
 
-jest.mock("@/stores/useSearchStore.ts", () => ({
+jest.mock("@/stores/searchStore.ts", () => ({
 	useSearchStore: jest.fn(),
 }));
 

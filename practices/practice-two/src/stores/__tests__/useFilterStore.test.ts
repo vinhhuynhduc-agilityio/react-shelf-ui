@@ -1,18 +1,18 @@
-import { useFilterStore } from '../useFilterStore';
+import { useSearchFilterStore } from "../searchFilterStore";
 
-describe('useFilterStore', () => {
-  beforeEach(() => {
-    useFilterStore.setState({ selectedFilter: 'Title' });
-  });
+describe("useSearchFilterStore", () => {
+	beforeEach(() => {
+		useSearchFilterStore.setState({ selectedFilter: "Title" });
+	});
 
-  it('should have initial state', () => {
-    const state = useFilterStore.getState();
-    expect(state.selectedFilter).toBe('Title');
-  });
+	it("should have initial state", () => {
+		const state = useSearchFilterStore.getState();
+		expect(state.selectedFilter).toBe("Title");
+	});
 
-  it('should set selectedFilter', () => {
-    useFilterStore.getState().setSelectedFilter('Author');
-    const state = useFilterStore.getState();
-    expect(state.selectedFilter).toBe('Author');
-  });
+	it("should set selectedFilter", () => {
+		useSearchFilterStore.getState().setSelectedFilter("Author");
+		const state = useSearchFilterStore.getState();
+		expect(state.selectedFilter).toBe("Author");
+	});
 });

@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@/helpers/test-utils";
 import Header from ".";
 import { MemoryRouter } from "react-router-dom";
-import { useFilterStore, useSearchStore, useUserStore } from "@/stores";
+import { useSearchFilterStore, useSearchStore, useUserStore } from "@/stores";
 
 jest.mock("@/hooks", () => ({
 	useCurrentUser: () => ({
@@ -15,13 +15,13 @@ jest.mock("@/stores", () => {
 	return {
 		...actual,
 		useUserStore: jest.fn(),
-		useFilterStore: jest.fn(),
+		useSearchFilterStore: jest.fn(),
 		useSearchStore: jest.fn(),
 	};
 });
 
 const mockedUseUserStore = useUserStore as unknown as jest.Mock;
-const mockedFilterStore = useFilterStore as unknown as jest.Mock;
+const mockedFilterStore = useSearchFilterStore as unknown as jest.Mock;
 const mockedSearchStore = useSearchStore as unknown as jest.Mock;
 
 describe("Header", () => {
