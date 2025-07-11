@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 // stores
 import {
 	useBookStore,
+	useFavouritesChangedStore,
+	useFavouritesStore,
 	usePendingFavouritesStore,
 	useUserStore,
 } from "@/stores";
@@ -20,7 +22,7 @@ import { BackButton, BookRow, HeaderRow } from "@/components";
 // hooks
 import {
 	useFetchBooks,
-	useGetFavourites,
+	useFetchFavourites,
 	useGetMyShelf,
 	useRemoveFavouriteItem,
 } from "@/hooks";
@@ -31,9 +33,6 @@ import { ROUTE } from "@/constants";
 const FavouritePage: React.FC = () => {
 	const navigate = useNavigate();
 
-	// hooks
-	const { isLoading, isError, error } = useFetchBooks();
-
 	// store
 	const books = useBookStore((state) => state.books);
 	const currentUser = useUserStore((state) => state.currentUser);
@@ -41,8 +40,13 @@ const FavouritePage: React.FC = () => {
 		(state) => state.pendingFavouritesActions
 	);
 
+	const { favourites, setFavourites } = useFavouritesStore();
+	const { setFavouritesChanged } = useFavouritesChangedStore();
+
 	// API hooks
-	const { data: favourites } = useGetFavourites(currentUser?.id || "");
+	const { isLoading, isError: isErrorBooks, error } = useFetchBooks();
+	const { isLoading: isLoadingFavourites, isError: isErrorFavourites } =
+		useFetchFavourites(currentUser?.id || "");
 	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
 	const { mutate: removeFavourite } = useRemoveFavouriteItem();
 
@@ -75,15 +79,28 @@ const FavouritePage: React.FC = () => {
 				userId: currentUser?.id || "",
 			};
 
-			removeFavourite(removeItem);
+			removeFavourite(removeItem, {
+				onSuccess: () => {
+					setFavourites(
+						(favourites || []).filter((fav) => fav.bookId !== book.id)
+					);
+					setFavouritesChanged(true);
+				},
+			});
 		},
-		[currentUser, removeFavourite]
+		[
+			currentUser,
+			favourites,
+			removeFavourite,
+			setFavourites,
+			setFavouritesChanged,
+		]
 	);
 
 	// If loading or error, show appropriate messages
-	if (isLoading && books.length === 0) return <p>Loading books...</p>;
+	if (isLoading || isLoadingFavourites) return <p>Loading books...</p>;
 
-	if (isError)
+	if (isErrorBooks || isErrorFavourites)
 		return (
 			<p className="text-red-500">Error loading books: {error?.message}</p>
 		);

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 // constants
@@ -15,7 +15,11 @@ import {
 import { FavouriteItem } from "@/types";
 
 // stores
-import { useFavouritesStore, usePendingFavouritesStore } from "@/stores";
+import {
+	useFavouritesChangedStore,
+	useFavouritesStore,
+	usePendingFavouritesStore,
+} from "@/stores";
 
 export const useGetFavourites = (userId: string) => {
 	return useQuery({
@@ -25,16 +29,36 @@ export const useGetFavourites = (userId: string) => {
 };
 
 export const useFetchFavourites = (userId: string) => {
-	const setFavourites = useFavouritesStore((state) => state.setFavourites);
-	const favourites = useFavouritesStore((state) => state.favourites);
-
+	const { favourites, setFavourites } = useFavouritesStore();
+	const { favouritesChanged, setFavouritesChanged } =
+		useFavouritesChangedStore();
 	const {
 		data: queryFavourites,
 		isLoading,
 		isError,
 		error,
 		isSuccess,
+		refetch,
 	} = useGetFavourites(userId);
+	const favouritesChangedRef = useRef(favouritesChanged);
+	const refetchRef = useRef(refetch);
+	const setFavouritesChangedRef = useRef(setFavouritesChanged);
+
+	useEffect(() => {
+		favouritesChangedRef.current = favouritesChanged;
+	}, [favouritesChanged]);
+
+	useEffect(() => {
+		refetchRef.current = refetch;
+		setFavouritesChangedRef.current = setFavouritesChanged;
+
+		return () => {
+			if (favouritesChangedRef.current) {
+				refetchRef.current();
+				setFavouritesChangedRef.current(false);
+			}
+		};
+	}, [refetch, setFavouritesChanged]);
 
 	useEffect(() => {
 		if (isSuccess && queryFavourites && queryFavourites.length > 0) {

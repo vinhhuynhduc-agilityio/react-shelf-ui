@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`matches snapshot 1`] = `
+exports[`FavouritePage matches snapshot 1`] = `
 <div>
   <button
     class="flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4"

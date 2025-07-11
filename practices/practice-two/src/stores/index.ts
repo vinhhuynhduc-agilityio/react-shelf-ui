@@ -6,3 +6,4 @@ export * from "./toastStore";
 export * from "./pendingShelfStore";
 export * from "./pendingFavouriteStore";
 export * from "./favouriteStore";
+export * from "./favouritesChangedStore";

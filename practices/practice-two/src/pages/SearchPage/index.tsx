@@ -19,6 +19,7 @@ import {
 	usePendingFavouritesStore,
 	useSearchStore,
 	useUserStore,
+	useFavouritesChangedStore,
 } from "@/stores";
 
 // types
@@ -47,6 +48,9 @@ const SearchPage: React.FC = () => {
 	);
 	const setFavourites = useFavouritesStore((state) => state.setFavourites);
 	const favourites = useFavouritesStore((state) => state.favourites);
+	const setFavouritesChanged = useFavouritesChangedStore(
+		(state) => state.setFavouritesChanged
+	);
 
 	// API hooks
 	const { isLoading, isError: isErrorBooks, error } = useFetchBooks();
@@ -109,6 +113,7 @@ const SearchPage: React.FC = () => {
 			addFavourite(favouriteItem, {
 				onSuccess: () => {
 					setFavourites([...(favourites || []), favouriteItem]);
+					setFavouritesChanged(true);
 				},
 			});
 		} else {
@@ -117,6 +122,7 @@ const SearchPage: React.FC = () => {
 					setFavourites(
 						(favourites || []).filter((fav) => fav.bookId !== book.id)
 					);
+					setFavouritesChanged(true);
 				},
 			});
 		}
