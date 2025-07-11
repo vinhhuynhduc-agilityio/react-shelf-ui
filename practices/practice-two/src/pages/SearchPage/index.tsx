@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
 	useAddFavouriteItem,
 	useFetchBooks,
-	useGetFavourites,
+	useFetchFavourites,
 	useGetMyShelf,
 	useRemoveFavouriteItem,
 } from "@/hooks";
@@ -14,6 +14,7 @@ import {
 // stores
 import {
 	useBookStore,
+	useFavouritesStore,
 	useFilterStore,
 	usePendingFavouritesStore,
 	useSearchStore,
@@ -35,9 +36,6 @@ import { ROUTE } from "@/constants";
 const SearchPage: React.FC = () => {
 	const navigate = useNavigate();
 
-	// hooks
-	const { isLoading, isError, error } = useFetchBooks();
-
 	// store
 	const books = useBookStore((state) => state.books);
 	const currentUser = useUserStore((state) => state.currentUser);
@@ -47,14 +45,17 @@ const SearchPage: React.FC = () => {
 	const pendingFavouritesActions = usePendingFavouritesStore(
 		(state) => state.pendingFavouritesActions
 	);
+	const setFavourites = useFavouritesStore((state) => state.setFavourites);
+	const favourites = useFavouritesStore((state) => state.favourites);
 
 	// API hooks
-	const { data: favourites } = useGetFavourites(currentUser?.id || "");
-	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
-	const { mutate: addFavourite } = useAddFavouriteItem(currentUser?.id || "");
-	const { mutate: removeFavourite } = useRemoveFavouriteItem(
+	const { isLoading, isError: isErrorBooks, error } = useFetchBooks();
+	const { isError: isErrorFavourites } = useFetchFavourites(
 		currentUser?.id || ""
 	);
+	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
+	const { mutate: addFavourite } = useAddFavouriteItem();
+	const { mutate: removeFavourite } = useRemoveFavouriteItem();
 
 	// Filter books based on search term and selected filter
 	const filteredBooks = searchFromSidebar
@@ -105,16 +106,26 @@ const SearchPage: React.FC = () => {
 			  } as FavouriteItem);
 
 		if (!isFavorite) {
-			addFavourite(favouriteItem);
+			addFavourite(favouriteItem, {
+				onSuccess: () => {
+					setFavourites([...(favourites || []), favouriteItem]);
+				},
+			});
 		} else {
-			removeFavourite(favouriteItem);
+			removeFavourite(favouriteItem, {
+				onSuccess: () => {
+					setFavourites(
+						(favourites || []).filter((fav) => fav.bookId !== book.id)
+					);
+				},
+			});
 		}
 	};
 
 	// If loading or error, show appropriate messages
 	if (isLoading && books.length === 0) return <p>Loading books...</p>;
 
-	if (isError)
+	if (isErrorBooks || isErrorFavourites)
 		return (
 			<p className="text-red-500">Error loading books: {error?.message}</p>
 		);

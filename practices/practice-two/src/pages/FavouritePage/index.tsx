@@ -44,9 +44,7 @@ const FavouritePage: React.FC = () => {
 	// API hooks
 	const { data: favourites } = useGetFavourites(currentUser?.id || "");
 	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
-	const { mutate: removeFavourite } = useRemoveFavouriteItem(
-		currentUser?.id || ""
-	);
+	const { mutate: removeFavourite } = useRemoveFavouriteItem();
 
 	// Filter books by favourites
 	const filteredBooks = books.filter((book) => {

@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 // constants
 import { QUERY_KEY_MY_FAVOURITE } from "@/constants";
@@ -14,7 +15,7 @@ import {
 import { FavouriteItem } from "@/types";
 
 // stores
-import { usePendingFavouritesStore } from "@/stores";
+import { useFavouritesStore, usePendingFavouritesStore } from "@/stores";
 
 export const useGetFavourites = (userId: string) => {
 	return useQuery({
@@ -23,19 +24,39 @@ export const useGetFavourites = (userId: string) => {
 	});
 };
 
-export const useAddFavouriteItem = (userId: string) => {
+export const useFetchFavourites = (userId: string) => {
+	const setFavourites = useFavouritesStore((state) => state.setFavourites);
+	const favourites = useFavouritesStore((state) => state.favourites);
+
+	const {
+		data: queryFavourites,
+		isLoading,
+		isError,
+		error,
+		isSuccess,
+	} = useGetFavourites(userId);
+
+	useEffect(() => {
+		if (isSuccess && queryFavourites && queryFavourites.length > 0) {
+			setFavourites(queryFavourites || []);
+		}
+	}, [isSuccess, queryFavourites, setFavourites]);
+
+	return {
+		favourites: queryFavourites || favourites,
+		isLoading,
+		isError,
+		error,
+	};
+};
+
+export const useAddFavouriteItem = () => {
 	const { addPending, removePending } = usePendingFavouritesStore();
-	const queryClient = useQueryClient();
 
 	return useMutation({
 		mutationFn: addFavouriteItem,
 		onMutate: (item: FavouriteItem) => {
 			addPending(item.bookId);
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: QUERY_KEY_MY_FAVOURITE(userId),
-			});
 		},
 		onSettled: (_data, _error, item: FavouriteItem) => {
 			removePending(item.bookId);
@@ -43,19 +64,13 @@ export const useAddFavouriteItem = (userId: string) => {
 	});
 };
 
-export const useRemoveFavouriteItem = (userId: string) => {
+export const useRemoveFavouriteItem = () => {
 	const { addPending, removePending } = usePendingFavouritesStore();
-	const queryClient = useQueryClient();
 
 	return useMutation({
 		mutationFn: removeFavouriteItem,
 		onMutate: (item: FavouriteItem) => {
 			addPending(item.bookId);
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: QUERY_KEY_MY_FAVOURITE(userId),
-			});
 		},
 		onSettled: (_data, _error, item: FavouriteItem) => {
 			removePending(item.bookId);
