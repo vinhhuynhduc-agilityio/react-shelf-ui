@@ -1,7 +1,7 @@
-import { render, screen } from "@/helpers/test-utils";
+import { render, screen, fireEvent } from "@/helpers/test-utils";
 import SearchPage from ".";
 import { MemoryRouter } from "react-router-dom";
-import { MOCK_BOOKS } from "@/__mocks__/book";
+import { MOCK_BOOKS, MOCK_FAVOURITES, MOCK_SHELVES } from "@/__mocks__/book";
 import { MOCK_USER } from "@/__mocks__/user";
 import {
 	useBookStore,
@@ -62,6 +62,7 @@ describe("SearchPage", () => {
 		});
 		mockedUseFetchFavourites.mockReturnValue({
 			isError: false,
+			isFetching: false,
 		});
 		mockedUseBookStore.mockImplementation((cb) => cb({ books: [] }));
 		mockedUseUserStore.mockImplementation((cb) =>
@@ -76,15 +77,19 @@ describe("SearchPage", () => {
 		mockedUsePendingFavouritesStore.mockImplementation((cb) =>
 			cb({ pendingFavouritesActions: [] })
 		);
-		mockedUseGetMyShelf.mockReturnValue({ data: [] });
+		mockedUseGetMyShelf.mockReturnValue({
+			data: MOCK_SHELVES,
+			isFetching: false,
+		});
 		mockedUseAddFavouriteItem.mockReturnValue({ mutate: jest.fn() });
 		mockedUseRemoveFavouriteItem.mockReturnValue({ mutate: jest.fn() });
 		mockedUseFavouritesStore.mockImplementation((cb) =>
 			cb({ favourites: [], setFavourites: jest.fn() })
 		);
-		mockedUseFavouritesChangedStore.mockImplementation((cb) =>
-			cb({ favouritesChanged: false, setFavouritesChanged: jest.fn() })
-		);
+		mockedUseFavouritesChangedStore.mockImplementation(() => ({
+			favouritesChanged: false,
+			setFavouritesChanged: jest.fn(),
+		}));
 	});
 	afterEach(() => {
 		jest.clearAllMocks();
@@ -96,6 +101,10 @@ describe("SearchPage", () => {
 			isLoading: true,
 			isError: false,
 			error: null,
+		});
+		mockedUseFetchFavourites.mockReturnValue({
+			isError: false,
+			isFetching: true,
 		});
 		render(
 			<MemoryRouter>
@@ -114,6 +123,7 @@ describe("SearchPage", () => {
 		});
 		mockedUseFetchFavourites.mockReturnValue({
 			isError: true,
+			isFetching: false,
 		});
 		render(
 			<MemoryRouter>
@@ -137,5 +147,145 @@ describe("SearchPage", () => {
 			</MemoryRouter>
 		);
 		expect(screen.getByText(/no books available/i)).toBeInTheDocument();
+	});
+
+	it("shows no books found if search yields nothing", () => {
+		mockedUseFetchBooks.mockReturnValue({
+			books: MOCK_BOOKS,
+			isLoading: false,
+			isError: false,
+			error: null,
+		});
+		mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
+		mockedUseSearchStore.mockImplementation((cb) =>
+			cb({ searchFromSidebar: false, searchTerm: "notfound" })
+		);
+		render(
+			<MemoryRouter>
+				<SearchPage />
+			</MemoryRouter>
+		);
+		expect(screen.getByText(/no books found/i)).toBeInTheDocument();
+	});
+
+	it("renders filtered books list", () => {
+		mockedUseFetchBooks.mockReturnValue({
+			books: MOCK_BOOKS,
+			isLoading: false,
+			isError: false,
+			error: null,
+		});
+		mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
+		mockedUseSearchStore.mockImplementation((cb) =>
+			cb({ searchFromSidebar: false, searchTerm: "think" })
+		);
+		mockedUseFavouritesStore.mockImplementation((cb) =>
+			cb({ favourites: [], setFavourites: jest.fn() })
+		);
+		render(
+			<MemoryRouter>
+				<SearchPage />
+			</MemoryRouter>
+		);
+		expect(screen.getByText(/don't make me think/i)).toBeInTheDocument();
+	});
+
+	it("calls addFavourite and updates favourites when favorite button clicked", () => {
+		const mutate = jest.fn((item, options) => {
+			if (options && options.onSuccess) {
+				options.onSuccess();
+			}
+		});
+		const setFavouritesMock = jest.fn();
+		const setFavouritesChangedMock = jest.fn();
+		mockedUseFetchBooks.mockReturnValue({
+			books: MOCK_BOOKS,
+			isLoading: false,
+			isError: false,
+			error: null,
+		});
+		mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
+		mockedUseFavouritesStore.mockImplementation((cb) =>
+			cb({
+				favourites: [],
+				setFavourites: setFavouritesMock,
+			})
+		);
+		mockedUseFavouritesChangedStore.mockImplementation(() => ({
+			favouritesChanged: false,
+			setFavouritesChanged: setFavouritesChangedMock,
+		}));
+		mockedUseAddFavouriteItem.mockReturnValue({ mutate });
+		render(
+			<MemoryRouter>
+				<SearchPage />
+			</MemoryRouter>
+		);
+		const favButtons = screen.getAllByRole("button");
+		fireEvent.click(favButtons[0]);
+		expect(mutate).toHaveBeenCalled();
+		expect(setFavouritesMock).toHaveBeenCalled();
+		expect(setFavouritesChangedMock).toHaveBeenCalledWith(true);
+	});
+
+	it("calls removeFavourite and updates favourites when favorite button clicked if already favorite", () => {
+		const mutate = jest.fn((item, options) => {
+			if (options && options.onSuccess) {
+				options.onSuccess();
+			}
+		});
+		const setFavouritesMock = jest.fn();
+		const setFavouritesChangedMock = jest.fn();
+		mockedUseFetchBooks.mockReturnValue({
+			books: MOCK_BOOKS,
+			isLoading: false,
+			isError: false,
+			error: null,
+		});
+		mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
+		mockedUseFavouritesStore.mockImplementation((cb) =>
+			cb({
+				favourites: MOCK_FAVOURITES,
+				setFavourites: setFavouritesMock,
+			})
+		);
+		mockedUseFavouritesChangedStore.mockImplementation(() => ({
+			favouritesChanged: false,
+			setFavouritesChanged: setFavouritesChangedMock,
+		}));
+		mockedUseRemoveFavouriteItem.mockReturnValue({ mutate });
+		render(
+			<MemoryRouter>
+				<SearchPage />
+			</MemoryRouter>
+		);
+		const favButtons = screen.getAllByRole("button");
+		fireEvent.click(favButtons[0]);
+		expect(mutate).toHaveBeenCalled();
+		expect(setFavouritesMock).toHaveBeenCalled();
+		expect(setFavouritesChangedMock).toHaveBeenCalledWith(true);
+	});
+
+	it("matches snapshot", () => {
+		mockedUseFetchBooks.mockReturnValue({
+			books: MOCK_BOOKS,
+			isLoading: false,
+			isError: false,
+			error: null,
+		});
+		mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
+		mockedUseFavouritesStore.mockImplementation((cb) =>
+			cb({
+				favourites: MOCK_FAVOURITES,
+				setFavourites: jest.fn(),
+			})
+		);
+		mockedUseGetMyShelf.mockReturnValue({ data: MOCK_SHELVES });
+		const { container } = render(
+			<MemoryRouter>
+				<SearchPage />
+			</MemoryRouter>
+		);
+		expect(container).toMatchSnapshot();
 	});
 });

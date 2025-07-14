@@ -45,7 +45,7 @@ const FavouritePage: React.FC = () => {
 
 	// API hooks
 	const { isLoading, isError: isErrorBooks, error } = useFetchBooks();
-	const { isLoading: isLoadingFavourites, isError: isErrorFavourites } =
+	const { isError: isErrorFavourites, isFetching: isFetchingFavourites } =
 		useFetchFavourites(currentUser?.id || "");
 	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
 	const { mutate: removeFavourite } = useRemoveFavouriteItem();
@@ -98,7 +98,7 @@ const FavouritePage: React.FC = () => {
 	);
 
 	// If loading or error, show appropriate messages
-	if (isLoading || isLoadingFavourites) return <p>Loading books...</p>;
+	if (isLoading || isFetchingFavourites) return <p>Loading books...</p>;
 
 	if (isErrorBooks || isErrorFavourites)
 		return (

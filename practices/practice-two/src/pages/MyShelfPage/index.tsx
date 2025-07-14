@@ -1,17 +1,25 @@
+import { useEffect, useRef } from "react";
 import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 // hooks
-import { useFetchBooks, useGetMyShelf, useRemoveShelfItem } from "@/hooks";
+import { useFetchBooks, useFetchMySHelf, useRemoveShelfItem } from "@/hooks";
 
 // stores
-import { useBookStore, usePendingShelfStore, useUserStore } from "@/stores";
+import {
+	useBookStore,
+	usePendingShelfStore,
+	useShelfStore,
+	useUserStore,
+	useShelfChangedStore,
+} from "@/stores";
 
 // components
 import { MyShelfBookCard } from "@/components";
 
 // constants
-import { ROUTE } from "@/constants";
+import { QUERY_KEY_MY_SHELF, ROUTE } from "@/constants";
 
 // helpers
 import { filterBooksByShelves } from "@/helpers";
@@ -21,28 +29,68 @@ import { ShelfItem } from "@/types";
 
 const MyShelfPage: React.FC = () => {
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	// Fetch books from the API
-	const { isLoading, isError, error } = useFetchBooks();
+	const { isLoading, error, isError: isErrorFetchBook } = useFetchBooks();
 
 	// store
 	const books = useBookStore((state) => state.books);
 	const currentUser = useUserStore((state) => state.currentUser);
 	const { pendingShelfActions } = usePendingShelfStore();
+	const { shelf, setShelf } = useShelfStore();
+	const { shelfChanged, setShelfChanged } = useShelfChangedStore();
 
 	// API hooks
-	const { data: myShelf } = useGetMyShelf(currentUser?.id || "");
-	const { mutate: removeShelfItem } = useRemoveShelfItem(currentUser?.id || "");
+	const { isError: isErrorShelf, isFetching: isFetchingShelf } =
+		useFetchMySHelf(currentUser?.id || "");
+	const { mutate: removeShelfItem } = useRemoveShelfItem();
+
+	// refs
+	const shelfChangedRef = useRef(shelfChanged);
+	const setShelfChangedRef = useRef(setShelfChanged);
+
+	useEffect(() => {
+		shelfChangedRef.current = shelfChanged;
+	}, [shelfChanged]);
+
+	useEffect(() => {
+		setShelfChangedRef.current = setShelfChanged;
+	}, [setShelfChanged]);
+
+	useEffect(() => {
+		setShelfChangedRef.current = setShelfChanged;
+
+		return () => {
+			// Invalidate the shelf query if there are changes
+			// when the component unmounts or dependencies change
+			if (shelfChangedRef.current) {
+				queryClient.invalidateQueries({
+					queryKey: QUERY_KEY_MY_SHELF(currentUser?.id ?? ""),
+				});
+				setShelfChangedRef.current(false);
+			}
+		};
+	}, [currentUser?.id, queryClient, setShelfChanged]);
 
 	const handleReturnBook = (shelfItem: ShelfItem) => {
-		removeShelfItem(shelfItem);
+		removeShelfItem(shelfItem, {
+			onSuccess: () => {
+				setShelf(
+					shelf.filter((item: ShelfItem) => item.bookId !== shelfItem.bookId)
+				);
+				setShelfChanged(true);
+			},
+		});
 	};
+
 	// Filter books by user's shelf
-	const borrowedBooks = filterBooksByShelves(books, myShelf ?? []);
+	const borrowedBooks = filterBooksByShelves(books, shelf ?? []);
 
 	// If loading or error, show appropriate messages
-	if (isLoading && books.length === 0) return <p>Loading books...</p>;
-	if (isError)
+	if (isLoading && isFetchingShelf) return <p>Loading books...</p>;
+
+	if (isErrorShelf || isErrorFetchBook)
 		return (
 			<p className="text-red-500">Error loading books: {error?.message}</p>
 		);
@@ -81,7 +129,7 @@ const MyShelfPage: React.FC = () => {
 				) : (
 					borrowedBooks.map((book) => {
 						const disabled = pendingShelfActions.includes(book.id);
-						const shelfItem = (myShelf ?? []).find(
+						const shelfItem = (shelf ?? []).find(
 							(item) => item.bookId === book.id
 						);
 

@@ -1,6 +1,7 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { useQueryClient } from "@tanstack/react-query";
 
 // hooks
 import {
@@ -32,10 +33,11 @@ import { isBookInShelf } from "@/helpers";
 import { BookRow, HeaderRow } from "@/components";
 
 // constants
-import { ROUTE } from "@/constants";
+import { QUERY_KEY_MY_FAVOURITE, ROUTE } from "@/constants";
 
 const SearchPage: React.FC = () => {
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	// store
 	const books = useBookStore((state) => state.books);
@@ -48,18 +50,46 @@ const SearchPage: React.FC = () => {
 	);
 	const setFavourites = useFavouritesStore((state) => state.setFavourites);
 	const favourites = useFavouritesStore((state) => state.favourites);
-	const setFavouritesChanged = useFavouritesChangedStore(
-		(state) => state.setFavouritesChanged
-	);
+	const { favouritesChanged, setFavouritesChanged } =
+		useFavouritesChangedStore();
+
+	// refs
+	const favouritesChangedRef = useRef(favouritesChanged);
+	const setFavouritesChangedRef = useRef(setFavouritesChanged);
+	const setFavouritesRef = useRef(setFavourites);
 
 	// API hooks
 	const { isLoading, isError: isErrorBooks, error } = useFetchBooks();
-	const { isError: isErrorFavourites } = useFetchFavourites(
+	const { isError: isErrorFavourites, isFetching: isFetchingFavourites } =
+		useFetchFavourites(currentUser?.id || "");
+	const { data: shelves, isFetching: isFetchingShelf } = useGetMyShelf(
 		currentUser?.id || ""
 	);
-	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
 	const { mutate: addFavourite } = useAddFavouriteItem();
 	const { mutate: removeFavourite } = useRemoveFavouriteItem();
+
+	useEffect(() => {
+		favouritesChangedRef.current = favouritesChanged;
+	}, [favouritesChanged]);
+	useEffect(() => {
+		setFavouritesRef.current = setFavourites;
+	}, [setFavourites]);
+
+	useEffect(() => {
+		setFavouritesChangedRef.current = setFavouritesChanged;
+
+		return () => {
+			// Invalidate the favourites query if there are changes
+			// when the component unmounts or dependencies change
+			if (favouritesChangedRef.current) {
+				queryClient.invalidateQueries({
+					queryKey: QUERY_KEY_MY_FAVOURITE(currentUser?.id || ""),
+				});
+				setFavouritesChangedRef.current(false);
+				setFavouritesRef.current([]);
+			}
+		};
+	}, [setFavouritesChanged, queryClient, currentUser?.id]);
 
 	// Filter books based on search term and selected filter
 	const filteredBooks = searchFromSidebar
@@ -129,7 +159,8 @@ const SearchPage: React.FC = () => {
 	};
 
 	// If loading or error, show appropriate messages
-	if (isLoading && books.length === 0) return <p>Loading books...</p>;
+	if (isLoading || isFetchingFavourites || isFetchingShelf)
+		return <p>Loading books...</p>;
 
 	if (isErrorBooks || isErrorFavourites)
 		return (
