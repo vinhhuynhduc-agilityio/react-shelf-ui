@@ -1,8 +1,13 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { wrapper } from "@/helpers/test-utils";
-import { useGetMyShelf, useAddShelfItem, useRemoveShelfItem } from "../shelf";
+import {
+	useGetMyShelf,
+	useAddShelfItem,
+	useRemoveShelfItem,
+	useFetchMySHelf,
+} from "../shelf";
 import { getShelves, addShelfItem, removeShelfItem } from "@/services";
-import { usePendingShelfStore } from "@/stores";
+import { usePendingShelfStore, useShelfStore } from "@/stores";
 import { ShelfItem } from "@/types";
 
 jest.mock("@/services", () => ({
@@ -12,6 +17,7 @@ jest.mock("@/services", () => ({
 }));
 jest.mock("@/stores", () => ({
 	usePendingShelfStore: jest.fn(),
+	useShelfStore: jest.fn(),
 }));
 
 describe("useGetMyShelf", () => {
@@ -69,5 +75,38 @@ describe("useRemoveShelfItem", () => {
 		expect(addPending).toHaveBeenCalledWith("2");
 		expect(removePending).toHaveBeenCalledWith("2");
 		expect(removeShelfItem).toHaveBeenCalledWith(item);
+	});
+});
+
+describe("useFetchMySHelf", () => {
+	it("returns shelf from query when successful", async () => {
+		const mockShelf = [{ bookId: "1" }, { bookId: "2" }];
+		(getShelves as jest.Mock).mockResolvedValue(mockShelf);
+
+		const setShelf = jest.fn();
+		(useShelfStore as unknown as jest.Mock).mockReturnValue({
+			shelf: [],
+			setShelf,
+		});
+
+		const { result } = renderHook(() => useFetchMySHelf("user1"), { wrapper });
+
+		await waitFor(() => expect(result.current.shelf).toEqual([]));
+		await waitFor(() => expect(setShelf).toHaveBeenCalledWith(mockShelf));
+	});
+
+	it("returns store shelf if queryShelf is empty", async () => {
+		(getShelves as jest.Mock).mockResolvedValue([]);
+		const setShelf = jest.fn();
+		(useShelfStore as unknown as jest.Mock).mockReturnValue({
+			shelf: [{ bookId: "store" }],
+			setShelf,
+		});
+
+		const { result } = renderHook(() => useFetchMySHelf("user1"), { wrapper });
+
+		await waitFor(() =>
+			expect(result.current.shelf).toEqual([{ bookId: "store" }])
+		);
 	});
 });

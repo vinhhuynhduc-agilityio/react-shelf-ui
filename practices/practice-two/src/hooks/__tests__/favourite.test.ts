@@ -4,13 +4,14 @@ import {
 	useGetFavourites,
 	useAddFavouriteItem,
 	useRemoveFavouriteItem,
+	useFetchFavourites,
 } from "../favourite";
 import {
 	getFavourites,
 	addFavouriteItem,
 	removeFavouriteItem,
 } from "@/services";
-import { usePendingFavouritesStore } from "@/stores";
+import { useFavouritesStore, usePendingFavouritesStore } from "@/stores";
 import { FavouriteItem } from "@/types";
 
 jest.mock("@/services", () => ({
@@ -20,6 +21,7 @@ jest.mock("@/services", () => ({
 }));
 jest.mock("@/stores", () => ({
 	usePendingFavouritesStore: jest.fn(),
+	useFavouritesStore: jest.fn(),
 }));
 
 describe("useGetFavourites", () => {
@@ -45,7 +47,7 @@ describe("useAddFavouriteItem", () => {
 		removePending.mockClear();
 	});
 	it("calls addPending and removePending on mutation", async () => {
-		const { result } = renderHook(() => useAddFavouriteItem("user1"), {
+		const { result } = renderHook(() => useAddFavouriteItem(), {
 			wrapper,
 		});
 		const item: FavouriteItem = { bookId: "1" } as FavouriteItem;
@@ -71,7 +73,7 @@ describe("useRemoveFavouriteItem", () => {
 		removePending.mockClear();
 	});
 	it("calls addPending and removePending on mutation", async () => {
-		const { result } = renderHook(() => useRemoveFavouriteItem("user1"), {
+		const { result } = renderHook(() => useRemoveFavouriteItem(), {
 			wrapper,
 		});
 		const item: FavouriteItem = { bookId: "2" } as FavouriteItem;
@@ -81,5 +83,29 @@ describe("useRemoveFavouriteItem", () => {
 		expect(addPending).toHaveBeenCalledWith("2");
 		expect(removePending).toHaveBeenCalledWith("2");
 		expect(removeFavouriteItem).toHaveBeenCalledWith(item);
+	});
+});
+
+describe("useFetchFavourites", () => {
+	it("returns favourites from query when successful", async () => {
+		const mockFavourites = [{ bookId: "1" }, { bookId: "2" }];
+		(getFavourites as jest.Mock).mockResolvedValue(mockFavourites);
+
+		const setFavourites = jest.fn();
+		(useFavouritesStore as unknown as jest.Mock).mockReturnValue({
+			favourites: [],
+			setFavourites,
+		});
+
+		const { result } = renderHook(() => useFetchFavourites("user1"), {
+			wrapper,
+		});
+
+		await waitFor(() =>
+			expect(result.current.favourites).toEqual(mockFavourites)
+		);
+		expect(setFavourites).toHaveBeenCalledWith(mockFavourites);
+		expect(result.current.isLoading).toBe(false);
+		expect(result.current.isError).toBeFalsy();
 	});
 });
