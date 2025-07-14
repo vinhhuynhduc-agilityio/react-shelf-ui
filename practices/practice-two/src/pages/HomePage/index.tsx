@@ -1,8 +1,8 @@
 // hooks
-import { useFetchBooks, useGetMyShelf } from "@/hooks";
+import { useFetchBooks, useFetchMySHelf } from "@/hooks";
 
 // stores
-import { useBookStore, useUserStore } from "@/stores";
+import { useBookStore, useShelfStore, useUserStore } from "@/stores";
 
 // components
 import { BookHomeList, ErrorBoundary, TodayQuote } from "@/components";
@@ -20,14 +20,12 @@ const HomePage: React.FC = () => {
 	// store
 	const books = useBookStore((state) => state.books);
 	const currentUser = useUserStore((state) => state.currentUser);
+	const { shelf } = useShelfStore();
 
 	// API hooks
-	const { data: myShelf } = useGetMyShelf(currentUser?.id || "");
-
-	// If loading or error, show appropriate messages
-	if (isLoading && books.length === 0) {
-		return <p>Loading books...</p>;
-	}
+	const { isFetching: isFetchingShelf } = useFetchMySHelf(
+		currentUser?.id || ""
+	);
 
 	if (isError) {
 		return (
@@ -43,7 +41,7 @@ const HomePage: React.FC = () => {
 	const recommendedBooks = books.slice(0, 8);
 
 	// Simulated recent readings display; no update feature yet.
-	const recentReadings: Book[] = filterBooksByShelves(books, myShelf ?? []);
+	const recentReadings: Book[] = filterBooksByShelves(books, shelf ?? []);
 
 	return (
 		<div>
@@ -60,11 +58,19 @@ const HomePage: React.FC = () => {
 					</div>
 				}
 			>
-				<BookHomeList title="Recommended for You" books={recommendedBooks} />
+				<BookHomeList
+					title="Recommended for You"
+					books={recommendedBooks}
+					isLoading={isLoading}
+				/>
 			</ErrorBoundary>
 			<ErrorBoundary>
 				{recentReadings.length > 0 ? (
-					<BookHomeList title="Recent Readings" books={recentReadings} />
+					<BookHomeList
+						title="Recent Readings"
+						books={recentReadings}
+						isLoading={isFetchingShelf}
+					/>
 				) : (
 					<p className="mt-4 text-gray-600">
 						You have no recent readings yet. Start reading to see them here!

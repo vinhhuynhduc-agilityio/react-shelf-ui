@@ -95,7 +95,7 @@ describe("SearchPage", () => {
 		jest.clearAllMocks();
 	});
 
-	it("shows loading when loading and no books", () => {
+	it("shows skeleton when loading books or favourites", () => {
 		mockedUseFetchBooks.mockReturnValue({
 			books: [],
 			isLoading: true,
@@ -103,15 +103,15 @@ describe("SearchPage", () => {
 			error: null,
 		});
 		mockedUseFetchFavourites.mockReturnValue({
+			isLoading: true,
 			isError: false,
-			isFetching: true,
 		});
 		render(
 			<MemoryRouter>
 				<SearchPage />
 			</MemoryRouter>
 		);
-		expect(screen.getByText(/loading books/i)).toBeInTheDocument();
+		expect(screen.getByTestId("book-row-skeleton")).toBeInTheDocument();
 	});
 
 	it("shows error when error", () => {

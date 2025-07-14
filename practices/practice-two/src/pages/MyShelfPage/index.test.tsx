@@ -62,22 +62,6 @@ describe("MyShelfPage", () => {
 		jest.clearAllMocks();
 	});
 
-	it("shows loading when loading and no books", () => {
-		mockedUseFetchBooks.mockReturnValue({
-			books: [],
-			isLoading: true,
-			isError: false,
-			error: null,
-		});
-		mockedUseFetchMySHelf.mockReturnValue({ isError: false, isFetching: true });
-		render(
-			<MemoryRouter>
-				<MyShelfPage />
-			</MemoryRouter>
-		);
-		expect(screen.getByText(/loading books/i)).toBeInTheDocument();
-	});
-
 	it("shows error when error", () => {
 		mockedUseFetchBooks.mockReturnValue({
 			books: [],

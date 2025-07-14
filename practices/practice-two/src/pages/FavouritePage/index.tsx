@@ -18,7 +18,7 @@ import { Book, FavouriteItem } from "@/types";
 import { isBookInShelf } from "@/helpers";
 
 // components
-import { BackButton, BookRow, HeaderRow } from "@/components";
+import { BackButton, BookRow, BookRowSkeleton, HeaderRow } from "@/components";
 
 // hooks
 import {
@@ -128,7 +128,7 @@ const FavouritePage: React.FC = () => {
 	);
 
 	// If loading or error, show appropriate messages
-	if (isLoading || isFetchingFavourites) return <p>Loading books...</p>;
+	if (isLoading || isFetchingFavourites) return <BookRowSkeleton />;
 
 	if (isErrorBooks || isErrorFavourites)
 		return (

@@ -16,7 +16,7 @@ import {
 } from "@/stores";
 
 // components
-import { MyShelfBookCard } from "@/components";
+import { MyShelfBookCard, MyShelfBookCardSkeleton } from "@/components";
 
 // constants
 import { QUERY_KEY_MY_SHELF, ROUTE } from "@/constants";
@@ -87,9 +87,6 @@ const MyShelfPage: React.FC = () => {
 	// Filter books by user's shelf
 	const borrowedBooks = filterBooksByShelves(books, shelf ?? []);
 
-	// If loading or error, show appropriate messages
-	if (isLoading && isFetchingShelf) return <p>Loading books...</p>;
-
 	if (isErrorShelf || isErrorFetchBook)
 		return (
 			<p className="text-red-500">Error loading books: {error?.message}</p>
@@ -122,7 +119,13 @@ const MyShelfPage: React.FC = () => {
 				</button>
 			</div>
 			<div className="flex flex-wrap gap-10 justify-center">
-				{borrowedBooks.length === 0 ? (
+				{isLoading || isFetchingShelf ? (
+					<div className="flex flex-wrap gap-10 justify-center">
+						{Array.from({ length: 4 }).map((_, idx) => (
+							<MyShelfBookCardSkeleton key={idx} />
+						))}
+					</div>
+				) : borrowedBooks.length === 0 ? (
 					<p className="text-xl font-semibold text-red-400">
 						No books in your shelf.
 					</p>
@@ -134,7 +137,7 @@ const MyShelfPage: React.FC = () => {
 						);
 
 						return (
-							<div key={book.id} className="">
+							<div key={book.id}>
 								<MyShelfBookCard
 									book={book}
 									borrowedDate={shelfItem?.borrowedDate ?? ""}

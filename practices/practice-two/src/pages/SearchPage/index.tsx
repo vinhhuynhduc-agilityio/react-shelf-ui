@@ -30,7 +30,7 @@ import { Book, FavouriteItem } from "@/types";
 import { isBookInShelf } from "@/helpers";
 
 // components
-import { BookRow, HeaderRow } from "@/components";
+import { BookRow, BookRowSkeleton, HeaderRow } from "@/components";
 
 // constants
 import { QUERY_KEY_MY_FAVOURITE, ROUTE } from "@/constants";
@@ -160,7 +160,7 @@ const SearchPage: React.FC = () => {
 
 	// If loading or error, show appropriate messages
 	if (isLoading || isFetchingFavourites || isFetchingShelf)
-		return <p>Loading books...</p>;
+		return <BookRowSkeleton />;
 
 	if (isErrorBooks || isErrorFavourites)
 		return (

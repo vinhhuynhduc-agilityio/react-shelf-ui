@@ -39,7 +39,9 @@ const BookPreviewPage = () => {
 	const { pendingShelfActions } = usePendingShelfStore();
 
 	// hooks
-	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
+	const { data: shelves, isFetching: isFetchingShelf } = useGetMyShelf(
+		currentUser?.id || ""
+	);
 	const { mutate: addShelf } = useAddShelfItem(currentUser?.id || "");
 
 	const isPendingBorrowedBook = pendingShelfActions.includes(book?.id) || false;
@@ -129,7 +131,7 @@ const BookPreviewPage = () => {
 						<Button
 							className="mt-10"
 							variant="primary"
-							disabled={isInShelf || isPendingBorrowedBook}
+							disabled={isInShelf || isPendingBorrowedBook || isFetchingShelf}
 							onClick={handleBorrow}
 						>
 							{isInShelf ? "Already in shelf" : "Borrow"}

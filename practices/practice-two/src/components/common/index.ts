@@ -12,3 +12,4 @@ export { default as Toast } from "./Toast";
 export { default as ActionIcon } from "./ActionIcon";
 export { default as RatingStars } from "./RatingStars";
 export { HeartIcon } from "./HeartIcon";
+export { default as Skeleton } from "./Skeleton";

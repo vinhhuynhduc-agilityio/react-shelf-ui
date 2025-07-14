@@ -5,8 +5,7 @@ import clsx from "clsx";
 import { Book } from "@/types";
 
 // components
-import { Button, StatusBadge } from "@/components";
-import { HeartIcon } from "@/components/common";
+import { Button, StatusBadge, HeartIcon } from "@/components";
 
 interface RowBookProps {
 	book: Book;

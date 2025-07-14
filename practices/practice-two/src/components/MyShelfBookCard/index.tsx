@@ -23,7 +23,7 @@ const MyShelfBookCard = ({
 				<BookItem book={book} />
 			</div>
 			<div className="w-2/5 flex flex-col justify-between items-center h-full ml-2">
-				<div className="flex flex-col items-center">
+				<div>
 					<p className="md:text-[15px] text-[13px] text-[#4D4D4D]">
 						Borrowed on
 					</p>
