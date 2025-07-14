@@ -1,5 +1,6 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 // stores
 import {
@@ -28,10 +29,11 @@ import {
 } from "@/hooks";
 
 // constants
-import { ROUTE } from "@/constants";
+import { QUERY_KEY_MY_FAVOURITE, ROUTE } from "@/constants";
 
 const FavouritePage: React.FC = () => {
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	// store
 	const books = useBookStore((state) => state.books);
@@ -39,9 +41,14 @@ const FavouritePage: React.FC = () => {
 	const pendingFavouritesActions = usePendingFavouritesStore(
 		(state) => state.pendingFavouritesActions
 	);
-
 	const { favourites, setFavourites } = useFavouritesStore();
-	const { setFavouritesChanged } = useFavouritesChangedStore();
+	const { favouritesChanged, setFavouritesChanged } =
+		useFavouritesChangedStore();
+
+	// refs
+	const favouritesChangedRef = useRef(favouritesChanged);
+	const setFavouritesChangedRef = useRef(setFavouritesChanged);
+	const setFavouritesRef = useRef(setFavourites);
 
 	// API hooks
 	const { isLoading, isError: isErrorBooks, error } = useFetchBooks();
@@ -49,6 +56,29 @@ const FavouritePage: React.FC = () => {
 		useFetchFavourites(currentUser?.id || "");
 	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
 	const { mutate: removeFavourite } = useRemoveFavouriteItem();
+
+	useEffect(() => {
+		favouritesChangedRef.current = favouritesChanged;
+	}, [favouritesChanged]);
+	useEffect(() => {
+		setFavouritesRef.current = setFavourites;
+	}, [setFavourites]);
+
+	useEffect(() => {
+		setFavouritesChangedRef.current = setFavouritesChanged;
+
+		return () => {
+			// Invalidate the favourites query if there are changes
+			// when the component unmounts or dependencies change
+			if (favouritesChangedRef.current) {
+				queryClient.invalidateQueries({
+					queryKey: QUERY_KEY_MY_FAVOURITE(currentUser?.id || ""),
+				});
+				setFavouritesChangedRef.current(false);
+				setFavouritesRef.current([]);
+			}
+		};
+	}, [setFavouritesChanged, queryClient, currentUser?.id]);
 
 	// Filter books by favourites
 	const filteredBooks = books.filter((book) => {
