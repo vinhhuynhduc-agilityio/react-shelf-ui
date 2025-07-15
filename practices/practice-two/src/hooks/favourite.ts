@@ -36,7 +36,7 @@ export const useFetchFavourites = (userId: string) => {
 	} = useGetFavourites(userId);
 
 	useEffect(() => {
-		if (isSuccess && queryFavourites && queryFavourites.length > 0) {
+		if (isSuccess && Array.isArray(queryFavourites)) {
 			setFavourites(queryFavourites || []);
 		}
 	}, [isSuccess, queryFavourites, setFavourites]);

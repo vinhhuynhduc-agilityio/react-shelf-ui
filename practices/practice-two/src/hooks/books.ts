@@ -32,7 +32,7 @@ export const useFetchBooks = () => {
 	} = useBooksQuery(!hasFetched);
 
 	useEffect(() => {
-		if (isSuccess && !hasFetched && queryBooks && queryBooks.length > 0) {
+		if (isSuccess && !hasFetched && Array.isArray(queryBooks)) {
 			setBooks(queryBooks || []);
 		}
 	}, [isSuccess, queryBooks, hasFetched, setBooks]);

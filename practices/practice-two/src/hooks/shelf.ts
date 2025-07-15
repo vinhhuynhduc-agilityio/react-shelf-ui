@@ -31,7 +31,7 @@ export const useFetchMySHelf = (userId: string) => {
 	} = useGetMyShelf(userId);
 
 	useEffect(() => {
-		if (isSuccess && queryShelf && queryShelf.length > 0) {
+		if (isSuccess && Array.isArray(queryShelf)) {
 			setShelf(queryShelf || []);
 		}
 	}, [isSuccess, queryShelf, setShelf]);
