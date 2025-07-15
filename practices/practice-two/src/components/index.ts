@@ -11,3 +11,5 @@ export { default as AuthRedirect } from "./AuthRedirect";
 export { ErrorBoundary } from "./ErrorBoundary";
 export { BookRowSkeleton } from "./BookRowSkeleton";
 export { MyShelfBookCardSkeleton } from "./MyShelfBookCardSkeleton";
+export { BookMediaCard } from "./BookMediaCard";
+export { BookDetailInfo } from "./BookDetailInfo";

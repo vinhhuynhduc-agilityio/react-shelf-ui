@@ -6,6 +6,9 @@ jest.mock("@/config", () => ({
 	API_BASE_URL: "http://localhost:3001",
 }));
 
+// Mock logo image import
+jest.mock("@/assets/images/logo.png", () => "logo.png");
+
 // Fix for TextEncoder and TextDecoder not being available in JSDOM
 if (typeof global.TextEncoder === "undefined") {
 	global.TextEncoder = TextEncoder as typeof global.TextEncoder;

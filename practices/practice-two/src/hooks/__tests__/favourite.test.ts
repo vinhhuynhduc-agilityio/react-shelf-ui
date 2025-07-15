@@ -93,7 +93,7 @@ describe("useFetchFavourites", () => {
 
 		const setFavourites = jest.fn();
 		(useFavouritesStore as unknown as jest.Mock).mockReturnValue({
-			favourites: [],
+			favourites: mockFavourites,
 			setFavourites,
 		});
 

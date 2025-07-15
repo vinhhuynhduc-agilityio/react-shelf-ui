@@ -33,6 +33,7 @@ exports[`Header matches snapshot 1`] = `
         value=""
       />
       <button
+        aria-label="Search"
         class="px-2 py-2 flex-shrink-0 min-w-[40px]"
       >
         <svg

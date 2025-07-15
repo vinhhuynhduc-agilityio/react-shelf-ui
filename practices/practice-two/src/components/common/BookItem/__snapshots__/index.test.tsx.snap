@@ -10,11 +10,11 @@ exports[`BookItem matches snapshot 1`] = `
       class="w-[130px] h-[170px] object-cover rounded-lg mx-auto"
       src="https://i.postimg.cc/qvgQxTNW/4aa430788b3938ca7d778a99fe0ff1587c81c67e.jpg"
     />
-    <h3
+    <h2
       class="w-[130px] text-[12px] font-normal mt-2 truncate text-[#4D4D4D] mx-auto"
     >
       Don't Make Me Think
-    </h3>
+    </h2>
     <p
       class="w-[130px] text-[10px] text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden mx-auto"
     >

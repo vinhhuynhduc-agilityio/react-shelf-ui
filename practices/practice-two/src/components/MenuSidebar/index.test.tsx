@@ -2,6 +2,9 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import MenuSidebar from "../MenuSidebar";
 
+// Mock logo image import
+jest.mock("@/assets/images/logo.png", () => "logo.png");
+
 const mockSetSearchTerm = jest.fn();
 const mockSetSearchFromSidebar = jest.fn();
 const mockSetValueSearch = jest.fn();

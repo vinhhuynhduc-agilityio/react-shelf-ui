@@ -152,7 +152,7 @@ exports[`BookPreviewPage matches snapshot 1`] = `
         class="flex flex-col md:w-[433px] sm:w-[483px] w-[370px]"
       >
         <h1
-          class="lg:text-[35px] md:text-[30px] sm:text-[25px] text-[20px]  text-[#4D4D4D] overflow-hidden text-ellipsis line-clamp-2"
+          class="lg:text-[35px] md:text-[30px] sm:text-[25px] text-[20px] text-[#4D4D4D] overflow-hidden text-ellipsis line-clamp-2"
         >
           Don't Make Me Think
         </h1>
@@ -342,9 +342,7 @@ exports[`BookPreviewPage matches snapshot 1`] = `
               </li>
             </ul>
           </div>
-          <div
-            class=""
-          >
+          <div>
             <h3
               class="lg:text-[18px] md:text-[16px] font-medium mb-[12px] text-[#4D4D4D]"
             >
