@@ -9,16 +9,13 @@ import { profileOptions, ROUTE, searchOptions } from "@/constants";
 
 // components
 import { Avatar, Dropdown } from "@/components";
+import { FilterDropdownIcon, SearchIconFilled } from "@/components/icons";
 
 // hooks
 import { useCurrentUser } from "@/hooks";
 
 // types
 import { DropdownOption } from "@/types";
-
-// assets
-import { FilterDropdownIcon } from "@/components/icons";
-import { SearchIconFilled } from "@/components/icons";
 
 const Header: React.FC = () => {
 	const navigate = useNavigate();
@@ -87,6 +84,11 @@ const Header: React.FC = () => {
 			logout();
 			navigate(ROUTE.LOGIN);
 		} else {
+			// Check if current path matches the option key
+			if (location.pathname === `/${option.key}`) {
+				setProfileMenuOpen(false);
+				return;
+			}
 			navigate(`/${option.key}`);
 		}
 
@@ -132,6 +134,7 @@ const Header: React.FC = () => {
 				<button
 					className="px-2 py-2 flex-shrink-0 min-w-[40px]"
 					onClick={handleSearch}
+					aria-label="Search"
 				>
 					<SearchIconFilled />
 				</button>

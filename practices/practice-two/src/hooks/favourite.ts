@@ -42,7 +42,7 @@ export const useFetchFavourites = (userId: string) => {
 	}, [isSuccess, queryFavourites, setFavourites]);
 
 	return {
-		favourites: queryFavourites || favourites,
+		favourites,
 		isLoading,
 		isError,
 		error,

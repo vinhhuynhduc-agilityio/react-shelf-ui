@@ -1,5 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 
+// assets
+import logo from "@/assets/images/logo.png";
+
 // constants
 import { ROUTE } from "@/constants";
 
@@ -63,8 +66,10 @@ const MenuSidebar = () => {
 			<div className="flex justify-center mb-16">
 				<Link to={ROUTE.HOME}>
 					<img
-						src="https://i.ibb.co/0Yx3BN3/Book-Shelf.png"
+						src={logo}
 						alt="Book Shelf Logo"
+						width={120}
+						height={74}
 						className="w-[80px] lg:w-[120px] h-auto"
 					/>
 				</Link>
@@ -80,11 +85,17 @@ const MenuSidebar = () => {
 						<Link
 							key={item.key}
 							to={item.path}
-							className={`flex w-full items-center justify-center lg:justify-start px-2 py-2 lg:py-3 rounded-lg transition
-					${isActive ? "text-[#4D4D4D]" : "text-[#8A8A8A]"}
-					hover:text-black hover:bg-gray-200
-				`}
-							onClick={() => handleMenuItemClick(item.key)}
+							aria-label={item.label}
+							className={`flex w-full items-center justify-center lg:justify-start px-2 py-2 lg:py-3 rounded-lg transition hover:text-black hover:bg-gray-200 ${
+								isActive ? "text-[#4D4D4D]" : "text-[#8A8A8A]"
+							}`}
+							onClick={(e) => {
+								if (isActive) {
+									e.preventDefault();
+									return;
+								}
+								handleMenuItemClick(item.key);
+							}}
 						>
 							<span className="flex-shrink-0">
 								{item.icon({ fill: iconColor })}

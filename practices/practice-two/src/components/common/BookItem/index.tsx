@@ -15,9 +15,9 @@ const BookItem: React.FC<BookItemProps> = memo(({ book }) => {
 				alt={title}
 				className="w-[130px] h-[170px] object-cover rounded-lg mx-auto"
 			/>
-			<h3 className="w-[130px] text-[12px] font-normal mt-2 truncate text-[#4D4D4D] mx-auto">
+			<h2 className="w-[130px] text-[12px] font-normal mt-2 truncate text-[#4D4D4D] mx-auto">
 				{title}
-			</h3>
+			</h2>
 			<p className="w-[130px] text-[10px] text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden mx-auto">
 				{author.name}, {publishedYear}
 			</p>

@@ -115,6 +115,7 @@ const AccountSettingPage: React.FC = () => {
 				<div className="flex flex-row-reverse">
 					<button
 						type="button"
+						aria-label="Edit Profile"
 						data-testid="edit-profile-btn"
 						className={clsx(
 							"border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition",
