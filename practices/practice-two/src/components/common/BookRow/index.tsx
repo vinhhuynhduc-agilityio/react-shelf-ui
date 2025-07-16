@@ -70,7 +70,6 @@ const BookRow: React.FC<RowBookProps> = memo(
 				>
 					<HeartIcon
 						filled={isFavorite}
-						disabled={disabled}
 						className={clsx(
 							"lg:w-[20px] lg:h-[18px] w-[17px] h-[15px]",
 							"w-6 h-6"
