@@ -108,13 +108,17 @@ const FavouritePage: React.FC = () => {
 				id: favouriteId || "",
 				userId: currentUser?.id || "",
 			};
+			const prevFavourites = favourites || [];
+			setFavourites(prevFavourites.filter((fav) => fav.bookId !== book.id));
 
+			// Remove from favourites
 			removeFavourite(removeItem, {
 				onSuccess: () => {
-					setFavourites(
-						(favourites || []).filter((fav) => fav.bookId !== book.id)
-					);
 					setFavouritesChanged(true);
+				},
+				onError: () => {
+					// Revert on error
+					setFavourites(prevFavourites);
 				},
 			});
 		},

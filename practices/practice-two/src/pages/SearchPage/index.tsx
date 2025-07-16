@@ -139,20 +139,30 @@ const SearchPage: React.FC = () => {
 					userId: currentUser?.id || "",
 			  } as FavouriteItem);
 
+		const prevFavourites = favourites || [];
 		if (!isFavorite) {
+			setFavourites([...prevFavourites, favouriteItem]);
 			addFavourite(favouriteItem, {
 				onSuccess: () => {
-					setFavourites([...(favourites || []), favouriteItem]);
 					setFavouritesChanged(true);
+				},
+				onError: () => {
+					// Revert on error
+					setFavourites(prevFavourites);
 				},
 			});
 		} else {
+			const updatedFavourites = prevFavourites.filter(
+				(fav) => fav.bookId !== book.id
+			);
+			setFavourites(updatedFavourites);
 			removeFavourite(favouriteItem, {
 				onSuccess: () => {
-					setFavourites(
-						(favourites || []).filter((fav) => fav.bookId !== book.id)
-					);
 					setFavouritesChanged(true);
+				},
+				onError: () => {
+					// Revert on error
+					setFavourites(prevFavourites);
 				},
 			});
 		}

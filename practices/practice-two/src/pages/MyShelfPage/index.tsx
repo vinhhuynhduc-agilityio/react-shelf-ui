@@ -74,12 +74,19 @@ const MyShelfPage: React.FC = () => {
 	}, [currentUser?.id, queryClient, setShelfChanged]);
 
 	const handleReturnBook = (shelfItem: ShelfItem) => {
+		const prevShelf = shelf || [];
+		setShelf(
+			prevShelf.filter((item: ShelfItem) => item.bookId !== shelfItem.bookId)
+		);
+
+		// Remove the book from the shelf
 		removeShelfItem(shelfItem, {
 			onSuccess: () => {
-				setShelf(
-					shelf.filter((item: ShelfItem) => item.bookId !== shelfItem.bookId)
-				);
 				setShelfChanged(true);
+			},
+			onError: () => {
+				// Revert on error
+				setShelf(prevShelf);
 			},
 		});
 	};
