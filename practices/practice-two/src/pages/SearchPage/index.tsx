@@ -30,7 +30,12 @@ import { Book, FavouriteItem } from "@/types";
 import { isBookInShelf } from "@/helpers";
 
 // components
-import { BookRow, BookRowSkeleton, HeaderRow } from "@/components";
+import {
+	ApiErrorNotice,
+	BookRow,
+	BookRowSkeleton,
+	HeaderRow,
+} from "@/components";
 
 // constants
 import { QUERY_KEY_MY_FAVOURITE, ROUTE } from "@/constants";
@@ -38,10 +43,27 @@ import { QUERY_KEY_MY_FAVOURITE, ROUTE } from "@/constants";
 const SearchPage: React.FC = () => {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
-
-	// store
-	const books = useBookStore((state) => state.books);
 	const currentUser = useUserStore((state) => state.currentUser);
+
+	// Fetch data from the API
+	const {
+		isLoading,
+		isError: isErrorBooks,
+		error: errorBooks,
+	} = useFetchBooks();
+	const {
+		isError: isErrorFavourites,
+		isFetching: isFetchingFavourites,
+		error: errorFavourites,
+	} = useFetchFavourites(currentUser?.id || "");
+	const {
+		data: shelves,
+		isFetching: isFetchingShelf,
+		isError: isErrorShelf,
+		error: errorShelf,
+	} = useGetMyShelf(currentUser?.id || "");
+
+	const books = useBookStore((state) => state.books);
 	const searchFromSidebar = useSearchStore((state) => state.searchFromSidebar);
 	const searchTerm = useSearchStore((state) => state.searchTerm);
 	const selectedFilter = useSearchFilterStore((state) => state.selectedFilter);
@@ -59,18 +81,13 @@ const SearchPage: React.FC = () => {
 	const setFavouritesRef = useRef(setFavourites);
 
 	// API hooks
-	const { isLoading, isError: isErrorBooks, error } = useFetchBooks();
-	const { isError: isErrorFavourites, isFetching: isFetchingFavourites } =
-		useFetchFavourites(currentUser?.id || "");
-	const { data: shelves, isFetching: isFetchingShelf } = useGetMyShelf(
-		currentUser?.id || ""
-	);
 	const { mutate: addFavourite } = useAddFavouriteItem();
 	const { mutate: removeFavourite } = useRemoveFavouriteItem();
 
 	useEffect(() => {
 		favouritesChangedRef.current = favouritesChanged;
 	}, [favouritesChanged]);
+
 	useEffect(() => {
 		setFavouritesRef.current = setFavourites;
 	}, [setFavourites]);
@@ -103,11 +120,7 @@ const SearchPage: React.FC = () => {
 						: selectedFilter === "Subjects"
 						? book.category
 						: "";
-
-				return (
-					filterValue &&
-					filterValue.toLowerCase().includes(searchTerm.toLowerCase())
-				);
+				return filterValue?.toLowerCase().includes(searchTerm.toLowerCase());
 		  });
 
 	// Navigate to book preview page with book details and from route
@@ -140,46 +153,26 @@ const SearchPage: React.FC = () => {
 			  } as FavouriteItem);
 
 		const prevFavourites = favourites || [];
+
 		if (!isFavorite) {
 			setFavourites([...prevFavourites, favouriteItem]);
+
 			addFavourite(favouriteItem, {
-				onSuccess: () => {
-					setFavouritesChanged(true);
-				},
-				onError: () => {
-					// Revert on error
-					setFavourites(prevFavourites);
-				},
+				onSuccess: () => setFavouritesChanged(true),
+				onError: () => setFavourites(prevFavourites),
 			});
 		} else {
 			const updatedFavourites = prevFavourites.filter(
 				(fav) => fav.bookId !== book.id
 			);
 			setFavourites(updatedFavourites);
+
 			removeFavourite(favouriteItem, {
-				onSuccess: () => {
-					setFavouritesChanged(true);
-				},
-				onError: () => {
-					// Revert on error
-					setFavourites(prevFavourites);
-				},
+				onSuccess: () => setFavouritesChanged(true),
+				onError: () => setFavourites(prevFavourites),
 			});
 		}
 	};
-
-	// If loading or error, show appropriate messages
-	if (isLoading || isFetchingFavourites || isFetchingShelf)
-		return <BookRowSkeleton />;
-
-	if (isErrorBooks || isErrorFavourites)
-		return (
-			<p className="text-red-500">Error loading books: {error?.message}</p>
-		);
-
-	// If no books found, show message
-	if (!books.length)
-		return <p className="text-gray-600">No books available.</p>;
 
 	return (
 		<div className="overflow-x-auto text-[#4D4D4D]">
@@ -188,7 +181,20 @@ const SearchPage: React.FC = () => {
 
 			{/* Rows */}
 			<div className="space-y-4 mt-4">
-				{filteredBooks.length === 0 ? (
+				{isLoading || isFetchingFavourites || isFetchingShelf ? (
+					<BookRowSkeleton />
+				) : isErrorBooks || isErrorFavourites || isErrorShelf ? (
+					<ApiErrorNotice
+						title="Failed to load search data"
+						errors={[
+							isErrorBooks ? errorBooks?.message : null,
+							isErrorFavourites ? errorFavourites?.message : null,
+							isErrorShelf ? errorShelf?.message : null,
+						]}
+					/>
+				) : books.length === 0 ? (
+					<p className="text-gray-600">No books available.</p>
+				) : filteredBooks.length === 0 ? (
 					<p className="text-xl font-semibold text-red-400 mt-9 ml-8">
 						No books found.
 					</p>

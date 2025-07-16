@@ -25,15 +25,17 @@ const BookPreviewPage = () => {
 	const location = useLocation();
 	const book = location.state?.book;
 	const navigate = useNavigate();
-
-	// stores
 	const currentUser = useUserStore((state) => state.currentUser);
-	const { pendingShelfActions } = usePendingShelfStore();
 
-	// hooks
+	// Fetch shelves from the API
 	const { data: shelves, isFetching: isFetchingShelf } = useGetMyShelf(
 		currentUser?.id || ""
 	);
+
+	// stores
+	const { pendingShelfActions } = usePendingShelfStore();
+
+	// hooks
 	const { mutate: addShelf } = useAddShelfItem(currentUser?.id || "");
 
 	const isPendingBorrowedBook = pendingShelfActions.includes(book?.id) || false;

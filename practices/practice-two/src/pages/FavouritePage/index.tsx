@@ -18,7 +18,13 @@ import { Book, FavouriteItem } from "@/types";
 import { isBookInShelf } from "@/helpers";
 
 // components
-import { BackButton, BookRow, BookRowSkeleton, HeaderRow } from "@/components";
+import {
+	ApiErrorNotice,
+	BackButton,
+	BookRow,
+	BookRowSkeleton,
+	HeaderRow,
+} from "@/components";
 
 // hooks
 import {
@@ -34,10 +40,23 @@ import { QUERY_KEY_MY_FAVOURITE, ROUTE } from "@/constants";
 const FavouritePage: React.FC = () => {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
+	const currentUser = useUserStore((state) => state.currentUser);
+
+	// Fetch data from the API
+	const {
+		isLoading,
+		isError: isErrorBooks,
+		error: errorBooks,
+	} = useFetchBooks();
+	const {
+		isError: isErrorFavourites,
+		isFetching: isFetchingFavourites,
+		error: errorFavourites,
+	} = useFetchFavourites(currentUser?.id || "");
+	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
 
 	// store
 	const books = useBookStore((state) => state.books);
-	const currentUser = useUserStore((state) => state.currentUser);
 	const pendingFavouritesActions = usePendingFavouritesStore(
 		(state) => state.pendingFavouritesActions
 	);
@@ -45,17 +64,13 @@ const FavouritePage: React.FC = () => {
 	const { favouritesChanged, setFavouritesChanged } =
 		useFavouritesChangedStore();
 
+	// API hooks
+	const { mutate: removeFavourite } = useRemoveFavouriteItem();
+
 	// refs
 	const favouritesChangedRef = useRef(favouritesChanged);
 	const setFavouritesChangedRef = useRef(setFavouritesChanged);
 	const setFavouritesRef = useRef(setFavourites);
-
-	// API hooks
-	const { isLoading, isError: isErrorBooks, error } = useFetchBooks();
-	const { isError: isErrorFavourites, isFetching: isFetchingFavourites } =
-		useFetchFavourites(currentUser?.id || "");
-	const { data: shelves } = useGetMyShelf(currentUser?.id || "");
-	const { mutate: removeFavourite } = useRemoveFavouriteItem();
 
 	useEffect(() => {
 		favouritesChangedRef.current = favouritesChanged;
@@ -131,18 +146,6 @@ const FavouritePage: React.FC = () => {
 		]
 	);
 
-	// If loading or error, show appropriate messages
-	if (isLoading || isFetchingFavourites) return <BookRowSkeleton />;
-
-	if (isErrorBooks || isErrorFavourites)
-		return (
-			<p className="text-red-500">Error loading books: {error?.message}</p>
-		);
-
-	// If no books in favourites, show message
-	if (!filteredBooks.length)
-		return <p className="text-gray-600">No books in your favourites.</p>;
-
 	return (
 		<>
 			<BackButton onClick={handleClickBack} title="Back" />
@@ -151,8 +154,20 @@ const FavouritePage: React.FC = () => {
 			</h1>
 			<div className="overflow-x-auto text-[#4D4D4D]">
 				<HeaderRow />
+
+				{/* Main content */}
 				<div className="space-y-4 mt-4">
-					{filteredBooks.length === 0 ? (
+					{isLoading || isFetchingFavourites ? (
+						<BookRowSkeleton />
+					) : isErrorBooks || isErrorFavourites ? (
+						<ApiErrorNotice
+							title="Failed to load favourites data"
+							errors={[
+								isErrorBooks ? errorBooks?.message : null,
+								isErrorFavourites ? errorFavourites?.message : null,
+							]}
+						/>
+					) : filteredBooks.length === 0 ? (
 						<p className="text-xl font-semibold text-red-400 mt-9 ml-8">
 							No books found in your favourites.
 						</p>

@@ -14,34 +14,24 @@ import { Book } from "@/types/books";
 import { filterBooksByShelves } from "@/helpers";
 
 const HomePage: React.FC = () => {
-	// Fetch books from the API
-	const { isLoading, isError, error } = useFetchBooks();
-
-	// store
-	const books = useBookStore((state) => state.books);
 	const currentUser = useUserStore((state) => state.currentUser);
-	const { shelf } = useShelfStore();
 
-	// API hooks
+	// Fetch books and shelves from the API
+	const { isLoading: isLoadingBooks, isError, error } = useFetchBooks();
 	const { isFetching: isFetchingShelf } = useFetchMySHelf(
 		currentUser?.id || ""
 	);
 
-	if (isError) {
-		return (
-			<p className="text-red-500">Error loading books: {error?.message}</p>
-		);
-	}
-
-	// If no books are available, show a message
-	if (!books.length) {
-		return <p className="text-gray-600">No books available.</p>;
-	}
+	// store
+	const books = useBookStore((state) => state.books);
+	const { shelf } = useShelfStore();
 
 	const recommendedBooks = books.slice(0, 8);
 
 	// Simulated recent readings display; no update feature yet.
 	const recentReadings: Book[] = filterBooksByShelves(books, shelf ?? []);
+
+	const isLoadingRecent = isFetchingShelf || isLoadingBooks;
 
 	return (
 		<div>
@@ -59,23 +49,29 @@ const HomePage: React.FC = () => {
 				}
 			>
 				<BookHomeList
+					isLoading={isLoadingBooks}
+					isError={isError}
+					errorMessage={error?.message}
 					title="Recommended for You"
 					books={recommendedBooks}
-					isLoading={isLoading}
 				/>
 			</ErrorBoundary>
-			<ErrorBoundary>
-				{recentReadings.length > 0 ? (
-					<BookHomeList
-						title="Recent Readings"
-						books={recentReadings}
-						isLoading={isFetchingShelf}
-					/>
-				) : (
-					<p className="mt-4 text-gray-600">
-						You have no recent readings yet. Start reading to see them here!
-					</p>
-				)}
+			<ErrorBoundary
+				fallback={
+					<div className="flex items-center justify-center p-4 bg-red-100 border border-red-400 text-red-800 rounded-lg shadow-md">
+						<p className="font-semibold text-lg">
+							Error loading recent readings.
+						</p>
+					</div>
+				}
+			>
+				<BookHomeList
+					isLoading={isLoadingRecent}
+					isError={isError}
+					errorMessage={error?.message}
+					title="Recent Readings"
+					books={recentReadings}
+				/>
 			</ErrorBoundary>
 		</div>
 	);

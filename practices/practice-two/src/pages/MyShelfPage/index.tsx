@@ -16,7 +16,11 @@ import {
 } from "@/stores";
 
 // components
-import { MyShelfBookCard, MyShelfBookCardSkeleton } from "@/components";
+import {
+	ApiErrorNotice,
+	MyShelfBookCard,
+	MyShelfBookCardSkeleton,
+} from "@/components";
 
 // constants
 import { QUERY_KEY_MY_SHELF, ROUTE } from "@/constants";
@@ -30,20 +34,27 @@ import { ShelfItem } from "@/types";
 const MyShelfPage: React.FC = () => {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
+	const currentUser = useUserStore((state) => state.currentUser);
 
-	// Fetch books from the API
-	const { isLoading, error, isError: isErrorFetchBook } = useFetchBooks();
+	// Fetch books and shelves from the API
+	const {
+		isLoading,
+		error: errorBooks,
+		isError: isErrorBooks,
+	} = useFetchBooks();
+	const {
+		isError: isErrorShelf,
+		isFetching: isFetchingShelf,
+		error: errorShelf,
+	} = useFetchMySHelf(currentUser?.id || "");
 
 	// store
 	const books = useBookStore((state) => state.books);
-	const currentUser = useUserStore((state) => state.currentUser);
 	const { pendingShelfActions } = usePendingShelfStore();
 	const { shelf, setShelf } = useShelfStore();
 	const { shelfChanged, setShelfChanged } = useShelfChangedStore();
 
 	// API hooks
-	const { isError: isErrorShelf, isFetching: isFetchingShelf } =
-		useFetchMySHelf(currentUser?.id || "");
 	const { mutate: removeShelfItem } = useRemoveShelfItem();
 
 	// refs
@@ -94,20 +105,12 @@ const MyShelfPage: React.FC = () => {
 	// Filter books by user's shelf
 	const borrowedBooks = filterBooksByShelves(books, shelf ?? []);
 
-	if (isErrorShelf || isErrorFetchBook)
-		return (
-			<p className="text-red-500">Error loading books: {error?.message}</p>
-		);
-
-	// If no books found, show message
-	if (!books.length)
-		return <p className="text-gray-600">No books available.</p>;
-
 	return (
 		<div className="">
 			<h1 className="sm:text-[25px] text-[23px] font-bold text-[#4D4D4D] mb-6 mt-4">
 				Your <span className="text-[#EF8361]">Shelf</span>
 			</h1>
+
 			<div className="flex space-x-16 pb-2 mb-6">
 				<button
 					className={clsx(
@@ -125,15 +128,22 @@ const MyShelfPage: React.FC = () => {
 					Favourite
 				</button>
 			</div>
+
 			<div className="flex flex-wrap gap-10 justify-center">
 				{isLoading || isFetchingShelf ? (
-					<div className="flex flex-wrap gap-10 justify-center">
-						{Array.from({ length: 4 }).map((_, idx) => (
-							<MyShelfBookCardSkeleton key={idx} />
-						))}
-					</div>
+					Array.from({ length: 4 }).map((_, idx) => (
+						<MyShelfBookCardSkeleton key={idx} />
+					))
+				) : isErrorShelf || isErrorBooks ? (
+					<ApiErrorNotice
+						title="Failed to load shelf data"
+						errors={[
+							isErrorBooks ? errorBooks?.message : null,
+							isErrorShelf ? errorShelf?.message : null,
+						]}
+					/>
 				) : borrowedBooks.length === 0 ? (
-					<p className="text-xl font-semibold text-red-400">
+					<p className="text-xl font-semibold text-red-400 mt-6 text-center">
 						No books in your shelf.
 					</p>
 				) : (

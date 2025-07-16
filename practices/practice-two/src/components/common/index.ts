@@ -13,3 +13,4 @@ export { default as ActionIcon } from "./ActionIcon";
 export { default as RatingStars } from "./RatingStars";
 export { HeartIcon } from "./HeartIcon";
 export { default as Skeleton } from "./Skeleton";
+export { default as ApiErrorNotice } from "./ApiErrorNotice";

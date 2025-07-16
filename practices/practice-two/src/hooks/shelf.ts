@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addShelfItem, getShelves, removeShelfItem } from "@/services";
 
 // constants
-import { QUERY_KEY_MY_SHELF } from "@/constants";
+import { ERROR_MESSAGE, QUERY_KEY_MY_SHELF } from "@/constants";
 
 // stores
 import { usePendingShelfStore, useShelfStore } from "@/stores";
@@ -13,10 +13,14 @@ import { usePendingShelfStore, useShelfStore } from "@/stores";
 // types
 import { ShelfItem } from "@/types";
 
+// helpers
+import { showDefaultErrorToast } from "@/helpers";
+
 export const useGetMyShelf = (userId: string) =>
 	useQuery({
 		queryKey: QUERY_KEY_MY_SHELF(userId),
 		queryFn: () => getShelves(userId),
+		meta: { errorMessage: ERROR_MESSAGE.SHELF_FETCH_ERROR },
 	});
 
 export const useFetchMySHelf = (userId: string) => {
@@ -62,6 +66,9 @@ export const useAddShelfItem = (id: string) => {
 		onSettled: (_data, _error, shelfItem: ShelfItem) => {
 			removePending(shelfItem.bookId);
 		},
+		onError: () => {
+			showDefaultErrorToast();
+		},
 	});
 };
 
@@ -75,6 +82,9 @@ export const useRemoveShelfItem = () => {
 		},
 		onSettled: (_data, _error, shelfItem: ShelfItem) => {
 			removePending(shelfItem.bookId);
+		},
+		onError: () => {
+			showDefaultErrorToast();
 		},
 	});
 };

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 // constants
-import { QUERY_KEY_MY_FAVOURITE } from "@/constants";
+import { ERROR_MESSAGE, QUERY_KEY_MY_FAVOURITE } from "@/constants";
 
 // services
 import {
@@ -17,10 +17,14 @@ import { FavouriteItem } from "@/types";
 // stores
 import { useFavouritesStore, usePendingFavouritesStore } from "@/stores";
 
+// helpers
+import { showDefaultErrorToast } from "@/helpers";
+
 export const useGetFavourites = (userId: string) => {
 	return useQuery({
 		queryKey: QUERY_KEY_MY_FAVOURITE(userId),
 		queryFn: () => getFavourites(userId),
+		meta: { errorMessage: ERROR_MESSAGE.FAVOURITES_FETCH_ERROR },
 	});
 };
 
@@ -61,6 +65,7 @@ export const useAddFavouriteItem = () => {
 		onSettled: (_data, _error, item: FavouriteItem) => {
 			removePending(item.bookId);
 		},
+		onError: () => showDefaultErrorToast(),
 	});
 };
 
@@ -75,5 +80,6 @@ export const useRemoveFavouriteItem = () => {
 		onSettled: (_data, _error, item: FavouriteItem) => {
 			removePending(item.bookId);
 		},
+		onError: () => showDefaultErrorToast(),
 	});
 };
