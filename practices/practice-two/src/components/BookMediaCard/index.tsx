@@ -1,5 +1,5 @@
 //components
-import { ActionIcon } from "@/components";
+import { IconLabel } from "@/components";
 import { NotesIcon, ReviewIcon, ShareIcon } from "@/components/icons";
 
 export const BookMediaCard = ({
@@ -16,9 +16,9 @@ export const BookMediaCard = ({
 			className="sm:w-[190px] sm:h-[280px] md:w-[209px] md:h-[277px] w-[170px] h-[260px] object-cover rounded-md shadow-lg mt-6"
 		/>
 		<div className="flex items-center space-x-6 mt-4">
-			<ActionIcon icon={<ReviewIcon />} label="Review" />
-			<ActionIcon icon={<NotesIcon />} label="Notes" />
-			<ActionIcon icon={<ShareIcon />} label="Share" />
+			<IconLabel icon={<ReviewIcon />} label="Review" />
+			<IconLabel icon={<NotesIcon />} label="Notes" />
+			<IconLabel icon={<ShareIcon />} label="Share" />
 		</div>
 	</div>
 );

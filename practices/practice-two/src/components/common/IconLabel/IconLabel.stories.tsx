@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import ActionIcon from ".";
+import IconLabel from ".";
 import { ReviewIcon, NotesIcon, ShareIcon } from "@/components/icons";
 
-const meta: Meta<typeof ActionIcon> = {
-	title: "Components/ActionIcon",
-	component: ActionIcon,
+const meta: Meta<typeof IconLabel> = {
+	title: "Components/IconLabel",
+	component: IconLabel,
 	tags: ["autodocs"],
 	argTypes: {
 		icon: { control: false },
@@ -12,7 +12,7 @@ const meta: Meta<typeof ActionIcon> = {
 	},
 };
 export default meta;
-type Story = StoryObj<typeof ActionIcon>;
+type Story = StoryObj<typeof IconLabel>;
 
 export const Review: Story = {
 	args: {

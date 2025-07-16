@@ -6,7 +6,7 @@ import { availability, ROUTE } from "@/constants";
 
 // components
 import {
-	BackButton,
+	IconButton,
 	AuthorCard,
 	BookMediaCard,
 	BookDetailInfo,
@@ -63,7 +63,7 @@ const BookPreviewPage = () => {
 
 	return (
 		<>
-			<BackButton
+			<IconButton
 				onClick={handleClickBackToResult}
 				title="Back to results"
 				disabled={isPendingBorrowedBook}

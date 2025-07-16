@@ -1,11 +1,11 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import BackButton from ".";
+import IconButton from ".";
 
-describe("BackButton", () => {
+describe("IconButton", () => {
 	it("renders with correct title", () => {
 		const handleClick = jest.fn();
-		render(<BackButton onClick={handleClick} title="Go Back" />);
+		render(<IconButton onClick={handleClick} title="Go Back" />);
 		const button = screen.getByRole("button", { name: /Go Back/i });
 		expect(button).toBeInTheDocument();
 		expect(button).toHaveTextContent("Go Back");
@@ -13,7 +13,7 @@ describe("BackButton", () => {
 
 	it("calls onClick when clicked", () => {
 		const handleClick = jest.fn();
-		render(<BackButton onClick={handleClick} title="Back" />);
+		render(<IconButton onClick={handleClick} title="Back" />);
 		const button = screen.getByRole("button", { name: /Back/i });
 		fireEvent.click(button);
 		expect(handleClick).toHaveBeenCalledTimes(1);
@@ -21,7 +21,7 @@ describe("BackButton", () => {
 
 	it("is disabled and has correct class when disabled", () => {
 		const handleClick = jest.fn();
-		render(<BackButton onClick={handleClick} title="Back" disabled />);
+		render(<IconButton onClick={handleClick} title="Back" disabled />);
 		const button = screen.getByRole("button", { name: /Back/i });
 		expect(button).toBeDisabled();
 		expect(button).toHaveClass("cursor-not-allowed");
@@ -30,7 +30,7 @@ describe("BackButton", () => {
 	it("matches snapshot", () => {
 		const handleClick = jest.fn();
 		const { container } = render(
-			<BackButton onClick={handleClick} title="Back" />
+			<IconButton onClick={handleClick} title="Back" />
 		);
 		expect(container).toMatchSnapshot();
 	});

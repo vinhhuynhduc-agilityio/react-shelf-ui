@@ -1,4 +1,4 @@
-const ActionIcon = ({
+const IconLabel = ({
 	icon,
 	label,
 }: {
@@ -13,4 +13,4 @@ const ActionIcon = ({
 	</div>
 );
 
-export default ActionIcon;
+export default IconLabel;

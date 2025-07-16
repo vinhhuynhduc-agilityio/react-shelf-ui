@@ -3,13 +3,13 @@ import clsx from "clsx";
 // components
 import { ArrowBackIcon } from "@/components/icons/ArrowBackIcon";
 
-interface BackButtonProps {
+interface IconButtonProps {
 	onClick: () => void;
 	title: string;
 	disabled?: boolean;
 }
 
-const BackButton: React.FC<BackButtonProps> = ({
+const IconButton: React.FC<IconButtonProps> = ({
 	onClick,
 	title,
 	disabled,
@@ -29,4 +29,4 @@ const BackButton: React.FC<BackButtonProps> = ({
 	);
 };
 
-export default BackButton;
+export default IconButton;

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import BackButton from ".";
+import IconButton from ".";
 
-const meta: Meta<typeof BackButton> = {
-	title: "Components/BackButton",
-	component: BackButton,
+const meta: Meta<typeof IconButton> = {
+	title: "Components/IconButton",
+	component: IconButton,
 	tags: ["autodocs"],
 	argTypes: {
 		title: { control: "text" },
@@ -25,7 +25,7 @@ const meta: Meta<typeof BackButton> = {
 	],
 };
 export default meta;
-type Story = StoryObj<typeof BackButton>;
+type Story = StoryObj<typeof IconButton>;
 
 export const Default: Story = {
 	args: {

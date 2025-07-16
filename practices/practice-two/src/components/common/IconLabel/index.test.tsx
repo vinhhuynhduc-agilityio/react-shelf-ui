@@ -1,18 +1,16 @@
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import ActionIcon from ".";
+import IconLabel from ".";
 
-describe("ActionIcon", () => {
+describe("IconLabel", () => {
 	it("renders the icon and label", () => {
-		render(
-			<ActionIcon icon={<span data-testid="icon">🔥</span>} label="Hot" />
-		);
+		render(<IconLabel icon={<span data-testid="icon">🔥</span>} label="Hot" />);
 		expect(screen.getByTestId("icon")).toBeInTheDocument();
 		expect(screen.getByText("Hot")).toBeInTheDocument();
 	});
 
 	it("applies correct container classes", () => {
-		const { container } = render(<ActionIcon icon={<span />} label="Test" />);
+		const { container } = render(<IconLabel icon={<span />} label="Test" />);
 		expect(container.firstChild).toHaveClass(
 			"flex",
 			"flex-col",
@@ -29,7 +27,7 @@ describe("ActionIcon", () => {
 
 	it("matches snapshot", () => {
 		const { container } = render(
-			<ActionIcon icon={<span>⭐</span>} label="Star" />
+			<IconLabel icon={<span>⭐</span>} label="Star" />
 		);
 		expect(container).toMatchSnapshot();
 	});

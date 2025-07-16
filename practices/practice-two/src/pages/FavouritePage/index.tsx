@@ -20,7 +20,7 @@ import { isBookInShelf } from "@/helpers";
 // components
 import {
 	ApiErrorNotice,
-	BackButton,
+	IconButton,
 	BookRow,
 	BookRowSkeleton,
 	HeaderRow,
@@ -148,7 +148,7 @@ const FavouritePage: React.FC = () => {
 
 	return (
 		<>
-			<BackButton onClick={handleClickBack} title="Back" />
+			<IconButton onClick={handleClickBack} title="Back" />
 			<h1 className="md:text-[25px] text-[20px] font-semibold text-[#4D4D4D] mb-6">
 				Your Favourite
 			</h1>
