@@ -3,7 +3,14 @@ import clsx from "clsx";
 import { useForm, SubmitHandler, FieldErrors } from "react-hook-form";
 
 // components
-import { Avatar, Button, PhoneNumberField, TextField } from "@/components";
+import {
+	Avatar,
+	Button,
+	IconButton,
+	PhoneNumberField,
+	TextField,
+} from "@/components";
+import { CancelIcon, EditIcon } from "@/components/icons";
 
 // hooks
 import { useUpdateUser } from "@/hooks";
@@ -19,7 +26,6 @@ import { AccountFormValues, User } from "@/types";
 
 // stores
 import { useUserStore } from "@/stores";
-import { CancelIcon, EditIcon } from "@/components/icons";
 
 const AccountSettingPage: React.FC = () => {
 	// stores
@@ -113,19 +119,18 @@ const AccountSettingPage: React.FC = () => {
 					</div>
 				</div>
 				<div className="flex flex-row-reverse">
-					<button
-						type="button"
-						aria-label="Edit Profile"
-						data-testid="edit-profile-btn"
+					<IconButton
+						icon={isEditing ? CancelIcon : EditIcon}
+						classNameIcon="w-5 h-5"
+						onClick={toggleEdit}
+						dataTestId="toggle-edit-btn"
 						className={clsx(
 							"border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition",
 							isPending && "cursor-not-allowed opacity-50"
 						)}
-						onClick={toggleEdit}
 						disabled={isPending}
-					>
-						{isEditing ? <CancelIcon /> : <EditIcon />}
-					</button>
+						ariaLabel="Edit profile"
+					/>
 				</div>
 				{/* Profile Fields */}
 				<div className="flex md:flex-row flex-col gap-4">

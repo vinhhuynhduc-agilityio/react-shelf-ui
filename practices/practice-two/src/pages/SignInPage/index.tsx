@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
 // components
-import { AuthButton, TextField } from "@/components";
+import { Button, TextField } from "@/components";
 
 // stores
 import { useUserStore } from "@/stores/userStore";
@@ -128,7 +128,9 @@ const SignInPage: React.FC = () => {
 							Forgot password?
 						</a>
 					</div>
-					<AuthButton
+					<Button
+						type="submit"
+						variant="auth"
 						disabled={isPending}
 						label="Login"
 						pendingLabel="Checking..."

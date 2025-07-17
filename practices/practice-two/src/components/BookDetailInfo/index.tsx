@@ -54,7 +54,7 @@ export const BookDetailInfo = ({
 		</div>
 
 		<Button
-			className="mt-10"
+			className="mt-10 font-semibold"
 			variant="primary"
 			disabled={isInShelf || isPending || isFetching}
 			onClick={onBorrow}

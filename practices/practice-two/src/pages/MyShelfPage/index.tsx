@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -18,6 +17,7 @@ import {
 // components
 import {
 	ApiErrorNotice,
+	Button,
 	MyShelfBookCard,
 	MyShelfBookCardSkeleton,
 } from "@/components";
@@ -112,21 +112,17 @@ const MyShelfPage: React.FC = () => {
 			</h1>
 
 			<div className="flex space-x-16 pb-2 mb-6">
-				<button
-					className={clsx(
-						"font-medium text-[#4D4D4D] sm:text-[20px] text-[18px]"
-					)}
-				>
-					All Books
-				</button>
-				<button
-					className={clsx(
-						"text-[#868686] hover:text-[#bfbebe] transition sm:text-[20px] text-[18px] font-medium"
-					)}
+				<Button
+					variant="text"
+					label="All Books"
+					className="font-medium text-[#4D4D4D] sm:text-[20px] text-[18px]"
+				/>
+				<Button
+					variant="text"
+					label="Favourite"
 					onClick={() => navigate(ROUTE.FAVOURITE)}
-				>
-					Favourite
-				</button>
+					className="text-[#868686] hover:text-[#bfbebe] transition sm:text-[20px] text-[18px] font-medium"
+				/>
 			</div>
 
 			<div className="flex flex-wrap gap-10 justify-center">

@@ -1,32 +1,56 @@
+import { FC, ElementType } from "react";
 import clsx from "clsx";
 
-// components
-import { ArrowBackIcon } from "@/components/icons/ArrowBackIcon";
-
 interface IconButtonProps {
-	onClick: () => void;
-	title: string;
+	type?: "button" | "submit";
+	icon: ElementType;
+	classNameIcon?: string;
+	filled?: boolean;
+	label?: React.ReactNode;
+	ariaLabel?: string;
+	onClick?: () => void;
 	disabled?: boolean;
+	className?: string;
+	iconPosition?: "left" | "right";
+	dataTestId?: string;
 }
 
-const IconButton: React.FC<IconButtonProps> = ({
+export const IconButton: FC<IconButtonProps> = ({
+	type = "button",
+	icon: Icon,
+	classNameIcon = "",
+	filled,
+	label,
+	ariaLabel,
 	onClick,
-	title,
-	disabled,
+	disabled = false,
+	className = "",
+	iconPosition = "left",
+	dataTestId = "",
 }) => {
+	const iconElement = (
+		<Icon
+			className={classNameIcon}
+			{...(typeof filled === "boolean" ? { filled } : {})}
+		/>
+	);
+
 	return (
 		<button
+			type={type}
 			onClick={onClick}
-			className={clsx(
-				"flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4",
-				disabled && "cursor-not-allowed text-gray-200 hover:text-gray-400"
-			)}
 			disabled={disabled}
+			aria-label={ariaLabel}
+			data-testid={dataTestId}
+			className={clsx(
+				"flex items-center transition-all",
+				disabled && "opacity-50",
+				className
+			)}
 		>
-			<ArrowBackIcon />
-			{title}
+			{iconPosition === "left" && iconElement}
+			{label}
+			{iconPosition === "right" && iconElement}
 		</button>
 	);
 };
-
-export default IconButton;

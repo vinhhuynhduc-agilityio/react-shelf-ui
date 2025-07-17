@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { Book } from "@/types";
 
 // components
-import { Button, StatusBadge, HeartIcon } from "@/components";
+import { Button, StatusBadge, HeartIcon, IconButton } from "@/components";
 
 interface RowBookProps {
 	book: Book;
@@ -62,20 +62,15 @@ const BookRow: React.FC<RowBookProps> = memo(
 				<div className="text-left">
 					<StatusBadge status={isInShelf ? "In-Shelf" : "None"} />
 				</div>
-				<button
-					className="hover:scale-110 transition-all"
+				<IconButton
+					icon={HeartIcon}
+					filled={isFavorite}
+					classNameIcon="lg:w-[20px] lg:h-[18px] w-[17px] h-[15px]"
 					onClick={handleFavoriteClick}
-					aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+					ariaLabel="Toggle favorite"
+					className="hover:scale-110"
 					disabled={disabled}
-				>
-					<HeartIcon
-						filled={isFavorite}
-						className={clsx(
-							"lg:w-[20px] lg:h-[18px] w-[17px] h-[15px]",
-							"w-6 h-6"
-						)}
-					/>
-				</button>
+				/>
 				<div className="text-center">
 					<Button variant="outline" onClick={handlePreviewClick}>
 						Preview

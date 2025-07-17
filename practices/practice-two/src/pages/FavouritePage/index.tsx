@@ -25,6 +25,7 @@ import {
 	BookRowSkeleton,
 	HeaderRow,
 } from "@/components";
+import { ArrowBackIcon } from "@/components/icons";
 
 // hooks
 import {
@@ -148,7 +149,14 @@ const FavouritePage: React.FC = () => {
 
 	return (
 		<>
-			<IconButton onClick={handleClickBack} title="Back" />
+			<IconButton
+				icon={ArrowBackIcon}
+				label="Back"
+				iconPosition="left"
+				onClick={handleClickBack}
+				className="flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4"
+				classNameIcon="mr-[9px]"
+			/>
 			<h1 className="md:text-[25px] text-[20px] font-semibold text-[#4D4D4D] mb-6">
 				Your Favourite
 			</h1>

@@ -11,6 +11,7 @@ import {
 	BookMediaCard,
 	BookDetailInfo,
 } from "@/components";
+import { ArrowBackIcon } from "@/components/icons";
 
 // stores
 import { usePendingShelfStore, useUserStore } from "@/stores";
@@ -64,9 +65,12 @@ const BookPreviewPage = () => {
 	return (
 		<>
 			<IconButton
+				icon={ArrowBackIcon}
+				label="Back to results"
+				iconPosition="left"
 				onClick={handleClickBackToResult}
-				title="Back to results"
-				disabled={isPendingBorrowedBook}
+				className="flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4"
+				classNameIcon="mr-[9px]"
 			/>
 			<div className="flex xl:flex-row flex-col justify-between xl:space-x-6">
 				<div className="flex md:flex-row flex-col justify-start mb-16">

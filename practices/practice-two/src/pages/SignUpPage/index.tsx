@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRegisterUser } from "@/hooks";
 
 // components
-import { AuthButton, TextField } from "@/components";
+import { Button, TextField } from "@/components";
 
 // constants
 import { ROUTE } from "@/constants";
@@ -166,7 +166,9 @@ const SignUpPage: React.FC = () => {
 					</div>
 
 					{/* Submit Button */}
-					<AuthButton
+					<Button
+						type="submit"
+						variant="auth"
 						disabled={isPending}
 						label="Register"
 						pendingLabel="Registering..."

@@ -1,9 +1,8 @@
 export { TextField } from "./TextField";
-export { default as AuthButton } from "./AuthButton";
+export { IconButton } from "./IconButton";
 export { default as Button } from "./Button";
 export { default as Dropdown } from "./Dropdown";
 export { default as Avatar } from "./Avatar";
-export { default as IconButton } from "./IconButton";
 export { default as BookItem } from "./BookItem";
 export { default as BookRow } from "./BookRow";
 export { default as HeaderRow } from "./HeaderRow";

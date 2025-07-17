@@ -8,7 +8,7 @@ import { useSearchFilterStore, useSearchStore, useUserStore } from "@/stores";
 import { profileOptions, ROUTE, searchOptions } from "@/constants";
 
 // components
-import { Avatar, Dropdown } from "@/components";
+import { Avatar, Dropdown, IconButton } from "@/components";
 import { FilterDropdownIcon, SearchIconFilled } from "@/components/icons";
 
 // hooks
@@ -102,15 +102,15 @@ const Header: React.FC = () => {
 				className="relative flex items-center bg-white border border-gray-300 rounded-full h-[40px] w-full max-w-[280px] sm:max-w-[300px] md:max-w-[450px] overflow-hidden"
 				ref={filterButtonRef}
 			>
-				<button
+				<IconButton
+					icon={FilterDropdownIcon}
+					iconPosition="right"
+					label={selectedFilter}
 					data-testid="filter-btn"
 					onClick={() => setFilterMenuOpen(!isFilterMenuOpen)}
 					className="px-2 py-2 bg-[#F5F5F5] text-black border-r flex items-center gap-2 flex-shrink-0"
-				>
-					{selectedFilter}
-					<FilterDropdownIcon />
-				</button>
-
+					ariaLabel="Filter dropdown"
+				/>
 				{/* Dropdown for search filter */}
 				<Dropdown
 					options={searchOptions}
@@ -125,21 +125,20 @@ const Header: React.FC = () => {
 
 				<input
 					type="text"
+					id="search-input"
 					placeholder="Search"
 					className="px-2 py-2 flex-grow focus:outline-none focus:ring-0 w-0 min-w-[60px]"
 					value={valueSearch}
 					onChange={handleOnChange}
 					onKeyDown={handleKeyDown}
 				/>
-				<button
-					className="px-2 py-2 flex-shrink-0 min-w-[40px]"
+				<IconButton
+					icon={SearchIconFilled}
 					onClick={handleSearch}
-					aria-label="Search"
-				>
-					<SearchIconFilled />
-				</button>
+					className="px-2 py-2 flex-shrink-0 min-w-[40px]"
+					ariaLabel="Search"
+				/>
 			</div>
-
 			{/* User Profile */}
 			<div
 				className="relative flex items-center justify-between bg-white border border-gray-300 rounded-full overflow-hidden h-[40px] px-2 w-auto sm:max-w-[150px] md:min-w-[150px]"
@@ -150,29 +149,19 @@ const Header: React.FC = () => {
 					size="small"
 					className="ml-[-5px]"
 				/>
-				<button
-					data-testid="profile-btn"
+				<IconButton
+					icon={FilterDropdownIcon}
+					label={
+						<span className="hidden sm:inline-block truncate">
+							{currentUser?.fullName || "Guest"}
+						</span>
+					}
+					iconPosition="right"
 					onClick={() => setProfileMenuOpen(!isProfileMenuOpen)}
 					className="flex items-center gap-1 px-2 max-w-[90px] sm:max-w-[120px] md:max-w-[120px] truncate overflow-hidden"
-				>
-					<span className="hidden sm:block truncate">
-						{currentUser?.fullName || "Guest"}
-					</span>
-					<svg
-						className="ml-1 flex-shrink-0"
-						width="13"
-						height="7"
-						viewBox="0 0 13 7"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<path
-							d="M7.17585 6.38027C6.79349 6.73088 6.20651 6.73088 5.82415 6.38027L1.03312 1.98704C0.360988 1.37072 0.797034 0.25 1.70896 0.25L11.291 0.25C12.203 0.25 12.639 1.37072 11.9669 1.98704L7.17585 6.38027Z"
-							fill="#4D4D4D"
-						/>
-					</svg>
-				</button>
-
+					classNameIcon="ml-1 flex-shrink-0"
+					data-testid="profile-btn"
+				/>
 				{/* Dropdown for Profile Menu */}
 				<Dropdown
 					options={profileOptions}
