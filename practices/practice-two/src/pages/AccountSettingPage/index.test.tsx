@@ -60,7 +60,7 @@ describe("AccountSettingPage", () => {
 				<AccountSettingPage />
 			</MemoryRouter>
 		);
-		fireEvent.click(screen.getByTestId("edit-profile-btn"));
+		fireEvent.click(screen.getByTestId("toggle-edit-btn"));
 		await waitFor(() => {
 			expect(screen.getByLabelText(/full name/i)).not.toBeDisabled();
 		});
@@ -93,7 +93,7 @@ describe("AccountSettingPage", () => {
 				<AccountSettingPage />
 			</MemoryRouter>
 		);
-		fireEvent.click(screen.getByTestId("edit-profile-btn"));
+		fireEvent.click(screen.getByTestId("toggle-edit-btn"));
 		await waitFor(() => {
 			expect(screen.getByLabelText(/college email id/i)).not.toBeDisabled();
 		});
@@ -114,7 +114,7 @@ describe("AccountSettingPage", () => {
 				<AccountSettingPage />
 			</MemoryRouter>
 		);
-		fireEvent.click(screen.getByTestId("edit-profile-btn"));
+		fireEvent.click(screen.getByTestId("toggle-edit-btn"));
 		await waitFor(() => {
 			expect(screen.getByLabelText(/full name/i)).not.toBeDisabled();
 		});
@@ -139,7 +139,7 @@ describe("AccountSettingPage", () => {
 				<AccountSettingPage />
 			</MemoryRouter>
 		);
-		fireEvent.click(screen.getByTestId("edit-profile-btn"));
+		fireEvent.click(screen.getByTestId("toggle-edit-btn"));
 		await waitFor(() => {
 			expect(screen.getByLabelText(/full name/i)).not.toBeDisabled();
 		});

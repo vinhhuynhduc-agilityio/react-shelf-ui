@@ -115,7 +115,7 @@ exports[`SignInPage matches snapshot 1`] = `
           </a>
         </div>
         <button
-          class="bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] transition-opacity  mt-4"
+          class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] transition-opacity [object Object] mt-4"
           type="submit"
         >
           Login

@@ -35,9 +35,8 @@ const MyShelfBookCard = ({
 					variant="outline"
 					onClick={() => onReturn(book.id)}
 					disabled={disabled}
-				>
-					Return
-				</Button>
+					label="Return"
+				/>
 			</div>
 		</div>
 	);

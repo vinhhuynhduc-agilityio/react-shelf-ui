@@ -75,8 +75,7 @@ describe("MyShelfPage", () => {
 				<MyShelfPage />
 			</MemoryRouter>
 		);
-		expect(screen.getByText(/error loading books/i)).toBeInTheDocument();
-		expect(screen.getByText(/fail/)).toBeInTheDocument();
+		expect(screen.getByText(/Failed to load shelf data/)).toBeInTheDocument();
 	});
 
 	it("shows no books available if none", () => {
@@ -91,7 +90,7 @@ describe("MyShelfPage", () => {
 				<MyShelfPage />
 			</MemoryRouter>
 		);
-		expect(screen.getByText(/no books available/i)).toBeInTheDocument();
+		expect(screen.getByText(/No books in your shelf./i)).toBeInTheDocument();
 	});
 
 	it("shows no books in your shelf if none", () => {

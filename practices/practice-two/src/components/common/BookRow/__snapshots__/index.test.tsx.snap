@@ -55,11 +55,13 @@ exports[`BookRow matches snapshot 1`] = `
       </span>
     </div>
     <button
-      aria-label="Remove from favorites"
-      class="hover:scale-110 transition-all"
+      aria-label="Toggle favorite"
+      class="flex items-center transition-all hover:scale-110"
+      data-testid=""
+      type="button"
     >
       <svg
-        class="lg:w-[20px] lg:h-[18px] w-[17px] h-[15px] w-6 h-6"
+        class="lg:w-[20px] lg:h-[18px] w-[17px] h-[15px]"
         fill="none"
         height="18"
         viewBox="0 0 20 18"
@@ -76,7 +78,7 @@ exports[`BookRow matches snapshot 1`] = `
       class="text-center"
     >
       <button
-        class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all font-normal w-[70px] h-[25px] border border-[#F76B56] text-[#F76B56] text-[12px] rounded-[5px] hover:bg-orange-100 md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px]  md:text-[14px]"
+        class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all text-[12px] rounded-[5px] w-[70px] h-[25px] md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px] md:text-[14px] [object Object]"
         type="button"
       >
         Preview

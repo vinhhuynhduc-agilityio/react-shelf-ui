@@ -2,18 +2,20 @@ import { render, screen } from "@testing-library/react";
 import { BookRowSkeleton } from ".";
 
 describe("BookRowSkeleton", () => {
-	it("renders the header row", () => {
-		render(<BookRowSkeleton />);
-		expect(screen.getByText(/title/i)).toBeInTheDocument();
+	it("renders 4 skeleton rows", () => {
+		const { container } = render(<BookRowSkeleton />);
+		const rows = container.querySelectorAll("div.grid");
+		expect(rows.length).toBe(4);
 	});
 
 	it("renders skeletons for book image and info", () => {
 		render(<BookRowSkeleton />);
-		expect(screen.getAllByTestId(/skeleton/i)[0]).toBeInTheDocument();
+		const skeletons = screen.getAllByTestId(/book-row-skeleton/i);
+		expect(skeletons.length).toBeGreaterThan(0);
 	});
 
-	it("has correct data-testid for the wrapper", () => {
-		render(<BookRowSkeleton />);
-		expect(screen.getByTestId("book-row-skeleton")).toBeInTheDocument();
+	it("matches snapshot", () => {
+		const { container } = render(<BookRowSkeleton />);
+		expect(container).toMatchSnapshot();
 	});
 });

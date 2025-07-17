@@ -3,6 +3,8 @@ import Header from ".";
 import { MemoryRouter } from "react-router-dom";
 import { useSearchFilterStore, useSearchStore, useUserStore } from "@/stores";
 
+const navigate = jest.fn();
+
 jest.mock("@/hooks", () => ({
 	useCurrentUser: () => ({
 		fullName: "Test User",
@@ -19,6 +21,11 @@ jest.mock("@/stores", () => {
 		useSearchStore: jest.fn(),
 	};
 });
+
+jest.mock("react-router-dom", () => ({
+	...jest.requireActual("react-router-dom"),
+	useNavigate: () => navigate,
+}));
 
 const mockedUseUserStore = useUserStore as unknown as jest.Mock;
 const mockedFilterStore = useSearchFilterStore as unknown as jest.Mock;
@@ -104,5 +111,107 @@ describe("Header", () => {
 		const logoutOption = screen.getByText(/logout/i, { selector: "li" });
 		fireEvent.click(logoutOption);
 		expect(logout).toHaveBeenCalled();
+	});
+
+	it("calls setSearchTerm when typing in search bar", async () => {
+		const setSearchTerm = jest.fn();
+		const setValueSearch = jest.fn();
+
+		mockedSearchStore.mockImplementation((cb) =>
+			cb({
+				searchTerm: "",
+				setSearchTerm,
+				setSearchFromSidebar: jest.fn(),
+				valueSearch: "",
+				setValueSearch,
+			})
+		);
+
+		render(
+			<MemoryRouter>
+				<Header />
+			</MemoryRouter>
+		);
+
+		const input = screen.getByPlaceholderText(/search/i);
+		screen.debug(input);
+		fireEvent.input(input, { target: { value: "react" } });
+		expect(setValueSearch).toHaveBeenCalledWith("react");
+	});
+
+	it("calls setSelectedFilter when filter is changed", () => {
+		const setSelectedFilter = jest.fn();
+		mockedFilterStore.mockImplementation((cb) =>
+			cb({
+				selectedFilter: "All",
+				setSelectedFilter,
+			})
+		);
+
+		render(
+			<MemoryRouter>
+				<Header />
+			</MemoryRouter>
+		);
+		const filterBtn = screen.getByTestId("filter-btn");
+		fireEvent.click(filterBtn);
+		const filterOption = screen.getByText(/Title/i, { selector: "li" });
+		fireEvent.click(filterOption);
+
+		expect(setSelectedFilter).toHaveBeenCalledWith("Title");
+	});
+
+	it("calls handleSearch when pressing Enter in search input", () => {
+		const setSearchTerm = jest.fn();
+		const setSearchFromSidebar = jest.fn();
+		mockedSearchStore.mockImplementation((cb) =>
+			cb({
+				setSearchTerm,
+				searchTerm: "",
+				setSearchFromSidebar,
+				valueSearch: "react",
+				setValueSearch: jest.fn(),
+			})
+		);
+
+		render(
+			<MemoryRouter>
+				<Header />
+			</MemoryRouter>
+		);
+		const input = screen.getByPlaceholderText(/search/i);
+		fireEvent.keyDown(input, { key: "Enter" });
+		expect(setSearchTerm).toHaveBeenCalledWith("react");
+		expect(setSearchFromSidebar).toHaveBeenCalledWith(false);
+		expect(navigate).toHaveBeenCalledWith("/search");
+	});
+
+	it("calls logout and navigates to login when selecting logout in profile menu", () => {
+		const logout = jest.fn();
+		mockedUseUserStore.mockImplementation((cb) => cb({ logout }));
+		render(
+			<MemoryRouter>
+				<Header />
+			</MemoryRouter>
+		);
+		const profileBtn = screen.getByTestId("profile-btn");
+		fireEvent.click(profileBtn);
+		const logoutOption = screen.getByText(/logout/i, { selector: "li" });
+		fireEvent.click(logoutOption);
+		expect(logout).toHaveBeenCalled();
+		expect(navigate).toHaveBeenCalledWith("/login");
+	});
+
+	it("navigates to correct page when selecting profile menu option", () => {
+		render(
+			<MemoryRouter>
+				<Header />
+			</MemoryRouter>
+		);
+		const profileBtn = screen.getByTestId("profile-btn");
+		fireEvent.click(profileBtn);
+		const option = screen.getByText(/profile/i, { selector: "li" });
+		fireEvent.click(option);
+		expect(navigate).toHaveBeenCalledWith("/account-setting");
 	});
 });

@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ApiErrorNotice matches snapshot 1`] = `
+<div>
+  <div
+    class="w-full "
+  >
+    <div
+      class="border border-red-500 rounded-xl px-6 py-4 bg-white text-center shadow-md "
+    >
+      <div
+        class="flex flex-col items-center justify-center gap-2"
+      >
+        <svg
+          class="text-red-600 text-4xl"
+          data-testid="MdError-icon"
+          fill="currentColor"
+          height="1em"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+          />
+        </svg>
+        <p
+          class="text-red-600 font-bold text-lg"
+        >
+          Error
+        </p>
+        <ul
+          class="text-red-600 text-sm list-none mt-2"
+        >
+          <li
+            class="font-medium text-left"
+          >
+            Error!
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+`;

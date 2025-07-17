@@ -111,7 +111,7 @@ describe("SearchPage", () => {
 				<SearchPage />
 			</MemoryRouter>
 		);
-		expect(screen.getByTestId("book-row-skeleton")).toBeInTheDocument();
+		expect(screen.getAllByTestId("book-row-skeleton")[0]).toBeInTheDocument();
 	});
 
 	it("shows error when error", () => {
@@ -130,8 +130,7 @@ describe("SearchPage", () => {
 				<SearchPage />
 			</MemoryRouter>
 		);
-		expect(screen.getByText(/error loading books/i)).toBeInTheDocument();
-		expect(screen.getByText(/fail/)).toBeInTheDocument();
+		expect(screen.getByText(/Failed to load search data/)).toBeInTheDocument();
 	});
 
 	it("shows no books available if none", () => {

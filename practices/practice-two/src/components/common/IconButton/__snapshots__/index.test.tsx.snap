@@ -3,51 +3,15 @@
 exports[`IconButton matches snapshot 1`] = `
 <div>
   <button
-    class="flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4"
+    class="flex items-center transition-all"
+    data-testid=""
+    type="button"
   >
     <svg
-      class="mr-2.5"
-      fill="none"
-      height="14"
-      viewBox="0 0 14 14"
-      width="14"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M13.25 7L0.75 7M0.75 7L6.375 12.625M0.75 7L6.375 1.375"
-        stroke="#4D4D4D"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="1.5"
-      />
-    </svg>
-    Back
-  </button>
-</div>
-`;
-
-exports[`IconButton matches snapshot 1`] = `
-<div>
-  <button
-    class="flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4"
-  >
-    <svg
-      class="mr-2.5"
-      fill="none"
-      height="14"
-      viewBox="0 0 14 14"
-      width="14"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M13.25 7L0.75 7M0.75 7L6.375 12.625M0.75 7L6.375 1.375"
-        stroke="#4D4D4D"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="1.5"
-      />
-    </svg>
-    Back
+      class=""
+      data-testid="mock-icon"
+    />
+    Snapshot
   </button>
 </div>
 `;

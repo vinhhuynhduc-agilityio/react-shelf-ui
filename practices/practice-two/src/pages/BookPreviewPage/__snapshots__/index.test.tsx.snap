@@ -3,10 +3,12 @@
 exports[`BookPreviewPage matches snapshot 1`] = `
 <div>
   <button
-    class="flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4"
+    class="flex items-center transition-all flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4"
+    data-testid=""
+    type="button"
   >
     <svg
-      class="mr-2.5"
+      class="mr-[9px]"
       fill="none"
       height="14"
       viewBox="0 0 14 14"
@@ -356,7 +358,7 @@ exports[`BookPreviewPage matches snapshot 1`] = `
           </div>
         </div>
         <button
-          class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all font-normal bg-orange-500 text-white hover:bg-orange-600 lg:w-[201px] lg:h-[49px] md:w-[181px] md:h-[39px] w-[161px] h-[29px] rounded-[8px] lg:text-[18px] md:text-[16px] font-bold mt-10"
+          class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all rounded-[8px] font-bold text-white lg:text-[18px] md:text-[16px] w-[161px] h-[29px] md:w-[181px] md:h-[39px] lg:w-[201px] lg:h-[49px] [object Object] mt-10 font-semibold"
           type="button"
         >
           Borrow

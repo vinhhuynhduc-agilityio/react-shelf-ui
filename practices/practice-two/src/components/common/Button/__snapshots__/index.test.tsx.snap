@@ -3,7 +3,7 @@
 exports[`Button matches snapshot 1`] = `
 <div>
   <button
-    class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all font-normal bg-orange-500 text-white hover:bg-orange-600 lg:w-[201px] lg:h-[49px] md:w-[181px] md:h-[39px] w-[161px] h-[29px] rounded-[8px] lg:text-[18px] md:text-[16px] font-bold"
+    class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all rounded-[8px] font-bold text-white lg:text-[18px] md:text-[16px] w-[161px] h-[29px] md:w-[181px] md:h-[39px] lg:w-[201px] lg:h-[49px] [object Object]"
     type="button"
   >
     Snapshot

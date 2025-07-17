@@ -93,7 +93,7 @@ describe("FavouritePage", () => {
 				<FavouritePage />
 			</MemoryRouter>
 		);
-		expect(screen.getByTestId("book-row-skeleton")).toBeInTheDocument();
+		expect(screen.getAllByTestId("book-row-skeleton")[0]).toBeInTheDocument();
 	});
 
 	it("shows error when error", () => {
@@ -112,7 +112,9 @@ describe("FavouritePage", () => {
 				<FavouritePage />
 			</MemoryRouter>
 		);
-		expect(screen.getByText(/error loading books/i)).toBeInTheDocument();
+		expect(
+			screen.getByText(/failed to load favourites data/i)
+		).toBeInTheDocument();
 		expect(screen.getByText(/fail/)).toBeInTheDocument();
 	});
 
@@ -128,7 +130,7 @@ describe("FavouritePage", () => {
 			</MemoryRouter>
 		);
 		expect(
-			screen.getByText(/no books in your favourites/i)
+			screen.getByText(/no books found in your favourites/i)
 		).toBeInTheDocument();
 	});
 
@@ -146,7 +148,7 @@ describe("FavouritePage", () => {
 		);
 		expect(screen.getByText(/your favourite/i)).toBeInTheDocument();
 		expect(
-			screen.getAllByLabelText(/remove from favorites/i).length
+			screen.getAllByLabelText(/Toggle favorite/i).length
 		).toBeGreaterThanOrEqual(1);
 	});
 
@@ -174,7 +176,7 @@ describe("FavouritePage", () => {
 				<FavouritePage />
 			</MemoryRouter>
 		);
-		fireEvent.click(screen.getAllByLabelText(/remove from favorites/i)[0]);
+		fireEvent.click(screen.getAllByLabelText(/Toggle favorite/i)[0]);
 		expect(mutate).toHaveBeenCalled();
 		expect(setFavourites).toHaveBeenCalled();
 		expect(setFavouritesChanged).toHaveBeenCalledWith(true);

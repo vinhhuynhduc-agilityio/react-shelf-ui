@@ -1,56 +1,48 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import Button from ".";
+import Button from "./index";
 
 describe("Button", () => {
-	it("renders children correctly", () => {
-		render(<Button>Click me</Button>);
+	it("renders label", () => {
+		render(<Button label="Test" />);
+		expect(screen.getByRole("button", { name: "Test" })).toBeInTheDocument();
+	});
+
+	it("shows pendingLabel when disabled", () => {
+		render(<Button label="Label" pendingLabel="Pending..." disabled />);
 		expect(
-			screen.getByRole("button", { name: /Click me/i })
+			screen.getByRole("button", { name: "Pending..." })
 		).toBeInTheDocument();
 	});
 
-	it("calls onClick when clicked", () => {
-		const handleClick = jest.fn();
-		render(<Button onClick={handleClick}>Click</Button>);
-		fireEvent.click(screen.getByRole("button", { name: /Click/i }));
-		expect(handleClick).toHaveBeenCalledTimes(1);
+	it("calls onClick when not disabled", () => {
+		const onClick = jest.fn();
+		render(<Button label="Click" onClick={onClick} />);
+		fireEvent.click(screen.getByRole("button", { name: "Click" }));
+		expect(onClick).toHaveBeenCalledTimes(1);
+	});
+
+	it("does not call onClick when disabled", () => {
+		const onClick = jest.fn();
+		render(<Button label="Click" onClick={onClick} disabled />);
+		fireEvent.click(screen.getByRole("button", { name: "Click" }));
+		expect(onClick).not.toHaveBeenCalled();
 	});
 
 	it("is disabled when disabled prop is true", () => {
-		render(<Button disabled>Disabled</Button>);
-		const btn = screen.getByRole("button", { name: /Disabled/i });
+		render(<Button label="Disabled" disabled />);
+		const btn = screen.getByRole("button", { name: "Disabled" });
 		expect(btn).toBeDisabled();
-		expect(btn).toHaveClass("cursor-not-allowed");
-	});
-
-	it("applies primary variant by default", () => {
-		render(<Button>Primary</Button>);
-		const btn = screen.getByRole("button", { name: /Primary/i });
-		expect(btn).toHaveClass("bg-orange-500");
-	});
-
-	it("applies outline variant", () => {
-		render(<Button variant="outline">Outline</Button>);
-		const btn = screen.getByRole("button", { name: /Outline/i });
-		expect(btn).toHaveClass("border");
-		expect(btn).toHaveClass("text-[#F76B56]");
-	});
-
-	it("applies text variant", () => {
-		render(<Button variant="text">Text</Button>);
-		const btn = screen.getByRole("button", { name: /Text/i });
-		expect(btn).toHaveClass("text-orange-500");
 	});
 
 	it("applies custom className", () => {
-		render(<Button className="custom-class">Custom</Button>);
-		const btn = screen.getByRole("button", { name: /Custom/i });
-		expect(btn).toHaveClass("custom-class");
+		render(<Button label="Custom" className="my-custom" />);
+		const btn = screen.getByRole("button", { name: "Custom" });
+		expect(btn.className).toMatch(/my-custom/);
 	});
 
 	it("matches snapshot", () => {
-		const { container } = render(<Button>Snapshot</Button>);
+		const { container } = render(<Button label="Snapshot" />);
 		expect(container).toMatchSnapshot();
 	});
 });

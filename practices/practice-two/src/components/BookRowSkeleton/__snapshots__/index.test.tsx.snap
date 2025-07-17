@@ -1,0 +1,370 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`BookRowSkeleton matches snapshot 1`] = `
+<div>
+  <div
+    class="grid xl:grid-cols-[340px_100px_130px_130px_60px_auto] lg:grid-cols-[280px_60px_80px_85px_20px_auto] md:grid-cols-[110px_80px_100px_88px_28px_auto] grid-cols-[95px_80px_30px_auto] gap-4 p-4 border border-gray-200 rounded-[10px] shadow-sm bg-white items-center sm:grid-cols-[95px_80px_90px_30px_auto]"
+    data-testid="book-row-skeleton"
+  >
+    <div
+      class="flex items-center space-x-3"
+    >
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 75px; height: 99px; border-radius: 6px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+      <div
+        class="hidden lg:flex flex-col space-y-2"
+      >
+        <span
+          class="relative overflow-hidden bg-gray-200 animate-pulse block"
+          style="width: 160px; height: 20px; border-radius: 4px;"
+        >
+          <span
+            class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+          />
+        </span>
+        <span
+          class="relative overflow-hidden bg-gray-200 animate-pulse block"
+          style="width: 120px; height: 16px; border-radius: 4px;"
+        >
+          <span
+            class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+          />
+        </span>
+      </div>
+    </div>
+    <div
+      class="hidden md:block"
+    >
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 40px; height: 16px; border-radius: 4px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div
+      class="hidden sm:block"
+    >
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 60px; height: 16px; border-radius: 4px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div>
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 60px; height: 28px; border-radius: 6px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div>
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 20px; height: 18px; border-radius: 4px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div>
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 80px; height: 34px; border-radius: 6px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+  </div>
+  <div
+    class="grid xl:grid-cols-[340px_100px_130px_130px_60px_auto] lg:grid-cols-[280px_60px_80px_85px_20px_auto] md:grid-cols-[110px_80px_100px_88px_28px_auto] grid-cols-[95px_80px_30px_auto] gap-4 p-4 border border-gray-200 rounded-[10px] shadow-sm bg-white items-center sm:grid-cols-[95px_80px_90px_30px_auto]"
+    data-testid="book-row-skeleton"
+  >
+    <div
+      class="flex items-center space-x-3"
+    >
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 75px; height: 99px; border-radius: 6px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+      <div
+        class="hidden lg:flex flex-col space-y-2"
+      >
+        <span
+          class="relative overflow-hidden bg-gray-200 animate-pulse block"
+          style="width: 160px; height: 20px; border-radius: 4px;"
+        >
+          <span
+            class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+          />
+        </span>
+        <span
+          class="relative overflow-hidden bg-gray-200 animate-pulse block"
+          style="width: 120px; height: 16px; border-radius: 4px;"
+        >
+          <span
+            class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+          />
+        </span>
+      </div>
+    </div>
+    <div
+      class="hidden md:block"
+    >
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 40px; height: 16px; border-radius: 4px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div
+      class="hidden sm:block"
+    >
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 60px; height: 16px; border-radius: 4px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div>
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 60px; height: 28px; border-radius: 6px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div>
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 20px; height: 18px; border-radius: 4px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div>
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 80px; height: 34px; border-radius: 6px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+  </div>
+  <div
+    class="grid xl:grid-cols-[340px_100px_130px_130px_60px_auto] lg:grid-cols-[280px_60px_80px_85px_20px_auto] md:grid-cols-[110px_80px_100px_88px_28px_auto] grid-cols-[95px_80px_30px_auto] gap-4 p-4 border border-gray-200 rounded-[10px] shadow-sm bg-white items-center sm:grid-cols-[95px_80px_90px_30px_auto]"
+    data-testid="book-row-skeleton"
+  >
+    <div
+      class="flex items-center space-x-3"
+    >
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 75px; height: 99px; border-radius: 6px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+      <div
+        class="hidden lg:flex flex-col space-y-2"
+      >
+        <span
+          class="relative overflow-hidden bg-gray-200 animate-pulse block"
+          style="width: 160px; height: 20px; border-radius: 4px;"
+        >
+          <span
+            class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+          />
+        </span>
+        <span
+          class="relative overflow-hidden bg-gray-200 animate-pulse block"
+          style="width: 120px; height: 16px; border-radius: 4px;"
+        >
+          <span
+            class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+          />
+        </span>
+      </div>
+    </div>
+    <div
+      class="hidden md:block"
+    >
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 40px; height: 16px; border-radius: 4px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div
+      class="hidden sm:block"
+    >
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 60px; height: 16px; border-radius: 4px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div>
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 60px; height: 28px; border-radius: 6px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div>
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 20px; height: 18px; border-radius: 4px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div>
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 80px; height: 34px; border-radius: 6px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+  </div>
+  <div
+    class="grid xl:grid-cols-[340px_100px_130px_130px_60px_auto] lg:grid-cols-[280px_60px_80px_85px_20px_auto] md:grid-cols-[110px_80px_100px_88px_28px_auto] grid-cols-[95px_80px_30px_auto] gap-4 p-4 border border-gray-200 rounded-[10px] shadow-sm bg-white items-center sm:grid-cols-[95px_80px_90px_30px_auto]"
+    data-testid="book-row-skeleton"
+  >
+    <div
+      class="flex items-center space-x-3"
+    >
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 75px; height: 99px; border-radius: 6px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+      <div
+        class="hidden lg:flex flex-col space-y-2"
+      >
+        <span
+          class="relative overflow-hidden bg-gray-200 animate-pulse block"
+          style="width: 160px; height: 20px; border-radius: 4px;"
+        >
+          <span
+            class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+          />
+        </span>
+        <span
+          class="relative overflow-hidden bg-gray-200 animate-pulse block"
+          style="width: 120px; height: 16px; border-radius: 4px;"
+        >
+          <span
+            class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+          />
+        </span>
+      </div>
+    </div>
+    <div
+      class="hidden md:block"
+    >
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 40px; height: 16px; border-radius: 4px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div
+      class="hidden sm:block"
+    >
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 60px; height: 16px; border-radius: 4px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div>
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 60px; height: 28px; border-radius: 6px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div>
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 20px; height: 18px; border-radius: 4px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+    <div>
+      <span
+        class="relative overflow-hidden bg-gray-200 animate-pulse block"
+        style="width: 80px; height: 34px; border-radius: 6px;"
+      >
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer"
+        />
+      </span>
+    </div>
+  </div>
+</div>
+`;

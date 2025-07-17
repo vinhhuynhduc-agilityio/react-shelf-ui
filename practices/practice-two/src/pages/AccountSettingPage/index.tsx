@@ -223,9 +223,8 @@ const AccountSettingPage: React.FC = () => {
 					variant="primary"
 					disabled={isDisabled}
 					type="submit"
-				>
-					Update Profile
-				</Button>
+					label="Update Profile"
+				/>
 			</form>
 		</div>
 	);

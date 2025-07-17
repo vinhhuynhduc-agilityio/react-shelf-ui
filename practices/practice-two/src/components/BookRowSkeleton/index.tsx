@@ -6,6 +6,7 @@ export const BookRowSkeleton: React.FC = () => {
 			{Array.from({ length: 4 }).map((_, index) => (
 				<div
 					key={index}
+					data-testid="book-row-skeleton"
 					className="grid xl:grid-cols-[340px_100px_130px_130px_60px_auto] lg:grid-cols-[280px_60px_80px_85px_20px_auto] md:grid-cols-[110px_80px_100px_88px_28px_auto] grid-cols-[95px_80px_30px_auto] gap-4 p-4 border border-gray-200 rounded-[10px] shadow-sm bg-white items-center sm:grid-cols-[95px_80px_90px_30px_auto]"
 				>
 					<div className="flex items-center space-x-3">

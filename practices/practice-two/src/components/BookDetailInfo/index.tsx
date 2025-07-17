@@ -52,14 +52,12 @@ export const BookDetailInfo = ({
 				<StatusBadge status={isInShelf ? "In-Shelf" : "None"} />
 			</div>
 		</div>
-
 		<Button
 			className="mt-10 font-semibold"
 			variant="primary"
 			disabled={isInShelf || isPending || isFetching}
 			onClick={onBorrow}
-		>
-			{isInShelf ? "Already in shelf" : "Borrow"}
-		</Button>
+			label={isInShelf ? "Already in shelf" : "Borrow"}
+		/>
 	</div>
 );

@@ -9,11 +9,14 @@ exports[`Header matches snapshot 1`] = `
       class="relative flex items-center bg-white border border-gray-300 rounded-full h-[40px] w-full max-w-[280px] sm:max-w-[300px] md:max-w-[450px] overflow-hidden"
     >
       <button
-        class="px-2 py-2 bg-[#F5F5F5] text-black border-r flex items-center gap-2 flex-shrink-0"
+        aria-label="Filter dropdown"
+        class="flex items-center transition-all px-2 py-2 bg-[#F5F5F5] text-black border-r flex items-center gap-2 flex-shrink-0"
         data-testid="filter-btn"
+        type="button"
       >
         all
         <svg
+          class=""
           fill="none"
           height="7"
           viewBox="0 0 13 7"
@@ -28,15 +31,19 @@ exports[`Header matches snapshot 1`] = `
       </button>
       <input
         class="px-2 py-2 flex-grow focus:outline-none focus:ring-0 w-0 min-w-[60px]"
+        id="search-input"
         placeholder="Search"
         type="text"
         value=""
       />
       <button
         aria-label="Search"
-        class="px-2 py-2 flex-shrink-0 min-w-[40px]"
+        class="flex items-center transition-all px-2 py-2 flex-shrink-0 min-w-[40px]"
+        data-testid=""
+        type="button"
       >
         <svg
+          class=""
           fill="none"
           height="17"
           viewBox="0 0 17 17"
@@ -64,11 +71,12 @@ exports[`Header matches snapshot 1`] = `
         />
       </div>
       <button
-        class="flex items-center gap-1 px-2 max-w-[90px] sm:max-w-[120px] md:max-w-[120px] truncate overflow-hidden"
+        class="flex items-center transition-all flex items-center gap-1 px-2 max-w-[90px] sm:max-w-[120px] md:max-w-[120px] truncate overflow-hidden"
         data-testid="profile-btn"
+        type="button"
       >
         <span
-          class="hidden sm:block truncate"
+          class="hidden sm:inline-block truncate"
         >
           Test User
         </span>

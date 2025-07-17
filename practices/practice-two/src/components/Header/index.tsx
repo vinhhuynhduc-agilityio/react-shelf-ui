@@ -106,7 +106,7 @@ const Header: React.FC = () => {
 					icon={FilterDropdownIcon}
 					iconPosition="right"
 					label={selectedFilter}
-					data-testid="filter-btn"
+					dataTestId="filter-btn"
 					onClick={() => setFilterMenuOpen(!isFilterMenuOpen)}
 					className="px-2 py-2 bg-[#F5F5F5] text-black border-r flex items-center gap-2 flex-shrink-0"
 					ariaLabel="Filter dropdown"
@@ -160,7 +160,7 @@ const Header: React.FC = () => {
 					onClick={() => setProfileMenuOpen(!isProfileMenuOpen)}
 					className="flex items-center gap-1 px-2 max-w-[90px] sm:max-w-[120px] md:max-w-[120px] truncate overflow-hidden"
 					classNameIcon="ml-1 flex-shrink-0"
-					data-testid="profile-btn"
+					dataTestId="profile-btn"
 				/>
 				{/* Dropdown for Profile Menu */}
 				<Dropdown

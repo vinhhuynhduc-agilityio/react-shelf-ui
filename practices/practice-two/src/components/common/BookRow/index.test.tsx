@@ -55,7 +55,7 @@ describe("BookRow", () => {
 				handleFavoriteClick={handleFavoriteClick}
 			/>
 		);
-		const favBtn = screen.getByRole("button", { name: /Add to favorites/i });
+		const favBtn = screen.getByRole("button", { name: /Toggle favorite/i });
 		fireEvent.click(favBtn);
 		expect(handleFavoriteClick).toHaveBeenCalledTimes(1);
 	});
@@ -71,7 +71,7 @@ describe("BookRow", () => {
 			/>
 		);
 		expect(
-			screen.getByRole("button", { name: /Remove from favorites/i })
+			screen.getByRole("button", { name: /Toggle favorite/i })
 		).toBeInTheDocument();
 	});
 
@@ -86,7 +86,7 @@ describe("BookRow", () => {
 				disabled
 			/>
 		);
-		const favBtn = screen.getByRole("button", { name: /Add to favorites/i });
+		const favBtn = screen.getByRole("button", { name: /Toggle favorite/i });
 		expect(favBtn).toBeDisabled();
 	});
 

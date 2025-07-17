@@ -1,5 +1,4 @@
 import { memo, useCallback } from "react";
-import clsx from "clsx";
 
 // types
 import { Book } from "@/types";
@@ -72,9 +71,11 @@ const BookRow: React.FC<RowBookProps> = memo(
 					disabled={disabled}
 				/>
 				<div className="text-center">
-					<Button variant="outline" onClick={handlePreviewClick}>
-						Preview
-					</Button>
+					<Button
+						variant="outline"
+						onClick={handlePreviewClick}
+						label="Preview"
+					/>
 				</div>
 			</div>
 		);

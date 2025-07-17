@@ -6,7 +6,7 @@ exports[`BookHomeList matches snapshot 1`] = `
     class="mb-6 w-full"
   >
     <h2
-      class="text-[22px] sm:text-[24px] md:text-[25px]  text-gray-500 mb-4 font-normal"
+      class="text-[22px] sm:text-[24px] md:text-[25px] text-gray-500 mb-4 font-normal"
     >
       Snapshot Title
     </h2>

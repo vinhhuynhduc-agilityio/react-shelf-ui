@@ -31,7 +31,7 @@ exports[`AccountSettingPage matches snapshot 1`] = `
             <img
               alt="User"
               class="w-full h-full object-cover"
-              src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><rect width='40' height='40' fill='%23C4C4C4'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='10' fill='white'>No Avatar</text></svg>"
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='100%25' height='100%25' rx='8' fill='%23ccc'/%3E%3Ccircle cx='32' cy='24' r='12' fill='%23eee'/%3E%3Cpath d='M16 52c0-8 8-12 16-12s16 4 16 12' fill='%23eee'/%3E%3C/svg%3E"
             />
           </div>
           <input
@@ -53,9 +53,9 @@ exports[`AccountSettingPage matches snapshot 1`] = `
         class="flex flex-row-reverse"
       >
         <button
-          aria-label="Edit Profile"
-          class="border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition"
-          data-testid="edit-profile-btn"
+          aria-label="Edit profile"
+          class="flex items-center transition-all border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition"
+          data-testid="toggle-edit-btn"
           type="button"
         >
           <svg
@@ -234,7 +234,7 @@ exports[`AccountSettingPage matches snapshot 1`] = `
         </div>
       </div>
       <button
-        class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all font-normal bg-gray-400 text-white cursor-not-allowed hover:bg-gray-600 lg:w-[201px] lg:h-[49px] md:w-[181px] md:h-[39px] w-[161px] h-[29px] rounded-[8px] lg:text-[18px] md:text-[16px] font-bold mt-4"
+        class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all rounded-[8px] font-bold text-white lg:text-[18px] md:text-[16px] w-[161px] h-[29px] md:w-[181px] md:h-[39px] lg:w-[201px] lg:h-[49px] [object Object] mt-4"
         disabled=""
         type="submit"
       >

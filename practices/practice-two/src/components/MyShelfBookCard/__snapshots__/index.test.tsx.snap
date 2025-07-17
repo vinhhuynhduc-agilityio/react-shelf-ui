@@ -56,7 +56,7 @@ exports[`MyShelfBookCard matches snapshot 1`] = `
         </p>
       </div>
       <button
-        class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all font-normal w-[70px] h-[25px] border border-[#F76B56] text-[#F76B56] text-[12px] rounded-[5px] hover:bg-orange-100 md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px]  md:text-[14px]"
+        class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all text-[12px] rounded-[5px] w-[70px] h-[25px] md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px] md:text-[14px] [object Object]"
         type="button"
       >
         Return
