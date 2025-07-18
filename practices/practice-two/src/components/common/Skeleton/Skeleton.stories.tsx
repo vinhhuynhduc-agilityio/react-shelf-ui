@@ -1,24 +1,54 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import Skeleton from "./index";
 
-// Simple UI stories
 const meta: Meta<typeof Skeleton> = {
 	title: "Components/Skeleton",
 	component: Skeleton,
 	tags: ["autodocs"],
 	argTypes: {
-		width: { control: "number" },
-		height: { control: "number" },
-		borderRadius: { control: "number" },
-		variant: { control: "radio", options: ["block", "inline-block"] },
-		className: { control: "text" },
+		width: {
+			control: "number",
+			description:
+				"The width of the skeleton in pixels or string (e.g. '100%').",
+		},
+		height: {
+			control: "number",
+			description: "The height of the skeleton.",
+		},
+		borderRadius: {
+			control: "number",
+			description: "Border radius of the skeleton shape.",
+		},
+		variant: {
+			control: "radio",
+			options: ["block", "inline-block"],
+			description: "Display variant of the skeleton (block or inline-block).",
+		},
+		className: {
+			control: "text",
+			description: "Additional Tailwind or custom classes.",
+		},
+		dataTestId: {
+			control: "text",
+			description: "Test ID for testing purposes.",
+		},
+	},
+	parameters: {
+		docs: {
+			description: {
+				component:
+					"A flexible loading skeleton component used to indicate loading UI blocks with shimmer animation.",
+			},
+		},
 	},
 };
+
 export default meta;
 
 type Story = StoryObj<typeof Skeleton>;
 
-export const Default: Story = {
+export const BlockSkeleton: Story = {
+	name: "Block Skeleton",
 	args: {
 		width: 100,
 		height: 20,
@@ -26,9 +56,18 @@ export const Default: Story = {
 		variant: "block",
 		dataTestId: "skeleton",
 	},
+	parameters: {
+		docs: {
+			description: {
+				story:
+					"Basic block-level skeleton, typically used for list items or larger UI elements.",
+			},
+		},
+	},
 };
 
-export const Inline: Story = {
+export const InlineSkeleton: Story = {
+	name: "Inline Skeleton",
 	args: {
 		width: 80,
 		height: 18,
@@ -36,9 +75,18 @@ export const Inline: Story = {
 		variant: "inline-block",
 		dataTestId: "skeleton-inline",
 	},
+	parameters: {
+		docs: {
+			description: {
+				story:
+					"An inline-block skeleton useful for inline content like buttons or small text placeholders.",
+			},
+		},
+	},
 };
 
-export const CustomClass: Story = {
+export const CustomClassSkeleton: Story = {
+	name: "Skeleton with Custom Class",
 	args: {
 		width: 120,
 		height: 40,
@@ -46,9 +94,16 @@ export const CustomClass: Story = {
 		className: "bg-blue-200",
 		dataTestId: "skeleton-custom",
 	},
+	parameters: {
+		docs: {
+			description: {
+				story:
+					"Skeleton with custom background using Tailwind utility classes.",
+			},
+		},
+	},
 };
 
-// MyShelfBookCardSkeleton style
 export const MyShelfBookCardSkeletonDemo: Story = {
 	render: () => (
 		<div className="flex items-center bg-white rounded-lg shadow-md p-4 w-[308px] h-[260px]">
@@ -69,10 +124,16 @@ export const MyShelfBookCardSkeletonDemo: Story = {
 			</div>
 		</div>
 	),
-	name: "MyShelfBookCardSkeleton",
+	name: "MyShelfBookCard Skeleton",
+	parameters: {
+		docs: {
+			description: {
+				story: "Skeleton placeholder for the MyShelf book card layout.",
+			},
+		},
+	},
 };
 
-// BookRowSkeleton style
 export const BookRowSkeletonDemo: Story = {
 	render: () => (
 		<div className="overflow-x-auto text-[#4D4D4D]">
@@ -99,5 +160,12 @@ export const BookRowSkeletonDemo: Story = {
 			</div>
 		</div>
 	),
-	name: "BookRowSkeleton",
+	name: "BookRow Skeleton",
+	parameters: {
+		docs: {
+			description: {
+				story: "Skeleton used for rows of book data in a table or grid layout.",
+			},
+		},
+	},
 };

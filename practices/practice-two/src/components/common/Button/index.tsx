@@ -31,8 +31,7 @@ const Button: React.FC<ButtonProps> = memo(
 			"bg-orange-500 hover:bg-orange-600": !disabled,
 			"bg-gray-400 cursor-not-allowed hover:bg-gray-600": disabled,
 		});
-		const sharedOutline =
-			"text-[12px] rounded-[5px] w-[70px] h-[25px] md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px] md:text-[14px]";
+		const sharedOutline = "rounded-[5px] p-[4px]";
 		const outlineStyle = clsx(sharedOutline, {
 			"border border-[#F76B56] text-[#F76B56] hover:bg-orange-100": !disabled,
 			"cursor-not-allowed border border-[#000000] text-[#000000] hover:bg-gray-200":
@@ -40,7 +39,7 @@ const Button: React.FC<ButtonProps> = memo(
 		});
 		const textStyle = "";
 		const authStyle = clsx(
-			"bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] transition-opacity",
+			"bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] transition-opacity min-w-[120px]",
 			{
 				"opacity-50 cursor-not-allowed": disabled,
 			}

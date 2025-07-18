@@ -10,8 +10,8 @@ interface AvatarProps {
 	className?: string;
 }
 
+// [MEMO] Optimizing re-render: Prevents Avatar from re-rendering when parent (e.g., Header) re-renders due to search text changes
 const Avatar: React.FC<AvatarProps> = memo(
-	// [MEMO] Optimizing re-render: Prevents Avatar from re-rendering when parent (e.g., Header) re-renders due to search text changes
 	({ src, alt = "User", size = "medium", className = "" }) => {
 		const sizeClass =
 			size === "small"

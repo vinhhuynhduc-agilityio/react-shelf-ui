@@ -175,7 +175,7 @@ exports[`SignUpPage matches snapshot 1`] = `
           </label>
         </div>
         <button
-          class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] transition-opacity [object Object] mt-2"
+          class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] transition-opacity min-w-[120px] [object Object] mt-2"
           type="submit"
         >
           Register

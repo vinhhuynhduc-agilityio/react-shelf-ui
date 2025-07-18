@@ -19,7 +19,7 @@ const ApiErrorNotice: React.FC<ApiErrorNoticeProps> = ({
 	return (
 		<div
 			className={`w-full ${
-				centerScreen ? "flex items-center justify-center min-h-[300px]" : ""
+				centerScreen ? "flex items-center justify-center" : ""
 			}`}
 		>
 			<div

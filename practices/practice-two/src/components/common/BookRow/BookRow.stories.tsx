@@ -4,14 +4,39 @@ import BookRow from ".";
 const meta: Meta<typeof BookRow> = {
 	title: "Components/BookRow",
 	component: BookRow,
-	tags: ["autodocs"],
+	parameters: {
+		docs: {
+			description: {
+				component: `BookRow is a row-style book display component used in lists or table views. It presents book cover, title, author, rating, category, shelf status, and includes actions like marking favorite or previewing details.`,
+			},
+		},
+	},
 	argTypes: {
-		book: { control: false },
-		isInShelf: { control: "boolean" },
-		isFavorite: { control: "boolean" },
-		disabled: { control: "boolean" },
-		onClickPreview: { action: "preview" },
-		handleFavoriteClick: { action: "favorite" },
+		book: {
+			control: false,
+			description:
+				"Book object including id, title, author, published year, rating, image URL, and category.",
+		},
+		isInShelf: {
+			control: "boolean",
+			description: "Marks whether the book is already in the user's shelf.",
+		},
+		isFavorite: {
+			control: "boolean",
+			description: "Marks whether the book is marked as favorite by the user.",
+		},
+		disabled: {
+			control: "boolean",
+			description: "Disables the favorite button and preview button when true.",
+		},
+		onClickPreview: {
+			action: "preview",
+			description: "Callback triggered when the Preview button is clicked.",
+		},
+		handleFavoriteClick: {
+			action: "favorite",
+			description: "Callback triggered when the Favorite icon is clicked.",
+		},
 	},
 	decorators: [
 		(Story) => (
@@ -20,6 +45,7 @@ const meta: Meta<typeof BookRow> = {
 					display: "flex",
 					alignItems: "center",
 					justifyContent: "center",
+					padding: "1rem",
 				}}
 			>
 				{Story()}
@@ -28,6 +54,7 @@ const meta: Meta<typeof BookRow> = {
 	],
 };
 export default meta;
+
 type Story = StoryObj<typeof BookRow>;
 
 const sampleBook = {
@@ -40,7 +67,7 @@ const sampleBook = {
 	category: "Classic",
 };
 
-export const Default: Story = {
+export const BasicBookRow: Story = {
 	args: {
 		book: sampleBook,
 		isInShelf: false,
@@ -49,7 +76,7 @@ export const Default: Story = {
 	},
 };
 
-export const InShelfFavorite: Story = {
+export const BookRowInShelf: Story = {
 	args: {
 		book: sampleBook,
 		isInShelf: true,
@@ -58,7 +85,7 @@ export const InShelfFavorite: Story = {
 	},
 };
 
-export const Disabled: Story = {
+export const DisabledBookRow: Story = {
 	args: {
 		book: sampleBook,
 		isInShelf: false,

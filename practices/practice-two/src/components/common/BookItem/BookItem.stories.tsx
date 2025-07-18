@@ -4,9 +4,19 @@ import BookItem from ".";
 const meta: Meta<typeof BookItem> = {
 	title: "Components/BookItem",
 	component: BookItem,
-	tags: ["autodocs"],
+	parameters: {
+		docs: {
+			description: {
+				component: `BookItem displays brief information about a book, including title, author, year, rating, and cover image. It is used in lists or preview sections.`,
+			},
+		},
+	},
 	argTypes: {
-		book: { control: false },
+		book: {
+			description:
+				"The book data object to display, including title, author, publication year, image, category, and rating.",
+			control: false,
+		},
 	},
 	decorators: [
 		(Story) => (
@@ -14,6 +24,7 @@ const meta: Meta<typeof BookItem> = {
 		),
 	],
 };
+
 export default meta;
 type Story = StoryObj<typeof BookItem>;
 
@@ -27,7 +38,7 @@ const sampleBook = {
 	category: "Classic",
 };
 
-export const Default: Story = {
+export const BasicBookItem: Story = {
 	args: {
 		book: sampleBook,
 	},

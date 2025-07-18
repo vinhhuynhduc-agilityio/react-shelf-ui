@@ -5,17 +5,41 @@ import { useRef, useState } from "react";
 const meta: Meta<typeof Dropdown> = {
 	title: "Components/Dropdown",
 	component: Dropdown,
-	tags: ["autodocs"],
+	parameters: {
+		docs: {
+			description: {
+				component:
+					"`Dropdown` is a pop-up menu component used to display a list of selectable options. It is positioned relative to a trigger element (like a button), and can be aligned to the left or right.",
+			},
+		},
+	},
 	argTypes: {
-		options: { control: false },
-		isOpen: { control: false },
-		setIsOpen: { control: false },
-		triggerRef: { control: false },
+		options: {
+			description: "Array of options to be displayed in the dropdown",
+			control: false,
+		},
+		isOpen: {
+			description: "Boolean flag to control dropdown visibility",
+			control: false,
+		},
+		setIsOpen: {
+			description: "Function to update the `isOpen` state",
+			control: false,
+		},
+		triggerRef: {
+			description:
+				"Ref to the element that triggers the dropdown. Used to calculate dropdown position.",
+			control: false,
+		},
 		align: {
-			control: { type: "select" },
+			description: "Dropdown alignment relative to trigger (`left` or `right`)",
+			control: { type: "radio" },
 			options: ["left", "right"],
 		},
-		onSelect: { action: "selected" },
+		onSelect: {
+			description: "Callback function called when an option is selected",
+			action: "selected",
+		},
 	},
 	decorators: [
 		(Story) => (
@@ -42,11 +66,20 @@ interface DropdownDemoProps {
 const DropdownDemo = (props: DropdownDemoProps) => {
 	const triggerRef = useRef<HTMLButtonElement>(null);
 	const [isOpen, setIsOpen] = useState(false);
+
+	const handleToggle = () => {
+		if (!isOpen) {
+			requestAnimationFrame(() => setIsOpen(true));
+		} else {
+			setIsOpen(false);
+		}
+	};
+
 	return (
 		<div style={{ position: "relative", height: 120 }}>
 			<button
 				ref={triggerRef}
-				onClick={() => setIsOpen((v) => !v)}
+				onClick={handleToggle}
 				className="mb-2 px-5 py-2 border border-gray-300 rounded-md bg-blue-600 text-white font-medium shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2"
 			>
 				Toggle Dropdown
@@ -63,10 +96,10 @@ const DropdownDemo = (props: DropdownDemoProps) => {
 	);
 };
 
-export const Default: Story = {
+export const BasicDropdown: Story = {
 	render: (args) => <DropdownDemo {...args} />,
 };
 
-export const AlignRight: Story = {
+export const DropdownRightAlignedToButton: Story = {
 	render: (args) => <DropdownDemo {...args} align="right" />,
 };
