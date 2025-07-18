@@ -12,6 +12,7 @@ interface IconButtonProps {
 	disabled?: boolean;
 	className?: string;
 	iconPosition?: "left" | "right";
+	direction?: "row" | "column";
 	dataTestId?: string;
 }
 
@@ -26,6 +27,7 @@ export const IconButton: FC<IconButtonProps> = ({
 	disabled = false,
 	className = "",
 	iconPosition = "left",
+	direction = "row",
 	dataTestId = "",
 }) => {
 	const iconElement = (
@@ -35,6 +37,8 @@ export const IconButton: FC<IconButtonProps> = ({
 		/>
 	);
 
+	const isColumn = direction === "column";
+
 	return (
 		<button
 			type={type}
@@ -43,14 +47,25 @@ export const IconButton: FC<IconButtonProps> = ({
 			aria-label={ariaLabel}
 			data-testid={dataTestId}
 			className={clsx(
-				"flex items-center transition-all",
+				isColumn
+					? "flex flex-col items-center transition-all"
+					: "flex items-center transition-all",
 				disabled && "opacity-50",
 				className
 			)}
 		>
-			{iconPosition === "left" && iconElement}
-			{label}
-			{iconPosition === "right" && iconElement}
+			{isColumn ? (
+				<>
+					{iconElement}
+					{label}
+				</>
+			) : (
+				<>
+					{iconPosition === "left" && iconElement}
+					{label}
+					{iconPosition === "right" && iconElement}
+				</>
+			)}
 		</button>
 	);
 };

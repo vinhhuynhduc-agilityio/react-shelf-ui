@@ -95,6 +95,12 @@ const Header: React.FC = () => {
 		setProfileMenuOpen(false);
 	};
 
+	const profileLabel = (
+		<span className="hidden sm:inline-block truncate">
+			{currentUser?.fullName || "Guest"}
+		</span>
+	);
+
 	return (
 		<header className="flex justify-between items-center p-6 relative">
 			{/* Search Bar */}
@@ -151,11 +157,7 @@ const Header: React.FC = () => {
 				/>
 				<IconButton
 					icon={FilterDropdownIcon}
-					label={
-						<span className="hidden sm:inline-block truncate">
-							{currentUser?.fullName || "Guest"}
-						</span>
-					}
+					label={profileLabel}
 					iconPosition="right"
 					onClick={() => setProfileMenuOpen(!isProfileMenuOpen)}
 					className="flex items-center gap-1 px-2 max-w-[90px] sm:max-w-[120px] md:max-w-[120px] truncate overflow-hidden"

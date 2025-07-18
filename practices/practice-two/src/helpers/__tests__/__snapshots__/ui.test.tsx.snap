@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`renderIconButtonLabel matches snapshot 1`] = `
+<div>
+  <span
+    class="text-center md:text-[13px] font-bold text-[#333333] sm:text-[11px] text-[10px]"
+  >
+    Label
+  </span>
+</div>
+`;
