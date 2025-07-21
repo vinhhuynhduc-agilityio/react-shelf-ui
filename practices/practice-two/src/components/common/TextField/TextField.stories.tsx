@@ -7,17 +7,82 @@ const meta: Meta<typeof TextField> = {
 	title: "Components/TextField",
 	component: TextField,
 	tags: ["autodocs"],
+	parameters: {
+		docs: {
+			description: {
+				component:
+					"A versatile text field component supporting input, password, and textarea types, integrated with React Hook Form. Includes options for vertical layout, password visibility toggle, and validation.",
+			},
+		},
+	},
 	argTypes: {
+		name: {
+			control: false,
+			description:
+				"The name of the field, used for form registration and identifying input.",
+		},
+		label: {
+			control: "text",
+			description: "Label displayed beside or above the input.",
+		},
 		type: {
 			control: { type: "select" },
 			options: ["text", "password", "textarea"],
+			description: "Input type. Supports 'text', 'password', and 'textarea'.",
 		},
-		vertical: { control: "boolean" },
-		disabled: { control: "boolean" },
-		label: { control: "text" },
-		placeholder: { control: "text" },
-		error: { control: "text" },
-		maxLength: { control: "number" },
+		placeholder: {
+			control: "text",
+			description: "Placeholder text shown when input is empty.",
+		},
+		vertical: {
+			control: "boolean",
+			description:
+				"Display the label above (vertical) or beside (horizontal) the input.",
+		},
+		error: {
+			control: "text",
+			description: "Error message displayed below the input.",
+		},
+		maxLength: {
+			control: "number",
+			description: "Maximum number of characters allowed.",
+		},
+		disabled: {
+			control: "boolean",
+			description: "Disables the input field if true.",
+		},
+		showPasswordToggle: {
+			control: "boolean",
+			description: "Enables toggle visibility button for password input.",
+		},
+		isPasswordVisible: {
+			control: false,
+			description:
+				"Current visibility state of password field (controlled internally).",
+		},
+		togglePasswordVisibility: {
+			control: false,
+			description:
+				"Function to toggle the password visibility (controlled internally).",
+		},
+		register: {
+			control: false,
+			description: "Function from React Hook Form to register input.",
+		},
+		className: {
+			control: "text",
+			description: "Custom className to override container styles.",
+		},
+		labelWidth: {
+			control: "text",
+			description:
+				"Width of the label in horizontal layout (e.g., 'w-30', 'w-32').",
+		},
+		withErrorMargin: {
+			control: false,
+			description:
+				"Reserved for future use or custom layout error margin handling.",
+		},
 	},
 	decorators: [
 		(Story) => (
@@ -25,6 +90,7 @@ const meta: Meta<typeof TextField> = {
 		),
 	],
 };
+
 export default meta;
 type Story = StoryObj<typeof TextField>;
 
@@ -45,7 +111,7 @@ const Template = (args: React.ComponentProps<typeof TextField>) => {
 	);
 };
 
-export const Default: Story = {
+export const BasicTextInput: Story = {
 	render: (args) => <Template {...args} />,
 	args: {
 		name: "username",
@@ -55,7 +121,7 @@ export const Default: Story = {
 	},
 };
 
-export const Password: Story = {
+export const PasswordInputWithToggle: Story = {
 	render: (args) => <Template {...args} />,
 	args: {
 		name: "password",
@@ -66,7 +132,7 @@ export const Password: Story = {
 	},
 };
 
-export const Textarea: Story = {
+export const TextareaWithMaxLength: Story = {
 	render: (args) => <Template {...args} />,
 	args: {
 		name: "bio",
@@ -78,7 +144,7 @@ export const Textarea: Story = {
 	},
 };
 
-export const WithError: Story = {
+export const TextInputWithError: Story = {
 	render: (args) => <Template {...args} />,
 	args: {
 		name: "email",

@@ -88,13 +88,46 @@ const meta: Meta<typeof ToastDemo> = {
 	title: "Components/Toast",
 	component: ToastDemo,
 	tags: ["autodocs"],
+	parameters: {
+		docs: {
+			description: {
+				component:
+					"A small notification component (toast) that shows messages for different statuses like success, error, info, and warning. It automatically hides after a configurable duration.",
+			},
+		},
+	},
 	argTypes: {
+		message: {
+			control: "text",
+			description: "The text content shown inside the toast.",
+			table: {
+				type: { summary: "string" },
+				defaultValue: { summary: "''" },
+			},
+		},
 		variant: {
 			control: { type: "select" },
 			options: ["success", "error", "info", "warning"],
+			description:
+				"The visual style of the toast, affecting background color and icon.",
+			table: {
+				type: { summary: `"success" | "error" | "info" | "warning"` },
+				defaultValue: { summary: '"info"' },
+			},
 		},
-		message: { control: "text" },
-		duration: { control: "number" },
+		duration: {
+			control: "number",
+			description:
+				"Time in milliseconds before the toast automatically disappears.",
+		},
+		onClose: {
+			control: false,
+			description: "Callback function triggered when the toast closes.",
+			table: {
+				type: { summary: "() => void" },
+				defaultValue: { summary: "undefined" },
+			},
+		},
 	},
 	decorators: [
 		(Story) => (
@@ -102,6 +135,7 @@ const meta: Meta<typeof ToastDemo> = {
 		),
 	],
 };
+
 export default meta;
 type Story = StoryObj<typeof ToastDemo>;
 
