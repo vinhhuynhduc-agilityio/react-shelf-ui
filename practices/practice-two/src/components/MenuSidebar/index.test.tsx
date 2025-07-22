@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import MenuSidebar from "../MenuSidebar";
 
 // Mock logo image import
-jest.mock("@/assets/images/logo.png", () => "logo.png");
+jest.mock("@/assets/images/logo.webp", () => "logo.webp");
 
 const mockSetSearchTerm = jest.fn();
 const mockSetSearchFromSidebar = jest.fn();
