@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 
 // assets
-import logo from "@/assets/images/logo.png";
+import logo from "@/assets/images/logo.webp";
 
 // constants
 import { ROUTE } from "@/constants";

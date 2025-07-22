@@ -134,6 +134,7 @@ const SearchPage: React.FC = () => {
 			}),
 		[navigate]
 	);
+
 	// Handle favorite click to add/remove from favourites
 	const handleFavoriteClick = (
 		book: Book,
