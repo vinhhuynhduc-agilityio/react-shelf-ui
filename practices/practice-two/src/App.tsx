@@ -85,14 +85,7 @@ const App: React.FC = () => {
 							}
 						/>
 					</Route>
-					<Route
-						path="*"
-						element={
-							<ProtectedRoute>
-								<NotFoundPage />
-							</ProtectedRoute>
-						}
-					/>
+					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 			</Router>
 		</QueryClientProvider>

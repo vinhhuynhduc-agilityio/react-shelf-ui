@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 // constants
@@ -67,7 +67,7 @@ const BookPreviewPage = () => {
 	const handleClickBackToResult = () => navigate(ROUTE.SEARCH);
 
 	if (!book) {
-		return <p className="text-red-500">No book data available.</p>;
+		return <Navigate to="*" replace />;
 	}
 
 	return (
