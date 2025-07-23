@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 // constants
@@ -14,7 +14,7 @@ import {
 import { ArrowBackIcon } from "@/components/icons";
 
 // stores
-import { usePendingShelfStore, useUserStore } from "@/stores";
+import { useBookStore, usePendingShelfStore, useUserStore } from "@/stores";
 
 // helpers
 import { formatBorrowedDate, isBookInShelf } from "@/helpers";
@@ -22,9 +22,16 @@ import { formatBorrowedDate, isBookInShelf } from "@/helpers";
 // hooks
 import { useAddShelfItem, useGetMyShelf } from "@/hooks";
 
+// types
+import { Book } from "@/types";
+
 const BookPreviewPage = () => {
-	const location = useLocation();
-	const book = location.state?.book;
+	const { bookId } = useParams();
+
+	const book: Book | undefined = useBookStore((state) =>
+		state.books.find((b) => b.id.toString() === bookId)
+	);
+
 	const navigate = useNavigate();
 	const currentUser = useUserStore((state) => state.currentUser);
 
@@ -39,10 +46,14 @@ const BookPreviewPage = () => {
 	// hooks
 	const { mutate: addShelf } = useAddShelfItem(currentUser?.id || "");
 
-	const isPendingBorrowedBook = pendingShelfActions.includes(book?.id) || false;
-	const isInShelf = isBookInShelf(book?.id, shelves ?? []);
+	const isPendingBorrowedBook = book?.id
+		? pendingShelfActions.includes(book.id)
+		: false;
+	const isInShelf = isBookInShelf(book?.id ?? "", shelves ?? []);
 
 	const handleBorrow = () => {
+		if (!book?.id) return; // Prevent borrowing if book id is missing
+
 		const borrowedBook = {
 			bookId: book.id,
 			borrowedDate: formatBorrowedDate(),
@@ -53,10 +64,7 @@ const BookPreviewPage = () => {
 		addShelf(borrowedBook);
 	};
 
-	const handleClickBackToResult = () => {
-		const from = location.state?.from || ROUTE.SEARCH;
-		navigate(from);
-	};
+	const handleClickBackToResult = () => navigate(ROUTE.SEARCH);
 
 	if (!book) {
 		return <p className="text-red-500">No book data available.</p>;
@@ -84,7 +92,7 @@ const BookPreviewPage = () => {
 						availability={availability}
 					/>
 				</div>
-				<AuthorCard name={book.author.name} bio={book.author.bio} />
+				<AuthorCard name={book.author.name} bio={book.author.bio ?? ""} />
 			</div>
 		</>
 	);

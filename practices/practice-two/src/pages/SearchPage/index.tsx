@@ -124,14 +124,8 @@ const SearchPage: React.FC = () => {
 		  });
 
 	// Navigate to book preview page with book details and from route
-	const handleCLickPreview = useCallback(
-		(book: Book) =>
-			navigate(`${ROUTE.BOOK_PREVIEW}/${book.id}`, {
-				state: {
-					book,
-					from: ROUTE.SEARCH,
-				},
-			}),
+	const handleClickPreview = useCallback(
+		(book: Book) => navigate(`${ROUTE.BOOK_PREVIEW}/${book.id}`),
 		[navigate]
 	);
 
@@ -216,7 +210,7 @@ const SearchPage: React.FC = () => {
 								book={book}
 								isInShelf={isInShelf}
 								isFavorite={!!isFavorite}
-								onClickPreview={handleCLickPreview}
+								onClickPreview={handleClickPreview}
 								handleFavoriteClick={() =>
 									handleFavoriteClick(book, !!isFavorite, favouriteId)
 								}

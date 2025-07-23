@@ -2,18 +2,19 @@ import { render, screen, fireEvent } from "@/helpers/test-utils";
 import BookPreviewPage from ".";
 import { MOCK_BOOKS } from "@/__mocks__/book";
 import { MOCK_USER } from "@/__mocks__/user";
-import { useLocation, useNavigate } from "react-router-dom";
-import { usePendingShelfStore, useUserStore } from "@/stores";
+import { useNavigate, useParams } from "react-router-dom";
+import { useBookStore, usePendingShelfStore, useUserStore } from "@/stores";
 import { useGetMyShelf, useAddShelfItem } from "@/hooks";
 
 jest.mock("react-router-dom", () => ({
 	...jest.requireActual("react-router-dom"),
-	useLocation: jest.fn(),
+	useParams: jest.fn(),
 	useNavigate: jest.fn(),
 }));
 jest.mock("@/stores", () => ({
 	usePendingShelfStore: jest.fn(),
 	useUserStore: jest.fn(),
+	useBookStore: jest.fn(),
 }));
 jest.mock("@/hooks", () => ({
 	useGetMyShelf: jest.fn(),
@@ -24,7 +25,7 @@ const mockBook = MOCK_BOOKS[0];
 const mockUser = MOCK_USER;
 const mockNavigate = jest.fn();
 
-const mockedUseLocation = useLocation as jest.Mock;
+const mockedUseParams = useParams as jest.Mock;
 const mockedUseNavigate = useNavigate as jest.Mock;
 const mockedUsePendingShelfStore = usePendingShelfStore as unknown as jest.Mock;
 const mockedUseUserStore = useUserStore as unknown as jest.Mock;
@@ -33,7 +34,7 @@ const mockedUseAddShelfItem = useAddShelfItem as jest.Mock;
 
 describe("BookPreviewPage", () => {
 	beforeEach(() => {
-		mockedUseLocation.mockReturnValue({ state: { book: mockBook } });
+		mockedUseParams.mockReturnValue({ bookId: "11" });
 		mockedUseNavigate.mockReturnValue(mockNavigate);
 		mockedUseUserStore.mockImplementation((cb) =>
 			cb({ currentUser: mockUser })
@@ -41,6 +42,13 @@ describe("BookPreviewPage", () => {
 		mockedUsePendingShelfStore.mockReturnValue({ pendingShelfActions: [] });
 		mockedUseGetMyShelf.mockReturnValue({ data: [] });
 		mockedUseAddShelfItem.mockReturnValue({ mutate: jest.fn() });
+		(useBookStore as unknown as jest.Mock).mockImplementation((cb) =>
+			cb({
+				hasFetched: false,
+				setBooks: jest.fn(),
+				books: MOCK_BOOKS,
+			})
+		);
 	});
 
 	afterEach(() => {
@@ -56,7 +64,7 @@ describe("BookPreviewPage", () => {
 	});
 
 	it("shows error if no book data", () => {
-		mockedUseLocation.mockReturnValue({ state: { book: undefined } });
+		mockedUseParams.mockReturnValue({ bookId: undefined }); // Non-existent book ID
 		render(<BookPreviewPage />);
 		expect(screen.getByText(/no book data available/i)).toBeInTheDocument();
 	});
