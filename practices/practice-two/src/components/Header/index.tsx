@@ -57,7 +57,7 @@ const Header: React.FC = () => {
 
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.key !== "Enter") return;
-
+		setFilterMenuOpen(false);
 		handleSearch();
 	};
 
@@ -76,6 +76,7 @@ const Header: React.FC = () => {
 	};
 
 	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setFilterMenuOpen(false);
 		setValueSearch(e.target.value);
 	};
 
