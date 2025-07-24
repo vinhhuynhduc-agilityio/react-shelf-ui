@@ -104,7 +104,7 @@ export const CustomClassSkeleton: Story = {
 	},
 };
 
-export const MyShelfBookCardSkeletonDemo: Story = {
+export const MyShelfBookCardSkeleton: Story = {
 	render: () => (
 		<div className="flex items-center bg-white rounded-lg shadow-md p-4 w-[308px] h-[260px]">
 			<div className="w-3/5">
@@ -124,7 +124,7 @@ export const MyShelfBookCardSkeletonDemo: Story = {
 			</div>
 		</div>
 	),
-	name: "MyShelfBookCard Skeleton",
+	name: "My Shelf Book Card Skeleton",
 	parameters: {
 		docs: {
 			description: {
@@ -134,33 +134,47 @@ export const MyShelfBookCardSkeletonDemo: Story = {
 	},
 };
 
-export const BookRowSkeletonDemo: Story = {
+export const BookRowSkeleton: Story = {
 	render: () => (
-		<div className="overflow-x-auto text-[#4D4D4D]">
-			<div className="space-y-4 mt-4">
-				{Array.from({ length: 2 }).map((_, index) => (
-					<div
-						key={index}
-						className="grid xl:grid-cols-[340px_100px_130px_130px_60px_auto] gap-4 p-4 border border-gray-200 rounded-[10px] shadow-sm bg-white items-center"
-					>
-						<div className="flex items-center space-x-3">
-							<Skeleton width={75} height={99} borderRadius={6} />
-							<div className="flex flex-col space-y-2">
-								<Skeleton width={160} height={20} borderRadius={4} />
-								<Skeleton width={120} height={16} borderRadius={4} />
-							</div>
-						</div>
-						<Skeleton width={40} height={16} borderRadius={4} />
-						<Skeleton width={60} height={16} borderRadius={4} />
-						<Skeleton width={60} height={28} borderRadius={6} />
-						<Skeleton width={20} height={18} borderRadius={4} />
-						<Skeleton width={80} height={34} borderRadius={6} />
-					</div>
-				))}
+		<div
+			data-testid="book-row-skeleton"
+			className="grid xl:grid-cols-[340px_100px_130px_130px_60px_auto] lg:grid-cols-[280px_60px_80px_85px_20px_auto] md:grid-cols-[110px_80px_100px_88px_28px_auto] grid-cols-[95px_80px_30px_auto] gap-4 p-4 border border-gray-200 rounded-[10px] shadow-sm bg-white items-center sm:grid-cols-[95px_80px_90px_30px_auto]"
+		>
+			<div className="flex items-center space-x-3">
+				<Skeleton width={75} height={99} borderRadius={6} />
+				<div className="hidden lg:flex flex-col space-y-2">
+					<Skeleton width={160} height={20} borderRadius={4} />
+					<Skeleton width={120} height={16} borderRadius={4} />
+				</div>
+			</div>
+
+			{/* Rating */}
+			<div className="hidden md:block">
+				<Skeleton width={40} height={16} borderRadius={4} />
+			</div>
+
+			{/* Category */}
+			<div className="hidden sm:block">
+				<Skeleton width={60} height={16} borderRadius={4} />
+			</div>
+
+			{/* Status badge */}
+			<div>
+				<Skeleton width={60} height={28} borderRadius={6} />
+			</div>
+
+			{/* Heart icon */}
+			<div>
+				<Skeleton width={20} height={18} borderRadius={4} />
+			</div>
+
+			{/* Preview button */}
+			<div>
+				<Skeleton width={80} height={34} borderRadius={6} />
 			</div>
 		</div>
 	),
-	name: "BookRow Skeleton",
+	name: "Book Row Skeleton",
 	parameters: {
 		docs: {
 			description: {
