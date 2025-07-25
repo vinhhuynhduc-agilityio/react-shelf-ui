@@ -119,13 +119,19 @@ const meta: Meta<typeof ToastDemo> = {
 			control: "number",
 			description:
 				"Time in milliseconds before the toast automatically disappears.",
+			table: {
+				type: { summary: "number" },
+				defaultValue: { summary: "4000" },
+			},
 		},
 		onClose: {
 			control: false,
 			description: "Callback function triggered when the toast closes.",
 			table: {
-				type: { summary: "() => void" },
-				defaultValue: { summary: "undefined" },
+				type: {
+					summary: "(event: React.MouseEvent<HTMLButtonElement>) => void",
+					detail: "Standard React click handler for button element.",
+				},
 			},
 		},
 	},

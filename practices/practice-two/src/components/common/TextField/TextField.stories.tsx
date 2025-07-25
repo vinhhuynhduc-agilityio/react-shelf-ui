@@ -64,12 +64,18 @@ const meta: Meta<typeof TextField> = {
 			control: false,
 			description:
 				"Function to toggle the password visibility (controlled internally).",
+			table: {
+				type: {
+					summary: "(event: React.MouseEvent<HTMLButtonElement>) => void",
+					detail: "Standard React click handler for button element.",
+				},
+			},
 		},
 		register: {
 			control: false,
 			description: "Function from React Hook Form to register input.",
 		},
-		className: {
+		additionalClasses: {
 			control: "text",
 			description: "Custom className to override container styles.",
 		},

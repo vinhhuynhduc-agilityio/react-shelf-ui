@@ -17,32 +17,45 @@ const meta: Meta<typeof Button> = {
 			control: { type: "select" },
 			options: ["primary", "outline", "text", "auth"],
 			description: "Visual style of the button",
+			table: {
+				type: { summary: '"primary" | "outline" | "text" | "auth"' },
+			},
 		},
 		disabled: {
 			control: "boolean",
-			description:
-				"If true, disables the button and optionally shows `pendingLabel`",
+			description: "If true, disables the button",
+			table: {
+				type: { summary: "boolean" },
+			},
 		},
 		type: {
 			control: { type: "select" },
 			options: ["button", "submit"],
 			description: "HTML type of the button",
+			table: {
+				type: { summary: '"button" | "submit"' },
+			},
 		},
-		className: {
+		additionalClasses: {
 			control: "text",
 			description: "Additional CSS classes",
+			table: {
+				type: { summary: "string" },
+			},
 		},
 		label: {
 			control: "text",
 			description: "Button text",
 		},
-		pendingLabel: {
-			control: "text",
-			description: "Text shown when button is disabled",
-		},
 		onClick: {
 			action: "clicked",
 			description: "Button click handler",
+			table: {
+				type: {
+					summary: "(event: React.MouseEvent<HTMLButtonElement>) => void",
+					detail: "Standard React click handler for button element.",
+				},
+			},
 		},
 	},
 	decorators: [
@@ -122,7 +135,7 @@ export const OutlineButton: Story = {
 		variant: "outline",
 		label: "Preview",
 		disabled: false,
-		className:
+		additionalClasses:
 			"text-[12px] w-[70px] h-[25px] md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px] md:text-[14px]",
 	},
 	parameters: {

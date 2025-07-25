@@ -23,10 +23,16 @@ const meta: Meta<typeof Skeleton> = {
 			control: "radio",
 			options: ["block", "inline-block"],
 			description: "Display variant of the skeleton (block or inline-block).",
+			table: {
+				type: { summary: '"block" | "inline-block"' },
+			},
 		},
-		className: {
+		additionalClasses: {
 			control: "text",
 			description: "Additional Tailwind or custom classes.",
+			table: {
+				type: { summary: "string" },
+			},
 		},
 		dataTestId: {
 			control: "text",
@@ -91,7 +97,7 @@ export const CustomClassSkeleton: Story = {
 		width: 120,
 		height: 40,
 		borderRadius: 8,
-		className: "bg-blue-200",
+		additionalClasses: "bg-blue-200",
 		dataTestId: "skeleton-custom",
 	},
 	parameters: {
@@ -163,7 +169,7 @@ export const BookRowSkeleton: Story = {
 				<Skeleton width={60} height={28} borderRadius={6} />
 			</div>
 
-			{/* Heart icon */}
+			{/* Favourite icon */}
 			<div>
 				<Skeleton width={20} height={18} borderRadius={4} />
 			</div>

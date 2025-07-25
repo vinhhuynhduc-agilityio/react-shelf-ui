@@ -18,19 +18,31 @@ const meta: Meta<typeof Avatar> = {
 			description:
 				"The image URL for the avatar. Defaults to a fallback avatar if not provided.",
 			control: "text",
+			table: {
+				type: { summary: "string" },
+			},
 		},
 		alt: {
 			description: "Alternative text for the image.",
 			control: "text",
+			table: {
+				type: { summary: "string" },
+			},
 		},
 		size: {
 			description: "Controls the avatar size.",
 			control: { type: "select" },
 			options: ["small", "medium", "large"],
+			table: {
+				type: { summary: '"small" | "medium" | "large"' },
+			},
 		},
-		className: {
+		additionalClasses: {
 			description: "Optional additional CSS classes for the avatar container.",
 			control: "text",
+			table: {
+				type: { summary: "string" },
+			},
 		},
 	},
 	decorators: [

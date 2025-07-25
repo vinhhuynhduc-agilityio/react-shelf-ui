@@ -1,4 +1,4 @@
-import { HeartIcon, IconButton } from "@/components";
+import { FavouriteIcon, IconButton } from "@/components";
 import {
 	ReviewIcon,
 	FilterDropdownIcon,
@@ -33,28 +33,50 @@ const meta: Meta<typeof IconButton> = {
 			control: "radio",
 			options: ["left", "right"],
 			description: "Position of the icon when layout direction is `row`.",
+			table: {
+				type: { summary: '"left" | "right"' },
+			},
 		},
 		direction: {
 			control: "radio",
 			options: ["row", "column"],
 			description: "Layout direction of icon and label.",
+			table: {
+				type: { summary: '"row" | "column"' },
+			},
 		},
 		ariaLabel: {
 			control: "text",
 			description: "ARIA label for screen readers.",
 		},
-		onClick: { action: "clicked" },
+		onClick: {
+			action: "clicked",
+			table: {
+				type: {
+					summary: "(event: React.MouseEvent<HTMLButtonElement>) => void",
+					detail: "Standard React click handler for button element.",
+				},
+			},
+			description: "Triggered when the button is clicked.",
+		},
 		disabled: {
 			control: "boolean",
 			description: "Disable the button.",
 		},
-		className: {
+		additionalClasses: {
 			control: "text",
 			description: "Custom class name for the button container.",
 		},
 		dataTestId: {
 			control: "text",
 			description: "Value for `data-testid` attribute (used in testing).",
+		},
+		type: {
+			description: "Specifies the native HTML button type attribute.",
+			table: {
+				type: { summary: '"button" | "submit"' },
+			},
+			control: false,
 		},
 	},
 	args: {
@@ -90,16 +112,16 @@ export const WithSearchIcon: Story = {
 	},
 };
 
-export const HeartIconUnfilled: Story = {
+export const FavouriteIconUnfilled: Story = {
 	args: {
-		icon: HeartIcon,
+		icon: FavouriteIcon,
 		filled: false,
 	},
 };
 
-export const HeartIconFilled: Story = {
+export const FavouriteIconFilled: Story = {
 	args: {
-		icon: HeartIcon,
+		icon: FavouriteIcon,
 		filled: true,
 	},
 };
@@ -132,7 +154,9 @@ export const BackIconLeft: Story = {
 
 export const DisabledIcon: Story = {
 	args: {
-		icon: HeartIcon,
+		icon: ReviewIcon,
+		label: "Review",
+		direction: "column",
 		disabled: true,
 	},
 };

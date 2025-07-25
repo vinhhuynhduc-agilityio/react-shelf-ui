@@ -12,6 +12,9 @@ const meta: Meta<typeof RatingStars> = {
 		maxStars: {
 			control: { type: "number", min: 1, max: 10, step: 1 },
 			description: "The maximum number of stars to display (default is 5).",
+			table: {
+				type: { summary: "number" },
+			},
 		},
 	},
 	args: {
@@ -43,9 +46,23 @@ export const Default: Story = {
 	},
 };
 
-export const ThreeStars: Story = {
+export const ZeroRating: Story = {
+	args: {
+		rating: 0,
+		maxStars: 5,
+	},
+};
+
+export const IntegerRating: Story = {
 	args: {
 		rating: 3,
+		maxStars: 5,
+	},
+};
+
+export const HalfStar: Story = {
+	args: {
+		rating: 2.5,
 		maxStars: 5,
 	},
 };
@@ -53,13 +70,6 @@ export const ThreeStars: Story = {
 export const PerfectRating: Story = {
 	args: {
 		rating: 5,
-		maxStars: 5,
-	},
-};
-
-export const WithHalfStar: Story = {
-	args: {
-		rating: 2.5,
 		maxStars: 5,
 	},
 };

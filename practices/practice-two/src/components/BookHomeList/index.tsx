@@ -48,7 +48,7 @@ const BookHomeList: React.FC<BookListProps> = ({
 					) : books.length > 0 ? (
 						books.map((book) => (
 							<div key={book.id} className="flex-shrink-0">
-								<BookItem book={book} />
+								<BookItem {...book} />
 							</div>
 						))
 					) : (

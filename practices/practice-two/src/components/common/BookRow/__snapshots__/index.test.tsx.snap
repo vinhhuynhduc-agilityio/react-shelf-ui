@@ -59,7 +59,7 @@ exports[`BookRow matches snapshot 1`] = `
       class="hover:scale-110 transition-all"
     >
       <svg
-        class="lg:w-[20px] lg:h-[18px] w-[17px] h-[15px] w-6 h-6"
+        class="lg:w-[20px] lg:h-[18px] w-[17px] h-[15px]"
         fill="none"
         height="18"
         viewBox="0 0 20 18"

@@ -20,7 +20,7 @@ const MyShelfBookCard = ({
 	return (
 		<div className="flex items-center bg-white rounded-lg shadow-md p-4 w-[308px] h-[260px]">
 			<div className="w-3/5">
-				<BookItem book={book} />
+				<BookItem {...book} />
 			</div>
 			<div className="w-2/5 flex flex-col justify-between items-center h-full ml-2">
 				<div>

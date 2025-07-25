@@ -21,14 +21,20 @@ const meta: Meta<typeof ApiErrorNotice> = {
 				"An array of error messages. Null or undefined values will be ignored.",
 			control: false,
 		},
-		className: {
+		additionalClasses: {
 			description: "Optional additional CSS class for the outer container.",
 			control: { type: "text" },
+			table: {
+				type: { summary: "string" },
+			},
 		},
 		centerScreen: {
 			description:
 				"If true, centers the component both vertically and horizontally within a minimum height of 300px.",
 			control: { type: "boolean" },
+			table: {
+				type: { summary: "boolean" },
+			},
 		},
 	},
 	args: {
@@ -59,12 +65,5 @@ export const CenteredErrorNotice: Story = {
 	args: {
 		centerScreen: true,
 		errors: ["Critical error occurred"],
-	},
-};
-
-export const NoVisibleErrors: Story = {
-	name: "No errors (hidden)",
-	args: {
-		errors: [],
 	},
 };

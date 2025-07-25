@@ -28,14 +28,29 @@ const meta: Meta<typeof BookRow> = {
 		disabled: {
 			control: "boolean",
 			description: "Disables the favorite button and preview button when true.",
+			table: {
+				type: { summary: "boolean" },
+			},
 		},
 		onClickPreview: {
 			action: "preview",
 			description: "Callback triggered when the Preview button is clicked.",
+			table: {
+				type: {
+					summary: "(event: React.MouseEvent<HTMLButtonElement>) => void",
+					detail: "Standard React click handler for button element.",
+				},
+			},
 		},
 		handleFavoriteClick: {
 			action: "favorite",
 			description: "Callback triggered when the Favorite icon is clicked.",
+			table: {
+				type: {
+					summary: "(event: React.MouseEvent<HTMLButtonElement>) => void",
+					detail: "Standard React click handler for button element.",
+				},
+			},
 		},
 	},
 	decorators: [
@@ -77,6 +92,7 @@ export const BasicBookRow: Story = {
 };
 
 export const BookRowInShelf: Story = {
+	name: "Book Row – In Shelf & Favorited",
 	args: {
 		book: sampleBook,
 		isInShelf: true,
@@ -86,10 +102,11 @@ export const BookRowInShelf: Story = {
 };
 
 export const DisabledBookRow: Story = {
+	name: "Book Row – Favorited but Not in Shelf",
 	args: {
 		book: sampleBook,
 		isInShelf: false,
-		isFavorite: false,
+		isFavorite: true,
 		disabled: true,
 	},
 };

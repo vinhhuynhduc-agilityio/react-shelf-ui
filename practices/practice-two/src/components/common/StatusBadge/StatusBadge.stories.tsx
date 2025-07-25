@@ -19,6 +19,9 @@ const meta: Meta<typeof StatusBadge> = {
 			options: ["In-Shelf", "None"],
 			description:
 				"Status of the book. `'In-Shelf'` shows a green badge and `'None'` shows a gray badge.",
+			table: {
+				type: { summary: '"In-Shelf" | "None"' },
+			},
 		},
 	},
 	decorators: [

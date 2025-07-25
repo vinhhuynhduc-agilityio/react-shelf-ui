@@ -21,10 +21,19 @@ const meta: Meta<typeof Dropdown> = {
 		isOpen: {
 			description: "Boolean flag to control dropdown visibility",
 			control: false,
+			table: {
+				type: { summary: "boolean" },
+			},
 		},
 		setIsOpen: {
 			description: "Function to update the `isOpen` state",
 			control: false,
+			table: {
+				type: {
+					summary: "(open: boolean) => void",
+					detail: "Used to toggle dropdown visibility.",
+				},
+			},
 		},
 		triggerRef: {
 			description:
@@ -35,10 +44,19 @@ const meta: Meta<typeof Dropdown> = {
 			description: "Dropdown alignment relative to trigger (`left` or `right`)",
 			control: { type: "radio" },
 			options: ["left", "right"],
+			table: {
+				type: { summary: '"left" | "right"' },
+			},
 		},
 		onSelect: {
 			description: "Callback function called when an option is selected",
 			action: "selected",
+			table: {
+				type: {
+					summary: "(option: DropdownOption) => void",
+					detail: "Called with the selected option when an option is clicked.",
+				},
+			},
 		},
 	},
 	decorators: [

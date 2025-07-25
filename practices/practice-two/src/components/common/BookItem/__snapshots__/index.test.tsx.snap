@@ -3,7 +3,9 @@
 exports[`BookItem matches snapshot 1`] = `
 <div>
   <div
-    class="w-[160px] bg-white p-4 rounded-lg shadow-sm h-[260px] flex flex-col items-center"
+    class="w-[160px] bg-white p-4 rounded-lg shadow-sm h-[260px] flex flex-col items-center cursor-pointer"
+    role="button"
+    tabindex="0"
   >
     <img
       alt="Don't Make Me Think"
