@@ -28,9 +28,22 @@ export const BookDetailInfo = ({
 			By <span className="underline">{book.author.name}</span>,{" "}
 			{book.publishedYear}
 		</h2>
+		<div className="flex items-center mt-2 mb-4 space-x-6">
+			<div className="flex items-center space-x-2">
+				<RatingStars rating={book.rating} />
+				<p className="text-[#4D4D4D] text-[14px] font-medium">
+					{book.rating} Ratings
+				</p>
+			</div>
 
-		<RatingStars rating={book.rating} />
+			<p className="text-[#4D4D4D] text-[14px] font-medium">
+				25 Current reading
+			</p>
 
+			<p className="text-[#4D4D4D] text-[14px] font-medium hidden lg:block">
+				119 Have read
+			</p>
+		</div>
 		<div className="flex flex-row mt-4">
 			<div className="mr-16">
 				<h3 className="lg:text-[18px] md:text-[16px] font-medium mb-[4px] text-[#4D4D4D]">
@@ -53,7 +66,7 @@ export const BookDetailInfo = ({
 			</div>
 		</div>
 		<Button
-			className="mt-10 font-semibold"
+			additionalClasses="mt-10 font-semibold"
 			variant="primary"
 			disabled={isInShelf || isPending || isFetching}
 			onClick={onBorrow}

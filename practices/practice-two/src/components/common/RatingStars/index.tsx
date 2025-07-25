@@ -38,15 +38,6 @@ const RatingStars: React.FC<RatingProps> = ({ rating, maxStars = 5 }) => {
 					);
 				}
 			})}
-			<p className="text-[#4D4D4D] text-[14px] font-medium mr-6">
-				{rating} Ratings
-			</p>
-			<p className="text-[#4D4D4D] text-[14px] font-medium mr-6">
-				25 Current reading
-			</p>
-			<p className="text-[#4D4D4D] text-[14px] font-medium hidden lg:block">
-				119 Have read
-			</p>
 		</div>
 	);
 };
