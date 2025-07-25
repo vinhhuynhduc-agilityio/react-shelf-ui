@@ -1,8 +1,13 @@
+import { useNavigate } from "react-router-dom";
+
 // types
 import { Book } from "@/types";
 
 // components
 import { BookItem, Button } from "@/components";
+
+// constants
+import { ROUTE } from "@/constants";
 
 interface BookCardProps {
 	book: Book;
@@ -17,10 +22,16 @@ const MyShelfBookCard = ({
 	onReturn,
 	disabled = false,
 }: BookCardProps) => {
+	const navigate = useNavigate();
+
+	const handleBookItemClick = (bookId: string) => {
+		navigate(`${ROUTE.BOOK_PREVIEW}/${bookId}`);
+	};
+
 	return (
 		<div className="flex items-center bg-white rounded-lg shadow-md p-4 w-[308px] h-[260px]">
 			<div className="w-3/5">
-				<BookItem {...book} />
+				<BookItem {...book} onClick={() => handleBookItemClick(book.id)} />
 			</div>
 			<div className="w-2/5 flex flex-col justify-between items-center h-full ml-2">
 				<div>
@@ -36,7 +47,7 @@ const MyShelfBookCard = ({
 					onClick={() => onReturn(book.id)}
 					disabled={disabled}
 					label="Return"
-					className="text-[12px] w-[70px] h-[25px] md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px] md:text-[14px]"
+					additionalClasses="text-[12px] w-[70px] h-[25px] md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px] md:text-[14px]"
 				/>
 			</div>
 		</div>

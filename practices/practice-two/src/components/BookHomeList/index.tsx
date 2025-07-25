@@ -1,6 +1,10 @@
+import { useNavigate } from "react-router-dom";
+
 // components
 import { ApiErrorNotice, BookItem, Skeleton } from "@/components";
-import { ERROR_MESSAGE } from "@/constants";
+
+// constants
+import { ERROR_MESSAGE, ROUTE } from "@/constants";
 
 // types
 import { Book } from "@/types";
@@ -22,6 +26,12 @@ const BookHomeList: React.FC<BookListProps> = ({
 	errorMessage = ERROR_MESSAGE.DEFAULT,
 	skeletonCount = 4,
 }) => {
+	const navigate = useNavigate();
+
+	const handleBookItemClick = (bookId: string) => {
+		navigate(`${ROUTE.BOOK_PREVIEW}/${bookId}`);
+	};
+
 	return (
 		<div className="mb-6 w-full">
 			<h2 className="text-[22px] sm:text-[24px] md:text-[25px] text-gray-500 mb-4 font-normal">
@@ -41,14 +51,17 @@ const BookHomeList: React.FC<BookListProps> = ({
 									width={160}
 									height={260}
 									borderRadius={16}
-									className="p-4"
+									additionalClasses="p-4"
 								/>
 							</div>
 						))
 					) : books.length > 0 ? (
 						books.map((book) => (
 							<div key={book.id} className="flex-shrink-0">
-								<BookItem {...book} />
+								<BookItem
+									{...book}
+									onClick={() => handleBookItemClick(book.id)}
+								/>
 							</div>
 						))
 					) : (
