@@ -46,7 +46,13 @@ describe("IconButton", () => {
 	});
 
 	it("applies custom className", () => {
-		render(<IconButton icon={MockIcon} label="Custom" className="my-custom" />);
+		render(
+			<IconButton
+				icon={MockIcon}
+				label="Custom"
+				additionalClasses="my-custom"
+			/>
+		);
 		const button = screen.getByRole("button");
 		expect(button).toHaveClass("my-custom");
 	});

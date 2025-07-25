@@ -154,7 +154,7 @@ const FavouritePage: React.FC = () => {
 				label="Back"
 				iconPosition="left"
 				onClick={handleClickBack}
-				className="flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4"
+				additionalClasses="flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4"
 				classNameIcon="mr-[9px]"
 			/>
 			<h1 className="md:text-[25px] text-[20px] font-semibold text-[#4D4D4D] mb-6">

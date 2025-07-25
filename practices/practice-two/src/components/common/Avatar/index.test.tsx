@@ -46,7 +46,7 @@ describe("Avatar", () => {
 	});
 
 	it("applies custom className", () => {
-		render(<Avatar className="custom-class" />);
+		render(<Avatar additionalClasses="custom-class" />);
 		const avatarDiv = screen.getByTestId("avatar");
 		expect(avatarDiv).toHaveClass("custom-class");
 	});

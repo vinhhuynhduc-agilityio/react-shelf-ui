@@ -134,7 +134,7 @@ const SignInPage: React.FC = () => {
 						disabled={isPending}
 						label="Login"
 						pendingLabel="Checking..."
-						className="mt-4"
+						additionalClasses="mt-4"
 					/>
 				</form>
 				{/* Footer */}

@@ -9,6 +9,6 @@ export { default as HeaderRow } from "./HeaderRow";
 export { default as StatusBadge } from "./StatusBadge";
 export { default as Toast } from "./Toast";
 export { default as RatingStars } from "./RatingStars";
-export { HeartIcon } from "./HeartIcon";
+export { FavouriteIcon } from "./FavouriteIcon";
 export { default as Skeleton } from "./Skeleton";
 export { default as ApiErrorNotice } from "./ApiErrorNotice";

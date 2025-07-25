@@ -7,7 +7,7 @@ interface ButtonProps {
 	type?: "button" | "submit";
 	variant?: Variant;
 	disabled?: boolean;
-	className?: string;
+	additionalClasses?: string;
 	label?: string;
 	pendingLabel?: string;
 	onClick?: () => void;
@@ -18,7 +18,7 @@ const Button: React.FC<ButtonProps> = memo(
 		type = "button",
 		variant = "primary",
 		disabled = false,
-		className = "",
+		additionalClasses = "",
 		label,
 		pendingLabel,
 		onClick,
@@ -57,7 +57,7 @@ const Button: React.FC<ButtonProps> = memo(
 				type={type}
 				onClick={onClick}
 				disabled={disabled}
-				className={clsx(baseStyles, variants[variant], className)}
+				className={clsx(baseStyles, variants[variant], additionalClasses)}
 			>
 				{content}
 			</button>

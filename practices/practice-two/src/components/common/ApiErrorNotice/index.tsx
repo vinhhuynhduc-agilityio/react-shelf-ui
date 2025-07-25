@@ -3,14 +3,14 @@ import { MdError } from "react-icons/md";
 interface ApiErrorNoticeProps {
 	title?: string;
 	errors: (string | undefined | null)[];
-	className?: string;
+	additionalClasses?: string;
 	centerScreen?: boolean;
 }
 
 const ApiErrorNotice: React.FC<ApiErrorNoticeProps> = ({
 	title,
 	errors,
-	className = "",
+	additionalClasses = "",
 	centerScreen = false,
 }) => {
 	const filteredErrors = errors.filter(Boolean);
@@ -23,7 +23,7 @@ const ApiErrorNotice: React.FC<ApiErrorNoticeProps> = ({
 			}`}
 		>
 			<div
-				className={`border border-red-500 rounded-xl px-6 py-4 bg-white text-center shadow-md ${className}`}
+				className={`border border-red-500 rounded-xl px-6 py-4 bg-white text-center shadow-md ${additionalClasses}`}
 			>
 				<div className="flex flex-col items-center justify-center gap-2">
 					<MdError

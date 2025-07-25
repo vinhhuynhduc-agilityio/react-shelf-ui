@@ -29,7 +29,7 @@ describe("ApiErrorNotice", () => {
 	});
 
 	it("applies custom className", () => {
-		render(<ApiErrorNotice errors={["Error!"]} className="my-error" />);
+		render(<ApiErrorNotice errors={["Error!"]} additionalClasses="my-error" />);
 		const box = screen.getByText("Error!").closest("div.border-red-500");
 		expect(box).toHaveClass("my-error");
 	});

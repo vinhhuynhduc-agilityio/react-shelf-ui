@@ -1,11 +1,10 @@
-import clsx from "clsx";
 import { memo, useCallback } from "react";
 
 // types
 import { Book } from "@/types";
 
 // components
-import { Button, StatusBadge, HeartIcon } from "@/components";
+import { Button, StatusBadge, FavouriteIcon } from "@/components";
 
 interface RowBookProps {
 	book: Book;
@@ -68,12 +67,9 @@ const BookRow: React.FC<RowBookProps> = memo(
 					aria-label="Toggle favorite"
 					disabled={disabled}
 				>
-					<HeartIcon
+					<FavouriteIcon
 						filled={isFavorite}
-						className={clsx(
-							"lg:w-[20px] lg:h-[18px] w-[17px] h-[15px]",
-							"w-6 h-6"
-						)}
+						className="lg:w-[20px] lg:h-[18px] w-[17px] h-[15px]"
 					/>
 				</button>
 				<div className="text-center">
@@ -81,7 +77,7 @@ const BookRow: React.FC<RowBookProps> = memo(
 						variant="outline"
 						onClick={handlePreviewClick}
 						label="Preview"
-						className="text-[12px] w-[70px] h-[25px] md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px] md:text-[14px]"
+						additionalClasses="text-[12px] w-[70px] h-[25px] md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px] md:text-[14px]"
 					/>
 				</div>
 			</div>

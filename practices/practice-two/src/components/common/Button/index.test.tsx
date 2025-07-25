@@ -36,7 +36,7 @@ describe("Button", () => {
 	});
 
 	it("applies custom className", () => {
-		render(<Button label="Custom" className="my-custom" />);
+		render(<Button label="Custom" additionalClasses="my-custom" />);
 		const btn = screen.getByRole("button", { name: "Custom" });
 		expect(btn.className).toMatch(/my-custom/);
 	});

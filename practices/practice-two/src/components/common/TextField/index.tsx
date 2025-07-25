@@ -23,7 +23,7 @@ interface TextFieldProps<T extends FieldValues> {
 	showPasswordToggle?: boolean;
 	isPasswordVisible?: boolean;
 	togglePasswordVisibility?: () => void;
-	className?: string;
+	additionalClasses?: string;
 	maxLength?: number;
 	disabled?: boolean;
 }
@@ -41,7 +41,7 @@ export const TextField = <T extends FieldValues>({
 	showPasswordToggle = false,
 	isPasswordVisible = false,
 	togglePasswordVisibility,
-	className = "",
+	additionalClasses = "",
 	maxLength,
 	disabled = false,
 }: TextFieldProps<T>) => {
@@ -57,7 +57,7 @@ export const TextField = <T extends FieldValues>({
 	const containerClass = clsx("flex", {
 		"flex-col gap-[6px] md:gap-[8px]": vertical,
 		"items-center": !vertical,
-		[className]: className,
+		additionalClasses,
 	});
 
 	const inputClass = clsx(
@@ -104,7 +104,11 @@ export const TextField = <T extends FieldValues>({
 						className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
 						data-testid="toggle-password-visibility"
 					>
-						{isPasswordVisible ? <EyeOffIcon data-testid="eye-off" /> : <EyeOnIcon data-testid="eye-on" />}
+						{isPasswordVisible ? (
+							<EyeOffIcon data-testid="eye-off" />
+						) : (
+							<EyeOnIcon data-testid="eye-on" />
+						)}
 					</button>
 				)}
 			</div>

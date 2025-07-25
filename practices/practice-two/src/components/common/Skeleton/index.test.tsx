@@ -29,7 +29,7 @@ describe("Skeleton", () => {
 
 	it("applies custom className", () => {
 		const { getByTestId } = render(
-			<Skeleton dataTestId="skeleton" className="custom-class" />
+			<Skeleton dataTestId="skeleton" additionalClasses="custom-class" />
 		);
 		const skeleton = getByTestId("skeleton");
 		expect(skeleton).toHaveClass("custom-class");

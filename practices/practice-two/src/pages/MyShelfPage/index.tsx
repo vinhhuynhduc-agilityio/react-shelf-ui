@@ -115,13 +115,13 @@ const MyShelfPage: React.FC = () => {
 				<Button
 					variant="text"
 					label="All Books"
-					className="font-medium text-[#4D4D4D] sm:text-[20px] text-[18px]"
+					additionalClasses="font-medium text-[#4D4D4D] sm:text-[20px] text-[18px]"
 				/>
 				<Button
 					variant="text"
 					label="Favourite"
 					onClick={() => navigate(ROUTE.FAVOURITE)}
-					className="text-[#868686] hover:text-[#bfbebe] transition sm:text-[20px] text-[18px] font-medium"
+					additionalClasses="text-[#868686] hover:text-[#bfbebe] transition sm:text-[20px] text-[18px] font-medium"
 				/>
 			</div>
 

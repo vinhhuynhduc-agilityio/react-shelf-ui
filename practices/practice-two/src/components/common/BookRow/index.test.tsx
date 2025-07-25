@@ -45,7 +45,7 @@ describe("BookRow", () => {
 		expect(onClickPreview).toHaveBeenCalledTimes(1);
 	});
 
-	it("calls handleFavoriteClick when heart icon button is clicked", () => {
+	it("calls handleFavoriteClick when favourite icon button is clicked", () => {
 		render(
 			<BookRow
 				book={mockBook}

@@ -20,19 +20,19 @@ export const BookMediaCard = memo(
 					icon={ReviewIcon}
 					label={renderIconButtonLabel("Review")}
 					direction="column"
-					className={ICON_BUTTON_COLUMN_CLASS}
+					additionalClasses={ICON_BUTTON_COLUMN_CLASS}
 				/>
 				<IconButton
 					icon={NotesIcon}
 					label={renderIconButtonLabel("Notes")}
 					direction="column"
-					className={ICON_BUTTON_COLUMN_CLASS}
+					additionalClasses={ICON_BUTTON_COLUMN_CLASS}
 				/>
 				<IconButton
 					icon={ShareIcon}
 					label={renderIconButtonLabel("Share")}
 					direction="column"
-					className={ICON_BUTTON_COLUMN_CLASS}
+					additionalClasses={ICON_BUTTON_COLUMN_CLASS}
 				/>
 			</div>
 		</div>

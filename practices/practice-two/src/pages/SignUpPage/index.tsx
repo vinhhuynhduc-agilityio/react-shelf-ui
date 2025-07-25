@@ -172,7 +172,7 @@ const SignUpPage: React.FC = () => {
 						disabled={isPending}
 						label="Register"
 						pendingLabel="Registering..."
-						className="mt-2"
+						additionalClasses="mt-2"
 					/>
 				</form>
 

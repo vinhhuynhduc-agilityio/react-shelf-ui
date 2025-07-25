@@ -10,7 +10,7 @@ interface IconButtonProps {
 	ariaLabel?: string;
 	onClick?: () => void;
 	disabled?: boolean;
-	className?: string;
+	additionalClasses?: string;
 	iconPosition?: "left" | "right";
 	direction?: "row" | "column";
 	dataTestId?: string;
@@ -25,7 +25,7 @@ export const IconButton: FC<IconButtonProps> = ({
 	ariaLabel,
 	onClick,
 	disabled = false,
-	className = "",
+	additionalClasses = "",
 	iconPosition = "left",
 	direction = "row",
 	dataTestId = "",
@@ -51,7 +51,7 @@ export const IconButton: FC<IconButtonProps> = ({
 					? "flex flex-col items-center transition-all"
 					: "flex items-center transition-all",
 				disabled && "opacity-50",
-				className
+				additionalClasses
 			)}
 		>
 			{isColumn ? (

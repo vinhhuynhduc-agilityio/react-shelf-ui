@@ -77,7 +77,7 @@ const BookPreviewPage = () => {
 				label="Back to results"
 				iconPosition="left"
 				onClick={handleClickBackToResult}
-				className="flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4"
+				additionalClasses="flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4"
 				classNameIcon="mr-[9px]"
 			/>
 			<div className="flex xl:flex-row flex-col justify-between xl:space-x-6">

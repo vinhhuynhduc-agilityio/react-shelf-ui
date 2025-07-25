@@ -7,7 +7,7 @@ interface SkeletonProps {
 	width?: number | string;
 	height?: number | string;
 	borderRadius?: number | string;
-	className?: string;
+	additionalClasses?: string;
 	dataTestId?: string;
 }
 
@@ -16,7 +16,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 	width,
 	height,
 	borderRadius,
-	className = "",
+	additionalClasses = "",
 	dataTestId,
 }) => {
 	const style: React.CSSProperties = {
@@ -30,7 +30,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 			className={clsx(
 				"relative overflow-hidden bg-gray-200 animate-pulse",
 				variant === "block" ? "block" : "inline-block",
-				className
+				additionalClasses
 			)}
 			style={style}
 			data-testid={dataTestId}

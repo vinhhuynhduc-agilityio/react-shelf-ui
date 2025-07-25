@@ -32,7 +32,7 @@ export const BookRowSkeleton: React.FC = () => {
 						<Skeleton width={60} height={28} borderRadius={6} />
 					</div>
 
-					{/* Heart icon */}
+					{/* Favourite icon */}
 					<div>
 						<Skeleton width={20} height={18} borderRadius={4} />
 					</div>

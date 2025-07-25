@@ -124,7 +124,7 @@ const AccountSettingPage: React.FC = () => {
 						classNameIcon="w-5 h-5"
 						onClick={toggleEdit}
 						dataTestId="toggle-edit-btn"
-						className={clsx(
+						additionalClasses={clsx(
 							"border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition",
 							isPending && "cursor-not-allowed opacity-50"
 						)}
@@ -158,7 +158,7 @@ const AccountSettingPage: React.FC = () => {
 						}}
 						error={errors.fullName?.message}
 						vertical
-						className="flex-1"
+						additionalClasses="flex-1"
 					/>
 					<TextField
 						name="email"
@@ -176,7 +176,7 @@ const AccountSettingPage: React.FC = () => {
 						}}
 						error={errors.email?.message}
 						vertical
-						className="flex-1"
+						additionalClasses="flex-1"
 					/>
 				</div>
 				<div className="flex md:flex-row flex-col gap-4">
@@ -198,7 +198,7 @@ const AccountSettingPage: React.FC = () => {
 						}}
 						error={errors.registerNumber?.message}
 						vertical
-						className="flex-1"
+						additionalClasses="flex-1"
 					/>
 					<PhoneNumberField
 						register={register}
@@ -214,12 +214,12 @@ const AccountSettingPage: React.FC = () => {
 					register={register}
 					error={errors.bio?.message}
 					vertical
-					className="w-full resize-none"
+					additionalClasses="w-full resize-none"
 					disabled={isDisabled}
 				/>
 				{/* Submit Button */}
 				<Button
-					className="mt-4"
+					additionalClasses="mt-4"
 					variant="primary"
 					disabled={isDisabled}
 					type="submit"
