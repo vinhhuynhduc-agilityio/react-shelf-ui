@@ -1,6 +1,5 @@
 import { render, screen, fireEvent } from "@/helpers/test-utils";
 import SearchPage from ".";
-import { MemoryRouter } from "react-router-dom";
 import { MOCK_BOOKS, MOCK_FAVOURITES, MOCK_SHELVES } from "@/__mocks__/book";
 import { MOCK_USER } from "@/__mocks__/user";
 import {
@@ -106,11 +105,7 @@ describe("SearchPage", () => {
 			isLoading: true,
 			isError: false,
 		});
-		render(
-			<MemoryRouter>
-				<SearchPage />
-			</MemoryRouter>
-		);
+		render(<SearchPage />);
 		expect(screen.getAllByTestId("book-row-skeleton")[0]).toBeInTheDocument();
 	});
 
@@ -125,11 +120,7 @@ describe("SearchPage", () => {
 			isError: true,
 			isFetching: false,
 		});
-		render(
-			<MemoryRouter>
-				<SearchPage />
-			</MemoryRouter>
-		);
+		render(<SearchPage />);
 		expect(screen.getByText(/Failed to load search data/)).toBeInTheDocument();
 	});
 
@@ -140,11 +131,7 @@ describe("SearchPage", () => {
 			isError: false,
 			error: null,
 		});
-		render(
-			<MemoryRouter>
-				<SearchPage />
-			</MemoryRouter>
-		);
+		render(<SearchPage />);
 		expect(screen.getByText(/no books available/i)).toBeInTheDocument();
 	});
 
@@ -159,11 +146,7 @@ describe("SearchPage", () => {
 		mockedUseSearchStore.mockImplementation((cb) =>
 			cb({ searchFromSidebar: false, searchTerm: "notfound" })
 		);
-		render(
-			<MemoryRouter>
-				<SearchPage />
-			</MemoryRouter>
-		);
+		render(<SearchPage />);
 		expect(screen.getByText(/no books found/i)).toBeInTheDocument();
 	});
 
@@ -181,11 +164,7 @@ describe("SearchPage", () => {
 		mockedUseFavouritesStore.mockImplementation((cb) =>
 			cb({ favourites: [], setFavourites: jest.fn() })
 		);
-		render(
-			<MemoryRouter>
-				<SearchPage />
-			</MemoryRouter>
-		);
+		render(<SearchPage />);
 		expect(screen.getByText(/don't make me think/i)).toBeInTheDocument();
 	});
 
@@ -215,11 +194,7 @@ describe("SearchPage", () => {
 			setFavouritesChanged: setFavouritesChangedMock,
 		}));
 		mockedUseAddFavouriteItem.mockReturnValue({ mutate });
-		render(
-			<MemoryRouter>
-				<SearchPage />
-			</MemoryRouter>
-		);
+		render(<SearchPage />);
 		const favButtons = screen.getAllByRole("button");
 		fireEvent.click(favButtons[0]);
 		expect(mutate).toHaveBeenCalled();
@@ -253,11 +228,7 @@ describe("SearchPage", () => {
 			setFavouritesChanged: setFavouritesChangedMock,
 		}));
 		mockedUseRemoveFavouriteItem.mockReturnValue({ mutate });
-		render(
-			<MemoryRouter>
-				<SearchPage />
-			</MemoryRouter>
-		);
+		render(<SearchPage />);
 		const favButtons = screen.getAllByRole("button");
 		fireEvent.click(favButtons[0]);
 		expect(mutate).toHaveBeenCalled();
@@ -280,11 +251,7 @@ describe("SearchPage", () => {
 			})
 		);
 		mockedUseGetMyShelf.mockReturnValue({ data: MOCK_SHELVES });
-		const { container } = render(
-			<MemoryRouter>
-				<SearchPage />
-			</MemoryRouter>
-		);
+		const { container } = render(<SearchPage />);
 		expect(container).toMatchSnapshot();
 	});
 });

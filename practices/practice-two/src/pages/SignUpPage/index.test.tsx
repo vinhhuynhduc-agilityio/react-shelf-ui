@@ -1,6 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@/helpers/test-utils";
 import SignUpPage from ".";
-import { MemoryRouter } from "react-router-dom";
 import { useRegisterUser } from "@/hooks";
 
 jest.mock("@/hooks", () => ({
@@ -21,11 +20,7 @@ describe("SignUpPage", () => {
 	});
 
 	it("renders form and UI elements", () => {
-		render(
-			<MemoryRouter>
-				<SignUpPage />
-			</MemoryRouter>
-		);
+		render(<SignUpPage />);
 		expect(screen.getByText(/create an account/i)).toBeInTheDocument();
 		expect(screen.getByLabelText(/username/i)).toBeInTheDocument();
 		expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
@@ -41,11 +36,7 @@ describe("SignUpPage", () => {
 	});
 
 	it("shows validation errors if fields are empty", async () => {
-		render(
-			<MemoryRouter>
-				<SignUpPage />
-			</MemoryRouter>
-		);
+		render(<SignUpPage />);
 		fireEvent.click(screen.getByRole("button", { name: /register/i }));
 		await waitFor(() => {
 			expect(
@@ -68,11 +59,7 @@ describe("SignUpPage", () => {
 	});
 
 	it("shows error if email is invalid", async () => {
-		render(
-			<MemoryRouter>
-				<SignUpPage />
-			</MemoryRouter>
-		);
+		render(<SignUpPage />);
 		fireEvent.input(screen.getByLabelText(/username/i), {
 			target: { value: "Test User" },
 		});
@@ -100,11 +87,7 @@ describe("SignUpPage", () => {
 	});
 
 	it("shows error if password is too short", async () => {
-		render(
-			<MemoryRouter>
-				<SignUpPage />
-			</MemoryRouter>
-		);
+		render(<SignUpPage />);
 		fireEvent.input(screen.getByLabelText(/username/i), {
 			target: { value: "Test User" },
 		});
@@ -129,11 +112,7 @@ describe("SignUpPage", () => {
 	});
 
 	it("shows error if passwords do not match", async () => {
-		render(
-			<MemoryRouter>
-				<SignUpPage />
-			</MemoryRouter>
-		);
+		render(<SignUpPage />);
 		fireEvent.input(screen.getByLabelText(/^password$/i), {
 			target: { value: "123456" },
 		});
@@ -149,11 +128,7 @@ describe("SignUpPage", () => {
 	it("calls registerUser on valid submit", async () => {
 		const mutate = jest.fn();
 		mockedUseRegisterUser.mockReturnValue({ mutate, isPending: false });
-		render(
-			<MemoryRouter>
-				<SignUpPage />
-			</MemoryRouter>
-		);
+		render(<SignUpPage />);
 		fireEvent.input(screen.getByLabelText(/username/i), {
 			target: { value: "Test User" },
 		});
@@ -183,11 +158,7 @@ describe("SignUpPage", () => {
 	});
 
 	it("matches snapshot", () => {
-		const { container } = render(
-			<MemoryRouter>
-				<SignUpPage />
-			</MemoryRouter>
-		);
+		const { container } = render(<SignUpPage />);
 		expect(container).toMatchSnapshot();
 	});
 });

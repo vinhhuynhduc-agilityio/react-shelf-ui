@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from "@/helpers/test-utils";
 import BookPreviewPage from ".";
 import { MOCK_BOOKS } from "@/__mocks__/book";
 import { MOCK_USER } from "@/__mocks__/user";
-import { MemoryRouter, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useBookStore, usePendingShelfStore, useUserStore } from "@/stores";
 import { useGetMyShelf, useAddShelfItem } from "@/hooks";
 
@@ -56,11 +56,7 @@ describe("BookPreviewPage", () => {
 	});
 
 	it("renders book info and actions", () => {
-		render(
-			<MemoryRouter>
-				<BookPreviewPage />
-			</MemoryRouter>
-		);
+		render(<BookPreviewPage />);
 		expect(screen.getByText(mockBook.title)).toBeInTheDocument();
 		expect(screen.getByRole("button", { name: /borrow/i })).toBeInTheDocument();
 		expect(screen.getByText(/availability/i)).toBeInTheDocument();
@@ -69,11 +65,7 @@ describe("BookPreviewPage", () => {
 
 	it("disables borrow button if already in shelf", () => {
 		mockedUseGetMyShelf.mockReturnValue({ data: [{ bookId: mockBook.id }] });
-		render(
-			<MemoryRouter>
-				<BookPreviewPage />
-			</MemoryRouter>
-		);
+		render(<BookPreviewPage />);
 		expect(
 			screen.getByRole("button", { name: /already in shelf/i })
 		).toBeDisabled();
@@ -83,42 +75,26 @@ describe("BookPreviewPage", () => {
 		mockedUsePendingShelfStore.mockReturnValue({
 			pendingShelfActions: [mockBook.id],
 		});
-		render(
-			<MemoryRouter>
-				<BookPreviewPage />
-			</MemoryRouter>
-		);
+		render(<BookPreviewPage />);
 		expect(screen.getByRole("button", { name: /borrow/i })).toBeDisabled();
 	});
 
 	it("calls addShelf when borrow clicked", () => {
 		const mutate = jest.fn();
 		mockedUseAddShelfItem.mockReturnValue({ mutate });
-		render(
-			<MemoryRouter>
-				<BookPreviewPage />
-			</MemoryRouter>
-		);
+		render(<BookPreviewPage />);
 		fireEvent.click(screen.getByRole("button", { name: /borrow/i }));
 		expect(mutate).toHaveBeenCalled();
 	});
 
 	it("calls navigate when back button clicked", () => {
-		render(
-			<MemoryRouter>
-				<BookPreviewPage />
-			</MemoryRouter>
-		);
+		render(<BookPreviewPage />);
 		fireEvent.click(screen.getByRole("button", { name: /back to results/i }));
 		expect(mockNavigate).toHaveBeenCalled();
 	});
 
 	it("matches snapshot", () => {
-		const { container } = render(
-			<MemoryRouter>
-				<BookPreviewPage />
-			</MemoryRouter>
-		);
+		const { container } = render(<BookPreviewPage />);
 		expect(container).toMatchSnapshot();
 	});
 });

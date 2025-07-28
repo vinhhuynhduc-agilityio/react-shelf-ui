@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import BookHomeList from ".";
 import { MOCK_BOOKS } from "@/__mocks__";
+import { MemoryRouter } from "react-router-dom";
 
 // Mock useNavigate
 const mockNavigate = jest.fn();
@@ -26,12 +27,20 @@ describe("BookHomeList", () => {
 	});
 
 	it("renders the title", () => {
-		render(<BookHomeList books={MOCK_BOOKS} title="Recommended Books" />);
+		render(
+			<MemoryRouter>
+				<BookHomeList books={MOCK_BOOKS} title="Recommended Books" />
+			</MemoryRouter>
+		);
 		expect(screen.getByText("Recommended Books")).toBeInTheDocument();
 	});
 
 	it("renders a BookItem for each book", () => {
-		render(<BookHomeList books={MOCK_BOOKS} title="Books" />);
+		render(
+			<MemoryRouter>
+				<BookHomeList books={MOCK_BOOKS} title="Books" />
+			</MemoryRouter>
+		);
 		const items = screen.getAllByTestId("book-item");
 		expect(items).toHaveLength(MOCK_BOOKS.length);
 		expect(items[0]).toHaveTextContent("Don't Make Me Think");
@@ -39,7 +48,11 @@ describe("BookHomeList", () => {
 	});
 
 	it("calls navigate when a BookItem is clicked", () => {
-		render(<BookHomeList books={MOCK_BOOKS} title="Books" />);
+		render(
+			<MemoryRouter>
+				<BookHomeList books={MOCK_BOOKS} title="Books" />
+			</MemoryRouter>
+		);
 		const items = screen.getAllByTestId("book-item");
 		fireEvent.click(items[0]);
 		expect(mockNavigate).toHaveBeenCalledWith(
@@ -49,7 +62,9 @@ describe("BookHomeList", () => {
 
 	it("matches snapshot", () => {
 		const { container } = render(
-			<BookHomeList books={MOCK_BOOKS} title="Snapshot Title" />
+			<MemoryRouter>
+				<BookHomeList books={MOCK_BOOKS} title="Snapshot Title" />
+			</MemoryRouter>
 		);
 		expect(container).toMatchSnapshot();
 	});

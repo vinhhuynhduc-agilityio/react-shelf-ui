@@ -1,6 +1,14 @@
+import { MemoryRouter } from "react-router-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import MyShelfBookCard from ".";
 import { Book } from "@/types";
+
+// Mock useNavigate
+const mockNavigate = jest.fn();
+jest.mock("react-router-dom", () => ({
+	...jest.requireActual("react-router-dom"),
+	useNavigate: () => mockNavigate,
+}));
 
 describe("MyShelfBookCard", () => {
 	const mockBook = {
@@ -17,21 +25,21 @@ describe("MyShelfBookCard", () => {
 
 	const setup = (props = {}) =>
 		render(
-			<MyShelfBookCard
-				book={mockBook as Book}
-				borrowedDate={borrowedDate}
-				onReturn={onReturn}
-				{...props}
-			/>
+			<MemoryRouter>
+				<MyShelfBookCard
+					book={mockBook as Book}
+					borrowedDate={borrowedDate}
+					onReturn={onReturn}
+					{...props}
+				/>
+			</MemoryRouter>
 		);
 
 	it("renders BookItem, borrowed date, and Return button", () => {
 		setup();
-		// BookItem: check for book title
 		expect(screen.getByText("Test Book")).toBeInTheDocument();
 		expect(screen.getByText("Borrowed on")).toBeInTheDocument();
 		expect(screen.getByText(borrowedDate)).toBeInTheDocument();
-		// Button: check for Return button
 		expect(screen.getByRole("button", { name: /return/i })).toBeInTheDocument();
 		expect(screen.getByText("Return")).toBeInTheDocument();
 	});
@@ -45,6 +53,13 @@ describe("MyShelfBookCard", () => {
 	it("disables Return button when disabled is true", () => {
 		setup({ disabled: true });
 		expect(screen.getByRole("button", { name: /return/i })).toBeDisabled();
+	});
+
+	it("navigates to book preview when BookItem is clicked", () => {
+		setup();
+		const bookItem = screen.getByRole("button", { name: /test book/i });
+		fireEvent.click(bookItem);
+		expect(mockNavigate).toHaveBeenCalledWith("/book-preview/book-1");
 	});
 
 	it("matches snapshot", () => {

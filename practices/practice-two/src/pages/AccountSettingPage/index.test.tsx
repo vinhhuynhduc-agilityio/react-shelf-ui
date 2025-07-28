@@ -1,6 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@/helpers/test-utils";
 import AccountSettingPage from ".";
-import { MemoryRouter } from "react-router-dom";
 import { useUpdateUser } from "@/hooks";
 import { useUserStore } from "@/stores";
 
@@ -39,11 +38,7 @@ describe("AccountSettingPage", () => {
 	});
 
 	it("renders form and UI elements", () => {
-		render(
-			<MemoryRouter>
-				<AccountSettingPage />
-			</MemoryRouter>
-		);
+		render(<AccountSettingPage />);
 		expect(screen.getByText(/account setting/i)).toBeInTheDocument();
 		expect(screen.getByLabelText(/full name/i)).toBeInTheDocument();
 		expect(screen.getByLabelText(/college email id/i)).toBeInTheDocument();
@@ -55,11 +50,7 @@ describe("AccountSettingPage", () => {
 	});
 
 	it("shows validation errors if fields are empty and submit is clicked", async () => {
-		render(
-			<MemoryRouter>
-				<AccountSettingPage />
-			</MemoryRouter>
-		);
+		render(<AccountSettingPage />);
 		fireEvent.click(screen.getByTestId("toggle-edit-btn"));
 		await waitFor(() => {
 			expect(screen.getByLabelText(/full name/i)).not.toBeDisabled();
@@ -88,11 +79,7 @@ describe("AccountSettingPage", () => {
 	});
 
 	it("shows error if email is invalid", async () => {
-		render(
-			<MemoryRouter>
-				<AccountSettingPage />
-			</MemoryRouter>
-		);
+		render(<AccountSettingPage />);
 		fireEvent.click(screen.getByTestId("toggle-edit-btn"));
 		await waitFor(() => {
 			expect(screen.getByLabelText(/college email id/i)).not.toBeDisabled();
@@ -109,11 +96,7 @@ describe("AccountSettingPage", () => {
 	});
 
 	it("shows error if full name is too short", async () => {
-		render(
-			<MemoryRouter>
-				<AccountSettingPage />
-			</MemoryRouter>
-		);
+		render(<AccountSettingPage />);
 		fireEvent.click(screen.getByTestId("toggle-edit-btn"));
 		await waitFor(() => {
 			expect(screen.getByLabelText(/full name/i)).not.toBeDisabled();
@@ -134,11 +117,7 @@ describe("AccountSettingPage", () => {
 	it("calls updateUser on valid submit", async () => {
 		const mutate = jest.fn();
 		mockedUseUpdateUser.mockReturnValue({ mutate, isPending: false });
-		render(
-			<MemoryRouter>
-				<AccountSettingPage />
-			</MemoryRouter>
-		);
+		render(<AccountSettingPage />);
 		fireEvent.click(screen.getByTestId("toggle-edit-btn"));
 		await waitFor(() => {
 			expect(screen.getByLabelText(/full name/i)).not.toBeDisabled();
@@ -177,11 +156,7 @@ describe("AccountSettingPage", () => {
 	});
 
 	it("matches snapshot", () => {
-		const { container } = render(
-			<MemoryRouter>
-				<AccountSettingPage />
-			</MemoryRouter>
-		);
+		const { container } = render(<AccountSettingPage />);
 		expect(container).toMatchSnapshot();
 	});
 });

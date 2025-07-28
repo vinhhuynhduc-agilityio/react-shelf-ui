@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from "@/helpers/test-utils";
 import MyShelfPage from ".";
 import { MOCK_BOOKS, MOCK_SHELVES } from "@/__mocks__/book";
-import { MemoryRouter } from "react-router-dom";
 import { MOCK_USER } from "@/__mocks__/user";
 import {
 	useBookStore,
@@ -70,11 +69,7 @@ describe("MyShelfPage", () => {
 			error: { message: "fail" },
 		});
 		mockedUseFetchMySHelf.mockReturnValue({ isError: true, isFetching: false });
-		render(
-			<MemoryRouter>
-				<MyShelfPage />
-			</MemoryRouter>
-		);
+		render(<MyShelfPage />);
 		expect(screen.getByText(/Failed to load shelf data/)).toBeInTheDocument();
 	});
 
@@ -85,11 +80,7 @@ describe("MyShelfPage", () => {
 			isError: false,
 			error: null,
 		});
-		render(
-			<MemoryRouter>
-				<MyShelfPage />
-			</MemoryRouter>
-		);
+		render(<MyShelfPage />);
 		expect(screen.getByText(/No books in your shelf./i)).toBeInTheDocument();
 	});
 
@@ -102,11 +93,7 @@ describe("MyShelfPage", () => {
 		});
 		mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
 		mockedUseShelfStore.mockReturnValue({ shelf: [], setShelf: jest.fn() });
-		render(
-			<MemoryRouter>
-				<MyShelfPage />
-			</MemoryRouter>
-		);
+		render(<MyShelfPage />);
 		expect(screen.getByText(/no books in your shelf/i)).toBeInTheDocument();
 	});
 
@@ -122,11 +109,7 @@ describe("MyShelfPage", () => {
 			shelf: MOCK_SHELVES,
 			setShelf: jest.fn(),
 		});
-		render(
-			<MemoryRouter>
-				<MyShelfPage />
-			</MemoryRouter>
-		);
+		render(<MyShelfPage />);
 		const headings = screen.getAllByText(
 			(_, node) => node?.textContent === "Your Shelf"
 		);
@@ -160,11 +143,7 @@ describe("MyShelfPage", () => {
 			setShelfChanged,
 		});
 		mockedUseRemoveShelfItem.mockReturnValue({ mutate });
-		render(
-			<MemoryRouter>
-				<MyShelfPage />
-			</MemoryRouter>
-		);
+		render(<MyShelfPage />);
 		const returnButtons = screen.getAllByRole("button", { name: /return/i });
 		fireEvent.click(returnButtons[0]);
 		expect(mutate).toHaveBeenCalled();
@@ -184,11 +163,7 @@ describe("MyShelfPage", () => {
 			shelf: MOCK_SHELVES,
 			setShelf: jest.fn(),
 		});
-		const { container } = render(
-			<MemoryRouter>
-				<MyShelfPage />
-			</MemoryRouter>
-		);
+		const { container } = render(<MyShelfPage />);
 		expect(container).toMatchSnapshot();
 	});
 });

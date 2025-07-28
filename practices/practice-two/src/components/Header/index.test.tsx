@@ -1,6 +1,5 @@
 import { render, screen, fireEvent } from "@/helpers/test-utils";
 import Header from ".";
-import { MemoryRouter } from "react-router-dom";
 import { useSearchFilterStore, useSearchStore, useUserStore } from "@/stores";
 
 const navigate = jest.fn();
@@ -55,11 +54,7 @@ describe("Header", () => {
 	});
 
 	it("renders search bar and user profile", () => {
-		render(
-			<MemoryRouter>
-				<Header />
-			</MemoryRouter>
-		);
+		render(<Header />);
 		expect(screen.getByPlaceholderText(/search/i)).toBeInTheDocument();
 		expect(screen.getByText(/test user/i)).toBeInTheDocument();
 		expect(screen.getByTestId("filter-btn")).toBeInTheDocument();
@@ -67,44 +62,28 @@ describe("Header", () => {
 	});
 
 	it("opens filter dropdown when filter button is clicked", () => {
-		render(
-			<MemoryRouter>
-				<Header />
-			</MemoryRouter>
-		);
+		render(<Header />);
 		const filterBtn = screen.getByTestId("filter-btn");
 		fireEvent.click(filterBtn);
 		expect(screen.getByRole("listbox")).toBeInTheDocument();
 	});
 
 	it("opens profile dropdown when profile button is clicked", () => {
-		render(
-			<MemoryRouter>
-				<Header />
-			</MemoryRouter>
-		);
+		render(<Header />);
 		const profileBtn = screen.getByTestId("profile-btn");
 		fireEvent.click(profileBtn);
 		expect(screen.getByRole("listbox")).toBeInTheDocument();
 	});
 
 	it("matches snapshot", () => {
-		const { container } = render(
-			<MemoryRouter>
-				<Header />
-			</MemoryRouter>
-		);
+		const { container } = render(<Header />);
 		expect(container).toMatchSnapshot();
 	});
 
 	it("calls logout and navigates to login when selecting logout in profile menu", () => {
 		const logout = jest.fn();
 		mockedUseUserStore.mockImplementation((cb) => cb({ logout }));
-		render(
-			<MemoryRouter>
-				<Header />
-			</MemoryRouter>
-		);
+		render(<Header />);
 		const profileBtn = screen.getByTestId("profile-btn");
 		fireEvent.click(profileBtn);
 		// Find the logout option in the dropdown and click it
@@ -127,11 +106,7 @@ describe("Header", () => {
 			})
 		);
 
-		render(
-			<MemoryRouter>
-				<Header />
-			</MemoryRouter>
-		);
+		render(<Header />);
 
 		const input = screen.getByPlaceholderText(/search/i);
 		screen.debug(input);
@@ -148,11 +123,7 @@ describe("Header", () => {
 			})
 		);
 
-		render(
-			<MemoryRouter>
-				<Header />
-			</MemoryRouter>
-		);
+		render(<Header />);
 		const filterBtn = screen.getByTestId("filter-btn");
 		fireEvent.click(filterBtn);
 		const filterOption = screen.getByText(/Title/i, { selector: "li" });
@@ -174,11 +145,7 @@ describe("Header", () => {
 			})
 		);
 
-		render(
-			<MemoryRouter>
-				<Header />
-			</MemoryRouter>
-		);
+		render(<Header />);
 		const input = screen.getByPlaceholderText(/search/i);
 		fireEvent.keyDown(input, { key: "Enter" });
 		expect(setSearchTerm).toHaveBeenCalledWith("react");
@@ -189,11 +156,7 @@ describe("Header", () => {
 	it("calls logout and navigates to login when selecting logout in profile menu", () => {
 		const logout = jest.fn();
 		mockedUseUserStore.mockImplementation((cb) => cb({ logout }));
-		render(
-			<MemoryRouter>
-				<Header />
-			</MemoryRouter>
-		);
+		render(<Header />);
 		const profileBtn = screen.getByTestId("profile-btn");
 		fireEvent.click(profileBtn);
 		const logoutOption = screen.getByText(/logout/i, { selector: "li" });
@@ -203,11 +166,7 @@ describe("Header", () => {
 	});
 
 	it("navigates to correct page when selecting profile menu option", () => {
-		render(
-			<MemoryRouter>
-				<Header />
-			</MemoryRouter>
-		);
+		render(<Header />);
 		const profileBtn = screen.getByTestId("profile-btn");
 		fireEvent.click(profileBtn);
 		const option = screen.getByText(/profile/i, { selector: "li" });

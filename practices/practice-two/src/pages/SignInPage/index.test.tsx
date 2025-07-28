@@ -1,6 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@/helpers/test-utils";
 import SignInPage from ".";
-import { MemoryRouter } from "react-router-dom";
 import { useUserStore } from "@/stores/userStore";
 import { useGetUser } from "@/hooks";
 
@@ -27,11 +26,7 @@ describe("SignInPage", () => {
 	});
 
 	it("renders form and UI elements", () => {
-		render(
-			<MemoryRouter>
-				<SignInPage />
-			</MemoryRouter>
-		);
+		render(<SignInPage />);
 		expect(screen.getByText(/welcome back/i)).toBeInTheDocument();
 		expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
 		expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
@@ -40,11 +35,7 @@ describe("SignInPage", () => {
 	});
 
 	it("shows validation errors if fields are empty", async () => {
-		render(
-			<MemoryRouter>
-				<SignInPage />
-			</MemoryRouter>
-		);
+		render(<SignInPage />);
 		fireEvent.click(screen.getByRole("button", { name: /login/i }));
 		await waitFor(() => {
 			expect(screen.getByText(/email is required/i)).toBeInTheDocument();
@@ -53,11 +44,7 @@ describe("SignInPage", () => {
 	});
 
 	it("shows error if email is invalid", async () => {
-		render(
-			<MemoryRouter>
-				<SignInPage />
-			</MemoryRouter>
-		);
+		render(<SignInPage />);
 		const emailInput = screen.getByLabelText(/email/i);
 		fireEvent.input(emailInput, { target: { value: "invalid@123" } });
 		fireEvent.blur(emailInput);
@@ -68,11 +55,7 @@ describe("SignInPage", () => {
 	});
 
 	it("shows error if password is too short", async () => {
-		render(
-			<MemoryRouter>
-				<SignInPage />
-			</MemoryRouter>
-		);
+		render(<SignInPage />);
 		fireEvent.input(screen.getByLabelText(/email/i), {
 			target: { value: "test@example.com" },
 		});
@@ -93,11 +76,7 @@ describe("SignInPage", () => {
 		const mutateAsync = jest.fn((email, { onSuccess }) => onSuccess(user));
 		mockedUseUserStore.mockImplementation((cb) => cb({ setUser }));
 		mockedUseGetUser.mockReturnValue({ mutateAsync, isPending: false });
-		render(
-			<MemoryRouter>
-				<SignInPage />
-			</MemoryRouter>
-		);
+		render(<SignInPage />);
 		fireEvent.input(screen.getByLabelText(/email/i), {
 			target: { value: user.email },
 		});
@@ -117,11 +96,7 @@ describe("SignInPage", () => {
 		const mutateAsync = jest.fn((email, { onSuccess }) => onSuccess(user));
 		mockedUseUserStore.mockImplementation((cb) => cb({ setUser }));
 		mockedUseGetUser.mockReturnValue({ mutateAsync, isPending: false });
-		render(
-			<MemoryRouter>
-				<SignInPage />
-			</MemoryRouter>
-		);
+		render(<SignInPage />);
 		fireEvent.input(screen.getByLabelText(/email/i), {
 			target: { value: user.email },
 		});
@@ -138,11 +113,7 @@ describe("SignInPage", () => {
 	});
 
 	it("matches snapshot", () => {
-		const { container } = render(
-			<MemoryRouter>
-				<SignInPage />
-			</MemoryRouter>
-		);
+		const { container } = render(<SignInPage />);
 		expect(container).toMatchSnapshot();
 	});
 });

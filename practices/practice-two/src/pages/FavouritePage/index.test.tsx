@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from "@/helpers/test-utils";
 import FavouritePage from ".";
 import { MOCK_BOOKS, MOCK_FAVOURITES, MOCK_SHELVES } from "@/__mocks__/book";
-import { MemoryRouter } from "react-router-dom";
 import { MOCK_USER } from "@/__mocks__/user";
 import {
 	useBookStore,
@@ -88,11 +87,7 @@ describe("FavouritePage", () => {
 			isLoading: true,
 			isError: false,
 		});
-		render(
-			<MemoryRouter>
-				<FavouritePage />
-			</MemoryRouter>
-		);
+		render(<FavouritePage />);
 		expect(screen.getAllByTestId("book-row-skeleton")[0]).toBeInTheDocument();
 	});
 
@@ -107,11 +102,7 @@ describe("FavouritePage", () => {
 			isLoading: false,
 			isError: true,
 		});
-		render(
-			<MemoryRouter>
-				<FavouritePage />
-			</MemoryRouter>
-		);
+		render(<FavouritePage />);
 		expect(
 			screen.getByText(/failed to load favourites data/i)
 		).toBeInTheDocument();
@@ -124,11 +115,7 @@ describe("FavouritePage", () => {
 			favourites: [],
 			setFavourites: jest.fn(),
 		}));
-		render(
-			<MemoryRouter>
-				<FavouritePage />
-			</MemoryRouter>
-		);
+		render(<FavouritePage />);
 		expect(
 			screen.getByText(/no books found in your favourites/i)
 		).toBeInTheDocument();
@@ -141,11 +128,7 @@ describe("FavouritePage", () => {
 			setFavourites: jest.fn(),
 		}));
 		mockedUseGetMyShelf.mockReturnValue({ data: MOCK_SHELVES });
-		render(
-			<MemoryRouter>
-				<FavouritePage />
-			</MemoryRouter>
-		);
+		render(<FavouritePage />);
 		expect(screen.getByText(/your favourite/i)).toBeInTheDocument();
 		expect(
 			screen.getAllByLabelText(/Toggle favorite/i).length
@@ -171,11 +154,7 @@ describe("FavouritePage", () => {
 		}));
 		mockedUseGetMyShelf.mockReturnValue({ data: MOCK_SHELVES });
 		mockedUseRemoveFavouriteItem.mockReturnValue({ mutate });
-		render(
-			<MemoryRouter>
-				<FavouritePage />
-			</MemoryRouter>
-		);
+		render(<FavouritePage />);
 		fireEvent.click(screen.getAllByLabelText(/Toggle favorite/i)[0]);
 		expect(mutate).toHaveBeenCalled();
 		expect(setFavourites).toHaveBeenCalled();
@@ -189,11 +168,7 @@ describe("FavouritePage", () => {
 			setFavourites: jest.fn(),
 		}));
 		mockedUseGetMyShelf.mockReturnValue({ data: MOCK_SHELVES });
-		const { container } = render(
-			<MemoryRouter>
-				<FavouritePage />
-			</MemoryRouter>
-		);
+		const { container } = render(<FavouritePage />);
 		expect(container).toMatchSnapshot();
 	});
 });

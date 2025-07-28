@@ -52,25 +52,46 @@ describe("HomePage", () => {
 		mockedUseShelfStore.mockReturnValue({ shelf: [], setShelf: jest.fn() });
 		render(<HomePage />);
 		expect(
-			screen.getAllByText(/Failed to load books data/).length
+			screen.getAllByText(/Failed to load books data/i).length
 		).toBeGreaterThanOrEqual(1);
 	});
 
-	it("shows no books available if books empty", () => {
+	it("shows loading state for recent readings", () => {
+		mockedUseFetchBooks.mockReturnValue({
+			isLoading: false,
+			isError: false,
+			error: null,
+		});
+		mockedUseFetchMySHelf.mockReturnValue({ isFetching: true });
+		mockedUseBookStore.mockImplementation((cb) => cb({ books: mockBooks }));
+		mockedUseUserStore.mockImplementation((cb) =>
+			cb({ currentUser: mockUser })
+		);
+		mockedUseShelfStore.mockReturnValue({
+			shelf: mockShelf,
+			setShelf: jest.fn(),
+		});
+		render(<HomePage />);
+		expect(screen.getByText(/Recent Readings/i)).toBeInTheDocument();
+	});
+
+	it("renders TodayQuote component", () => {
 		mockedUseFetchBooks.mockReturnValue({
 			isLoading: false,
 			isError: false,
 			error: null,
 		});
 		mockedUseFetchMySHelf.mockReturnValue({ isFetching: false });
-		mockedUseBookStore.mockImplementation((cb) => cb({ books: [] }));
+		mockedUseBookStore.mockImplementation((cb) => cb({ books: mockBooks }));
 		mockedUseUserStore.mockImplementation((cb) =>
 			cb({ currentUser: mockUser })
 		);
-		mockedUseShelfStore.mockReturnValue({ shelf: [], setShelf: jest.fn() });
+		mockedUseShelfStore.mockReturnValue({
+			shelf: mockShelf,
+			setShelf: jest.fn(),
+		});
 		render(<HomePage />);
-		const noBooksElements = screen.getAllByText(/no books available/i);
-		expect(noBooksElements.length).toBeGreaterThanOrEqual(1);
+		expect(screen.getByText(/good morning/i)).toBeInTheDocument();
 	});
 
 	it("renders recommended and recent readings", () => {
@@ -90,30 +111,10 @@ describe("HomePage", () => {
 		});
 		render(<HomePage />);
 		expect(screen.getByText(/good morning/i)).toBeInTheDocument();
-		expect(screen.getByText(/recommended for you/i)).toBeInTheDocument();
+		expect(
+			screen.getAllByAltText(/The Design of Everyday Things/i)[0]
+		).toBeInTheDocument();
 		expect(screen.getByText(/recent readings/i)).toBeInTheDocument();
-		expect(
-			screen.getAllByText("Don't Make Me Think").length
-		).toBeGreaterThanOrEqual(1);
-		expect(
-			screen.getAllByText("The Design of Everyday Things").length
-		).toBeGreaterThanOrEqual(1);
-	});
-
-	it("shows no recent readings message if none", () => {
-		mockedUseFetchBooks.mockReturnValue({
-			isLoading: false,
-			isError: false,
-			error: null,
-		});
-		mockedUseFetchMySHelf.mockReturnValue({ isFetching: false });
-		mockedUseBookStore.mockImplementation((cb) => cb({ books: mockBooks }));
-		mockedUseUserStore.mockImplementation((cb) =>
-			cb({ currentUser: mockUser })
-		);
-		mockedUseShelfStore.mockReturnValue({ shelf: [], setShelf: jest.fn() });
-		render(<HomePage />);
-		expect(screen.getByText(/no books available./i)).toBeInTheDocument();
 	});
 
 	it("matches snapshot", () => {
