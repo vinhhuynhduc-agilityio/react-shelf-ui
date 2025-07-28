@@ -1,4 +1,9 @@
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import {
+	Navigate,
+	useLocation,
+	useNavigate,
+	useParams,
+} from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 // constants
@@ -27,6 +32,7 @@ import { Book } from "@/types";
 
 const BookPreviewPage = () => {
 	const { bookId } = useParams();
+	const location = useLocation();
 
 	const book: Book | undefined = useBookStore((state) =>
 		state.books.find((b) => b.id.toString() === bookId)
@@ -64,7 +70,10 @@ const BookPreviewPage = () => {
 		addShelf(borrowedBook);
 	};
 
-	const handleClickBackToResult = () => navigate(ROUTE.SEARCH);
+	const handleClickBackToResult = () => {
+		const from = location.state?.from || ROUTE.SEARCH;
+		navigate(from);
+	};
 
 	if (!book) {
 		return <Navigate to="*" replace />;

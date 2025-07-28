@@ -29,7 +29,9 @@ const BookHomeList: React.FC<BookListProps> = ({
 	const navigate = useNavigate();
 
 	const handleBookItemClick = (bookId: string) => {
-		navigate(`${ROUTE.BOOK_PREVIEW}/${bookId}`);
+		navigate(`${ROUTE.BOOK_PREVIEW}/${bookId}`, {
+			state: { from: ROUTE.HOME },
+		});
 	};
 
 	return (

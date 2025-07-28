@@ -25,7 +25,9 @@ const MyShelfBookCard = ({
 	const navigate = useNavigate();
 
 	const handleBookItemClick = (bookId: string) => {
-		navigate(`${ROUTE.BOOK_PREVIEW}/${bookId}`);
+		navigate(`${ROUTE.BOOK_PREVIEW}/${bookId}`, {
+			state: { from: ROUTE.MY_SHELF },
+		});
 	};
 
 	return (

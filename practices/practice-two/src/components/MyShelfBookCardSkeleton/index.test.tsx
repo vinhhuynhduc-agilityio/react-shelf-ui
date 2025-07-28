@@ -3,23 +3,25 @@ import { render, screen } from "@testing-library/react";
 
 // Mock Skeleton to add data-testid for easier querying
 jest.mock("@/components", () => {
-	const OriginalModule = jest.requireActual("@/components");
 	return {
-		...OriginalModule,
-		Skeleton: (
-			props: React.ComponentProps<"div"> & {
-				width?: string | number;
-				height?: string | number;
-				borderRadius?: string | number;
-			}
-		) => (
+		...jest.requireActual("@/components"),
+		Skeleton: ({
+			width,
+			height,
+			borderRadius,
+			...rest
+		}: React.ComponentProps<"div"> & {
+			width?: string | number;
+			height?: string | number;
+			borderRadius?: string | number;
+		}) => (
 			<div
 				data-testid="skeleton"
-				{...props}
+				{...rest}
 				style={{
-					width: props.width,
-					height: props.height,
-					borderRadius: props.borderRadius,
+					width,
+					height,
+					borderRadius,
 				}}
 			/>
 		),

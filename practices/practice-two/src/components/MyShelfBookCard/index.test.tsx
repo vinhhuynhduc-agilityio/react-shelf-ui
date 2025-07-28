@@ -59,7 +59,9 @@ describe("MyShelfBookCard", () => {
 		setup();
 		const bookItem = screen.getByRole("button", { name: /test book/i });
 		fireEvent.click(bookItem);
-		expect(mockNavigate).toHaveBeenCalledWith("/book-preview/book-1");
+		expect(mockNavigate).toHaveBeenCalledWith("/book-preview/book-1", {
+			state: { from: "/my-shelf" },
+		});
 	});
 
 	it("matches snapshot", () => {

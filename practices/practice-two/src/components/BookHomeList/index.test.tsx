@@ -56,7 +56,8 @@ describe("BookHomeList", () => {
 		const items = screen.getAllByTestId("book-item");
 		fireEvent.click(items[0]);
 		expect(mockNavigate).toHaveBeenCalledWith(
-			`/book-preview/${MOCK_BOOKS[0].id}`
+			`/book-preview/${MOCK_BOOKS[0].id}`,
+			{ state: { from: "/home" } }
 		);
 	});
 
