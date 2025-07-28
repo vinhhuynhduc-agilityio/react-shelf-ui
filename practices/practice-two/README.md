@@ -1,50 +1,65 @@
-# React + TypeScript + Vite
+# React Advanced - Practice two
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+My Book Shelf is a web app for users to sign up, log in, search, preview, borrow, and manage books — like a personal library with a social reading touch.
 
-Currently, two official plugins are available:
+# Targets
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React Advanced: Apply advanced React techniques to optimize performance, manage state, and handle complex components efficiently.
+- React Hook Form: Develop dynamic forms with real-time validation and seamless submission handling.
+- Tailwind CSS: Design responsive and customizable UIs by leveraging Tailwind CSS utility classes.
+- Responsive Design: Build mobile-first, responsive interfaces using Tailwind’s utility-first approach.
+- Zustand: Manage global state with a lightweight and scalable solution, supporting selective state subscriptions and middleware integration.
+- React Query: Handle server state efficiently with caching, background updates, and seamless data synchronization.
+- React Router DOM: Implement client-side routing with nested routes, route guards, and dynamic navigation in single-page applications.
+- Testing: Achieve over 95% unit test coverage using React Testing Library to validate component logic and user interactions.
+- React-scan: Detect and optimize unnecessary component re-renders
+- Storybook: Develop, document, and test UI components for reusability.
 
-## Expanding the ESLint configuration
+# Technical stacks
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- [React](https://react.dev/) v18.3.1 (React lets you build user interfaces out of individual pieces called components.)
+- [React Hook Form](https://react-hook-form.com/) v7.53.1 (Lightweight library for form state management and validation with minimal re-renders.)
+- [Tailwind CSS](https://tailwindcss.com/) v3.4.14 (Tailwind CSS is a utility-first CSS framework for building responsive and customizable UI components.)
+- [Zustand](https://github.com/pmndrs/zustand) v5.0.3 (Zustand is a fast and scalable state management library that uses simplified hooks for managing global state.)
+- [React Query](https://tanstack.com/query/) v5.66.0 (React Query helps manage server state in React applications with efficient data fetching, caching, and synchronization.)
+- [React Router](https://reactrouter.com/) v5.3.3 (React Router DOM enables dynamic routing in React applications with support for nested and declarative routes.)
+- [React-Testing-Library](https://testing-library.com/docs/react-testing-library/intro/) v16.3.0 (React Testing Library builds on top of DOM Testing Library by adding APIs for working with React components.)
 
-- Configure the top-level `parserOptions` property like this:
+# Design
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+Design via [figma](https://www.figma.com/design/TvvCbZ4IqnjYSBE2NQtAUt/My-Book-Shelf-CRUD?node-id=1-2&p=f&t=e712ipV6fxYAJiLC-0)
+
+# Editor
+
+- Visual Studio Code
+
+# Author
+
+- vinh.huynhduc <[vinh.huynhduc@asnet.com.vn](vinh.huynhduc@asnet.com.vn)>
+
+# Getting started
+
+Step by step to get started this app at your location
+
+## Clone repository with ssh
+
+```bash
+git clone git@gitlab.asoft-python.com:vinh.huynhduc/react-advanced-training.git
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Install necessary packages
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+Make sure you are stay at the root of application (`practice-two`), execute the command
+to install package dependencies
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+Step 1: pnpm install
+```
+
+```bash
+Step 2: pnpm exec json-server --watch db.json --port 3001 --middlewares ./middleware.cjs
+```
+
+```bash
+Step 3: pnpm dev
 ```
