@@ -125,7 +125,10 @@ const SearchPage: React.FC = () => {
 
 	// Navigate to book preview page with book details and from route
 	const handleClickPreview = useCallback(
-		(book: Book) => navigate(`${ROUTE.BOOK_PREVIEW}/${book.id}`),
+		(book: Book) =>
+			navigate(`${ROUTE.BOOK_PREVIEW}/${book.id}`, {
+				state: { from: ROUTE.SEARCH },
+			}),
 		[navigate]
 	);
 
