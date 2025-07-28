@@ -33,29 +33,32 @@ const variantConfig: Record<ToastVariant, VariantConfig> = {
 };
 
 const Toast: FC = () => {
-	const { isVisible, variant, message, hideToast } = useToastStore();
-
-	if (!isVisible) return null;
-
-	const { style, Icon } = variantConfig[variant];
+	const { toasts, removeToast } = useToastStore();
 
 	return (
-		<div className="fixed bottom-24 right-12 sm:right-24 z-50 animate-slide-in">
-			<div
-				className={`flex items-center p-4 rounded-lg shadow-lg max-w-md ${style}`}
-			>
-				<Icon className="w-6 h-6 mr-2" />
-				<div className="flex-1">
-					<p className="text-sm">{message}</p>
-				</div>
-				<button
-					onClick={hideToast}
-					className="ml-4 text-current hover:text-opacity-80"
-					aria-label="Close toast"
-				>
-					<XMarkIcon className="w-4 h-4" />
-				</button>
-			</div>
+		<div className="fixed bottom-24 right-12 sm:right-24 z-50 space-y-2">
+			{toasts.map(({ id, message, variant }) => {
+				const { style, Icon } = variantConfig[variant];
+
+				return (
+					<div
+						key={id}
+						className={`flex items-center p-4 rounded-lg shadow-lg max-w-md animate-slide-in ${style}`}
+					>
+						<Icon className="w-6 h-6 mr-2" />
+						<div className="flex-1">
+							<p className="text-sm">{message}</p>
+						</div>
+						<button
+							onClick={() => removeToast(id)}
+							className="ml-4 text-current hover:text-opacity-80"
+							aria-label="Close toast"
+						>
+							<XMarkIcon className="w-4 h-4" />
+						</button>
+					</div>
+				);
+			})}
 		</div>
 	);
 };

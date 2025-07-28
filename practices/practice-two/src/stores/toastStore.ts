@@ -1,39 +1,45 @@
 import { create } from "zustand";
+import { v4 as uuidv4 } from "uuid";
 
 export type ToastVariant = "info" | "success" | "error" | "warning";
 
-interface ToastState {
-	isVisible: boolean;
-	variant: ToastVariant;
+interface ToastItem {
+	id: string;
 	message: string;
+	variant: ToastVariant;
 }
 
-interface ToastActions {
-	showToast: (
-		message: string,
-		variant?: ToastVariant,
-		duration?: number
-	) => void;
-	hideToast: () => void;
+interface ToastStore {
+	toasts: ToastItem[];
+	showToast: (message: string, variant: ToastVariant) => void;
+	removeToast: (id: string) => void;
 }
 
-const initialState: ToastState = {
-	isVisible: false,
-	variant: "info",
-	message: "",
-};
+export const useToastStore = create<ToastStore>((set) => ({
+	toasts: [],
+	showToast: (message, variant) => {
+		const id = uuidv4();
 
-export const useToastStore = create<ToastState & ToastActions>((set) => ({
-	...initialState,
-	showToast: (message, variant = "info", duration = 4000) => {
-		set({
-			isVisible: true,
-			message,
-			variant,
+		set((state) => {
+			let newToasts = [...state.toasts, { id, message, variant }];
+
+			if (newToasts.length > 2) {
+				newToasts = newToasts.slice(newToasts.length - 2);
+			}
+
+			return { toasts: newToasts };
 		});
+
+		// Auto-remove after 3s
 		setTimeout(() => {
-			set({ isVisible: false });
-		}, duration);
+			set((state) => ({
+				toasts: state.toasts.filter((t) => t.id !== id),
+			}));
+		}, 3000);
 	},
-	hideToast: () => set({ isVisible: false }),
+
+	removeToast: (id) =>
+		set((state) => ({
+			toasts: state.toasts.filter((t) => t.id !== id),
+		})),
 }));

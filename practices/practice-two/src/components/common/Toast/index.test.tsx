@@ -6,55 +6,51 @@ jest.mock("@/stores", () => ({
 	useToastStore: jest.fn(),
 }));
 
-const mockShowToast = jest.fn();
-const mockHideToast = jest.fn();
-
 describe("Toast Component", () => {
+	const mockRemoveToast = jest.fn();
+
+	const mockToasts = [
+		{ id: "1", message: "Success!", variant: "success" },
+		{ id: "2", message: "Error!", variant: "error" },
+	];
+
 	beforeEach(() => {
 		jest.clearAllMocks();
+		(useToastStore as unknown as jest.Mock).mockReturnValue({
+			toasts: [],
+			removeToast: mockRemoveToast,
+		});
 	});
 
-	it("matches snapshot when displaying", () => {
-		(
-			useToastStore as unknown as jest.MockedFunction<typeof useToastStore>
-		).mockReturnValue({
-			isVisible: true,
-			variant: "info",
-			message: "Message",
-			showToast: mockShowToast,
-			hideToast: mockHideToast,
+	it("renders Success and Error toasts with correct messages and variants", () => {
+		(useToastStore as unknown as jest.Mock).mockReturnValue({
+			toasts: mockToasts,
+			removeToast: mockRemoveToast,
+		});
+		render(<Toast />);
+		expect(screen.getByText("Success!")).toBeInTheDocument();
+		expect(screen.getByText("Error!")).toBeInTheDocument();
+	});
+
+	it("calls removeToast with correct id when close button is clicked", () => {
+		(useToastStore as unknown as jest.Mock).mockReturnValue({
+			toasts: mockToasts,
+			removeToast: mockRemoveToast,
+		});
+		render(<Toast />);
+		const closeButtons = screen.getAllByRole("button", {
+			name: /close toast/i,
+		});
+		fireEvent.click(closeButtons[1]);
+		expect(mockRemoveToast).toHaveBeenCalledWith("2");
+	});
+
+	it("matches snapshot with multiple toasts", () => {
+		(useToastStore as unknown as jest.Mock).mockReturnValue({
+			toasts: mockToasts,
+			removeToast: mockRemoveToast,
 		});
 		const { asFragment } = render(<Toast />);
 		expect(asFragment()).toMatchSnapshot();
-	});
-
-	it("returns null when not visible", () => {
-		(
-			useToastStore as unknown as jest.MockedFunction<typeof useToastStore>
-		).mockReturnValue({
-			isVisible: false,
-			variant: "info",
-			message: "Message",
-			showToast: mockShowToast,
-			hideToast: mockHideToast,
-		});
-		const { container } = render(<Toast />);
-		expect(container.firstChild).toBeNull();
-	});
-
-	it("calls hideToast when close button is clicked", () => {
-		(
-			useToastStore as unknown as jest.MockedFunction<typeof useToastStore>
-		).mockReturnValue({
-			isVisible: true,
-			variant: "info",
-			message: "Message",
-			showToast: mockShowToast,
-			hideToast: mockHideToast,
-		});
-		render(<Toast />);
-		const closeButton = screen.getByRole("button", { name: /close toast/i });
-		fireEvent.click(closeButton);
-		expect(mockHideToast).toHaveBeenCalledTimes(1);
 	});
 });
