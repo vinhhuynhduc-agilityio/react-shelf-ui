@@ -13,7 +13,7 @@ import { fetchUserByEmail, updateUser } from "@/services";
 import { showDefaultErrorToast } from "@/helpers";
 
 // constants
-import { ERROR_MESSAGE } from "@/constants";
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "@/constants";
 
 export const useGetUser = () => {
 	const showToast = useToastStore((state) => state.showToast);
@@ -34,11 +34,13 @@ export const useCurrentUser = (): User | null => {
 
 export const useUpdateUser = (): UseMutationResult<User, Error, User> => {
 	const setUser = useUserStore((state) => state.setUser);
+	const showToast = useToastStore((state) => state.showToast);
 
 	return useMutation({
 		mutationFn: updateUser,
 		onSuccess: (userToUpdate) => {
 			setUser(userToUpdate);
+			showToast(SUCCESS_MESSAGE.PROFILE_UPDATE, "success");
 		},
 		onError: () => showDefaultErrorToast(),
 	});

@@ -72,12 +72,17 @@ describe("useCurrentUser", () => {
 
 describe("useUpdateUser", () => {
 	const setUser = jest.fn();
+	const showToast = jest.fn();
 	beforeEach(() => {
 		(useUserStore as unknown as jest.Mock).mockImplementation(
 			(cb: (store: { setUser: typeof setUser }) => unknown) => cb({ setUser })
 		);
+		(useToastStore as unknown as jest.Mock).mockImplementation(
+			(cb: (store: { showToast: jest.Mock }) => unknown) => cb({ showToast })
+		);
 		jest.clearAllMocks();
 	});
+
 	it("should call updateUser with correct payload and set isSuccess", async () => {
 		(updateUser as jest.Mock).mockResolvedValue(MOCK_USER);
 		const { result } = renderHook(() => useUpdateUser(), { wrapper });
@@ -86,6 +91,7 @@ describe("useUpdateUser", () => {
 		expect(updateUser).toHaveBeenCalledWith(MOCK_USER);
 		expect(setUser).toHaveBeenCalledWith(MOCK_USER);
 	});
+
 	it("should handle error correctly", async () => {
 		const errorMessage = "Failed to update user";
 		(updateUser as jest.Mock).mockImplementation(() =>

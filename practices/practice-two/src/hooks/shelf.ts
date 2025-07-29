@@ -5,10 +5,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addShelfItem, getShelves, removeShelfItem } from "@/services";
 
 // constants
-import { ERROR_MESSAGE, QUERY_KEY_MY_SHELF } from "@/constants";
+import {
+	ERROR_MESSAGE,
+	QUERY_KEY_MY_SHELF,
+	SUCCESS_MESSAGE,
+} from "@/constants";
 
 // stores
-import { usePendingShelfStore, useShelfStore } from "@/stores";
+import { usePendingShelfStore, useShelfStore, useToastStore } from "@/stores";
 
 // types
 import { ShelfItem } from "@/types";
@@ -52,6 +56,7 @@ export const useFetchMySHelf = (userId: string) => {
 export const useAddShelfItem = (id: string) => {
 	const { addPending, removePending } = usePendingShelfStore();
 	const queryClient = useQueryClient();
+	const { showToast } = useToastStore();
 
 	return useMutation({
 		mutationFn: addShelfItem,
@@ -62,6 +67,7 @@ export const useAddShelfItem = (id: string) => {
 			queryClient.invalidateQueries({
 				queryKey: QUERY_KEY_MY_SHELF(id),
 			});
+			showToast(SUCCESS_MESSAGE.BOOK_BORROWED, "success");
 		},
 		onSettled: (_data, _error, shelfItem: ShelfItem) => {
 			removePending(shelfItem.bookId);
@@ -74,11 +80,15 @@ export const useAddShelfItem = (id: string) => {
 
 export const useRemoveShelfItem = () => {
 	const { addPending, removePending } = usePendingShelfStore();
+	const { showToast } = useToastStore();
 
 	return useMutation({
 		mutationFn: removeShelfItem,
 		onMutate: (shelfItem: ShelfItem) => {
 			addPending(shelfItem.bookId);
+		},
+		onSuccess: () => {
+			showToast(SUCCESS_MESSAGE.BOOK_REMOVED, "success");
 		},
 		onSettled: (_data, _error, shelfItem: ShelfItem) => {
 			removePending(shelfItem.bookId);

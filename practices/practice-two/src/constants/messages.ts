@@ -9,4 +9,7 @@ export const ERROR_MESSAGE = {
 
 export const SUCCESS_MESSAGE = {
 	REGISTRATION: "Registration successful!. Please log in to continue.",
+	PROFILE_UPDATE: "Profile updated successfully!",
+	BOOK_BORROWED: "The book has been borrowed successfully!",
+	BOOK_REMOVED: "Book removed successfully",
 };
