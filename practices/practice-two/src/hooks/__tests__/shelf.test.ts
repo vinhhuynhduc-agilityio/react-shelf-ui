@@ -72,37 +72,24 @@ describe("useAddShelfItem", () => {
 describe("useRemoveShelfItem", () => {
 	const addPending = jest.fn();
 	const removePending = jest.fn();
-	const showToast = jest.fn();
-
 	beforeEach(() => {
 		(usePendingShelfStore as unknown as jest.Mock).mockReturnValue({
 			addPending,
 			removePending,
 		});
 		(removeShelfItem as jest.Mock).mockResolvedValue({});
-		(useToastStore as unknown as jest.Mock).mockReturnValue({
-			showToast,
-		});
 		addPending.mockClear();
 		removePending.mockClear();
-		showToast.mockClear();
 	});
-
-	it("calls addPending, removePending, and showToast on success", async () => {
+	it("calls addPending and removePending on mutation", async () => {
 		const { result } = renderHook(() => useRemoveShelfItem(), { wrapper });
 		const item: ShelfItem = { bookId: "2" } as ShelfItem;
-
 		await act(async () => {
 			await result.current.mutateAsync(item);
 		});
-
 		expect(addPending).toHaveBeenCalledWith("2");
 		expect(removePending).toHaveBeenCalledWith("2");
 		expect(removeShelfItem).toHaveBeenCalledWith(item);
-		expect(showToast).toHaveBeenCalledWith(
-			SUCCESS_MESSAGE.BOOK_REMOVED,
-			"success"
-		);
 	});
 });
 

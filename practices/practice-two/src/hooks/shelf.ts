@@ -80,15 +80,11 @@ export const useAddShelfItem = (id: string) => {
 
 export const useRemoveShelfItem = () => {
 	const { addPending, removePending } = usePendingShelfStore();
-	const { showToast } = useToastStore();
 
 	return useMutation({
 		mutationFn: removeShelfItem,
 		onMutate: (shelfItem: ShelfItem) => {
 			addPending(shelfItem.bookId);
-		},
-		onSuccess: () => {
-			showToast(SUCCESS_MESSAGE.BOOK_REMOVED, "success");
 		},
 		onSettled: (_data, _error, shelfItem: ShelfItem) => {
 			removePending(shelfItem.bookId);
