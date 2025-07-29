@@ -132,8 +132,7 @@ const SignInPage: React.FC = () => {
 						type="submit"
 						variant="auth"
 						disabled={isPending}
-						label="Login"
-						pendingLabel="Checking..."
+						label={isPending ? "Checking..." : "Login"}
 						additionalClasses="mt-4"
 					/>
 				</form>

@@ -99,14 +99,12 @@ export const DisabledPrimary: Story = {
 	args: {
 		variant: "primary",
 		label: "Processing...",
-		pendingLabel: "Please wait...",
 		disabled: true,
 	},
 	parameters: {
 		docs: {
 			description: {
-				story:
-					"Disabled version of the primary button. When disabled, it shows the `pendingLabel` if provided.",
+				story: "Disabled version of the primary button.",
 			},
 		},
 	},

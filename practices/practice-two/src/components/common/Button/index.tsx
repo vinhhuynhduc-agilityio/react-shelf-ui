@@ -9,7 +9,6 @@ interface ButtonProps {
 	disabled?: boolean;
 	additionalClasses?: string;
 	label?: string;
-	pendingLabel?: string;
 	onClick?: () => void;
 }
 
@@ -20,7 +19,6 @@ const Button: React.FC<ButtonProps> = memo(
 		disabled = false,
 		additionalClasses = "",
 		label,
-		pendingLabel,
 		onClick,
 	}) => {
 		const baseStyles =
@@ -50,7 +48,6 @@ const Button: React.FC<ButtonProps> = memo(
 			text: textStyle,
 			auth: authStyle,
 		};
-		const content = disabled ? pendingLabel ?? label : label;
 
 		return (
 			<button
@@ -59,7 +56,7 @@ const Button: React.FC<ButtonProps> = memo(
 				disabled={disabled}
 				className={clsx(baseStyles, variants[variant], additionalClasses)}
 			>
-				{content}
+				{label}
 			</button>
 		);
 	}

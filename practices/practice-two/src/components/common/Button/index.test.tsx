@@ -8,13 +8,6 @@ describe("Button", () => {
 		expect(screen.getByRole("button", { name: "Test" })).toBeInTheDocument();
 	});
 
-	it("shows pendingLabel when disabled", () => {
-		render(<Button label="Label" pendingLabel="Pending..." disabled />);
-		expect(
-			screen.getByRole("button", { name: "Pending..." })
-		).toBeInTheDocument();
-	});
-
 	it("calls onClick when not disabled", () => {
 		const onClick = jest.fn();
 		render(<Button label="Click" onClick={onClick} />);
