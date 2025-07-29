@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { v4 as uuidv4 } from "uuid";
 import { FC, SVGProps, useEffect, useState } from "react";
 import {
 	CheckCircleIcon,
@@ -8,20 +9,27 @@ import {
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
 
+// Toast variant type
 type ToastVariant = "success" | "error" | "info" | "warning";
 
-interface ToastLocalProps {
+// Toast item type for demo
+interface ToastItem {
+	id: string;
+	message: string;
+	variant: ToastVariant;
+}
+
+interface ToastDemoProps {
 	message: string;
 	variant?: ToastVariant;
 	duration?: number;
-	onClose?: () => void;
-}
-interface VariantConfig {
-	style: string;
-	Icon: FC<SVGProps<SVGSVGElement>>;
 }
 
-const variantConfig: Record<ToastVariant, VariantConfig> = {
+// Variant config for style and icon
+const variantConfig: Record<
+	ToastVariant,
+	{ style: string; Icon: FC<SVGProps<SVGSVGElement>> }
+> = {
 	success: {
 		style: "bg-green-100 text-green-800",
 		Icon: CheckCircleIcon,
@@ -40,59 +48,91 @@ const variantConfig: Record<ToastVariant, VariantConfig> = {
 	},
 };
 
-const ToastDemo: FC<ToastLocalProps> = ({
-	message,
-	variant = "info",
-	duration = 3000,
-	onClose,
-}) => {
-	const [visible, setVisible] = useState(true);
-
-	const { style, Icon } = variantConfig[variant];
-
+// ToastDemo renders the toast UI and manages a local toast queue (max 2)
+const ToastDemo: FC<{
+	toasts: ToastItem[];
+	setToasts: React.Dispatch<React.SetStateAction<ToastItem[]>>;
+	duration: number;
+}> = ({ toasts, setToasts, duration }) => {
+	// Auto-remove the oldest toast after duration
 	useEffect(() => {
-		if (!visible) return;
-		const timer = setTimeout(() => {
-			setVisible(false);
-			onClose?.();
-		}, duration);
-		return () => clearTimeout(timer);
-	}, [visible, duration, onClose]);
-
-	if (!visible) return null;
+		if (toasts.length > 0) {
+			const timer = setTimeout(() => {
+				setToasts((prev) => prev.slice(1));
+			}, duration);
+			return () => clearTimeout(timer);
+		}
+	}, [toasts, duration, setToasts]);
 
 	return (
-		<div className="fixed bottom-24 right-12 sm:right-24 z-50 animate-slide-in">
-			<div
-				className={`flex items-center p-4 rounded-lg shadow-lg max-w-md ${style}`}
-			>
-				<Icon className="w-6 h-6 mr-2" />
-				<div className="flex-1">
-					<p className="text-sm">{message}</p>
-				</div>
-				<button
-					className="ml-4 text-current hover:text-opacity-80"
-					onClick={() => {
-						setVisible(false);
-						onClose?.();
-					}}
-				>
-					<XMarkIcon className="w-4 h-4" />
-				</button>
-			</div>
+		<div className="fixed bottom-24 right-12 sm:right-24 z-50 space-y-2">
+			{toasts.map(({ id, message, variant }) => {
+				const { style, Icon } = variantConfig[variant];
+				return (
+					<div
+						key={id}
+						className={`flex items-center p-4 rounded-lg shadow-lg max-w-md animate-slide-in ${style}`}
+					>
+						<Icon className="w-6 h-6 mr-2" />
+						<div className="flex-1">
+							<p className="text-sm">{message}</p>
+						</div>
+						<button
+							onClick={() =>
+								setToasts((prev) => prev.filter((t) => t.id !== id))
+							}
+							className="ml-4 text-current hover:text-opacity-80"
+							aria-label="Close toast"
+						>
+							<XMarkIcon className="w-4 h-4" />
+						</button>
+					</div>
+				);
+			})}
 		</div>
 	);
 };
 
-const meta: Meta<typeof ToastDemo> = {
+// ToastDemoButton manages the toast queue and triggers ToastDemo
+const ToastDemoButton: FC<ToastDemoProps> = ({
+	message,
+	variant = "info",
+	duration = 3000,
+}) => {
+	const [toasts, setToasts] = useState<ToastItem[]>([]);
+
+	// Show a new toast, keeping only the latest 2
+	const handleShowToast = () => {
+		const id = uuidv4();
+		setToasts((prev) => {
+			const newToasts = [...prev, { id, message, variant }];
+			return newToasts.length > 2 ? newToasts.slice(-2) : newToasts;
+		});
+	};
+
+	return (
+		<div className="flex flex-col items-center">
+			<button
+				className="mb-2 px-5 py-2 border border-gray-300 rounded-md bg-blue-600 text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2"
+				onClick={handleShowToast}
+			>
+				Show {variant.charAt(0).toUpperCase() + variant.slice(1)} Toast
+			</button>
+			<ToastDemo toasts={toasts} setToasts={setToasts} duration={duration} />
+		</div>
+	);
+};
+
+// Storybook meta configuration
+const meta: Meta<typeof ToastDemoButton> = {
 	title: "Components/Toast",
-	component: ToastDemo,
+	component: ToastDemoButton,
 	tags: ["autodocs"],
 	parameters: {
 		docs: {
 			description: {
 				component:
-					"A small notification component (toast) that shows messages for different statuses like success, error, info, and warning. It automatically hides after a configurable duration.",
+					"A button-triggered toast notification component that shows messages for different statuses like success, error, info, and warning. It supports a maximum of 2 toasts displayed at once and auto-hides after a configurable duration.",
 			},
 		},
 	},
@@ -121,17 +161,7 @@ const meta: Meta<typeof ToastDemo> = {
 				"Time in milliseconds before the toast automatically disappears.",
 			table: {
 				type: { summary: "number" },
-				defaultValue: { summary: "4000" },
-			},
-		},
-		onClose: {
-			control: false,
-			description: "Callback function triggered when the toast closes.",
-			table: {
-				type: {
-					summary: "(event: React.MouseEvent<HTMLButtonElement>) => void",
-					detail: "Standard React click handler for button element.",
-				},
+				defaultValue: { summary: "3000" },
 			},
 		},
 	},
@@ -143,75 +173,36 @@ const meta: Meta<typeof ToastDemo> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof ToastDemo>;
-
-const ToastDemoButton = ({
-	variant,
-	message,
-	duration,
-}: {
-	variant: ToastVariant;
-	message: string;
-	duration?: number;
-}) => {
-	const [show, setShow] = useState(false);
-
-	return (
-		<div>
-			<button
-				className="mb-2 px-5 py-2 border border-gray-300 rounded-md bg-blue-600 text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2"
-				onClick={() => setShow(true)}
-			>
-				Show {variant.charAt(0).toUpperCase() + variant.slice(1)} Toast
-			</button>
-			{show && (
-				<ToastDemo
-					message={message}
-					variant={variant}
-					duration={duration}
-					onClose={() => setShow(false)}
-				/>
-			)}
-		</div>
-	);
-};
+type Story = StoryObj<typeof ToastDemoButton>;
 
 export const Success: Story = {
-	render: () => (
-		<ToastDemoButton
-			variant="success"
-			message="This is a success toast!"
-			duration={3000}
-		/>
-	),
+	args: {
+		message: "This is a success toast!",
+		variant: "success",
+		duration: 3000,
+	},
 };
 
 export const Error: Story = {
-	render: () => (
-		<ToastDemoButton
-			variant="error"
-			message="This is an error toast!"
-			duration={3000}
-		/>
-	),
+	args: {
+		message: "This is an error toast!",
+		variant: "error",
+		duration: 3000,
+	},
 };
 
 export const Info: Story = {
-	render: () => (
-		<ToastDemoButton
-			variant="info"
-			message="This is an info toast!"
-			duration={3000}
-		/>
-	),
+	args: {
+		message: "This is an info toast!",
+		variant: "info",
+		duration: 3000,
+	},
 };
 
 export const Warning: Story = {
-	render: () => (
-		<ToastDemoButton
-			variant="warning"
-			message="This is a warning toast!"
-			duration={3000}
-		/>
-	),
+	args: {
+		message: "This is a warning toast!",
+		variant: "warning",
+		duration: 3000,
+	},
 };
