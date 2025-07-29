@@ -12,8 +12,20 @@ jest.mock("react-router-dom", () => ({
 }));
 
 jest.mock("@/components", () => ({
-	BookItem: ({ title, onClick }: { title: string; onClick?: () => void }) => (
-		<div data-testid="book-item" onClick={onClick} role="button">
+	BookItem: ({
+		id,
+		title,
+		onClick,
+	}: {
+		id: string | number;
+		title: string;
+		onClick?: (id: string | number) => void;
+	}) => (
+		<div
+			data-testid="book-item"
+			onClick={() => onClick && onClick(id)}
+			role="button"
+		>
 			{title}
 		</div>
 	),

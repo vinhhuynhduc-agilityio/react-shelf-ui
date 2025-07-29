@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 // types
@@ -24,16 +25,19 @@ const MyShelfBookCard = ({
 }: BookCardProps) => {
 	const navigate = useNavigate();
 
-	const handleBookItemClick = (bookId: string) => {
-		navigate(`${ROUTE.BOOK_PREVIEW}/${bookId}`, {
-			state: { from: ROUTE.MY_SHELF },
-		});
-	};
+	const handleBookClick = useCallback(
+		(bookId: string) => {
+			navigate(`${ROUTE.BOOK_PREVIEW}/${bookId}`, {
+				state: { from: ROUTE.MY_SHELF },
+			});
+		},
+		[navigate]
+	);
 
 	return (
 		<div className="flex items-center bg-white rounded-lg shadow-md p-4 w-[308px] h-[260px]">
 			<div className="w-3/5">
-				<BookItem {...book} onClick={() => handleBookItemClick(book.id)} />
+				<BookItem {...book} onClick={handleBookClick} />
 			</div>
 			<div className="w-2/5 flex flex-col justify-between items-center h-full ml-2">
 				<div>

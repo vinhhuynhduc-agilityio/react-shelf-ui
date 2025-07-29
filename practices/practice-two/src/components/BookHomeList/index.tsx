@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 // components
@@ -28,11 +29,14 @@ const BookHomeList: React.FC<BookListProps> = ({
 }) => {
 	const navigate = useNavigate();
 
-	const handleBookItemClick = (bookId: string) => {
-		navigate(`${ROUTE.BOOK_PREVIEW}/${bookId}`, {
-			state: { from: ROUTE.HOME },
-		});
-	};
+	const handleBookClick = useCallback(
+		(bookId: string) => {
+			navigate(`${ROUTE.BOOK_PREVIEW}/${bookId}`, {
+				state: { from: ROUTE.HOME },
+			});
+		},
+		[navigate]
+	);
 
 	return (
 		<div className="mb-6 w-full">
@@ -60,10 +64,7 @@ const BookHomeList: React.FC<BookListProps> = ({
 					) : books.length > 0 ? (
 						books.map((book) => (
 							<div key={book.id} className="flex-shrink-0">
-								<BookItem
-									{...book}
-									onClick={() => handleBookItemClick(book.id)}
-								/>
+								<BookItem {...book} onClick={handleBookClick} />
 							</div>
 						))
 					) : (

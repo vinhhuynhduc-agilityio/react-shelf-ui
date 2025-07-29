@@ -8,15 +8,19 @@ interface BookItemProps {
 	rating: number;
 	imageUrl: string;
 	category: string;
-	onClick?: () => void;
+	onClick?: (bookId: string) => void;
 }
 
 const BookItem: React.FC<BookItemProps> = memo(
-	({ title, author, publishedYear, rating, imageUrl, onClick }) => {
+	({ id, title, author, publishedYear, rating, imageUrl, onClick }) => {
+		const handleClick = () => {
+			if (onClick) onClick(id);
+		};
+
 		return (
 			<div
 				className="w-[160px] bg-white p-4 rounded-lg shadow-sm h-[260px] flex flex-col items-center cursor-pointer"
-				onClick={onClick}
+				onClick={handleClick}
 				role="button"
 				tabIndex={0}
 			>
