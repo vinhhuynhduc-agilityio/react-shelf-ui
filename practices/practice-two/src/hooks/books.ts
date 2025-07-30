@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getBooks } from "@/services/bookService";
 
 // stores
-import { useBookStore } from "@/stores/bookStore";
+import { useBookStore } from "@/stores/book";
 
 // constants
 import { ERROR_MESSAGE, QUERY_KEY_BOOKS } from "@/constants";

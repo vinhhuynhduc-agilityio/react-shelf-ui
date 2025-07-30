@@ -1,4 +1,4 @@
-import { useToastStore } from "../toastStore";
+import { useToastStore } from "../toast";
 
 describe("useToastStore", () => {
 	beforeEach(() => {

@@ -3,7 +3,7 @@ import { renderHook } from "@testing-library/react";
 import { wrapper } from "@/helpers/test-utils";
 import { useBooksQuery, useFetchBooks } from "../books";
 import { getBooks } from "@/services/bookService";
-import { useBookStore } from "@/stores/bookStore";
+import { useBookStore } from "@/stores/book";
 import { MOCK_BOOKS } from "@/__mocks__/book";
 
 jest.mock("@/services/bookService", () => ({

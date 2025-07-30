@@ -1,4 +1,4 @@
-import { usePendingFavouritesStore } from "../pendingFavouriteStore";
+import { usePendingFavouritesStore } from "../pendingFavourite";
 
 describe("usePendingFavouritesStore", () => {
 	beforeEach(() => {

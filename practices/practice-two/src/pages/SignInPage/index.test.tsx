@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@/helpers/test-utils";
 import SignInPage from ".";
-import { useUserStore } from "@/stores/userStore";
+import { useUserStore } from "@/stores/user";
 import { useGetUser } from "@/hooks";
 
 jest.mock("@/stores/userStore", () => ({

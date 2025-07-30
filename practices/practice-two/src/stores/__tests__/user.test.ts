@@ -1,5 +1,5 @@
 import { MOCK_USER } from "@/__mocks__";
-import { useUserStore } from "../userStore";
+import { useUserStore } from "../user";
 
 describe("useUserStore", () => {
 	beforeEach(() => {

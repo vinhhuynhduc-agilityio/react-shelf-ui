@@ -1,4 +1,4 @@
-import { useSearchFilterStore } from "../searchFilterStore";
+import { useSearchFilterStore } from "../searchFilter";
 
 describe("useSearchFilterStore", () => {
 	beforeEach(() => {

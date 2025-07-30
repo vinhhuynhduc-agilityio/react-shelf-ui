@@ -1,4 +1,4 @@
-import { usePendingShelfStore } from "../pendingShelfStore";
+import { usePendingShelfStore } from "../pendingShelf";
 
 describe("usePendingShelfStore", () => {
 	beforeEach(() => {
