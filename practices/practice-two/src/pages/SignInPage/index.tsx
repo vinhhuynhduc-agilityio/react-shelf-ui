@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, TextField } from "@/components";
 
 // stores
-import { useUserStore } from "@/stores/userStore";
+import { useUserStore } from "@/stores/user";
 
 // constants
 import { ROUTE } from "@/constants";
