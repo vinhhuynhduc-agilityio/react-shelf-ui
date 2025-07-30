@@ -3,3 +3,4 @@ export * from "./dateFormatter";
 export * from "./errorManager";
 export * from "./fileUtils";
 export * from "./ui";
+export * from "./book";
