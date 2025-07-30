@@ -126,36 +126,34 @@ const SearchPage: React.FC = () => {
     isFavorite: boolean,
     favouriteId?: string
   ) => {
-    const favouriteItem = !isFavorite
-      ? ({
-          id: uuidv4(),
-          bookId: book.id,
-          userId: currentUser?.id || "",
-        } as FavouriteItem)
-      : ({
-          bookId: book.id,
-          id: favouriteId || "",
-          userId: currentUser?.id || "",
-        } as FavouriteItem);
-
+    const userId = currentUser?.id || "";
     const prevFavourites = favourites || [];
 
-    if (!isFavorite) {
+    const favouriteItem: FavouriteItem = {
+      id: favouriteId || uuidv4(),
+      bookId: book.id,
+      userId,
+    };
+
+    const updateOnError = () => setFavourites(prevFavourites);
+    const updateOnSuccess = () => setFavouritesChanged(true);
+
+    if (isFavorite) {
+      // Remove
+      const updated = prevFavourites.filter((fav) => fav.bookId !== book.id);
+      setFavourites(updated);
+
+      removeFavourite(favouriteItem, {
+        onSuccess: updateOnSuccess,
+        onError: updateOnError,
+      });
+    } else {
+      // Add
       setFavourites([...prevFavourites, favouriteItem]);
 
       addFavourite(favouriteItem, {
-        onSuccess: () => setFavouritesChanged(true),
-        onError: () => setFavourites(prevFavourites),
-      });
-    } else {
-      const updatedFavourites = prevFavourites.filter(
-        (fav) => fav.bookId !== book.id
-      );
-      setFavourites(updatedFavourites);
-
-      removeFavourite(favouriteItem, {
-        onSuccess: () => setFavouritesChanged(true),
-        onError: () => setFavourites(prevFavourites),
+        onSuccess: updateOnSuccess,
+        onError: updateOnError,
       });
     }
   };
