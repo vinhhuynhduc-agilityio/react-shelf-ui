@@ -5,3 +5,4 @@ export * from "./userService";
 export * from "./shelfService";
 export * from "./favouriteService";
 export * from "./queryClient";
+export * from "./env";

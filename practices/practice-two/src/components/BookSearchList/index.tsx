@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 // hooks
 import { Book, FavouriteItem, ShelfItem } from "@/types";
 
@@ -27,6 +29,12 @@ const BookSearchList: React.FC<BookSearchListProps> = ({
   handleFavoriteClick,
   isBookInShelf,
 }) => {
+  const getFavoriteHandler = useCallback(
+    (book: Book, isFavorite: boolean, favouriteId?: string) => () =>
+      handleFavoriteClick(book, isFavorite, favouriteId),
+    [handleFavoriteClick]
+  );
+
   return (
     <>
       {books.map((book) => {
@@ -44,9 +52,11 @@ const BookSearchList: React.FC<BookSearchListProps> = ({
             isInShelf={isInShelf}
             isFavorite={!!isFavorite}
             onClickPreview={handleClickPreview}
-            handleFavoriteClick={() =>
-              handleFavoriteClick(book, !!isFavorite, favouriteId)
-            }
+            handleFavoriteClick={getFavoriteHandler(
+              book,
+              !!isFavorite,
+              favouriteId
+            )}
             disabled={isDisabled}
           />
         );

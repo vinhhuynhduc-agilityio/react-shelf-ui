@@ -1,8 +1,5 @@
 // services
-import { apiRequest } from "@/services";
-
-// config
-import { API_BASE_URL } from "@/config";
+import { API_BASE_URL, apiRequest } from "@/services";
 
 // types
 import { Book } from "@/types";
@@ -11,7 +8,7 @@ import { Book } from "@/types";
 import { API_ENDPOINTS } from "@/constants";
 
 export const getBooks = (): Promise<Book[]> => {
-	const url = `${API_BASE_URL}${API_ENDPOINTS.BOOKS}`;
+  const url = `${API_BASE_URL}${API_ENDPOINTS.BOOKS}`;
 
-	return apiRequest<null, Book[]>("GET", url);
+  return apiRequest<null, Book[]>("GET", url);
 };

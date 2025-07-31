@@ -6,36 +6,36 @@ import { useUserStore } from "@/stores";
 import { MOCK_USER } from "@/__mocks__/user";
 
 // Mock useUserStore
-jest.mock("@/stores/userStore", () => ({
-	useUserStore: jest.fn(),
+jest.mock("@/stores/user", () => ({
+  useUserStore: jest.fn(),
 }));
 
 // Mock SignInPage to avoid internal router hook errors
 jest.mock("@/pages/SignInPage", () => ({
-	__esModule: true,
-	default: () => <div>Sign In Page</div>,
+  __esModule: true,
+  default: () => <div>Sign In Page</div>,
 }));
 
 describe("AuthRedirect", () => {
-	it("redirects to home if currentUser exists", () => {
-		(useUserStore as unknown as jest.Mock).mockReturnValue({
-			currentUser: MOCK_USER,
-		});
-		render(
-			<MemoryRouter>
-				<AuthRedirect />
-			</MemoryRouter>
-		);
-		expect(screen.queryByText(/Sign In Page/i)).not.toBeInTheDocument();
-	});
+  it("redirects to home if currentUser exists", () => {
+    (useUserStore as unknown as jest.Mock).mockReturnValue({
+      currentUser: MOCK_USER,
+    });
+    render(
+      <MemoryRouter>
+        <AuthRedirect />
+      </MemoryRouter>
+    );
+    expect(screen.queryByText(/Sign In Page/i)).not.toBeInTheDocument();
+  });
 
-	it("renders SignInPage if currentUser is null", () => {
-		(useUserStore as unknown as jest.Mock).mockReturnValue(null);
-		render(
-			<MemoryRouter>
-				<AuthRedirect />
-			</MemoryRouter>
-		);
-		expect(screen.getByText(/Sign In Page/i)).toBeInTheDocument();
-	});
+  it("renders SignInPage if currentUser is null", () => {
+    (useUserStore as unknown as jest.Mock).mockReturnValue(null);
+    render(
+      <MemoryRouter>
+        <AuthRedirect />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/Sign In Page/i)).toBeInTheDocument();
+  });
 });
