@@ -12,18 +12,16 @@ import {
 } from "@/stores";
 
 // types
-import { Book, FavouriteItem } from "@/types";
-
-// helpers
-import { isBookInShelf } from "@/helpers";
+import { Book } from "@/types";
 
 // components
 import {
   ApiErrorNotice,
   IconButton,
-  BookRow,
   BookRowSkeleton,
   HeaderRow,
+  ParagraphMessage,
+  FavouriteBookList,
 } from "@/components";
 import { ArrowBackIcon } from "@/components/icons";
 
@@ -155,50 +153,50 @@ const FavouritePage: React.FC = () => {
       <h1 className="md:text-[25px] text-[20px] font-semibold text-[#4D4D4D] mb-6">
         Your Favourite
       </h1>
+
       <div className="overflow-x-auto text-[#4D4D4D]">
+        {/* Header */}
         <HeaderRow />
 
         {/* Main content */}
         <div className="space-y-4 mt-4">
-          {isLoading || isFetchingFavourites ? (
-            <BookRowSkeleton />
-          ) : isErrorBooks || isErrorFavourites ? (
-            <ApiErrorNotice
-              title="Failed to load favourites data"
-              errors={[
-                isErrorBooks ? errorBooks?.message : null,
-                isErrorFavourites ? errorFavourites?.message : null,
-              ]}
-            />
-          ) : filteredBooks.length === 0 ? (
-            <p className="text-xl font-semibold text-red-400 mt-9 ml-8">
-              No books found in your favourites.
-            </p>
-          ) : (
-            filteredBooks.map((book) => {
-              const isInShelf = isBookInShelf(book.id, shelves ?? []);
-              const favouriteObj = favourites?.find(
-                (fav: FavouriteItem) => fav.bookId === book.id
-              );
-              const isFavorite = !!favouriteObj;
-              const favouriteId = favouriteObj?.id;
-              const isDisabled = pendingFavouritesActions.includes(book.id);
+          {(() => {
+            if (isLoading || isFetchingFavourites) {
+              return <BookRowSkeleton />;
+            }
 
+            if (isErrorBooks || isErrorFavourites) {
               return (
-                <BookRow
-                  key={book.id}
-                  book={book}
-                  isInShelf={isInShelf}
-                  isFavorite={isFavorite}
-                  onClickPreview={handleCLickPreview}
-                  handleFavoriteClick={() =>
-                    handleFavoriteClick(book, favouriteId)
-                  }
-                  disabled={isDisabled}
+                <ApiErrorNotice
+                  title="Failed to load favourites data"
+                  errors={[
+                    isErrorBooks ? errorBooks?.message : null,
+                    isErrorFavourites ? errorFavourites?.message : null,
+                  ]}
                 />
               );
-            })
-          )}
+            }
+
+            if (filteredBooks.length === 0) {
+              return (
+                <ParagraphMessage
+                  text="No books found in your favourites."
+                  className="text-xl font-semibold text-red-400 mt-9 ml-8"
+                />
+              );
+            }
+
+            return (
+              <FavouriteBookList
+                books={filteredBooks}
+                favourites={favourites ?? []}
+                shelves={shelves ?? []}
+                pendingFavouritesActions={pendingFavouritesActions}
+                onClickPreview={handleCLickPreview}
+                onRemoveFavourite={handleFavoriteClick}
+              />
+            );
+          })()}
         </div>
       </div>
     </>

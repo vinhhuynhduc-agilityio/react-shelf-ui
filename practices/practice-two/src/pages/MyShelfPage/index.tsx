@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -7,19 +7,20 @@ import { useFetchBooks, useFetchMySHelf, useRemoveShelfItem } from "@/hooks";
 
 // stores
 import {
-	useBookStore,
-	usePendingShelfStore,
-	useShelfStore,
-	useUserStore,
-	useShelfChangedStore,
+  useBookStore,
+  usePendingShelfStore,
+  useShelfStore,
+  useUserStore,
+  useShelfChangedStore,
 } from "@/stores";
 
 // components
 import {
-	ApiErrorNotice,
-	Button,
-	MyShelfBookCard,
-	MyShelfBookCardSkeleton,
+  ApiErrorNotice,
+  Button,
+  MyShelfBookCardSkeleton,
+  MyShelfBookList,
+  ParagraphMessage,
 } from "@/components";
 
 // constants
@@ -32,138 +33,140 @@ import { filterBooksByShelves } from "@/helpers";
 import { ShelfItem } from "@/types";
 
 const MyShelfPage: React.FC = () => {
-	const navigate = useNavigate();
-	const queryClient = useQueryClient();
-	const currentUser = useUserStore((state) => state.currentUser);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const currentUser = useUserStore((state) => state.currentUser);
 
-	// Fetch books and shelves from the API
-	const {
-		isLoading,
-		error: errorBooks,
-		isError: isErrorBooks,
-	} = useFetchBooks();
-	const {
-		isError: isErrorShelf,
-		isFetching: isFetchingShelf,
-		error: errorShelf,
-	} = useFetchMySHelf(currentUser?.id || "");
+  // Fetch books and shelves from the API
+  const {
+    isLoading,
+    error: errorBooks,
+    isError: isErrorBooks,
+  } = useFetchBooks();
+  const {
+    isError: isErrorShelf,
+    isFetching: isFetchingShelf,
+    error: errorShelf,
+  } = useFetchMySHelf(currentUser?.id || "");
 
-	// store
-	const books = useBookStore((state) => state.books);
-	const { pendingShelfActions } = usePendingShelfStore();
-	const { shelf, setShelf } = useShelfStore();
-	const { shelfChanged, setShelfChanged } = useShelfChangedStore();
+  // store
+  const books = useBookStore((state) => state.books);
+  const { pendingShelfActions } = usePendingShelfStore();
+  const { shelf, setShelf } = useShelfStore();
+  const { shelfChanged, setShelfChanged } = useShelfChangedStore();
 
-	// API hooks
-	const { mutate: removeShelfItem } = useRemoveShelfItem();
+  // API hooks
+  const { mutate: removeShelfItem } = useRemoveShelfItem();
 
-	// refs
-	const shelfChangedRef = useRef(shelfChanged);
-	const setShelfChangedRef = useRef(setShelfChanged);
+  // refs
+  const shelfChangedRef = useRef(shelfChanged);
+  const setShelfChangedRef = useRef(setShelfChanged);
 
-	useEffect(() => {
-		shelfChangedRef.current = shelfChanged;
-	}, [shelfChanged]);
+  useEffect(() => {
+    shelfChangedRef.current = shelfChanged;
+  }, [shelfChanged]);
 
-	useEffect(() => {
-		setShelfChangedRef.current = setShelfChanged;
-	}, [setShelfChanged]);
+  useEffect(() => {
+    setShelfChangedRef.current = setShelfChanged;
 
-	useEffect(() => {
-		setShelfChangedRef.current = setShelfChanged;
+    return () => {
+      // Invalidate the shelf query if there are changes
+      // when the component unmounts or dependencies change
+      if (shelfChangedRef.current) {
+        queryClient.invalidateQueries({
+          queryKey: QUERY_KEY_MY_SHELF(currentUser?.id ?? ""),
+        });
+        setShelfChangedRef.current(false);
+      }
+    };
+  }, [currentUser?.id, queryClient, setShelfChanged]);
 
-		return () => {
-			// Invalidate the shelf query if there are changes
-			// when the component unmounts or dependencies change
-			if (shelfChangedRef.current) {
-				queryClient.invalidateQueries({
-					queryKey: QUERY_KEY_MY_SHELF(currentUser?.id ?? ""),
-				});
-				setShelfChangedRef.current(false);
-			}
-		};
-	}, [currentUser?.id, queryClient, setShelfChanged]);
+  const handleReturnBook = (shelfItem: ShelfItem) => {
+    const prevShelf = shelf || [];
+    setShelf(
+      prevShelf.filter((item: ShelfItem) => item.bookId !== shelfItem.bookId)
+    );
 
-	const handleReturnBook = (shelfItem: ShelfItem) => {
-		const prevShelf = shelf || [];
-		setShelf(
-			prevShelf.filter((item: ShelfItem) => item.bookId !== shelfItem.bookId)
-		);
+    // Remove the book from the shelf
+    removeShelfItem(shelfItem, {
+      onSuccess: () => {
+        setShelfChanged(true);
+      },
+      onError: () => {
+        // Revert on error
+        setShelf(prevShelf);
+      },
+    });
+  };
 
-		// Remove the book from the shelf
-		removeShelfItem(shelfItem, {
-			onSuccess: () => {
-				setShelfChanged(true);
-			},
-			onError: () => {
-				// Revert on error
-				setShelf(prevShelf);
-			},
-		});
-	};
+  const handleClickFavourite = useCallback(() => {
+    navigate(ROUTE.FAVOURITE);
+  }, [navigate]);
 
-	// Filter books by user's shelf
-	const borrowedBooks = filterBooksByShelves(books, shelf ?? []);
+  // Filter books by user's shelf
+  const borrowedBooks = filterBooksByShelves(books, shelf ?? []);
 
-	return (
-		<div className="">
-			<h1 className="sm:text-[25px] text-[23px] font-bold text-[#4D4D4D] mb-6 mt-4">
-				Your <span className="text-[#EF8361]">Shelf</span>
-			</h1>
+  return (
+    <div>
+      <h1 className="sm:text-[25px] text-[23px] font-bold text-[#4D4D4D] mb-6 mt-4">
+        Your <span className="text-[#EF8361]">Shelf</span>
+      </h1>
 
-			<div className="flex space-x-16 pb-2 mb-6">
-				<Button
-					variant="text"
-					label="All Books"
-					additionalClasses="font-medium text-[#4D4D4D] sm:text-[20px] text-[18px]"
-				/>
-				<Button
-					variant="text"
-					label="Favourite"
-					onClick={() => navigate(ROUTE.FAVOURITE)}
-					additionalClasses="text-[#868686] hover:text-[#bfbebe] transition sm:text-[20px] text-[18px] font-medium"
-				/>
-			</div>
+      <div className="flex space-x-16 pb-2 mb-6">
+        <Button
+          variant="text"
+          label="All Books"
+          additionalClasses="font-medium text-[#4D4D4D] sm:text-[20px] text-[18px]"
+        />
+        <Button
+          variant="text"
+          label="Favourite"
+          onClick={handleClickFavourite}
+          additionalClasses="text-[#868686] hover:text-[#bfbebe] transition sm:text-[20px] text-[18px] font-medium"
+        />
+      </div>
 
-			<div className="flex flex-wrap gap-10 justify-center">
-				{isLoading || isFetchingShelf ? (
-					Array.from({ length: 4 }).map((_, idx) => (
-						<MyShelfBookCardSkeleton key={idx} />
-					))
-				) : isErrorShelf || isErrorBooks ? (
-					<ApiErrorNotice
-						title="Failed to load shelf data"
-						errors={[
-							isErrorBooks ? errorBooks?.message : null,
-							isErrorShelf ? errorShelf?.message : null,
-						]}
-					/>
-				) : borrowedBooks.length === 0 ? (
-					<p className="text-xl font-semibold text-red-400 mt-6 text-center">
-						No books in your shelf.
-					</p>
-				) : (
-					borrowedBooks.map((book) => {
-						const disabled = pendingShelfActions.includes(book.id);
-						const shelfItem = (shelf ?? []).find(
-							(item) => item.bookId === book.id
-						);
+      <div className="flex flex-wrap gap-10 justify-center">
+        {(() => {
+          if (isLoading || isFetchingShelf) {
+            return Array.from({ length: 4 }).map((_, idx) => (
+              <MyShelfBookCardSkeleton key={idx} />
+            ));
+          }
 
-						return (
-							<div key={book.id}>
-								<MyShelfBookCard
-									book={book}
-									borrowedDate={shelfItem?.borrowedDate ?? ""}
-									onReturn={() => shelfItem && handleReturnBook(shelfItem)}
-									disabled={disabled}
-								/>
-							</div>
-						);
-					})
-				)}
-			</div>
-		</div>
-	);
+          if (isErrorBooks || isErrorShelf) {
+            return (
+              <ApiErrorNotice
+                title="Failed to load shelf data"
+                errors={[
+                  isErrorBooks ? errorBooks?.message : null,
+                  isErrorShelf ? errorShelf?.message : null,
+                ]}
+              />
+            );
+          }
+
+          if (borrowedBooks.length === 0) {
+            return (
+              <ParagraphMessage
+                text="No books in your shelf."
+                className="text-xl font-semibold text-red-400 mt-6 text-center"
+              />
+            );
+          }
+
+          return (
+            <MyShelfBookList
+              books={borrowedBooks}
+              shelf={shelf ?? []}
+              pendingShelfActions={pendingShelfActions}
+              onReturnBook={handleReturnBook}
+            />
+          );
+        })()}
+      </div>
+    </div>
+  );
 };
 
 export default MyShelfPage;

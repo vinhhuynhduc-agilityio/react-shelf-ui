@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`FavouriteBookList renders a BookRow for each book 1`] = `
+<div>
+  <div
+    data-disabled="false"
+    data-testid="fav-book-row"
+  >
+    <span>
+      Book 1
+    </span>
+    <button
+      data-testid="preview-btn"
+    >
+      Preview
+    </button>
+    <button
+      data-testid="remove-fav-btn"
+    >
+      Remove Favourite
+    </button>
+  </div>
+  <div
+    data-disabled="true"
+    data-testid="fav-book-row"
+  >
+    <span>
+      Book 2
+    </span>
+    <button
+      data-testid="preview-btn"
+    >
+      Preview
+    </button>
+    <button
+      data-testid="remove-fav-btn"
+      disabled=""
+    >
+      Remove Favourite
+    </button>
+  </div>
+</div>
+`;

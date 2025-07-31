@@ -73,8 +73,12 @@ const SearchPage: React.FC = () => {
   );
   const setFavourites = useFavouritesStore((state) => state.setFavourites);
   const favourites = useFavouritesStore((state) => state.favourites);
-  const { favouritesChanged, setFavouritesChanged } =
-    useFavouritesChangedStore();
+  const favouritesChanged = useFavouritesChangedStore(
+    (s) => s.favouritesChanged
+  );
+  const setFavouritesChanged = useFavouritesChangedStore(
+    (s) => s.setFavouritesChanged
+  );
 
   // refs
   const favouritesChangedRef = useRef(favouritesChanged);

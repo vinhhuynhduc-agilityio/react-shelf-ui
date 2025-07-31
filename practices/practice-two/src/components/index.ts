@@ -15,3 +15,5 @@ export { BookMediaCard } from "./BookMediaCard";
 export { BookDetailInfo } from "./BookDetailInfo";
 export { ParagraphMessage } from "./ParagraphMessage";
 export { default as BookSearchList } from "./BookSearchList";
+export { default as MyShelfBookList } from "./MyShelfBookList";
+export { default as FavouriteBookList } from "./FavouriteBookList";

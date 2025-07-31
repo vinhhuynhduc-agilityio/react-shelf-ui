@@ -2,9 +2,7 @@
 
 exports[`MyShelfPage matches snapshot 1`] = `
 <div>
-  <div
-    class=""
-  >
+  <div>
     <h1
       class="sm:text-[25px] text-[23px] font-bold text-[#4D4D4D] mb-6 mt-4"
     >
