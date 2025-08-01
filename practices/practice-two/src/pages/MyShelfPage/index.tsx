@@ -1,18 +1,12 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
 // hooks
-import { useFetchBooks, useFetchMySHelf, useRemoveShelfItem } from "@/hooks";
+import { useBooksQuery, useFetchMySHelf, useRemoveShelfItem } from "@/hooks";
 
 // stores
-import {
-  useBookStore,
-  usePendingShelfStore,
-  useShelfStore,
-  useUserStore,
-  useShelfChangedStore,
-} from "@/stores";
+import { usePendingShelfStore, useUserStore } from "@/stores";
 
 // components
 import {
@@ -37,23 +31,26 @@ const MyShelfPage: React.FC = () => {
   const queryClient = useQueryClient();
   const currentUser = useUserStore((state) => state.currentUser);
 
+  // state
+  const [shelfChanged, setShelfChanged] = useState(false);
+  const [shelf, setShelf] = useState<ShelfItem[]>([]);
+
   // Fetch books and shelves from the API
   const {
+    data: books = [],
     isLoading,
     error: errorBooks,
     isError: isErrorBooks,
-  } = useFetchBooks();
+  } = useBooksQuery();
+
   const {
     isError: isErrorShelf,
     isFetching: isFetchingShelf,
     error: errorShelf,
-  } = useFetchMySHelf(currentUser?.id || "");
+  } = useFetchMySHelf(currentUser?.id || "", setShelf);
 
   // store
-  const books = useBookStore((state) => state.books);
   const { pendingShelfActions } = usePendingShelfStore();
-  const { shelf, setShelf } = useShelfStore();
-  const { shelfChanged, setShelfChanged } = useShelfChangedStore();
 
   // API hooks
   const { mutate: removeShelfItem } = useRemoveShelfItem();

@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
 // stores
 import {
-  useBookStore,
-  useFavouritesChangedStore,
   useFavouritesStore,
   usePendingFavouritesStore,
   useUserStore,
@@ -27,7 +25,7 @@ import { ArrowBackIcon } from "@/components/icons";
 
 // hooks
 import {
-  useFetchBooks,
+  useBooksQuery,
   useFetchFavourites,
   useGetMyShelf,
   useRemoveFavouriteItem,
@@ -43,10 +41,12 @@ const FavouritePage: React.FC = () => {
 
   // Fetch data from the API
   const {
+    data: books = [],
     isLoading,
     isError: isErrorBooks,
     error: errorBooks,
-  } = useFetchBooks();
+  } = useBooksQuery();
+
   const {
     isError: isErrorFavourites,
     isFetching: isFetchingFavourites,
@@ -54,14 +54,14 @@ const FavouritePage: React.FC = () => {
   } = useFetchFavourites(currentUser?.id || "");
   const { data: shelves } = useGetMyShelf(currentUser?.id || "");
 
+  // states
+  const [favouritesChanged, setFavouritesChanged] = useState(false);
+
   // store
-  const books = useBookStore((state) => state.books);
   const pendingFavouritesActions = usePendingFavouritesStore(
     (state) => state.pendingFavouritesActions
   );
   const { favourites, setFavourites } = useFavouritesStore();
-  const { favouritesChanged, setFavouritesChanged } =
-    useFavouritesChangedStore();
 
   // API hooks
   const { mutate: removeFavourite } = useRemoveFavouriteItem();

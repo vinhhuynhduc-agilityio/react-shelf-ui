@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { useQueryClient } from "@tanstack/react-query";
@@ -6,7 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 // hooks
 import {
   useAddFavouriteItem,
-  useFetchBooks,
+  useBooksQuery,
   useFetchFavourites,
   useGetMyShelf,
   useRemoveFavouriteItem,
@@ -14,13 +14,11 @@ import {
 
 // stores
 import {
-  useBookStore,
   useFavouritesStore,
   useSearchFilterStore,
   usePendingFavouritesStore,
   useSearchStore,
   useUserStore,
-  useFavouritesChangedStore,
 } from "@/stores";
 
 // types
@@ -46,12 +44,14 @@ const SearchPage: React.FC = () => {
   const queryClient = useQueryClient();
   const currentUser = useUserStore((state) => state.currentUser);
 
-  // Fetch data from the API
+  // Fetch data from the API;
   const {
+    data: books = [],
     isLoading,
     isError: isErrorBooks,
     error: errorBooks,
-  } = useFetchBooks();
+  } = useBooksQuery();
+
   const {
     isError: isErrorFavourites,
     isFetching: isFetchingFavourites,
@@ -64,7 +64,9 @@ const SearchPage: React.FC = () => {
     error: errorShelf,
   } = useGetMyShelf(currentUser?.id || "");
 
-  const books = useBookStore((state) => state.books);
+  // states
+  const [favouritesChanged, setFavouritesChanged] = useState(false);
+
   const searchFromSidebar = useSearchStore((state) => state.searchFromSidebar);
   const searchTerm = useSearchStore((state) => state.searchTerm);
   const selectedFilter = useSearchFilterStore((state) => state.selectedFilter);
@@ -73,12 +75,6 @@ const SearchPage: React.FC = () => {
   );
   const setFavourites = useFavouritesStore((state) => state.setFavourites);
   const favourites = useFavouritesStore((state) => state.favourites);
-  const favouritesChanged = useFavouritesChangedStore(
-    (s) => s.favouritesChanged
-  );
-  const setFavouritesChanged = useFavouritesChangedStore(
-    (s) => s.setFavouritesChanged
-  );
 
   // refs
   const favouritesChangedRef = useRef(favouritesChanged);
