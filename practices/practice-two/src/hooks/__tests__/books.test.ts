@@ -1,25 +1,27 @@
-import { waitFor } from "@testing-library/react";
-import { renderHook } from "@testing-library/react";
-import { wrapper } from "@/helpers/test-utils";
+import { renderHook, waitFor, wrapper } from "@/helpers/test-utils";
 import { useBooksQuery } from "../books";
 import { getBooks } from "@/services/bookService";
-import { MOCK_BOOKS } from "@/__mocks__/book";
 
 jest.mock("@/services/bookService", () => ({
   getBooks: jest.fn(),
 }));
-jest.mock("@/stores/book", () => ({
-  useBookStore: jest.fn(),
-}));
 
 describe("useBooksQuery", () => {
-  it("should fetch books when enabled", async () => {
-    (getBooks as jest.Mock).mockResolvedValue(MOCK_BOOKS);
-    const { result } = renderHook(() => useBooksQuery(true), { wrapper });
-    await waitFor(() => expect(result.current.data).toEqual(MOCK_BOOKS));
+  it("calls getBooks and returns data", async () => {
+    const mockBooks = [{ id: "1", title: "Book 1" }];
+    (getBooks as jest.Mock).mockResolvedValue(mockBooks);
+
+    const { result } = renderHook(() => useBooksQuery(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual(mockBooks);
+      expect(result.current.isSuccess).toBe(true);
+    });
+
     expect(getBooks).toHaveBeenCalled();
   });
-  it("should not fetch books when disabled", async () => {
+
+  it("does not call getBooks if enabled is false", async () => {
     renderHook(() => useBooksQuery(false), { wrapper });
     expect(getBooks).not.toHaveBeenCalled();
   });

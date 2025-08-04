@@ -3,58 +3,51 @@ import SearchPage from ".";
 import { MOCK_BOOKS, MOCK_FAVOURITES, MOCK_SHELVES } from "@/__mocks__/book";
 import { MOCK_USER } from "@/__mocks__/user";
 import {
-  useBookStore,
   useUserStore,
   useSearchStore,
   useSearchFilterStore,
   usePendingFavouritesStore,
   useFavouritesStore,
-  useFavouritesChangedStore,
 } from "@/stores";
 import {
-  useFetchBooks,
   useFetchFavourites,
   useGetMyShelf,
   useAddFavouriteItem,
   useRemoveFavouriteItem,
+  useBooksQuery,
 } from "@/hooks";
 
 jest.mock("@/stores", () => ({
-  useBookStore: jest.fn(),
   useUserStore: jest.fn(),
   useSearchStore: jest.fn(),
   useSearchFilterStore: jest.fn(),
   usePendingFavouritesStore: jest.fn(),
   useFavouritesStore: jest.fn(),
-  useFavouritesChangedStore: jest.fn(),
 }));
 jest.mock("@/hooks", () => ({
-  useFetchBooks: jest.fn(),
   useFetchFavourites: jest.fn(),
   useGetMyShelf: jest.fn(),
   useAddFavouriteItem: jest.fn(),
   useRemoveFavouriteItem: jest.fn(),
+  useBooksQuery: jest.fn(),
 }));
 
-const mockedUseBookStore = useBookStore as unknown as jest.Mock;
+const mockedUseBooksQuery = useBooksQuery as jest.Mock;
 const mockedUseUserStore = useUserStore as unknown as jest.Mock;
 const mockedUseSearchStore = useSearchStore as unknown as jest.Mock;
 const mockedUseFilterStore = useSearchFilterStore as unknown as jest.Mock;
 const mockedUsePendingFavouritesStore =
   usePendingFavouritesStore as unknown as jest.Mock;
-const mockedUseFetchBooks = useFetchBooks as jest.Mock;
 const mockedUseFetchFavourites = useFetchFavourites as jest.Mock;
 const mockedUseGetMyShelf = useGetMyShelf as jest.Mock;
 const mockedUseAddFavouriteItem = useAddFavouriteItem as jest.Mock;
 const mockedUseRemoveFavouriteItem = useRemoveFavouriteItem as jest.Mock;
 const mockedUseFavouritesStore = useFavouritesStore as unknown as jest.Mock;
-const mockedUseFavouritesChangedStore =
-  useFavouritesChangedStore as unknown as jest.Mock;
 
 describe("SearchPage", () => {
   beforeEach(() => {
-    mockedUseFetchBooks.mockReturnValue({
-      books: [],
+    mockedUseBooksQuery.mockReturnValue({
+      data: MOCK_BOOKS,
       isLoading: false,
       isError: false,
       error: null,
@@ -63,7 +56,6 @@ describe("SearchPage", () => {
       isError: false,
       isFetching: false,
     });
-    mockedUseBookStore.mockImplementation((cb) => cb({ books: [] }));
     mockedUseUserStore.mockImplementation((cb) =>
       cb({ currentUser: MOCK_USER })
     );
@@ -85,20 +77,15 @@ describe("SearchPage", () => {
     mockedUseFavouritesStore.mockImplementation((cb) =>
       cb({ favourites: [], setFavourites: jest.fn() })
     );
-    mockedUseFavouritesChangedStore.mockImplementation((cb) =>
-      cb({
-        favouritesChanged: false,
-        setFavouritesChanged: jest.fn(),
-      })
-    );
   });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it("shows skeleton when loading books or favourites", () => {
-    mockedUseFetchBooks.mockReturnValue({
-      books: [],
+    mockedUseBooksQuery.mockReturnValue({
+      data: MOCK_BOOKS,
       isLoading: true,
       isError: false,
       error: null,
@@ -112,8 +99,8 @@ describe("SearchPage", () => {
   });
 
   it("shows error when error", () => {
-    mockedUseFetchBooks.mockReturnValue({
-      books: [],
+    mockedUseBooksQuery.mockReturnValue({
+      data: [],
       isLoading: false,
       isError: true,
       error: { message: "fail" },
@@ -121,14 +108,17 @@ describe("SearchPage", () => {
     mockedUseFetchFavourites.mockReturnValue({
       isError: true,
       isFetching: false,
+      error: { message: "fail2" },
     });
     render(<SearchPage />);
     expect(screen.getByText(/Failed to load search data/)).toBeInTheDocument();
+    expect(screen.getAllByText(/fail/)).toHaveLength(2);
+    expect(screen.getAllByText(/fail2/)).toHaveLength(1);
   });
 
   it("shows no books available if none", () => {
-    mockedUseFetchBooks.mockReturnValue({
-      books: [],
+    mockedUseBooksQuery.mockReturnValue({
+      data: [],
       isLoading: false,
       isError: false,
       error: null,
@@ -138,13 +128,12 @@ describe("SearchPage", () => {
   });
 
   it("shows no books found if search yields nothing", () => {
-    mockedUseFetchBooks.mockReturnValue({
-      books: MOCK_BOOKS,
+    mockedUseBooksQuery.mockReturnValue({
+      data: MOCK_BOOKS,
       isLoading: false,
       isError: false,
       error: null,
     });
-    mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
     mockedUseSearchStore.mockImplementation((cb) =>
       cb({ searchFromSidebar: false, searchTerm: "notfound" })
     );
@@ -153,13 +142,12 @@ describe("SearchPage", () => {
   });
 
   it("renders filtered books list", () => {
-    mockedUseFetchBooks.mockReturnValue({
-      books: MOCK_BOOKS,
+    mockedUseBooksQuery.mockReturnValue({
+      data: MOCK_BOOKS,
       isLoading: false,
       isError: false,
       error: null,
     });
-    mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
     mockedUseSearchStore.mockImplementation((cb) =>
       cb({ searchFromSidebar: false, searchTerm: "think" })
     );
@@ -177,24 +165,10 @@ describe("SearchPage", () => {
       }
     });
     const setFavouritesMock = jest.fn();
-    const setFavouritesChangedMock = jest.fn();
-    mockedUseFetchBooks.mockReturnValue({
-      books: MOCK_BOOKS,
-      isLoading: false,
-      isError: false,
-      error: null,
-    });
-    mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
     mockedUseFavouritesStore.mockImplementation((cb) =>
       cb({
         favourites: [],
         setFavourites: setFavouritesMock,
-      })
-    );
-    mockedUseFavouritesChangedStore.mockImplementation((cb) =>
-      cb({
-        favouritesChanged: false,
-        setFavouritesChanged: setFavouritesChangedMock,
       })
     );
     mockedUseAddFavouriteItem.mockReturnValue({ mutate });
@@ -203,7 +177,6 @@ describe("SearchPage", () => {
     fireEvent.click(favButtons[0]);
     expect(mutate).toHaveBeenCalled();
     expect(setFavouritesMock).toHaveBeenCalled();
-    expect(setFavouritesChangedMock).toHaveBeenCalledWith(true);
   });
 
   it("calls removeFavourite and updates favourites when favorite button clicked if already favorite", () => {
@@ -213,24 +186,10 @@ describe("SearchPage", () => {
       }
     });
     const setFavouritesMock = jest.fn();
-    const setFavouritesChangedMock = jest.fn();
-    mockedUseFetchBooks.mockReturnValue({
-      books: MOCK_BOOKS,
-      isLoading: false,
-      isError: false,
-      error: null,
-    });
-    mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
     mockedUseFavouritesStore.mockImplementation((cb) =>
       cb({
         favourites: MOCK_FAVOURITES,
         setFavourites: setFavouritesMock,
-      })
-    );
-    mockedUseFavouritesChangedStore.mockImplementation((cb) =>
-      cb({
-        favouritesChanged: false,
-        setFavouritesChanged: setFavouritesChangedMock,
       })
     );
     mockedUseRemoveFavouriteItem.mockReturnValue({ mutate });
@@ -239,17 +198,15 @@ describe("SearchPage", () => {
     fireEvent.click(favButtons[0]);
     expect(mutate).toHaveBeenCalled();
     expect(setFavouritesMock).toHaveBeenCalled();
-    expect(setFavouritesChangedMock).toHaveBeenCalledWith(true);
   });
 
   it("matches snapshot", () => {
-    mockedUseFetchBooks.mockReturnValue({
-      books: MOCK_BOOKS,
+    mockedUseBooksQuery.mockReturnValue({
+      data: MOCK_BOOKS,
       isLoading: false,
       isError: false,
       error: null,
     });
-    mockedUseBookStore.mockImplementation((cb) => cb({ books: MOCK_BOOKS }));
     mockedUseFavouritesStore.mockImplementation((cb) =>
       cb({
         favourites: MOCK_FAVOURITES,

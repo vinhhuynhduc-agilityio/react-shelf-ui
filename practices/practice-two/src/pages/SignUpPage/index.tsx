@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRegisterUser } from "@/hooks";
 
 // components
-import { Button, TextField } from "@/components";
+import { Button, ParagraphMessage, TextField } from "@/components";
 
 // constants
 import { ROUTE } from "@/constants";
@@ -74,10 +74,10 @@ const SignUpPage: React.FC = () => {
         <h1 className="text-center text-[18px] sm:text-[20px] font-normal leading-[24px] mb-2 sm:mb-4">
           Create an Account
         </h1>
-        <p className="text-center text-gray-500 text-sm sm:text-base mb-4">
-          Sign up to access your Digital Library
-        </p>
-
+        <ParagraphMessage
+          text="Sign up to access your Digital Library"
+          className="text-center text-gray-500 text-sm sm:text-base mb-4"
+        />
         {/* Form */}
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -165,9 +165,10 @@ const SignUpPage: React.FC = () => {
               I agree to the terms and conditions
             </label>
             {errors.agreeToTerms && (
-              <p className="text-red-500 text-xs sm:text-sm md:text-base mt-1">
-                {errors.agreeToTerms.message}
-              </p>
+              <ParagraphMessage
+                text={errors.agreeToTerms.message || ""}
+                className="text-red-500 text-xs sm:text-sm md:text-base mt-1"
+              />
             )}
           </div>
 

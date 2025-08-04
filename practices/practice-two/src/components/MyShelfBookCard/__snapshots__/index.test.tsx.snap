@@ -26,9 +26,7 @@ exports[`MyShelfBookCard matches snapshot 1`] = `
         <p
           class="w-[130px] text-[10px] text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden mx-auto"
         >
-          Author
-          , 
-          2020
+          Author, 2020
         </p>
         <p
           class="w-[130px] text-[10px] text-[#4D4D4D] mx-auto"

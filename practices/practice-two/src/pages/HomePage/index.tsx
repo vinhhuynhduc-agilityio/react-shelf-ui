@@ -5,7 +5,12 @@ import { useBooksQuery, useGetMyShelf } from "@/hooks";
 import { useUserStore } from "@/stores";
 
 // components
-import { BookHomeList, ErrorBoundary, TodayQuote } from "@/components";
+import {
+  BookHomeList,
+  ErrorBoundary,
+  ParagraphMessage,
+  TodayQuote,
+} from "@/components";
 
 // types
 import { Book } from "@/types/books";
@@ -43,9 +48,10 @@ const HomePage: React.FC = () => {
       <ErrorBoundary
         fallback={
           <div className="flex items-center justify-center p-4 bg-red-100 border border-red-400 text-red-800 rounded-lg shadow-md">
-            <p className="font-semibold text-lg">
-              Error loading recommended books.
-            </p>
+            <ParagraphMessage
+              text="Error loading recommended books."
+              className="font-semibold text-lg"
+            />
           </div>
         }
       >
@@ -60,9 +66,10 @@ const HomePage: React.FC = () => {
       <ErrorBoundary
         fallback={
           <div className="flex items-center justify-center p-4 bg-red-100 border border-red-400 text-red-800 rounded-lg shadow-md">
-            <p className="font-semibold text-lg">
-              Error loading recent readings.
-            </p>
+            <ParagraphMessage
+              text="Error loading recent readings."
+              className="font-semibold text-lg"
+            />
           </div>
         }
       >

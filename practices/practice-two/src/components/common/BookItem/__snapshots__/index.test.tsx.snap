@@ -20,9 +20,7 @@ exports[`BookItem matches snapshot 1`] = `
     <p
       class="w-[130px] text-[10px] text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden mx-auto"
     >
-      Steve Krug
-      , 
-      2000
+      Steve Krug, 2000
     </p>
     <p
       class="w-[130px] text-[10px] text-[#4D4D4D] mx-auto"

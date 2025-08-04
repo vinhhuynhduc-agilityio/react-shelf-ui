@@ -34,6 +34,9 @@ import {
 // constants
 import { QUERY_KEY_MY_FAVOURITE, ROUTE } from "@/constants";
 
+// helpers
+import { filterFavouritedBooks } from "@/helpers";
+
 const FavouritePage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -58,9 +61,7 @@ const FavouritePage: React.FC = () => {
   const [favouritesChanged, setFavouritesChanged] = useState(false);
 
   // store
-  const pendingFavouritesActions = usePendingFavouritesStore(
-    (state) => state.pendingFavouritesActions
-  );
+  const { pendingFavouritesActions = [] } = usePendingFavouritesStore();
   const { favourites, setFavourites } = useFavouritesStore();
 
   // API hooks
@@ -90,9 +91,7 @@ const FavouritePage: React.FC = () => {
   }, [setFavouritesChanged, queryClient, currentUser?.id]);
 
   // Filter books by favourites
-  const filteredBooks = books.filter((book) => {
-    return favourites?.some((favourite) => favourite.bookId === book.id);
-  });
+  const filteredBooks = filterFavouritedBooks(books, favourites);
 
   // Navigate to book preview page with book details and from route
   const handleCLickPreview = useCallback(

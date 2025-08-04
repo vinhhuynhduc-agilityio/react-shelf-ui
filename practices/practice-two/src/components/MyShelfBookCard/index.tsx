@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Book } from "@/types";
 
 // components
-import { BookItem, Button } from "@/components";
+import { BookItem, Button, ParagraphMessage } from "@/components";
 
 // constants
 import { ROUTE } from "@/constants";
@@ -41,12 +41,14 @@ const MyShelfBookCard = memo(
         </div>
         <div className="w-2/5 flex flex-col justify-between items-center h-full ml-2">
           <div>
-            <p className="md:text-[15px] text-[13px] text-[#4D4D4D]">
-              Borrowed on
-            </p>
-            <p className="text-[10px] font-semibold text-[#747373]">
-              {borrowedDate}
-            </p>
+            <ParagraphMessage
+              text="Borrowed on"
+              className="md:text-[15px] text-[13px] text-[#4D4D4D]"
+            />
+            <ParagraphMessage
+              text={borrowedDate}
+              className="text-[10px] font-semibold text-[#747373]"
+            />
           </div>
           <Button
             variant="outline"

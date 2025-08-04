@@ -4,7 +4,12 @@ import { memo, useCallback } from "react";
 import { Book } from "@/types";
 
 // components
-import { Button, StatusBadge, FavouriteIcon } from "@/components";
+import {
+  Button,
+  StatusBadge,
+  FavouriteIcon,
+  ParagraphMessage,
+} from "@/components";
 
 interface RowBookProps {
   book: Book;
@@ -47,12 +52,14 @@ const BookRow: React.FC<RowBookProps> = memo(
           </div>
           {/* Book Details */}
           <div className="hidden lg:flex flex-col">
-            <p className="font-medium text-[16px] leading-[22px] max-w-[200px] overflow-hidden text-ellipsis line-clamp-2">
-              {book.title}
-            </p>
-            <p className="text-gray-500 lg:text-[15px] text-[13px]">
-              {book.author.name}, {book.publishedYear}
-            </p>
+            <ParagraphMessage
+              text={book.title}
+              className="font-medium text-[16px] leading-[22px] max-w-[200px] overflow-hidden text-ellipsis line-clamp-2"
+            />
+            <ParagraphMessage
+              text={`${book.author.name}, ${book.publishedYear}`}
+              className="text-gray-500 lg:text-[15px] text-[13px]"
+            />
           </div>
         </div>
         {/* rating */}

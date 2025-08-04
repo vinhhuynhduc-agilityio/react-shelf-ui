@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
 // components
-import { Button, TextField } from "@/components";
+import { Button, ParagraphMessage, TextField } from "@/components";
 
 // stores
 import { useUserStore } from "@/stores/user";
@@ -72,12 +72,15 @@ const SignInPage: React.FC = () => {
         <h1 className="text-center text-[18px] sm:text-[20px] font-normal leading-[24px] mb-2 sm:mb-4">
           Welcome Back!
         </h1>
-        <p className="text-center text-gray-500 text-sm sm:text-base mb-6">
-          Sign in to continue to your Digital Library
-        </p>
-
+        <ParagraphMessage
+          text="Sign in to continue to your Digital Library"
+          className="text-center text-gray-500 text-sm sm:text-base mb-6"
+        />
         {errorMessage && (
-          <p className="text-red-500 text-center mb-4">{errorMessage}</p>
+          <ParagraphMessage
+            text={errorMessage}
+            className="text-red-500 text-center mb-4"
+          />
         )}
 
         {/* Form */}

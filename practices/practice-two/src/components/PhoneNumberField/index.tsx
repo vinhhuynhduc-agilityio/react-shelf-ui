@@ -1,14 +1,22 @@
 import clsx from "clsx";
-import { FieldErrors, FieldValues, Path, UseFormRegister } from "react-hook-form";
+import {
+  FieldErrors,
+  FieldValues,
+  Path,
+  UseFormRegister,
+} from "react-hook-form";
 
 // types
 import { AccountFormValues } from "@/types";
+
+// components
+import { ParagraphMessage } from "@/components";
 
 interface PhoneNumberFieldProps<T extends FieldValues> {
   register: UseFormRegister<T>;
   errors: FieldErrors<AccountFormValues>;
   isEditing: boolean;
-};
+}
 
 const PhoneNumberField = <T extends FieldValues>({
   register,
@@ -69,14 +77,16 @@ const PhoneNumberField = <T extends FieldValues>({
         />
       </div>
       {errors.countryCode?.message && (
-        <p className="text-red-500 text-xs sm:text-sm md:text-base">
-          {errors.countryCode?.message}
-        </p>
+        <ParagraphMessage
+          text={errors.countryCode?.message || ""}
+          className="text-red-500 text-xs sm:text-sm md:text-base"
+        />
       )}
       {errors.phoneNumber?.message && (
-        <p className="text-red-500 text-xs sm:text-sm md:text-base">
-          {errors.phoneNumber?.message}
-        </p>
+        <ParagraphMessage
+          text={errors.phoneNumber?.message || ""}
+          className="text-red-500 text-xs sm:text-sm md:text-base"
+        />
       )}
     </div>
   );

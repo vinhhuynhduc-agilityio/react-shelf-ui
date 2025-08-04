@@ -28,9 +28,7 @@ exports[`BookRow matches snapshot 1`] = `
         <p
           class="text-gray-500 lg:text-[15px] text-[13px]"
         >
-          Steve Krug
-          , 
-          2000
+          Steve Krug, 2000
         </p>
       </div>
     </div>
