@@ -40,7 +40,7 @@ import { filterFavouritedBooks } from "@/helpers";
 const FavouritePage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const currentUser = useUserStore((state) => state.currentUser);
+  const { currentUser } = useUserStore();
 
   // Fetch data from the API
   const {

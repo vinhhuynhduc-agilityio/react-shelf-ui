@@ -31,9 +31,7 @@ describe("MyShelfPage", () => {
       isError: false,
       error: null,
     });
-    mockedUseUserStore.mockImplementation((cb) =>
-      cb({ currentUser: MOCK_USER })
-    );
+    mockedUseUserStore.mockImplementation(() => ({ currentUser: MOCK_USER }));
     mockedUsePendingShelfStore.mockReturnValue({ pendingShelfActions: [] });
     mockedUseFetchMySHelf.mockImplementation((userId, setShelf) => {
       // Avoid direct setShelf call to prevent re-render loop

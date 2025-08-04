@@ -42,7 +42,7 @@ const BookPreviewPage = () => {
   const book: Book | undefined = books.find((b) => b.id.toString() === bookId);
 
   const navigate = useNavigate();
-  const currentUser = useUserStore((state) => state.currentUser);
+  const { currentUser } = useUserStore();
 
   // Fetch shelves from the API
   const { data: shelves, isFetching: isFetchingShelf } = useGetMyShelf(

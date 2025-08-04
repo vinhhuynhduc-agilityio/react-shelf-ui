@@ -15,7 +15,7 @@ const mockedUseGetUser = useGetUser as jest.Mock;
 
 describe("SignInPage", () => {
   beforeEach(() => {
-    mockedUseUserStore.mockImplementation((cb) => cb({ setUser: jest.fn() }));
+    mockedUseUserStore.mockImplementation(() => ({ setUser: jest.fn() }));
     mockedUseGetUser.mockReturnValue({
       mutateAsync: jest.fn(),
       isPending: false,
@@ -74,7 +74,7 @@ describe("SignInPage", () => {
     const setUser = jest.fn();
     const user = { email: "test@example.com", password: "123456" };
     const mutateAsync = jest.fn((email, { onSuccess }) => onSuccess(user));
-    mockedUseUserStore.mockImplementation((cb) => cb({ setUser }));
+    mockedUseUserStore.mockImplementation(() => ({ setUser }));
     mockedUseGetUser.mockReturnValue({ mutateAsync, isPending: false });
     render(<SignInPage />);
     fireEvent.input(screen.getByLabelText(/email/i), {
@@ -94,7 +94,7 @@ describe("SignInPage", () => {
     const setUser = jest.fn();
     const user = { email: "test@example.com", password: "correctpass" };
     const mutateAsync = jest.fn((email, { onSuccess }) => onSuccess(user));
-    mockedUseUserStore.mockImplementation((cb) => cb({ setUser }));
+    mockedUseUserStore.mockImplementation(() => ({ setUser }));
     mockedUseGetUser.mockReturnValue({ mutateAsync, isPending: false });
     render(<SignInPage />);
     fireEvent.input(screen.getByLabelText(/email/i), {

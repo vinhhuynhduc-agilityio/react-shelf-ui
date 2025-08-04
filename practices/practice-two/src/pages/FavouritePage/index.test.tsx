@@ -48,9 +48,7 @@ describe("FavouritePage", () => {
       isError: false,
       error: null,
     });
-    mockedUseUserStore.mockImplementation((cb) =>
-      cb({ currentUser: MOCK_USER })
-    );
+    mockedUseUserStore.mockImplementation(() => ({ currentUser: MOCK_USER }));
     mockedUsePendingFavouritesStore.mockReturnValue(["1", "2"]);
     mockedUseFavouritesStore.mockReturnValue({
       favourites: MOCK_FAVOURITES,

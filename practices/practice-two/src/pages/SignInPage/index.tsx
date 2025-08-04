@@ -27,7 +27,7 @@ const SignInPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   // Store actions
-  const setUser = useUserStore((state) => state.setUser);
+  const { setUser } = useUserStore();
 
   const {
     register,

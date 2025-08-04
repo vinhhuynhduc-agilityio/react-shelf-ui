@@ -19,7 +19,7 @@ import { Book } from "@/types/books";
 import { filterBooksByShelves } from "@/helpers";
 
 const HomePage: React.FC = () => {
-  const currentUser = useUserStore((state) => state.currentUser);
+  const { currentUser } = useUserStore();
 
   // Fetch books and shelves from the API
   const {

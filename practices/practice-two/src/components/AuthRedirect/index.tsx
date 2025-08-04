@@ -10,8 +10,9 @@ import { SignInPage } from "@/pages";
 import { useUserStore } from "@/stores";
 
 const AuthRedirect: React.FC = () => {
-	const currentUser = useUserStore((state) => state.currentUser);
-	return currentUser ? <Navigate to={ROUTE.HOME} replace /> : <SignInPage />;
+  const { currentUser } = useUserStore();
+
+  return currentUser ? <Navigate to={ROUTE.HOME} replace /> : <SignInPage />;
 };
 
 export default AuthRedirect;

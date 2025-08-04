@@ -31,9 +31,7 @@ describe("HomePage", () => {
       isError: false,
       error: null,
     });
-    mockedUseUserStore.mockImplementation((cb) =>
-      cb({ currentUser: mockUser })
-    );
+    mockedUseUserStore.mockImplementation(() => ({ currentUser: mockUser }));
   });
 
   afterEach(() => {

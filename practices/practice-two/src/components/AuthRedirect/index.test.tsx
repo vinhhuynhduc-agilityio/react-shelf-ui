@@ -30,7 +30,9 @@ describe("AuthRedirect", () => {
   });
 
   it("renders SignInPage if currentUser is null", () => {
-    (useUserStore as unknown as jest.Mock).mockReturnValue(null);
+    (useUserStore as unknown as jest.Mock).mockReturnValue({
+      currentUser: null,
+    });
     render(
       <MemoryRouter>
         <AuthRedirect />

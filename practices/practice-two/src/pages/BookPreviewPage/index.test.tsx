@@ -37,9 +37,7 @@ describe("BookPreviewPage", () => {
   beforeEach(() => {
     mockedUseParams.mockReturnValue({ bookId: "11" });
     mockedUseNavigate.mockReturnValue(mockNavigate);
-    mockedUseUserStore.mockImplementation((cb) =>
-      cb({ currentUser: mockUser })
-    );
+    mockedUseUserStore.mockImplementation(() => ({ currentUser: mockUser }));
     mockedUsePendingShelfStore.mockReturnValue({ pendingShelfActions: [] });
     mockedUseGetMyShelf.mockReturnValue({ data: [] });
     mockedUseAddShelfItem.mockReturnValue({ mutate: jest.fn() });

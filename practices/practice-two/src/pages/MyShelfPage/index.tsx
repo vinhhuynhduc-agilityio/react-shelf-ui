@@ -29,7 +29,7 @@ import { ShelfItem } from "@/types";
 const MyShelfPage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const currentUser = useUserStore((state) => state.currentUser);
+  const { currentUser } = useUserStore();
 
   // state
   const [shelfChanged, setShelfChanged] = useState(false);

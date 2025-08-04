@@ -4,11 +4,11 @@ import { useForm, SubmitHandler, FieldErrors } from "react-hook-form";
 
 // components
 import {
-	Avatar,
-	Button,
-	IconButton,
-	PhoneNumberField,
-	TextField,
+  Avatar,
+  Button,
+  IconButton,
+  PhoneNumberField,
+  TextField,
 } from "@/components";
 import { CancelIcon, EditIcon } from "@/components/icons";
 
@@ -28,206 +28,206 @@ import { AccountFormValues, User } from "@/types";
 import { useUserStore } from "@/stores";
 
 const AccountSettingPage: React.FC = () => {
-	// stores
-	const currentUser = useUserStore((state) => state.currentUser);
+  // stores
+  const { currentUser } = useUserStore();
 
-	// states
-	const [avatarUrl, setAvatarPreview] = useState<string>(
-		currentUser?.avatarUrl || DEFAULT_AVATAR
-	);
-	const [isEditing, setIsEditing] = useState<boolean>(false);
+  // states
+  const [avatarUrl, setAvatarPreview] = useState<string>(
+    currentUser?.avatarUrl || DEFAULT_AVATAR
+  );
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<AccountFormValues>({
-		defaultValues: currentUser || ({} as AccountFormValues),
-	});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AccountFormValues>({
+    defaultValues: currentUser || ({} as AccountFormValues),
+  });
 
-	const { mutate: updateUserBookData, isPending } = useUpdateUser();
+  const { mutate: updateUserBookData, isPending } = useUpdateUser();
 
-	const onSubmit: SubmitHandler<AccountFormValues> = (data) => {
-		if (!currentUser) {
-			return;
-		}
+  const onSubmit: SubmitHandler<AccountFormValues> = (data) => {
+    if (!currentUser) {
+      return;
+    }
 
-		const userToUpdate = {
-			...currentUser,
-			fullName: data.fullName,
-			email: data.email,
-			registerNumber: data.registerNumber,
-			countryCode: data.countryCode,
-			phoneNumber: data.phoneNumber,
-			bio: data.bio,
-			avatarUrl: avatarUrl,
-		} as User;
+    const userToUpdate = {
+      ...currentUser,
+      fullName: data.fullName,
+      email: data.email,
+      registerNumber: data.registerNumber,
+      countryCode: data.countryCode,
+      phoneNumber: data.phoneNumber,
+      bio: data.bio,
+      avatarUrl: avatarUrl,
+    } as User;
 
-		updateUserBookData(userToUpdate, {
-			onSuccess: () => toggleEdit(),
-		});
-	};
+    updateUserBookData(userToUpdate, {
+      onSuccess: () => toggleEdit(),
+    });
+  };
 
-	const toggleEdit = () => {
-		setIsEditing(!isEditing);
-	};
+  const toggleEdit = () => {
+    setIsEditing(!isEditing);
+  };
 
-	const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files?.[0];
+  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
 
-		if (file) {
-			readFileAsBase64(file, setAvatarPreview);
-		}
-	};
+    if (file) {
+      readFileAsBase64(file, setAvatarPreview);
+    }
+  };
 
-	const isDisabled = !isEditing || isPending;
+  const isDisabled = !isEditing || isPending;
 
-	return (
-		<div className="bg-white shadow-lg rounded-lg p-6 max-w-full h-auto max-h-screen flex flex-col overflow-auto">
-			{/* Title */}
-			<h1 className=" text-[20px] font-bold text-[#F4683C] mb-10 mt-6">
-				Account Setting
-			</h1>
-			{/* Form */}
-			<form
-				onSubmit={handleSubmit(onSubmit)}
-				className="flex flex-col gap-4 flex-grow"
-			>
-				{/* Avatar Upload */}
-				<div className="flex flex-col items-center space-y-3 w-[151px]">
-					<h2 className="text-[#4C535F] font-medium text-[16px]">
-						Your Profile Picture
-					</h2>
-					<div className="flex flex-col items-center space-y-3">
-						<Avatar src={avatarUrl || DEFAULT_AVATAR} size="large" />
-						<input
-							type="file"
-							accept="image/*"
-							{...register("avatar", { onChange: handleAvatarChange })}
-							className="hidden"
-							id="avatar-upload"
-						/>
-						<label
-							htmlFor="avatar-upload"
-							className={clsx(
-								"cursor-pointer items-center underline underline-offset-4 text-[#909090] text-[10px] font-medium",
-								isDisabled && "pointer-events-none"
-							)}
-						>
-							Upload new photo
-						</label>
-					</div>
-				</div>
-				<div className="flex flex-row-reverse">
-					<IconButton
-						icon={isEditing ? CancelIcon : EditIcon}
-						classNameIcon="w-5 h-5"
-						onClick={toggleEdit}
-						dataTestId="toggle-edit-btn"
-						additionalClasses={clsx(
-							"border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition",
-							isPending && "cursor-not-allowed opacity-50"
-						)}
-						disabled={isPending}
-						ariaLabel="Edit profile"
-					/>
-				</div>
-				{/* Profile Fields */}
-				<div className="flex md:flex-row flex-col gap-4">
-					<TextField
-						name="fullName"
-						label="Full Name"
-						type="text"
-						placeholder="Your Full Name"
-						disabled={isDisabled}
-						register={register}
-						validation={{
-							required: "Full Name is required",
-							minLength: {
-								value: 3,
-								message: "Full Name must be at least 3 characters long",
-							},
-							maxLength: {
-								value: 50,
-								message: "Full Name cannot exceed 30 characters",
-							},
-							pattern: {
-								value: /^[a-zA-Z\s]+$/,
-								message: "Full Name can only contain letters and spaces",
-							},
-						}}
-						error={errors.fullName?.message}
-						vertical
-						additionalClasses="flex-1"
-					/>
-					<TextField
-						name="email"
-						label="College Email ID"
-						type="email"
-						placeholder="username@college.com"
-						disabled={isDisabled}
-						register={register}
-						validation={{
-							required: "Email is required",
-							pattern: {
-								value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-								message: "Invalid email format",
-							},
-						}}
-						error={errors.email?.message}
-						vertical
-						additionalClasses="flex-1"
-					/>
-				</div>
-				<div className="flex md:flex-row flex-col gap-4">
-					<TextField
-						name="registerNumber"
-						label="Register Number"
-						type="text"
-						placeholder="Your Register Number"
-						disabled={isDisabled}
-						register={register}
-						maxLength={7}
-						validation={{
-							required: "Register number is required",
-							pattern: {
-								value: /^[1-9][0-9]{6}$/,
-								message:
-									"Register Number must be exactly 7 digits and cannot start with 0",
-							},
-						}}
-						error={errors.registerNumber?.message}
-						vertical
-						additionalClasses="flex-1"
-					/>
-					<PhoneNumberField
-						register={register}
-						errors={errors as FieldErrors<AccountFormValues>}
-						isEditing={isEditing}
-					/>
-				</div>
-				<TextField
-					name="bio"
-					label="Bio"
-					type="textarea"
-					placeholder="A short bio about you"
-					register={register}
-					error={errors.bio?.message}
-					vertical
-					additionalClasses="w-full resize-none"
-					disabled={isDisabled}
-				/>
-				{/* Submit Button */}
-				<Button
-					additionalClasses="mt-4"
-					variant="primary"
-					disabled={isDisabled}
-					type="submit"
-					label="Update Profile"
-				/>
-			</form>
-		</div>
-	);
+  return (
+    <div className="bg-white shadow-lg rounded-lg p-6 max-w-full h-auto max-h-screen flex flex-col overflow-auto">
+      {/* Title */}
+      <h1 className=" text-[20px] font-bold text-[#F4683C] mb-10 mt-6">
+        Account Setting
+      </h1>
+      {/* Form */}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-4 flex-grow"
+      >
+        {/* Avatar Upload */}
+        <div className="flex flex-col items-center space-y-3 w-[151px]">
+          <h2 className="text-[#4C535F] font-medium text-[16px]">
+            Your Profile Picture
+          </h2>
+          <div className="flex flex-col items-center space-y-3">
+            <Avatar src={avatarUrl || DEFAULT_AVATAR} size="large" />
+            <input
+              type="file"
+              accept="image/*"
+              {...register("avatar", { onChange: handleAvatarChange })}
+              className="hidden"
+              id="avatar-upload"
+            />
+            <label
+              htmlFor="avatar-upload"
+              className={clsx(
+                "cursor-pointer items-center underline underline-offset-4 text-[#909090] text-[10px] font-medium",
+                isDisabled && "pointer-events-none"
+              )}
+            >
+              Upload new photo
+            </label>
+          </div>
+        </div>
+        <div className="flex flex-row-reverse">
+          <IconButton
+            icon={isEditing ? CancelIcon : EditIcon}
+            classNameIcon="w-5 h-5"
+            onClick={toggleEdit}
+            dataTestId="toggle-edit-btn"
+            additionalClasses={clsx(
+              "border-2 border-gray-50 p-3 rounded-full hover:bg-gray-200 transition",
+              isPending && "cursor-not-allowed opacity-50"
+            )}
+            disabled={isPending}
+            ariaLabel="Edit profile"
+          />
+        </div>
+        {/* Profile Fields */}
+        <div className="flex md:flex-row flex-col gap-4">
+          <TextField
+            name="fullName"
+            label="Full Name"
+            type="text"
+            placeholder="Your Full Name"
+            disabled={isDisabled}
+            register={register}
+            validation={{
+              required: "Full Name is required",
+              minLength: {
+                value: 3,
+                message: "Full Name must be at least 3 characters long",
+              },
+              maxLength: {
+                value: 50,
+                message: "Full Name cannot exceed 30 characters",
+              },
+              pattern: {
+                value: /^[a-zA-Z\s]+$/,
+                message: "Full Name can only contain letters and spaces",
+              },
+            }}
+            error={errors.fullName?.message}
+            vertical
+            additionalClasses="flex-1"
+          />
+          <TextField
+            name="email"
+            label="College Email ID"
+            type="email"
+            placeholder="username@college.com"
+            disabled={isDisabled}
+            register={register}
+            validation={{
+              required: "Email is required",
+              pattern: {
+                value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                message: "Invalid email format",
+              },
+            }}
+            error={errors.email?.message}
+            vertical
+            additionalClasses="flex-1"
+          />
+        </div>
+        <div className="flex md:flex-row flex-col gap-4">
+          <TextField
+            name="registerNumber"
+            label="Register Number"
+            type="text"
+            placeholder="Your Register Number"
+            disabled={isDisabled}
+            register={register}
+            maxLength={7}
+            validation={{
+              required: "Register number is required",
+              pattern: {
+                value: /^[1-9][0-9]{6}$/,
+                message:
+                  "Register Number must be exactly 7 digits and cannot start with 0",
+              },
+            }}
+            error={errors.registerNumber?.message}
+            vertical
+            additionalClasses="flex-1"
+          />
+          <PhoneNumberField
+            register={register}
+            errors={errors as FieldErrors<AccountFormValues>}
+            isEditing={isEditing}
+          />
+        </div>
+        <TextField
+          name="bio"
+          label="Bio"
+          type="textarea"
+          placeholder="A short bio about you"
+          register={register}
+          error={errors.bio?.message}
+          vertical
+          additionalClasses="w-full resize-none"
+          disabled={isDisabled}
+        />
+        {/* Submit Button */}
+        <Button
+          additionalClasses="mt-4"
+          variant="primary"
+          disabled={isDisabled}
+          type="submit"
+          label="Update Profile"
+        />
+      </form>
+    </div>
+  );
 };
 
 export default AccountSettingPage;
