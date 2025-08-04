@@ -1,5 +1,19 @@
 import { Book, FavouriteItem } from "@/types";
 
+type AuthorAndYear = {
+  authorName: string;
+  publishedYear: number;
+};
+
+export const parseAuthorAndYear = (input: string): AuthorAndYear => {
+  const [name, yearStr] = input.split(",").map((s) => s.trim());
+
+  return {
+    authorName: name,
+    publishedYear: Number(yearStr),
+  };
+};
+
 export const filterBooks = (
   books: Book[],
   searchTerm: string,
@@ -10,7 +24,7 @@ export const filterBooks = (
 
   const filterMapping: Record<string, (book: Book) => string> = {
     Title: (book) => book.title,
-    Author: (book) => book.author.name,
+    Author: (book) => parseAuthorAndYear(book.authorAndYear).authorName,
     Subjects: (book) => book.category,
   };
 

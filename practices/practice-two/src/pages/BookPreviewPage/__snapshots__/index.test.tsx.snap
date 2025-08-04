@@ -167,8 +167,7 @@ exports[`BookPreviewPage matches snapshot 1`] = `
           >
             Steve Krug
           </span>
-          ,
-           
+          , 
           2000
         </h2>
         <div

@@ -22,7 +22,11 @@ import { ArrowBackIcon } from "@/components/icons";
 import { usePendingShelfStore, useUserStore } from "@/stores";
 
 // helpers
-import { formatBorrowedDate, isBookInShelf } from "@/helpers";
+import {
+  formatBorrowedDate,
+  isBookInShelf,
+  parseAuthorAndYear,
+} from "@/helpers";
 
 // hooks
 import { useAddShelfItem, useBooksQuery, useGetMyShelf } from "@/hooks";
@@ -78,6 +82,8 @@ const BookPreviewPage = () => {
     return <Navigate to="*" replace />;
   }
 
+  const { authorName } = parseAuthorAndYear(book.authorAndYear);
+
   return (
     <>
       <IconButton
@@ -100,7 +106,7 @@ const BookPreviewPage = () => {
             availability={availability}
           />
         </div>
-        <AuthorCard name={book.author.name} bio={book.author.bio ?? ""} />
+        <AuthorCard name={authorName} bio={book.authorBio ?? ""} />
       </div>
     </>
   );

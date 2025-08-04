@@ -4,8 +4,7 @@ import { memo } from "react";
 interface BookItemProps {
   id: string;
   title: string;
-  author: { name: string };
-  publishedYear: number;
+  authorAndYear: string;
   rating: number;
   imageUrl: string;
   category: string;
@@ -13,7 +12,7 @@ interface BookItemProps {
 }
 
 const BookItem: React.FC<BookItemProps> = memo(
-  ({ id, title, author, publishedYear, rating, imageUrl, onClick }) => {
+  ({ id, title, authorAndYear, rating, imageUrl, onClick }) => {
     const handleClick = () => {
       if (onClick) onClick(id);
     };
@@ -34,7 +33,7 @@ const BookItem: React.FC<BookItemProps> = memo(
           {title}
         </h2>
         <ParagraphMessage
-          text={`${author.name}, ${publishedYear}`}
+          text={`${authorAndYear}`}
           className="w-[130px] text-[10px] text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden mx-auto"
         />
         <p className="w-[130px] text-[10px] text-[#4D4D4D] mx-auto">
