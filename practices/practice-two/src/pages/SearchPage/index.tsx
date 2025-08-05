@@ -67,6 +67,7 @@ const SearchPage: React.FC = () => {
   // states
   const [favouritesChanged, setFavouritesChanged] = useState(false);
 
+  // stores
   const searchFromSidebar = useSearchStore((state) => state.searchFromSidebar);
   const searchTerm = useSearchStore((state) => state.searchTerm);
   const selectedFilter = useSearchFilterStore((state) => state.selectedFilter);

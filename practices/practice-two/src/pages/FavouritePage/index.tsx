@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -94,50 +94,38 @@ const FavouritePage: React.FC = () => {
   const filteredBooks = filterFavouritedBooks(books, favourites);
 
   // Navigate to book preview page with book details and from route
-  const handleCLickPreview = useCallback(
-    (book: Book) =>
-      navigate(`${ROUTE.BOOK_PREVIEW}/${book.id}`, {
-        state: {
-          book,
-          from: ROUTE.FAVOURITE,
-        },
-      }),
-    [navigate]
-  );
+  const handleCLickPreview = (book: Book) =>
+    navigate(`${ROUTE.BOOK_PREVIEW}/${book.id}`, {
+      state: {
+        book,
+        from: ROUTE.FAVOURITE,
+      },
+    });
 
   // Handle back navigation
   const handleClickBack = () => navigate(ROUTE.MY_SHELF);
 
   // Handle favorite click to remove from favourites
-  const handleFavoriteClick = useCallback(
-    (book: Book, favouriteId?: string) => {
-      const removeItem = {
-        bookId: book.id,
-        id: favouriteId || "",
-        userId: currentUser?.id || "",
-      };
-      const prevFavourites = favourites || [];
-      setFavourites(prevFavourites.filter((fav) => fav.bookId !== book.id));
+  const handleFavoriteClick = (book: Book, favouriteId?: string) => {
+    const removeItem = {
+      bookId: book.id,
+      id: favouriteId || "",
+      userId: currentUser?.id || "",
+    };
+    const prevFavourites = favourites || [];
+    setFavourites(prevFavourites.filter((fav) => fav.bookId !== book.id));
 
-      // Remove from favourites
-      removeFavourite(removeItem, {
-        onSuccess: () => {
-          setFavouritesChanged(true);
-        },
-        onError: () => {
-          // Revert on error
-          setFavourites(prevFavourites);
-        },
-      });
-    },
-    [
-      currentUser,
-      favourites,
-      removeFavourite,
-      setFavourites,
-      setFavouritesChanged,
-    ]
-  );
+    // Remove from favourites
+    removeFavourite(removeItem, {
+      onSuccess: () => {
+        setFavouritesChanged(true);
+      },
+      onError: () => {
+        // Revert on error
+        setFavourites(prevFavourites);
+      },
+    });
+  };
 
   return (
     <>
