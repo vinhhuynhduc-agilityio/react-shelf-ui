@@ -7,7 +7,6 @@ interface BookItemProps {
   authorAndYear: string;
   rating: number;
   imageUrl: string;
-  category: string;
   onClick?: (bookId: string) => void;
 }
 

@@ -23,7 +23,6 @@ const meta: Meta<typeof BookItem> = {
       control: { type: "number", min: 0, max: 5, step: 0.1 },
     },
     imageUrl: { description: "URL of the book's cover image", control: false },
-    category: { description: "Genre or category of the book", control: false },
     onClick: {
       action: "clicked",
       description: "Callback when the item is clicked",
@@ -48,6 +47,5 @@ export const BasicBookItem: Story = {
     authorAndYear: "F. Scott Fitzgerald, 1925",
     rating: 4.5,
     imageUrl: "https://covers.openlibrary.org/b/id/7222246-L.jpg",
-    category: "Classic",
   },
 };
