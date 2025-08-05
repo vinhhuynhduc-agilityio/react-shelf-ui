@@ -16,7 +16,7 @@ exports[`TextField matches snapshot 1`] = `
         class="relative"
       >
         <input
-          class="flex-1 p-2 border rounded-md text-[#4C535F] w-full pr-10 text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px] h-[40px] sm:h-[48px] md:h-[56px]"
+          class="flex-1 p-2 border rounded-md text-[#4C535F] w-full pr-10 h-[40px] sm:h-[48px] md:h-[56px] text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px]"
           data-testid="textfield-input"
           id="username"
           maxlength="255"

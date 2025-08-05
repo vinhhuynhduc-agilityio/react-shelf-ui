@@ -177,7 +177,7 @@ exports[`BookPreviewPage matches snapshot 1`] = `
             class="flex items-center space-x-2"
           >
             <div
-              class="flex items-center space-x-"
+              class="flex items-center"
             >
               <svg
                 class="text-yellow-400"

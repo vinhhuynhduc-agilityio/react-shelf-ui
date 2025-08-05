@@ -3,7 +3,7 @@
 exports[`RatingStars matches snapshot for custom maxStars 1`] = `
 <div>
   <div
-    class="flex items-center space-x-"
+    class="flex items-center"
   >
     <svg
       class="text-yellow-400"
@@ -124,7 +124,7 @@ exports[`RatingStars matches snapshot for custom maxStars 1`] = `
 exports[`RatingStars matches snapshot for default (5 stars) 1`] = `
 <div>
   <div
-    class="flex items-center space-x-"
+    class="flex items-center"
   >
     <svg
       class="text-yellow-400"
