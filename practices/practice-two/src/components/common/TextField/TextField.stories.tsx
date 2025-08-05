@@ -100,7 +100,7 @@ const meta: Meta<typeof TextField> = {
 export default meta;
 type Story = StoryObj<typeof TextField>;
 
-const TextFieldDemo = (args: React.ComponentProps<typeof TextField>) => {
+const TextFieldWrapper = (args: React.ComponentProps<typeof TextField>) => {
   const { register } = useForm();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -118,7 +118,7 @@ const TextFieldDemo = (args: React.ComponentProps<typeof TextField>) => {
 };
 
 export const BasicTextInput: Story = {
-  render: (args) => <TextFieldDemo {...args} />,
+  render: (args) => <TextFieldWrapper {...args} />,
   args: {
     name: "username",
     label: "Username",
@@ -128,7 +128,7 @@ export const BasicTextInput: Story = {
 };
 
 export const PasswordInputWithToggle: Story = {
-  render: (args) => <TextFieldDemo {...args} />,
+  render: (args) => <TextFieldWrapper {...args} />,
   args: {
     name: "password",
     label: "Password",
@@ -139,7 +139,7 @@ export const PasswordInputWithToggle: Story = {
 };
 
 export const TextareaWithMaxLength: Story = {
-  render: (args) => <TextFieldDemo {...args} />,
+  render: (args) => <TextFieldWrapper {...args} />,
   args: {
     name: "bio",
     label: "Bio",
@@ -151,7 +151,7 @@ export const TextareaWithMaxLength: Story = {
 };
 
 export const TextInputWithError: Story = {
-  render: (args) => <TextFieldDemo {...args} />,
+  render: (args) => <TextFieldWrapper {...args} />,
   args: {
     name: "email",
     label: "Email",
