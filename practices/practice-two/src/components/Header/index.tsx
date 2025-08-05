@@ -23,11 +23,8 @@ const Header: React.FC = () => {
 
   // stores
   const currentUser = useCurrentUser();
-  const logout = useUserStore((state) => state.logout);
-  const selectedFilter = useSearchFilterStore((state) => state.selectedFilter);
-  const setSelectedFilter = useSearchFilterStore(
-    (state) => state.setSelectedFilter
-  );
+  const { logout } = useUserStore();
+  const { selectedFilter, setSelectedFilter } = useSearchFilterStore();
   const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
   const searchTerm = useSearchStore((state) => state.searchTerm);
   const setSearchFromSidebar = useSearchStore(
