@@ -117,6 +117,8 @@ const TextFieldWrapper = (args: React.ComponentProps<typeof TextField>) => {
   );
 };
 
+TextFieldWrapper.displayName = "TextField";
+
 export const BasicTextInput: Story = {
   render: (args) => <TextFieldWrapper {...args} />,
   args: {
