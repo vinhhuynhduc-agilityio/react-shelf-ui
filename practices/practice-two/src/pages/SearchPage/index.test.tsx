@@ -74,9 +74,10 @@ describe("SearchPage", () => {
     });
     mockedUseAddFavouriteItem.mockReturnValue({ mutate: jest.fn() });
     mockedUseRemoveFavouriteItem.mockReturnValue({ mutate: jest.fn() });
-    mockedUseFavouritesStore.mockImplementation((cb) =>
-      cb({ favourites: [], setFavourites: jest.fn() })
-    );
+    mockedUseFavouritesStore.mockImplementation(() => ({
+      favourites: [],
+      setFavourites: jest.fn(),
+    }));
   });
 
   afterEach(() => {
@@ -151,9 +152,10 @@ describe("SearchPage", () => {
     mockedUseSearchStore.mockImplementation((cb) =>
       cb({ searchFromSidebar: false, searchTerm: "think" })
     );
-    mockedUseFavouritesStore.mockImplementation((cb) =>
-      cb({ favourites: [], setFavourites: jest.fn() })
-    );
+    mockedUseFavouritesStore.mockImplementation(() => ({
+      favourites: [],
+      setFavourites: jest.fn(),
+    }));
     render(<SearchPage />);
     expect(screen.getByText(/don't make me think/i)).toBeInTheDocument();
   });
@@ -165,12 +167,10 @@ describe("SearchPage", () => {
       }
     });
     const setFavouritesMock = jest.fn();
-    mockedUseFavouritesStore.mockImplementation((cb) =>
-      cb({
-        favourites: [],
-        setFavourites: setFavouritesMock,
-      })
-    );
+    mockedUseFavouritesStore.mockImplementation(() => ({
+      favourites: [],
+      setFavourites: setFavouritesMock,
+    }));
     mockedUseAddFavouriteItem.mockReturnValue({ mutate });
     render(<SearchPage />);
     const favButtons = screen.getAllByRole("button");
@@ -186,12 +186,10 @@ describe("SearchPage", () => {
       }
     });
     const setFavouritesMock = jest.fn();
-    mockedUseFavouritesStore.mockImplementation((cb) =>
-      cb({
-        favourites: MOCK_FAVOURITES,
-        setFavourites: setFavouritesMock,
-      })
-    );
+    mockedUseFavouritesStore.mockImplementation(() => ({
+      favourites: MOCK_FAVOURITES,
+      setFavourites: setFavouritesMock,
+    }));
     mockedUseRemoveFavouriteItem.mockReturnValue({ mutate });
     render(<SearchPage />);
     const favButtons = screen.getAllByRole("button");
@@ -207,12 +205,10 @@ describe("SearchPage", () => {
       isError: false,
       error: null,
     });
-    mockedUseFavouritesStore.mockImplementation((cb) =>
-      cb({
-        favourites: MOCK_FAVOURITES,
-        setFavourites: jest.fn(),
-      })
-    );
+    mockedUseFavouritesStore.mockImplementation(() => ({
+      favourites: MOCK_FAVOURITES,
+      setFavourites: jest.fn(),
+    }));
     mockedUseGetMyShelf.mockReturnValue({ data: MOCK_SHELVES });
     const { container } = render(<SearchPage />);
     expect(container).toMatchSnapshot();
