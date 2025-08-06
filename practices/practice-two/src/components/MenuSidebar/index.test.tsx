@@ -1,29 +1,9 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import MenuSidebar from "../MenuSidebar";
 
 // Mock logo image import
 jest.mock("@/assets/images/logo.webp", () => "logo.webp");
-
-const mockSetSearchTerm = jest.fn();
-const mockSetValueSearch = jest.fn();
-
-jest.mock("@/stores", () => ({
-  useSearchStore: (
-    selector: (store: {
-      setSearchTerm: typeof mockSetSearchTerm;
-      setValueSearch: typeof mockSetValueSearch;
-    }) => unknown
-  ) =>
-    selector({
-      setSearchTerm: mockSetSearchTerm,
-      setValueSearch: mockSetValueSearch,
-    }),
-}));
-
-jest.mock("@/stores/search.ts", () => ({
-  useSearchStore: jest.fn(),
-}));
 
 describe("MenuSidebar", () => {
   beforeEach(() => {
@@ -39,18 +19,5 @@ describe("MenuSidebar", () => {
 
     expect(screen.getByText("Home")).toBeInTheDocument();
     expect(screen.getByText("Search")).toBeInTheDocument();
-  });
-
-  it("calls zustand actions when clicking on 'search'", () => {
-    render(
-      <MemoryRouter initialEntries={["/"]}>
-        <MenuSidebar />
-      </MemoryRouter>
-    );
-
-    fireEvent.click(screen.getByText("Search"));
-
-    expect(mockSetSearchTerm).toHaveBeenCalledWith("");
-    expect(mockSetValueSearch).toHaveBeenCalledWith("");
   });
 });

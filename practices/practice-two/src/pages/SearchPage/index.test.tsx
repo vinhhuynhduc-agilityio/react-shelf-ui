@@ -5,7 +5,6 @@ import { MOCK_USER } from "@/__mocks__/user";
 import {
   useUserStore,
   useSearchStore,
-  useSearchFilterStore,
   usePendingFavouritesStore,
   useFavouritesStore,
 } from "@/stores";
@@ -20,7 +19,6 @@ import {
 jest.mock("@/stores", () => ({
   useUserStore: jest.fn(),
   useSearchStore: jest.fn(),
-  useSearchFilterStore: jest.fn(),
   usePendingFavouritesStore: jest.fn(),
   useFavouritesStore: jest.fn(),
 }));
@@ -35,7 +33,6 @@ jest.mock("@/hooks", () => ({
 const mockedUseBooksQuery = useBooksQuery as jest.Mock;
 const mockedUseUserStore = useUserStore as unknown as jest.Mock;
 const mockedUseSearchStore = useSearchStore as unknown as jest.Mock;
-const mockedUseFilterStore = useSearchFilterStore as unknown as jest.Mock;
 const mockedUsePendingFavouritesStore =
   usePendingFavouritesStore as unknown as jest.Mock;
 const mockedUseFetchFavourites = useFetchFavourites as jest.Mock;
@@ -59,12 +56,12 @@ describe("SearchPage", () => {
     mockedUseUserStore.mockImplementation((cb) =>
       cb({ currentUser: MOCK_USER })
     );
-    mockedUseFilterStore.mockImplementation((cb) =>
-      cb({ selectedFilter: "Title" })
+    mockedUseSearchStore.mockImplementation((cb) =>
+      cb({ searchTerm: "", selectedFilter: "Title" })
     );
-    mockedUsePendingFavouritesStore.mockImplementation((cb) =>
-      cb({ pendingFavouritesActions: [] })
-    );
+    mockedUsePendingFavouritesStore.mockImplementation(() => ({
+      pendingFavouritesActions: [],
+    }));
     mockedUseGetMyShelf.mockReturnValue({
       data: MOCK_SHELVES,
       isFetching: false,
@@ -132,6 +129,9 @@ describe("SearchPage", () => {
       isError: false,
       error: null,
     });
+    mockedUseSearchStore.mockImplementation((cb) =>
+      cb({ searchTerm: "notfound" })
+    );
     render(<SearchPage />);
     expect(screen.getByText(/no books found/i)).toBeInTheDocument();
   });
@@ -143,6 +143,9 @@ describe("SearchPage", () => {
       isError: false,
       error: null,
     });
+    mockedUseSearchStore.mockImplementation((cb) =>
+      cb({ searchTerm: "think", selectedFilter: "Title" })
+    );
     mockedUseFavouritesStore.mockImplementation(() => ({
       favourites: [],
       setFavourites: jest.fn(),

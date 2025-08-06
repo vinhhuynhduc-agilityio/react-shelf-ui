@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 // stores
-import { useSearchFilterStore, useSearchStore, useUserStore } from "@/stores";
+import { useSearchStore, useUserStore } from "@/stores";
 
 // constants
 import { profileOptions, ROUTE, searchOptions } from "@/constants";
@@ -24,7 +24,8 @@ const Header: React.FC = () => {
   // stores
   const currentUser = useCurrentUser();
   const { logout } = useUserStore();
-  const { selectedFilter, setSelectedFilter } = useSearchFilterStore();
+  const selectedFilter = useSearchStore((state) => state.selectedFilter);
+  const setSelectedFilter = useSearchStore((state) => state.setSelectedFilter);
   const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
   const searchTerm = useSearchStore((state) => state.searchTerm);
   const valueSearch = useSearchStore((state) => state.valueSearch);

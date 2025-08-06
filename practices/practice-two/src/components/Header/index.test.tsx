@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@/helpers/test-utils";
 import Header from ".";
-import { useSearchFilterStore, useSearchStore, useUserStore } from "@/stores";
+import { useSearchStore, useUserStore } from "@/stores";
 
 const navigate = jest.fn();
 
@@ -16,7 +16,6 @@ jest.mock("@/stores", () => {
   return {
     ...actual,
     useUserStore: jest.fn(),
-    useSearchFilterStore: jest.fn(),
     useSearchStore: jest.fn(),
   };
 });
@@ -27,22 +26,19 @@ jest.mock("react-router-dom", () => ({
 }));
 
 const mockedUseUserStore = useUserStore as unknown as jest.Mock;
-const mockedFilterStore = useSearchFilterStore as unknown as jest.Mock;
 const mockedSearchStore = useSearchStore as unknown as jest.Mock;
 
 describe("Header", () => {
   beforeEach(() => {
     mockedUseUserStore.mockImplementation(() => ({ logout: jest.fn() }));
-    mockedFilterStore.mockImplementation(() => ({
-      selectedFilter: "all",
-      setSelectedFilter: jest.fn(),
-    }));
     mockedSearchStore.mockImplementation((cb) =>
       cb({
         setSearchTerm: jest.fn(),
         searchTerm: "",
         valueSearch: "",
         setValueSearch: jest.fn(),
+        selectedFilter: "all",
+        setSelectedFilter: jest.fn(),
       })
     );
   });
@@ -112,10 +108,16 @@ describe("Header", () => {
 
   it("calls setSelectedFilter when filter is changed", () => {
     const setSelectedFilter = jest.fn();
-    mockedFilterStore.mockImplementation(() => ({
-      selectedFilter: "All",
-      setSelectedFilter,
-    }));
+    mockedSearchStore.mockImplementation((cb) =>
+      cb({
+        setSearchTerm: jest.fn(),
+        searchTerm: "do",
+        selectedFilter: "",
+        setSelectedFilter,
+        valueSearch: "do",
+        setValueSearch: jest.fn(),
+      })
+    );
 
     render(<Header />);
     const filterBtn = screen.getByTestId("filter-btn");
