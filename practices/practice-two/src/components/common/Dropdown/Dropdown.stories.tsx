@@ -129,7 +129,7 @@ export const BasicDropdown: Story = {
   setIsOpen={setIsOpen}
   triggerRef={triggerRef}
   align="left"
-  onSelect={() => {}}
+  onSelect={(option) => handleSelect(option)}
 />`,
       },
     },
@@ -151,7 +151,7 @@ export const DropdownRightAlignedToButton: Story = {
   setIsOpen={setIsOpen}
   triggerRef={triggerRef}
   align="right"
-  onSelect={() => {}}
+  onSelect={(option) => handleSelect(option)}
 />`,
       },
     },

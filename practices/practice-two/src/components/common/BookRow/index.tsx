@@ -83,7 +83,6 @@ const BookRow: React.FC<RowBookProps> = memo(
             variant="outline"
             onClick={handlePreviewClick}
             label="Preview"
-            additionalClasses="text-[12px] w-[70px] h-[25px] md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px] md:text-[14px]"
           />
         </div>
       </div>

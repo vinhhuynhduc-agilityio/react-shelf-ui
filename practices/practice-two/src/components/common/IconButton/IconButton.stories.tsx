@@ -17,7 +17,7 @@ const meta: Meta<typeof IconButton> = {
       control: false,
     },
     classNameIcon: {
-      control: "text",
+      control: false,
       description: "Custom class name for the icon element.",
     },
     filled: {
@@ -45,7 +45,7 @@ const meta: Meta<typeof IconButton> = {
       },
     },
     ariaLabel: {
-      control: "text",
+      control: false,
       description: "ARIA label for screen readers.",
     },
     onClick: {
@@ -63,11 +63,12 @@ const meta: Meta<typeof IconButton> = {
       description: "Disable the button.",
     },
     additionalClasses: {
-      control: "text",
+      control: false,
+
       description: "Custom class name for the button container.",
     },
     dataTestId: {
-      control: "text",
+      control: false,
       description: "Value for `data-testid` attribute (used in testing).",
     },
     type: {
@@ -110,6 +111,23 @@ export const ReviewIconVertical: Story = {
     icon: ReviewIcon,
     label: "Review",
     direction: "column",
+    onClick: () => alert("Clicked!"),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "An icon button with a review icon and label displayed vertically.",
+      },
+      source: {
+        code: `<IconButton
+  icon={ReviewIcon}
+  label="Review"
+  direction="column"
+  onClick={() => alert("Clicked!")}
+/>`,
+      },
+    },
   },
 };
 
@@ -119,6 +137,24 @@ export const FilterIconRight: Story = {
     label: "Filter",
     iconPosition: "right",
     classNameIcon: "ml-2",
+    onClick: () => alert("Clicked!"),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "An icon button with a filter icon and label positioned to the right.",
+      },
+      source: {
+        code: `<IconButton
+  icon={FilterDropdownIcon}
+  label="Filter"
+  iconPosition="right"
+  classNameIcon="ml-2"
+  onClick={() => alert("Clicked!")}
+/>`,
+      },
+    },
   },
 };
 
@@ -128,6 +164,23 @@ export const BackIconLeft: Story = {
     label: "Back",
     iconPosition: "left",
     classNameIcon: "mr-2",
+    onClick: () => alert("Clicked!"),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "An icon button with an arrow back icon and label.",
+      },
+      source: {
+        code: `<IconButton
+  icon={ArrowBackIcon}
+  label="Back"
+  iconPosition="left"
+  classNameIcon="mr-2"
+  onClick={() => alert("Clicked!")}
+/>`,
+      },
+    },
   },
 };
 
@@ -137,5 +190,20 @@ export const DisabledIcon: Story = {
     label: "Review",
     direction: "column",
     disabled: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "An icon button that is disabled and cannot be interacted with.",
+      },
+      source: {
+        code: `<IconButton
+  icon={ReviewIcon}
+  label="Review"
+  direction="column"
+  disabled={true}
+/>`,
+      },
+    },
   },
 };
