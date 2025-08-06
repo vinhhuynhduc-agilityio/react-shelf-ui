@@ -19,33 +19,28 @@ describe("parseAuthorAndYear", () => {
 });
 
 describe("filterBooks", () => {
-  it("returns all books if searchFromSidebar is true", () => {
-    const result = filterBooks(MOCK_BOOKS, "anything", "Title", true);
-    expect(result).toEqual(MOCK_BOOKS);
-  });
-
   it("filters by title", () => {
-    const result = filterBooks(MOCK_BOOKS, "think", "Title", false);
+    const result = filterBooks(MOCK_BOOKS, "think", "Title");
     expect(result).toEqual([MOCK_BOOKS[0]]);
   });
 
   it("filters by author", () => {
-    const result = filterBooks(MOCK_BOOKS, "don", "Author", false);
+    const result = filterBooks(MOCK_BOOKS, "don", "Author");
     expect(result).toEqual([MOCK_BOOKS[1]]);
   });
 
   it("filters by category", () => {
-    const result = filterBooks(MOCK_BOOKS, "computer", "Subjects", false);
+    const result = filterBooks(MOCK_BOOKS, "computer", "Subjects");
     expect(result).toEqual(MOCK_BOOKS);
   });
 
   it("returns empty if no match", () => {
-    const result = filterBooks(MOCK_BOOKS, "notfound", "Title", false);
+    const result = filterBooks(MOCK_BOOKS, "notfound", "Title");
     expect(result).toEqual([]);
   });
 
   it("returns empty if selectedFilter is invalid", () => {
-    const result = filterBooks(MOCK_BOOKS, "think", "Invalid", false);
+    const result = filterBooks(MOCK_BOOKS, "think", "Invalid");
     expect(result).toEqual([]);
   });
 });

@@ -68,7 +68,6 @@ const SearchPage: React.FC = () => {
   const [favouritesChanged, setFavouritesChanged] = useState(false);
 
   // stores
-  const searchFromSidebar = useSearchStore((state) => state.searchFromSidebar);
   const searchTerm = useSearchStore((state) => state.searchTerm);
   const selectedFilter = useSearchFilterStore((state) => state.selectedFilter);
   const pendingFavouritesActions = usePendingFavouritesStore(
@@ -104,12 +103,7 @@ const SearchPage: React.FC = () => {
   }, [setFavouritesChanged, queryClient, currentUser?.id]);
 
   // Filter books based on search term and selected filter
-  const filteredBooks = filterBooks(
-    books,
-    searchTerm,
-    selectedFilter,
-    searchFromSidebar
-  );
+  const filteredBooks = filterBooks(books, searchTerm, selectedFilter);
 
   // Navigate to book preview page with book details and from route
   const handleClickPreview = useCallback(

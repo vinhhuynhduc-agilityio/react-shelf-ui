@@ -27,9 +27,6 @@ const Header: React.FC = () => {
   const { selectedFilter, setSelectedFilter } = useSearchFilterStore();
   const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
   const searchTerm = useSearchStore((state) => state.searchTerm);
-  const setSearchFromSidebar = useSearchStore(
-    (state) => state.setSearchFromSidebar
-  );
   const valueSearch = useSearchStore((state) => state.valueSearch);
   const setValueSearch = useSearchStore((state) => state.setValueSearch);
 
@@ -68,7 +65,6 @@ const Header: React.FC = () => {
       navigate(ROUTE.SEARCH);
     }
 
-    setSearchFromSidebar(false);
     setSearchTerm(trimmedValue);
   };
 

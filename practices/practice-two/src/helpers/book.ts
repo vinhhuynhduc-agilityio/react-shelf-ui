@@ -17,11 +17,8 @@ export const parseAuthorAndYear = (input: string): AuthorAndYear => {
 export const filterBooks = (
   books: Book[],
   searchTerm: string,
-  selectedFilter: string,
-  searchFromSidebar: boolean
+  selectedFilter: string
 ): Book[] => {
-  if (searchFromSidebar) return books;
-
   const filterMapping: Record<string, (book: Book) => string> = {
     Title: (book) => book.title,
     Author: (book) => parseAuthorAndYear(book.authorAndYear).authorName,

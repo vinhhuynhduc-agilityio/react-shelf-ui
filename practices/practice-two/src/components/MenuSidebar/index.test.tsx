@@ -6,20 +6,17 @@ import MenuSidebar from "../MenuSidebar";
 jest.mock("@/assets/images/logo.webp", () => "logo.webp");
 
 const mockSetSearchTerm = jest.fn();
-const mockSetSearchFromSidebar = jest.fn();
 const mockSetValueSearch = jest.fn();
 
 jest.mock("@/stores", () => ({
   useSearchStore: (
     selector: (store: {
       setSearchTerm: typeof mockSetSearchTerm;
-      setSearchFromSidebar: typeof mockSetSearchFromSidebar;
       setValueSearch: typeof mockSetValueSearch;
     }) => unknown
   ) =>
     selector({
       setSearchTerm: mockSetSearchTerm,
-      setSearchFromSidebar: mockSetSearchFromSidebar,
       setValueSearch: mockSetValueSearch,
     }),
 }));
@@ -53,7 +50,6 @@ describe("MenuSidebar", () => {
 
     fireEvent.click(screen.getByText("Search"));
 
-    expect(mockSetSearchFromSidebar).toHaveBeenCalledWith(true);
     expect(mockSetSearchTerm).toHaveBeenCalledWith("");
     expect(mockSetValueSearch).toHaveBeenCalledWith("");
   });

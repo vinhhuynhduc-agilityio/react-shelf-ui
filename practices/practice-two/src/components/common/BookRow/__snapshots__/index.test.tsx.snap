@@ -74,7 +74,7 @@ exports[`BookRow matches snapshot 1`] = `
       class="text-center"
     >
       <button
-        class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all rounded-[5px] p-[4px] [object Object] text-[12px] w-[70px] h-[25px] md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px] md:text-[14px]"
+        class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all text-[12px] w-[70px] h-[25px] md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px] md:text-[14px] rounded-[5px] p-[4px] [object Object]"
         type="button"
       >
         Preview

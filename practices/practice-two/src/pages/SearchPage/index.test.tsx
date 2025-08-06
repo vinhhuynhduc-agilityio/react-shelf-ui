@@ -59,9 +59,6 @@ describe("SearchPage", () => {
     mockedUseUserStore.mockImplementation((cb) =>
       cb({ currentUser: MOCK_USER })
     );
-    mockedUseSearchStore.mockImplementation((cb) =>
-      cb({ searchFromSidebar: false, searchTerm: "" })
-    );
     mockedUseFilterStore.mockImplementation((cb) =>
       cb({ selectedFilter: "Title" })
     );
@@ -135,9 +132,6 @@ describe("SearchPage", () => {
       isError: false,
       error: null,
     });
-    mockedUseSearchStore.mockImplementation((cb) =>
-      cb({ searchFromSidebar: false, searchTerm: "notfound" })
-    );
     render(<SearchPage />);
     expect(screen.getByText(/no books found/i)).toBeInTheDocument();
   });
@@ -149,9 +143,6 @@ describe("SearchPage", () => {
       isError: false,
       error: null,
     });
-    mockedUseSearchStore.mockImplementation((cb) =>
-      cb({ searchFromSidebar: false, searchTerm: "think" })
-    );
     mockedUseFavouritesStore.mockImplementation(() => ({
       favourites: [],
       setFavourites: jest.fn(),

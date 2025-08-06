@@ -41,7 +41,6 @@ describe("Header", () => {
       cb({
         setSearchTerm: jest.fn(),
         searchTerm: "",
-        setSearchFromSidebar: jest.fn(),
         valueSearch: "",
         setValueSearch: jest.fn(),
       })
@@ -98,7 +97,6 @@ describe("Header", () => {
       cb({
         searchTerm: "",
         setSearchTerm,
-        setSearchFromSidebar: jest.fn(),
         valueSearch: "",
         setValueSearch,
       })
@@ -130,12 +128,10 @@ describe("Header", () => {
 
   it("calls handleSearch when pressing Enter in search input", () => {
     const setSearchTerm = jest.fn();
-    const setSearchFromSidebar = jest.fn();
     mockedSearchStore.mockImplementation((cb) =>
       cb({
         setSearchTerm,
         searchTerm: "",
-        setSearchFromSidebar,
         valueSearch: "react",
         setValueSearch: jest.fn(),
       })
@@ -145,7 +141,6 @@ describe("Header", () => {
     const input = screen.getByPlaceholderText(/search/i);
     fireEvent.keyDown(input, { key: "Enter" });
     expect(setSearchTerm).toHaveBeenCalledWith("react");
-    expect(setSearchFromSidebar).toHaveBeenCalledWith(false);
     expect(navigate).toHaveBeenCalledWith("/search");
   });
 
