@@ -70,6 +70,7 @@ const MyShelfPage: React.FC = () => {
       // Invalidate the shelf query if there are changes
       // when the component unmounts or dependencies change
       if (shelfChangedRef.current) {
+        console.log("debug unmount");
         queryClient.invalidateQueries({
           queryKey: QUERY_KEY_MY_SHELF(currentUser?.id ?? ""),
         });
