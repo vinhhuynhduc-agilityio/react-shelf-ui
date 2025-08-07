@@ -24,12 +24,14 @@ const Header: React.FC = () => {
   // stores
   const currentUser = useCurrentUser();
   const { logout } = useUserStore();
-  const selectedFilter = useSearchStore((state) => state.selectedFilter);
-  const setSelectedFilter = useSearchStore((state) => state.setSelectedFilter);
-  const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
-  const searchTerm = useSearchStore((state) => state.searchTerm);
-  const valueSearch = useSearchStore((state) => state.valueSearch);
-  const setValueSearch = useSearchStore((state) => state.setValueSearch);
+  const {
+    selectedFilter,
+    setSelectedFilter,
+    setSearchTerm,
+    setValueSearch,
+    searchTerm,
+    valueSearch,
+  } = useSearchStore();
 
   // states
   const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);

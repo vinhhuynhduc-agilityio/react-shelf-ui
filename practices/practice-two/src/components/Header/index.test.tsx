@@ -31,16 +31,14 @@ const mockedSearchStore = useSearchStore as unknown as jest.Mock;
 describe("Header", () => {
   beforeEach(() => {
     mockedUseUserStore.mockImplementation(() => ({ logout: jest.fn() }));
-    mockedSearchStore.mockImplementation((cb) =>
-      cb({
-        setSearchTerm: jest.fn(),
-        searchTerm: "",
-        valueSearch: "",
-        setValueSearch: jest.fn(),
-        selectedFilter: "all",
-        setSelectedFilter: jest.fn(),
-      })
-    );
+    mockedSearchStore.mockImplementation(() => ({
+      setSearchTerm: jest.fn(),
+      searchTerm: "",
+      valueSearch: "",
+      setValueSearch: jest.fn(),
+      selectedFilter: "all",
+      setSelectedFilter: jest.fn(),
+    }));
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -89,14 +87,12 @@ describe("Header", () => {
     const setSearchTerm = jest.fn();
     const setValueSearch = jest.fn();
 
-    mockedSearchStore.mockImplementation((cb) =>
-      cb({
-        searchTerm: "",
-        setSearchTerm,
-        valueSearch: "",
-        setValueSearch,
-      })
-    );
+    mockedSearchStore.mockImplementation(() => ({
+      searchTerm: "",
+      setSearchTerm,
+      valueSearch: "",
+      setValueSearch,
+    }));
 
     render(<Header />);
 
@@ -108,16 +104,14 @@ describe("Header", () => {
 
   it("calls setSelectedFilter when filter is changed", () => {
     const setSelectedFilter = jest.fn();
-    mockedSearchStore.mockImplementation((cb) =>
-      cb({
-        setSearchTerm: jest.fn(),
-        searchTerm: "do",
-        selectedFilter: "",
-        setSelectedFilter,
-        valueSearch: "do",
-        setValueSearch: jest.fn(),
-      })
-    );
+    mockedSearchStore.mockImplementation(() => ({
+      setSearchTerm: jest.fn(),
+      searchTerm: "do",
+      selectedFilter: "",
+      setSelectedFilter,
+      valueSearch: "do",
+      setValueSearch: jest.fn(),
+    }));
 
     render(<Header />);
     const filterBtn = screen.getByTestId("filter-btn");
@@ -130,14 +124,12 @@ describe("Header", () => {
 
   it("calls handleSearch when pressing Enter in search input", () => {
     const setSearchTerm = jest.fn();
-    mockedSearchStore.mockImplementation((cb) =>
-      cb({
-        setSearchTerm,
-        searchTerm: "",
-        valueSearch: "react",
-        setValueSearch: jest.fn(),
-      })
-    );
+    mockedSearchStore.mockImplementation(() => ({
+      setSearchTerm,
+      searchTerm: "",
+      valueSearch: "react",
+      setValueSearch: jest.fn(),
+    }));
 
     render(<Header />);
     const input = screen.getByPlaceholderText(/search/i);
