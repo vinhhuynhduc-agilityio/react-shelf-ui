@@ -70,7 +70,6 @@ const MyShelfPage: React.FC = () => {
       // Invalidate the shelf query if there are changes
       // when the component unmounts or dependencies change
       if (shelfChangedRef.current) {
-        console.log("debug unmount");
         queryClient.invalidateQueries({
           queryKey: QUERY_KEY_MY_SHELF(currentUser?.id ?? ""),
         });
@@ -84,12 +83,10 @@ const MyShelfPage: React.FC = () => {
     setShelf(
       prevShelf.filter((item: ShelfItem) => item.bookId !== shelfItem.bookId)
     );
+    setShelfChanged(true);
 
     // Remove the book from the shelf
     removeShelfItem(shelfItem, {
-      onSuccess: () => {
-        setShelfChanged(true);
-      },
       onError: () => {
         // Revert on error
         setShelf(prevShelf);
