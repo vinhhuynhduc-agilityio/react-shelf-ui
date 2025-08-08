@@ -1,4 +1,4 @@
-import { Book, FavouriteItem } from "@/types";
+import { Book, FavouriteItem, ShelfItem } from "@/types";
 
 type AuthorAndYear = {
   authorName: string;
@@ -50,4 +50,19 @@ export const filterFavouritedBooks = (
   return books.filter((book) =>
     favourites.some((favourite) => favourite.bookId === book.id)
   );
+};
+
+export const getBookStatus = (
+  bookId: string,
+  shelves: ShelfItem[] = [],
+  favourites: FavouriteItem[] = [],
+  pendingFavouritesActions: string[] = [],
+  isBookInShelf: (bookId: string, shelf: ShelfItem[]) => boolean
+) => {
+  const isInShelf = isBookInShelf(bookId, shelves);
+  const isFavorite = favourites.some((fav) => fav.bookId === bookId);
+  const favouriteId = favourites.find((fav) => fav.bookId === bookId)?.id;
+  const isDisabled = pendingFavouritesActions.includes(bookId);
+
+  return { isInShelf, isFavorite, favouriteId, isDisabled };
 };

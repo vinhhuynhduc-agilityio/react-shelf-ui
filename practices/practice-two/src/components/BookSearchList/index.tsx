@@ -6,6 +6,9 @@ import { Book, FavouriteItem, ShelfItem } from "@/types";
 // components
 import { BookRow } from "@/components/common";
 
+// helpers
+import { getBookStatus } from "@/helpers";
+
 interface BookSearchListProps {
   books: Book[];
   shelves: ShelfItem[];
@@ -38,12 +41,14 @@ const BookSearchList: React.FC<BookSearchListProps> = ({
   return (
     <>
       {books.map((book) => {
-        const isInShelf = isBookInShelf(book.id, shelves ?? []);
-        const isFavorite = favourites?.some((fav) => fav.bookId === book.id);
-        const favouriteId = favourites?.find(
-          (fav) => fav.bookId === book.id
-        )?.id;
-        const isDisabled = pendingFavouritesActions.includes(book.id);
+        const { isInShelf, isFavorite, favouriteId, isDisabled } =
+          getBookStatus(
+            book.id,
+            shelves,
+            favourites,
+            pendingFavouritesActions,
+            isBookInShelf
+          );
 
         return (
           <BookRow
