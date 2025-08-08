@@ -1,21 +1,21 @@
 import { Navigate } from "react-router-dom";
 
-// hooks
-import { useCurrentUser } from "@/hooks";
-
 // constants
 import { ROUTE } from "@/constants";
 
+// stores
+import { useUserStore } from "@/stores";
+
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
-	children,
+  children,
 }) => {
-	const currentUser = useCurrentUser();
+  const { currentUser } = useUserStore();
 
-	if (!currentUser) {
-		return <Navigate to={ROUTE.LOGIN} replace />;
-	}
+  if (!currentUser) {
+    return <Navigate to={ROUTE.LOGIN} replace />;
+  }
 
-	return <>{children}</>;
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

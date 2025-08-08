@@ -41,7 +41,7 @@ import { QUERY_KEY_MY_FAVOURITE, ROUTE } from "@/constants";
 const SearchPage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const currentUser = useUserStore((state) => state.currentUser);
+  const { currentUser } = useUserStore();
 
   // Fetch data from the API;
   const {
@@ -67,8 +67,7 @@ const SearchPage: React.FC = () => {
   const [favouritesChanged, setFavouritesChanged] = useState(false);
 
   // stores
-  const searchTerm = useSearchStore((state) => state.searchTerm);
-  const selectedFilter = useSearchStore((state) => state.selectedFilter);
+  const { searchTerm, selectedFilter } = useSearchStore();
   const { pendingFavouritesActions } = usePendingFavouritesStore();
   const { favourites, setFavourites } = useFavouritesStore();
 

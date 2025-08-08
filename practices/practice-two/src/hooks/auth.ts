@@ -13,11 +13,11 @@ import { SUCCESS_MESSAGE } from "@/constants";
 import { useToastStore } from "@/stores";
 
 export const useRegisterUser = () => {
-	const showToast = useToastStore((state) => state.showToast);
+  const { showToast } = useToastStore();
 
-	return useMutation({
-		mutationFn: registerUser,
-		onSuccess: () => showToast(SUCCESS_MESSAGE.REGISTRATION, "success"),
-		onError: () => showDefaultErrorToast(),
-	});
+  return useMutation({
+    mutationFn: registerUser,
+    onSuccess: () => showToast(SUCCESS_MESSAGE.REGISTRATION, "success"),
+    onError: () => showDefaultErrorToast(),
+  });
 };

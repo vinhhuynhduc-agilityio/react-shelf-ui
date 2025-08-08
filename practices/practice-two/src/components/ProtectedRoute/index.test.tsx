@@ -1,36 +1,40 @@
-import { render } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { render, screen, wrapper } from "@/helpers/test-utils";
 import ProtectedRoute from ".";
-import { useCurrentUser } from "@/hooks";
+import { useUserStore } from "@/stores";
 
-jest.mock("@/hooks", () => ({
-	useCurrentUser: jest.fn(),
+jest.mock("@/stores", () => ({
+  useUserStore: jest.fn(),
 }));
 
+const mockedUseUserStore = useUserStore as unknown as jest.Mock;
+
 describe("ProtectedRoute", () => {
-	const TestChild = () => <div>Protected Content</div>;
+  beforeEach(() => {
+    // Clear mocks before each test
+    jest.clearAllMocks();
+  });
 
-	const setup = (user: unknown) => {
-		(useCurrentUser as jest.Mock).mockReturnValue(user);
-		return render(
-			<MemoryRouter initialEntries={["/protected"]}>
-				<ProtectedRoute>
-					<TestChild />
-				</ProtectedRoute>
-			</MemoryRouter>
-		);
-	};
+  it("redirects to login if not authenticated", () => {
+    mockedUseUserStore.mockReturnValue({ currentUser: null });
+    render(
+      <ProtectedRoute>
+        <div>Private Content</div>
+      </ProtectedRoute>,
+      { wrapper: wrapper }
+    );
+    expect(screen.queryByText("Private Content")).not.toBeInTheDocument();
+  });
 
-	it("renders children if user exists", () => {
-		const { getByText, container } = setup({ id: 1, name: "User" });
-		expect(getByText("Protected Content")).toBeInTheDocument();
-		expect(container).toMatchSnapshot();
-	});
-
-	it("redirects to login if no user", () => {
-		const { container } = setup(null);
-		// Should render a Navigate component
-		expect(container.innerHTML).toBe("");
-		expect(container).toMatchSnapshot();
-	});
+  it("renders children if authenticated", () => {
+    mockedUseUserStore.mockReturnValue({
+      currentUser: { id: "1", name: "User" },
+    });
+    render(
+      <ProtectedRoute>
+        <div>Private Content</div>
+      </ProtectedRoute>,
+      { wrapper: wrapper }
+    );
+    expect(screen.getByText("Private Content")).toBeInTheDocument();
+  });
 });

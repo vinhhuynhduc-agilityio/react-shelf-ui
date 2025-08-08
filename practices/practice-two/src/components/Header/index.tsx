@@ -11,9 +11,6 @@ import { profileOptions, ROUTE, searchOptions } from "@/constants";
 import { Avatar, Dropdown, IconButton } from "@/components";
 import { FilterDropdownIcon, SearchIconFilled } from "@/components/icons";
 
-// hooks
-import { useCurrentUser } from "@/hooks";
-
 // types
 import { DropdownOption } from "@/types";
 
@@ -22,20 +19,15 @@ const Header: React.FC = () => {
   const location = useLocation();
 
   // stores
-  const currentUser = useCurrentUser();
+  const { currentUser } = useUserStore();
   const { logout } = useUserStore();
-  const {
-    selectedFilter,
-    setSelectedFilter,
-    setSearchTerm,
-    setValueSearch,
-    searchTerm,
-    valueSearch,
-  } = useSearchStore();
+  const { selectedFilter, setSelectedFilter, setSearchTerm, searchTerm } =
+    useSearchStore();
 
   // states
   const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
   const [isFilterMenuOpen, setFilterMenuOpen] = useState(false);
+  const [valueSearch, setValueSearch] = useState("");
 
   // Create triggerRef for filter and profile buttons
   const filterButtonRef = useRef(null);

@@ -53,12 +53,11 @@ describe("SearchPage", () => {
       isError: false,
       isFetching: false,
     });
-    mockedUseUserStore.mockImplementation((cb) =>
-      cb({ currentUser: MOCK_USER })
-    );
-    mockedUseSearchStore.mockImplementation((cb) =>
-      cb({ searchTerm: "", selectedFilter: "Title" })
-    );
+    mockedUseUserStore.mockImplementation(() => ({ currentUser: MOCK_USER }));
+    mockedUseSearchStore.mockImplementation(() => ({
+      searchTerm: "",
+      selectedFilter: "Title",
+    }));
     mockedUsePendingFavouritesStore.mockImplementation(() => ({
       pendingFavouritesActions: [],
     }));
@@ -129,9 +128,7 @@ describe("SearchPage", () => {
       isError: false,
       error: null,
     });
-    mockedUseSearchStore.mockImplementation((cb) =>
-      cb({ searchTerm: "notfound" })
-    );
+    mockedUseSearchStore.mockImplementation(() => ({ searchTerm: "notfound" }));
     render(<SearchPage />);
     expect(screen.getByText(/no books found/i)).toBeInTheDocument();
   });
@@ -143,9 +140,10 @@ describe("SearchPage", () => {
       isError: false,
       error: null,
     });
-    mockedUseSearchStore.mockImplementation((cb) =>
-      cb({ searchTerm: "think", selectedFilter: "Title" })
-    );
+    mockedUseSearchStore.mockImplementation(() => ({
+      searchTerm: "think",
+      selectedFilter: "Title",
+    }));
     mockedUseFavouritesStore.mockImplementation(() => ({
       favourites: [],
       setFavourites: jest.fn(),

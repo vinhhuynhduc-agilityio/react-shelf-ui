@@ -4,13 +4,6 @@ import { useSearchStore, useUserStore } from "@/stores";
 
 const navigate = jest.fn();
 
-jest.mock("@/hooks", () => ({
-  useCurrentUser: () => ({
-    fullName: "Test User",
-    avatarUrl: "https://example.com/avatar.png",
-  }),
-}));
-
 jest.mock("@/stores", () => {
   const actual = jest.requireActual("@/stores");
   return {
@@ -30,12 +23,16 @@ const mockedSearchStore = useSearchStore as unknown as jest.Mock;
 
 describe("Header", () => {
   beforeEach(() => {
-    mockedUseUserStore.mockImplementation(() => ({ logout: jest.fn() }));
+    mockedUseUserStore.mockImplementation(() => ({
+      logout: jest.fn(),
+      currentUser: {
+        fullName: "Test User",
+        avatarUrl: "https://example.com/avatar.png",
+      },
+    }));
     mockedSearchStore.mockImplementation(() => ({
       setSearchTerm: jest.fn(),
       searchTerm: "",
-      valueSearch: "",
-      setValueSearch: jest.fn(),
       selectedFilter: "all",
       setSelectedFilter: jest.fn(),
     }));
@@ -85,21 +82,16 @@ describe("Header", () => {
 
   it("calls setSearchTerm when typing in search bar", async () => {
     const setSearchTerm = jest.fn();
-    const setValueSearch = jest.fn();
 
     mockedSearchStore.mockImplementation(() => ({
       searchTerm: "",
       setSearchTerm,
-      valueSearch: "",
-      setValueSearch,
     }));
 
     render(<Header />);
 
     const input = screen.getByPlaceholderText(/search/i);
-    screen.debug(input);
     fireEvent.input(input, { target: { value: "react" } });
-    expect(setValueSearch).toHaveBeenCalledWith("react");
   });
 
   it("calls setSelectedFilter when filter is changed", () => {
@@ -109,8 +101,6 @@ describe("Header", () => {
       searchTerm: "do",
       selectedFilter: "",
       setSelectedFilter,
-      valueSearch: "do",
-      setValueSearch: jest.fn(),
     }));
 
     render(<Header />);
@@ -127,12 +117,13 @@ describe("Header", () => {
     mockedSearchStore.mockImplementation(() => ({
       setSearchTerm,
       searchTerm: "",
-      valueSearch: "react",
-      setValueSearch: jest.fn(),
+      selectedFilter: "Title",
+      setSelectedFilter: jest.fn(),
     }));
 
     render(<Header />);
     const input = screen.getByPlaceholderText(/search/i);
+    fireEvent.change(input, { target: { value: "react" } });
     fireEvent.keyDown(input, { key: "Enter" });
     expect(setSearchTerm).toHaveBeenCalledWith("react");
     expect(navigate).toHaveBeenCalledWith("/search");

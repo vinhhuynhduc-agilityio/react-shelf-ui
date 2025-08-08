@@ -2,25 +2,26 @@ import { useSearchStore } from "../search";
 
 describe("useSearchStore", () => {
   beforeEach(() => {
+    // Reset store state before each test
     useSearchStore.setState({
       searchTerm: "",
-      valueSearch: "",
+      selectedFilter: "Title",
     });
   });
 
   it("should have initial state", () => {
     const state = useSearchStore.getState();
     expect(state.searchTerm).toBe("");
-    expect(state.valueSearch).toBe("");
+    expect(state.selectedFilter).toBe("Title");
   });
 
   it("should set searchTerm", () => {
-    useSearchStore.getState().setSearchTerm("abc");
-    expect(useSearchStore.getState().searchTerm).toBe("abc");
+    useSearchStore.getState().setSearchTerm("react");
+    expect(useSearchStore.getState().searchTerm).toBe("react");
   });
 
-  it("should set valueSearch", () => {
-    useSearchStore.getState().setValueSearch("xyz");
-    expect(useSearchStore.getState().valueSearch).toBe("xyz");
+  it("should set selectedFilter", () => {
+    useSearchStore.getState().setSelectedFilter("Author");
+    expect(useSearchStore.getState().selectedFilter).toBe("Author");
   });
 });
