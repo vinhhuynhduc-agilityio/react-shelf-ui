@@ -35,10 +35,10 @@ const SignInPage: React.FC = () => {
     formState: { errors },
   } = useForm<LoginFormValues>();
 
-  const { mutateAsync: fetchUser, isPending } = useGetUser();
+  const { mutate: fetchUser, isPending } = useGetUser();
 
   // Handle form submission
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = (data: LoginFormValues) => {
     fetchUser(data.email, {
       onSuccess: (user) => {
         if (!user || user.password !== data.password) {
