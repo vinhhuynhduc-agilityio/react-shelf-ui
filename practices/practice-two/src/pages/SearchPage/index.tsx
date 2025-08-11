@@ -148,6 +148,58 @@ const SearchPage: React.FC = () => {
     }
   };
 
+  const hasApiError = isErrorBooks || isErrorFavourites || isErrorShelf;
+  const showSkeleton = isLoading || isFetchingFavourites || isFetchingShelf;
+  const hasFilteredData = filteredBooks.length > 0;
+  const hasOriginalData = books.length > 0;
+  const showErrorBook = !showSkeleton && hasApiError;
+  const showNoBooksAvailable =
+    !hasOriginalData && !showSkeleton && !hasApiError;
+  const showNoBooksFound =
+    !showSkeleton && !hasFilteredData && !hasApiError && hasOriginalData;
+  const showBookSearchList =
+    !showSkeleton && !hasApiError && hasFilteredData && hasOriginalData;
+
+  const renderApiError = () => {
+    const apiErrorMessages = [
+      isErrorBooks ? errorBooks?.message : null,
+      isErrorFavourites ? errorFavourites?.message : null,
+      isErrorShelf ? errorShelf?.message : null,
+    ];
+
+    return (
+      <ApiErrorNotice
+        title="Failed to load search data"
+        errors={apiErrorMessages}
+      />
+    );
+  };
+
+  const renderSkeleton = () => <BookRowSkeleton />;
+
+  const renderNoBooksAvailable = () => (
+    <ParagraphMessage text="No books available." className="text-gray-600" />
+  );
+
+  const renderNoBooksFound = () => (
+    <ParagraphMessage
+      text="No books found."
+      className="text-xl font-semibold text-red-400 mt-9 ml-8"
+    />
+  );
+
+  const renderBookSearchList = () => (
+    <BookSearchList
+      books={filteredBooks}
+      shelves={shelves ?? []}
+      favourites={favourites ?? []}
+      pendingFavouritesActions={pendingFavouritesActions}
+      handleClickPreview={handleClickPreview}
+      handleFavoriteClick={handleFavoriteClick}
+      isBookInShelf={isBookInShelf}
+    />
+  );
+
   return (
     <div className="overflow-x-auto text-[#4D4D4D]">
       {/* Header */}
@@ -155,54 +207,11 @@ const SearchPage: React.FC = () => {
 
       {/* Rows */}
       <div className="space-y-4 mt-4">
-        {(() => {
-          if (isLoading || isFetchingFavourites || isFetchingShelf) {
-            return <BookRowSkeleton />;
-          }
-
-          if (isErrorBooks || isErrorFavourites || isErrorShelf) {
-            return (
-              <ApiErrorNotice
-                title="Failed to load search data"
-                errors={[
-                  isErrorBooks ? errorBooks?.message : null,
-                  isErrorFavourites ? errorFavourites?.message : null,
-                  isErrorShelf ? errorShelf?.message : null,
-                ]}
-              />
-            );
-          }
-
-          if (books.length === 0) {
-            return (
-              <ParagraphMessage
-                text="No books available."
-                className="text-gray-600"
-              />
-            );
-          }
-
-          if (filteredBooks.length === 0) {
-            return (
-              <ParagraphMessage
-                text="No books found."
-                className="text-xl font-semibold text-red-400 mt-9 ml-8"
-              />
-            );
-          }
-
-          return (
-            <BookSearchList
-              books={filteredBooks}
-              shelves={shelves ?? []}
-              favourites={favourites ?? []}
-              pendingFavouritesActions={pendingFavouritesActions}
-              handleClickPreview={handleClickPreview}
-              handleFavoriteClick={handleFavoriteClick}
-              isBookInShelf={isBookInShelf}
-            />
-          );
-        })()}
+        {showSkeleton && renderSkeleton()}
+        {showErrorBook && renderApiError()}
+        {showNoBooksAvailable && renderNoBooksAvailable()}
+        {showNoBooksFound && renderNoBooksFound()}
+        {showBookSearchList && renderBookSearchList()}
       </div>
     </div>
   );

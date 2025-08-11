@@ -127,6 +127,44 @@ const FavouritePage: React.FC = () => {
     });
   };
 
+  const showSkeleton = isLoading || isFetchingFavourites;
+  const hasApiError = isErrorBooks || isErrorFavourites;
+  const hasFilteredData = filteredBooks.length > 0;
+  const showErrorBook = !showSkeleton && hasApiError;
+  const showNoBooksFound = !showSkeleton && !hasFilteredData && !hasApiError;
+  const showFavouritesBookList =
+    !showSkeleton && !hasApiError && hasFilteredData;
+
+  const renderSkeleton = () => <BookRowSkeleton />;
+
+  const renderApiError = () => (
+    <ApiErrorNotice
+      title="Failed to load favourites data"
+      errors={[
+        isErrorBooks ? errorBooks?.message : null,
+        isErrorFavourites ? errorFavourites?.message : null,
+      ]}
+    />
+  );
+
+  const renderNoBooksFound = () => (
+    <ParagraphMessage
+      text="No books found in your favourites."
+      className="text-xl font-semibold text-red-400 mt-9 ml-8"
+    />
+  );
+
+  const renderFavouritesBookList = () => (
+    <FavouriteBookList
+      books={filteredBooks}
+      favourites={favourites ?? []}
+      shelves={shelves ?? []}
+      pendingFavouritesActions={pendingFavouritesActions}
+      onClickPreview={handleCLickPreview}
+      onRemoveFavourite={handleFavoriteClick}
+    />
+  );
+
   return (
     <>
       <IconButton
@@ -147,43 +185,10 @@ const FavouritePage: React.FC = () => {
 
         {/* Main content */}
         <div className="space-y-4 mt-4">
-          {(() => {
-            if (isLoading || isFetchingFavourites) {
-              return <BookRowSkeleton />;
-            }
-
-            if (isErrorBooks || isErrorFavourites) {
-              return (
-                <ApiErrorNotice
-                  title="Failed to load favourites data"
-                  errors={[
-                    isErrorBooks ? errorBooks?.message : null,
-                    isErrorFavourites ? errorFavourites?.message : null,
-                  ]}
-                />
-              );
-            }
-
-            if (filteredBooks.length === 0) {
-              return (
-                <ParagraphMessage
-                  text="No books found in your favourites."
-                  className="text-xl font-semibold text-red-400 mt-9 ml-8"
-                />
-              );
-            }
-
-            return (
-              <FavouriteBookList
-                books={filteredBooks}
-                favourites={favourites ?? []}
-                shelves={shelves ?? []}
-                pendingFavouritesActions={pendingFavouritesActions}
-                onClickPreview={handleCLickPreview}
-                onRemoveFavourite={handleFavoriteClick}
-              />
-            );
-          })()}
+          {showSkeleton && renderSkeleton()}
+          {showErrorBook && renderApiError()}
+          {showNoBooksFound && renderNoBooksFound()}
+          {showFavouritesBookList && renderFavouritesBookList()}
         </div>
       </div>
     </>

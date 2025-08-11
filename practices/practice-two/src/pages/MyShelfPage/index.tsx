@@ -101,6 +101,46 @@ const MyShelfPage: React.FC = () => {
   // Filter books by user's shelf
   const borrowedBooks = filterBooksByShelves(books, shelf ?? []);
 
+  const showSkeleton = isLoading || isFetchingShelf;
+  const hasApiError = isErrorBooks || isErrorShelf;
+  const showErrorBooks = !showSkeleton && hasApiError;
+  const showNoBooksInShelf =
+    !showSkeleton && !hasApiError && borrowedBooks.length === 0;
+  const showMyShelfBookList =
+    !showSkeleton && !hasApiError && borrowedBooks.length > 0;
+
+  const renderSkeleton = () => {
+    return Array.from({ length: 4 }).map((_, idx) => (
+      <MyShelfBookCardSkeleton key={idx} />
+    ));
+  };
+
+  const renderApiError = () => (
+    <ApiErrorNotice
+      title="Failed to load shelf data"
+      errors={[
+        isErrorBooks ? errorBooks?.message : null,
+        isErrorShelf ? errorShelf?.message : null,
+      ]}
+    />
+  );
+
+  const renderNoBooksInShelf = () => (
+    <ParagraphMessage
+      text="No books in your shelf."
+      className="text-xl font-semibold text-red-400 mt-6 text-center"
+    />
+  );
+
+  const renderMyShelfBookList = () => (
+    <MyShelfBookList
+      books={borrowedBooks}
+      shelf={shelf ?? []}
+      pendingShelfActions={pendingShelfActions}
+      onReturnBook={handleReturnBook}
+    />
+  );
+
   return (
     <div>
       <h1 className="sm:text-[25px] text-[23px] font-bold text-[#4D4D4D] mb-6 mt-4">
@@ -122,43 +162,10 @@ const MyShelfPage: React.FC = () => {
       </div>
 
       <div className="flex flex-wrap gap-10 justify-center">
-        {(() => {
-          if (isLoading || isFetchingShelf) {
-            return Array.from({ length: 4 }).map((_, idx) => (
-              <MyShelfBookCardSkeleton key={idx} />
-            ));
-          }
-
-          if (isErrorBooks || isErrorShelf) {
-            return (
-              <ApiErrorNotice
-                title="Failed to load shelf data"
-                errors={[
-                  isErrorBooks ? errorBooks?.message : null,
-                  isErrorShelf ? errorShelf?.message : null,
-                ]}
-              />
-            );
-          }
-
-          if (borrowedBooks.length === 0) {
-            return (
-              <ParagraphMessage
-                text="No books in your shelf."
-                className="text-xl font-semibold text-red-400 mt-6 text-center"
-              />
-            );
-          }
-
-          return (
-            <MyShelfBookList
-              books={borrowedBooks}
-              shelf={shelf ?? []}
-              pendingShelfActions={pendingShelfActions}
-              onReturnBook={handleReturnBook}
-            />
-          );
-        })()}
+        {showSkeleton && renderSkeleton()}
+        {showErrorBooks && renderApiError()}
+        {showNoBooksInShelf && renderNoBooksInShelf()}
+        {showMyShelfBookList && renderMyShelfBookList()}
       </div>
     </div>
   );
