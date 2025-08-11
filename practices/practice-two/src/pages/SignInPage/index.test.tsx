@@ -17,7 +17,7 @@ describe("SignInPage", () => {
   beforeEach(() => {
     mockedUseUserStore.mockImplementation(() => ({ setUser: jest.fn() }));
     mockedUseGetUser.mockReturnValue({
-      mutateAsync: jest.fn(),
+      mutate: jest.fn(),
       isPending: false,
     });
   });
@@ -73,9 +73,9 @@ describe("SignInPage", () => {
   it("calls fetchUser and setUser on valid login", async () => {
     const setUser = jest.fn();
     const user = { email: "test@example.com", password: "123456" };
-    const mutateAsync = jest.fn((email, { onSuccess }) => onSuccess(user));
+    const mutate = jest.fn((email, { onSuccess }) => onSuccess(user));
     mockedUseUserStore.mockImplementation(() => ({ setUser }));
-    mockedUseGetUser.mockReturnValue({ mutateAsync, isPending: false });
+    mockedUseGetUser.mockReturnValue({ mutate, isPending: false });
     render(<SignInPage />);
     fireEvent.input(screen.getByLabelText(/email/i), {
       target: { value: user.email },
@@ -85,7 +85,7 @@ describe("SignInPage", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: /login/i }));
     await waitFor(() => {
-      expect(mutateAsync).toHaveBeenCalledWith(user.email, expect.any(Object));
+      expect(mutate).toHaveBeenCalledWith(user.email, expect.any(Object));
       expect(setUser).toHaveBeenCalledWith(user);
     });
   });
@@ -93,9 +93,9 @@ describe("SignInPage", () => {
   it("shows error if password is incorrect", async () => {
     const setUser = jest.fn();
     const user = { email: "test@example.com", password: "correctpass" };
-    const mutateAsync = jest.fn((email, { onSuccess }) => onSuccess(user));
+    const mutate = jest.fn((email, { onSuccess }) => onSuccess(user));
     mockedUseUserStore.mockImplementation(() => ({ setUser }));
-    mockedUseGetUser.mockReturnValue({ mutateAsync, isPending: false });
+    mockedUseGetUser.mockReturnValue({ mutate, isPending: false });
     render(<SignInPage />);
     fireEvent.input(screen.getByLabelText(/email/i), {
       target: { value: user.email },
