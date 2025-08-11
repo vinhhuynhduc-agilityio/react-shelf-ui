@@ -17,3 +17,4 @@ export { ParagraphMessage } from "./ParagraphMessage";
 export { default as BookSearchList } from "./BookSearchList";
 export { default as MyShelfBookList } from "./MyShelfBookList";
 export { default as FavouriteBookList } from "./FavouriteBookList";
+export { default as BookListWithBoundary } from "./BookListWithBoundary";
