@@ -11,7 +11,7 @@ import {
   addFavouriteItem,
   removeFavouriteItem,
 } from "@/services";
-import { useFavouritesStore, usePendingFavouritesStore } from "@/stores";
+import { useFavouritesStore } from "@/stores";
 import { UserBook } from "@/types";
 
 jest.mock("@/services", () => ({
@@ -20,7 +20,6 @@ jest.mock("@/services", () => ({
   removeFavouriteItem: jest.fn(),
 }));
 jest.mock("@/stores", () => ({
-  usePendingFavouritesStore: jest.fn(),
   useFavouritesStore: jest.fn(),
 }));
 
@@ -38,7 +37,7 @@ describe("useAddFavouriteItem", () => {
   const addFavourite = jest.fn();
   const removeFavourite = jest.fn();
   beforeEach(() => {
-    (usePendingFavouritesStore as unknown as jest.Mock).mockReturnValue({
+    (useFavouritesStore as unknown as jest.Mock).mockReturnValue({
       addFavourite,
       removeFavourite,
     });
@@ -64,7 +63,7 @@ describe("useRemoveFavouriteItem", () => {
   const addFavourite = jest.fn();
   const removeFavourite = jest.fn();
   beforeEach(() => {
-    (usePendingFavouritesStore as unknown as jest.Mock).mockReturnValue({
+    (useFavouritesStore as unknown as jest.Mock).mockReturnValue({
       addFavourite,
       removeFavourite,
     });

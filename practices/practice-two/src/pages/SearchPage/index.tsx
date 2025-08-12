@@ -13,12 +13,7 @@ import {
 } from "@/hooks";
 
 // stores
-import {
-  useFavouritesStore,
-  usePendingFavouritesStore,
-  useSearchStore,
-  useUserStore,
-} from "@/stores";
+import { useFavouritesStore, useSearchStore, useUserStore } from "@/stores";
 
 // types
 import { Book, UserBook } from "@/types";
@@ -68,8 +63,8 @@ const SearchPage: React.FC = () => {
 
   // stores
   const { searchTerm, selectedFilter } = useSearchStore();
-  const { pendingFavouritesActions } = usePendingFavouritesStore();
-  const { favourites, setFavourites } = useFavouritesStore();
+  const { favourites, setFavourites, pendingFavouritesActions } =
+    useFavouritesStore();
 
   // refs
   const favouritesChangedRef = useRef(favouritesChanged);

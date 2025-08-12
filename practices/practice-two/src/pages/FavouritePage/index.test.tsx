@@ -2,11 +2,7 @@ import { render, screen, fireEvent } from "@/components/Test/test-utils";
 import FavouritePage from ".";
 import { MOCK_BOOKS, MOCK_FAVOURITES, MOCK_SHELVES } from "@/__mocks__/book";
 import { MOCK_USER } from "@/__mocks__/user";
-import {
-  useUserStore,
-  usePendingFavouritesStore,
-  useFavouritesStore,
-} from "@/stores";
+import { useUserStore, useFavouritesStore } from "@/stores";
 import {
   useBooksQuery,
   useFetchAndStoreFavourites,
@@ -27,8 +23,6 @@ jest.mock("@/hooks", () => ({
 }));
 
 const mockedUseUserStore = useUserStore as unknown as jest.Mock;
-const mockedUsePendingFavouritesStore =
-  usePendingFavouritesStore as unknown as jest.Mock;
 const mockedUseFavouritesStore = useFavouritesStore as unknown as jest.Mock;
 const mockedUseBooksQuery = useBooksQuery as jest.Mock;
 const mockedUseFetchFavourites = useFetchAndStoreFavourites as jest.Mock;
@@ -49,10 +43,10 @@ describe("FavouritePage", () => {
       error: null,
     });
     mockedUseUserStore.mockImplementation(() => ({ currentUser: MOCK_USER }));
-    mockedUsePendingFavouritesStore.mockReturnValue(["1", "2"]);
     mockedUseFavouritesStore.mockReturnValue({
       favourites: MOCK_FAVOURITES,
       setFavourites: jest.fn(),
+      pendingFavouritesActions: ["1", "2"],
     });
     mockedUseGetMyShelf.mockReturnValue({ data: MOCK_SHELVES });
     mockedUseRemoveFavouriteItem.mockReturnValue({ mutate: jest.fn() });
@@ -113,9 +107,9 @@ describe("FavouritePage", () => {
     mockedUseFavouritesStore.mockReturnValue({
       favourites: MOCK_FAVOURITES,
       setFavourites: jest.fn(),
+      pendingFavouritesActions: ["1", "2"],
     });
     mockedUseGetMyShelf.mockReturnValue({ data: MOCK_SHELVES });
-    mockedUsePendingFavouritesStore.mockReturnValue(["1", "2"]);
     render(<FavouritePage />);
     expect(screen.getByText(/your favourite/i)).toBeInTheDocument();
     expect(
@@ -133,6 +127,7 @@ describe("FavouritePage", () => {
     mockedUseFavouritesStore.mockReturnValue({
       favourites: MOCK_FAVOURITES,
       setFavourites,
+      pendingFavouritesActions: ["1", "2"],
     });
     mockedUseRemoveFavouriteItem.mockReturnValue({ mutate });
     render(<FavouritePage />);

@@ -3,11 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
 // stores
-import {
-  useFavouritesStore,
-  usePendingFavouritesStore,
-  useUserStore,
-} from "@/stores";
+import { useFavouritesStore, useUserStore } from "@/stores";
 
 // types
 import { Book } from "@/types";
@@ -61,8 +57,8 @@ const FavouritePage: React.FC = () => {
   const [favouritesChanged, setFavouritesChanged] = useState(false);
 
   // store
-  const { pendingFavouritesActions = [] } = usePendingFavouritesStore();
-  const { favourites, setFavourites } = useFavouritesStore();
+  const { favourites, setFavourites, pendingFavouritesActions } =
+    useFavouritesStore();
 
   // API hooks
   const { mutate: removeFavourite } = useRemoveFavouriteItem();

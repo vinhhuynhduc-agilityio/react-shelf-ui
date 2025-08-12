@@ -21,6 +21,14 @@ jest.mock("@/components", () => ({
 }));
 
 describe("BookListWithBoundary", () => {
+  beforeAll(() => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    (console.error as jest.Mock).mockRestore();
+  });
+
   it("renders BookHomeList with title and passes props", () => {
     render(
       <BookListWithBoundary

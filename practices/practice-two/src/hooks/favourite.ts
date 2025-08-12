@@ -15,7 +15,7 @@ import {
 import { UserBook } from "@/types";
 
 // stores
-import { useFavouritesStore, usePendingFavouritesStore } from "@/stores";
+import { useFavouritesStore } from "@/stores";
 
 // helpers
 import { showDefaultErrorToast } from "@/helpers";
@@ -55,7 +55,7 @@ export const useFetchAndStoreFavourites = (userId: string) => {
 };
 
 export const useAddFavouriteItem = () => {
-  const { addFavourite, removeFavourite } = usePendingFavouritesStore();
+  const { addFavourite, removeFavourite } = useFavouritesStore();
 
   return useMutation({
     mutationFn: addFavouriteItem,
@@ -70,7 +70,7 @@ export const useAddFavouriteItem = () => {
 };
 
 export const useRemoveFavouriteItem = () => {
-  const { addFavourite, removeFavourite } = usePendingFavouritesStore();
+  const { addFavourite, removeFavourite } = useFavouritesStore();
 
   return useMutation({
     mutationFn: removeFavouriteItem,

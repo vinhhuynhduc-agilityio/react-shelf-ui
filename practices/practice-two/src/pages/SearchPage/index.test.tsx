@@ -2,12 +2,7 @@ import { render, screen, fireEvent } from "@/components/Test/test-utils";
 import SearchPage from ".";
 import { MOCK_BOOKS, MOCK_FAVOURITES, MOCK_SHELVES } from "@/__mocks__/book";
 import { MOCK_USER } from "@/__mocks__/user";
-import {
-  useUserStore,
-  useSearchStore,
-  usePendingFavouritesStore,
-  useFavouritesStore,
-} from "@/stores";
+import { useUserStore, useSearchStore, useFavouritesStore } from "@/stores";
 import {
   useFetchAndStoreFavourites,
   useGetMyShelf,
@@ -19,7 +14,6 @@ import {
 jest.mock("@/stores", () => ({
   useUserStore: jest.fn(),
   useSearchStore: jest.fn(),
-  usePendingFavouritesStore: jest.fn(),
   useFavouritesStore: jest.fn(),
 }));
 jest.mock("@/hooks", () => ({
@@ -33,8 +27,6 @@ jest.mock("@/hooks", () => ({
 const mockedUseBooksQuery = useBooksQuery as jest.Mock;
 const mockedUseUserStore = useUserStore as unknown as jest.Mock;
 const mockedUseSearchStore = useSearchStore as unknown as jest.Mock;
-const mockedUsePendingFavouritesStore =
-  usePendingFavouritesStore as unknown as jest.Mock;
 const mockedUseFetchFavourites = useFetchAndStoreFavourites as jest.Mock;
 const mockedUseGetMyShelf = useGetMyShelf as jest.Mock;
 const mockedUseAddFavouriteItem = useAddFavouriteItem as jest.Mock;
@@ -58,9 +50,6 @@ describe("SearchPage", () => {
       searchTerm: "",
       selectedFilter: "Title",
     }));
-    mockedUsePendingFavouritesStore.mockImplementation(() => ({
-      pendingFavouritesActions: [],
-    }));
     mockedUseGetMyShelf.mockReturnValue({
       data: MOCK_SHELVES,
       isFetching: false,
@@ -70,6 +59,7 @@ describe("SearchPage", () => {
     mockedUseFavouritesStore.mockImplementation(() => ({
       favourites: [],
       setFavourites: jest.fn(),
+      pendingFavouritesActions: [],
     }));
   });
 

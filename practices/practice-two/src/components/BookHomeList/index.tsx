@@ -43,6 +43,42 @@ const BookHomeList: React.FC<BookListProps> = ({
     [navigate]
   );
 
+  const hasBooksData = books.length > 0;
+  const showSkeleton = isLoading && !isError;
+  const showNoBooksAvailable = !isError && !showSkeleton && !hasBooksData;
+
+  const renderApiError = () => (
+    <ApiErrorNotice title="Failed to load books data" errors={[errorMessage]} />
+  );
+
+  const renderSkeleton = () => {
+    return Array.from({ length: skeletonCount }).map((_, idx) => (
+      <div key={idx} className="flex-shrink-0">
+        <Skeleton
+          width={160}
+          height={260}
+          borderRadius={16}
+          additionalClasses="p-4"
+        />
+      </div>
+    ));
+  };
+
+  const renderNoBooksAvailable = () => (
+    <ParagraphMessage
+      text="No books available."
+      className="mt-4 text-gray-600 col-span-full"
+    />
+  );
+
+  const renderBookList = () => {
+    return books.map((book) => (
+      <div key={book.id} className="flex-shrink-0">
+        <BookItem {...book} onClick={handleBookClick} />
+      </div>
+    ));
+  };
+
   return (
     <div className="mb-6 w-full">
       <h2 className="text-[22px] sm:text-[24px] md:text-[25px] text-gray-500 mb-4 font-normal">
@@ -51,44 +87,10 @@ const BookHomeList: React.FC<BookListProps> = ({
 
       <div className="w-full md:overflow-x-auto sm:overflow-x-auto md:whitespace-nowrap">
         <div className="grid grid-cols-2 gap-y-4 md:flex md:space-x-4 sm:flex sm:space-x-4">
-          {(() => {
-            if (isError) {
-              return (
-                <ApiErrorNotice
-                  title="Failed to load books data"
-                  errors={[errorMessage]}
-                />
-              );
-            }
-
-            if (isLoading) {
-              return Array.from({ length: skeletonCount }).map((_, idx) => (
-                <div key={idx} className="flex-shrink-0">
-                  <Skeleton
-                    width={160}
-                    height={260}
-                    borderRadius={16}
-                    additionalClasses="p-4"
-                  />
-                </div>
-              ));
-            }
-
-            if (books.length === 0) {
-              return (
-                <ParagraphMessage
-                  text="No books available."
-                  className="mt-4 text-gray-600 col-span-full"
-                />
-              );
-            }
-
-            return books.map((book) => (
-              <div key={book.id} className="flex-shrink-0">
-                <BookItem {...book} onClick={handleBookClick} />
-              </div>
-            ));
-          })()}
+          {isError && renderApiError()}
+          {showSkeleton && renderSkeleton()}
+          {showNoBooksAvailable && renderNoBooksAvailable()}
+          {hasBooksData && renderBookList()}
         </div>
       </div>
     </div>
