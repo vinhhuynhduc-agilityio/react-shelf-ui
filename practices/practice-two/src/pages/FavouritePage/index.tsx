@@ -26,7 +26,7 @@ import { ArrowBackIcon } from "@/components/icons";
 // hooks
 import {
   useBooksQuery,
-  useFetchFavourites,
+  useFetchAndStoreFavourites,
   useGetMyShelf,
   useRemoveFavouriteItem,
 } from "@/hooks";
@@ -54,7 +54,7 @@ const FavouritePage: React.FC = () => {
     isError: isErrorFavourites,
     isFetching: isFetchingFavourites,
     error: errorFavourites,
-  } = useFetchFavourites(currentUser?.id || "");
+  } = useFetchAndStoreFavourites(currentUser?.id || "");
   const { data: shelves } = useGetMyShelf(currentUser?.id || "");
 
   // states

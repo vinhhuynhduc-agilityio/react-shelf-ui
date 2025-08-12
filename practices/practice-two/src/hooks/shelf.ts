@@ -27,7 +27,7 @@ export const useGetMyShelf = (userId: string) =>
     meta: { errorMessage: ERROR_MESSAGE.SHELF_FETCH_ERROR },
   });
 
-export const useFetchMySHelf = (
+export const useFetchAndStoreMyShelf = (
   userId: string,
   setShelf: (shelf: ShelfItem[]) => void
 ) => {

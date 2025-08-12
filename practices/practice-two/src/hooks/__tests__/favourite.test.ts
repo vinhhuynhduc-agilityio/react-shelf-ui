@@ -4,7 +4,7 @@ import {
   useGetFavourites,
   useAddFavouriteItem,
   useRemoveFavouriteItem,
-  useFetchFavourites,
+  useFetchAndStoreFavourites,
 } from "../favourite";
 import {
   getFavourites,
@@ -86,7 +86,7 @@ describe("useRemoveFavouriteItem", () => {
   });
 });
 
-describe("useFetchFavourites", () => {
+describe("useFetchAndStoreFavourites", () => {
   it("returns favourites from query when successful", async () => {
     const mockFavourites = [{ bookId: "1" }, { bookId: "2" }];
     (getFavourites as jest.Mock).mockResolvedValue(mockFavourites);
@@ -97,7 +97,7 @@ describe("useFetchFavourites", () => {
       setFavourites,
     });
 
-    const { result } = renderHook(() => useFetchFavourites("user1"), {
+    const { result } = renderHook(() => useFetchAndStoreFavourites("user1"), {
       wrapper,
     });
 

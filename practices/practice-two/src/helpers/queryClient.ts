@@ -41,6 +41,20 @@ export const queryClient = new QueryClient({
 
 persistQueryClient({
   queryClient,
-  persister: localStoragePersister,
-  maxAge: 1000 * 60 * 60 * 24,
+  persister: {
+    persistClient: (client) => {
+      const filteredClient = {
+        ...client,
+        clientState: {
+          ...client.clientState,
+          queries: client.clientState.queries.filter((q) =>
+            JSON.stringify(q.queryKey).includes("books")
+          ),
+        },
+      };
+      localStoragePersister.persistClient(filteredClient);
+    },
+    restoreClient: localStoragePersister.restoreClient,
+    removeClient: localStoragePersister.removeClient,
+  },
 });

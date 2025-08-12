@@ -9,7 +9,7 @@ import {
 } from "@/stores";
 import {
   useBooksQuery,
-  useFetchFavourites,
+  useFetchAndStoreFavourites,
   useGetMyShelf,
   useRemoveFavouriteItem,
 } from "@/hooks";
@@ -21,7 +21,7 @@ jest.mock("@/stores", () => ({
 }));
 jest.mock("@/hooks", () => ({
   useBooksQuery: jest.fn(),
-  useFetchFavourites: jest.fn(),
+  useFetchAndStoreFavourites: jest.fn(),
   useGetMyShelf: jest.fn(),
   useRemoveFavouriteItem: jest.fn(),
 }));
@@ -31,7 +31,7 @@ const mockedUsePendingFavouritesStore =
   usePendingFavouritesStore as unknown as jest.Mock;
 const mockedUseFavouritesStore = useFavouritesStore as unknown as jest.Mock;
 const mockedUseBooksQuery = useBooksQuery as jest.Mock;
-const mockedUseFetchFavourites = useFetchFavourites as jest.Mock;
+const mockedUseFetchFavourites = useFetchAndStoreFavourites as jest.Mock;
 const mockedUseGetMyShelf = useGetMyShelf as jest.Mock;
 const mockedUseRemoveFavouriteItem = useRemoveFavouriteItem as jest.Mock;
 

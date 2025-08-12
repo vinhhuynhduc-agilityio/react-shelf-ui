@@ -3,7 +3,11 @@ import MyShelfPage from ".";
 import { MOCK_BOOKS, MOCK_SHELVES } from "@/__mocks__/book";
 import { MOCK_USER } from "@/__mocks__/user";
 import { usePendingShelfStore, useUserStore } from "@/stores";
-import { useBooksQuery, useFetchMySHelf, useRemoveShelfItem } from "@/hooks";
+import {
+  useBooksQuery,
+  useFetchAndStoreMyShelf,
+  useRemoveShelfItem,
+} from "@/hooks";
 import React from "react";
 
 jest.mock("@/stores", () => ({
@@ -13,13 +17,13 @@ jest.mock("@/stores", () => ({
 }));
 jest.mock("@/hooks", () => ({
   useBooksQuery: jest.fn(),
-  useFetchMySHelf: jest.fn(),
+  useFetchAndStoreMyShelf: jest.fn(),
   useRemoveShelfItem: jest.fn(),
 }));
 
 const mockedUseUserStore = useUserStore as unknown as jest.Mock;
 const mockedUsePendingShelfStore = usePendingShelfStore as unknown as jest.Mock;
-const mockedUseFetchMySHelf = useFetchMySHelf as jest.Mock;
+const mockedUseFetchMySHelf = useFetchAndStoreMyShelf as jest.Mock;
 const mockedUseRemoveShelfItem = useRemoveShelfItem as jest.Mock;
 const mockedUseBooksQuery = useBooksQuery as jest.Mock;
 

@@ -4,7 +4,7 @@ import {
   useGetMyShelf,
   useAddShelfItem,
   useRemoveShelfItem,
-  useFetchMySHelf,
+  useFetchAndStoreMyShelf,
 } from "../shelf";
 import { getShelves, addShelfItem, removeShelfItem } from "@/services";
 import { usePendingShelfStore, useToastStore } from "@/stores";
@@ -92,13 +92,13 @@ describe("useRemoveShelfItem", () => {
   });
 });
 
-describe("useFetchMySHelf", () => {
+describe("useFetchAndStoreMyShelf", () => {
   it("calls setShelf from component state when query returns shelf", async () => {
     const mockShelf = [{ bookId: "1" }, { bookId: "2" }];
     (getShelves as jest.Mock).mockResolvedValue(mockShelf);
 
     const setShelf = jest.fn();
-    renderHook(() => useFetchMySHelf("user1", setShelf), {
+    renderHook(() => useFetchAndStoreMyShelf("user1", setShelf), {
       wrapper,
     });
 

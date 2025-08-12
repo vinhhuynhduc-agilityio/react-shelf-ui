@@ -28,7 +28,7 @@ export const useGetFavourites = (userId: string) => {
   });
 };
 
-export const useFetchFavourites = (userId: string) => {
+export const useFetchAndStoreFavourites = (userId: string) => {
   const { favourites, setFavourites } = useFavouritesStore();
   const {
     data: queryFavourites,

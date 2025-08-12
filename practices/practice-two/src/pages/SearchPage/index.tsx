@@ -7,7 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   useAddFavouriteItem,
   useBooksQuery,
-  useFetchFavourites,
+  useFetchAndStoreFavourites,
   useGetMyShelf,
   useRemoveFavouriteItem,
 } from "@/hooks";
@@ -55,7 +55,7 @@ const SearchPage: React.FC = () => {
     isError: isErrorFavourites,
     isFetching: isFetchingFavourites,
     error: errorFavourites,
-  } = useFetchFavourites(currentUser?.id || "");
+  } = useFetchAndStoreFavourites(currentUser?.id || "");
   const {
     data: shelves,
     isFetching: isFetchingShelf,
