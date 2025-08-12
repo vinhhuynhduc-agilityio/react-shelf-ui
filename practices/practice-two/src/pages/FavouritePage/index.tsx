@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -63,28 +63,18 @@ const FavouritePage: React.FC = () => {
   // API hooks
   const { mutate: removeFavourite } = useRemoveFavouriteItem();
 
-  // refs
-  const favouritesChangedRef = useRef(favouritesChanged);
-  const setFavouritesChangedRef = useRef(setFavouritesChanged);
-
   useEffect(() => {
-    favouritesChangedRef.current = favouritesChanged;
-  }, [favouritesChanged]);
-
-  useEffect(() => {
-    setFavouritesChangedRef.current = setFavouritesChanged;
-
     return () => {
       // Invalidate the favourites query if there are changes
       // when the component unmounts or dependencies change
-      if (favouritesChangedRef.current) {
+      if (favouritesChanged) {
         queryClient.invalidateQueries({
           queryKey: QUERY_KEY_MY_FAVOURITE(currentUser?.id || ""),
         });
-        setFavouritesChangedRef.current(false);
+        setFavouritesChanged(false);
       }
     };
-  }, [setFavouritesChanged, queryClient, currentUser?.id]);
+  }, [setFavouritesChanged, queryClient, currentUser?.id, favouritesChanged]);
 
   // Filter books by favourites
   const filteredBooks = filterFavouritedBooks(books, favourites);
@@ -110,12 +100,10 @@ const FavouritePage: React.FC = () => {
     };
     const prevFavourites = favourites || [];
     setFavourites(prevFavourites.filter((fav) => fav.bookId !== book.id));
+    setFavouritesChanged(true);
 
     // Remove from favourites
     removeFavourite(removeItem, {
-      onSuccess: () => {
-        setFavouritesChanged(true);
-      },
       onError: () => {
         // Revert on error
         setFavourites(prevFavourites);

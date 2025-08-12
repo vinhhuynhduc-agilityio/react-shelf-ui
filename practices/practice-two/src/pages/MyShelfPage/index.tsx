@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -59,29 +59,18 @@ const MyShelfPage: React.FC = () => {
   // API hooks
   const { mutate: removeShelfItem } = useRemoveShelfItem();
 
-  // refs
-  const shelfChangedRef = useRef(shelfChanged);
-  const setShelfChangedRef = useRef(setShelfChanged);
-
   useEffect(() => {
-    shelfChangedRef.current = shelfChanged;
-  }, [shelfChanged]);
-
-  useEffect(() => {
-    setShelfChangedRef.current = setShelfChanged;
-
     return () => {
       // Invalidate the shelf query if there are changes
       // when the component unmounts or dependencies change
-      if (shelfChangedRef.current) {
-        console.log("Un Mounting MyShelfPagE");
+      if (shelfChanged) {
         queryClient.invalidateQueries({
           queryKey: QUERY_KEY_MY_SHELF(currentUser?.id ?? ""),
         });
-        setShelfChangedRef.current(false);
+        setShelfChanged(false);
       }
     };
-  }, [currentUser?.id, queryClient, setShelfChanged]);
+  }, [currentUser?.id, queryClient, setShelfChanged, shelfChanged]);
 
   const handleReturnBook = (shelfItem: ShelfItem) => {
     const prevShelf = shelf || [];

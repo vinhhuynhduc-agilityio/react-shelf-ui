@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { useQueryClient } from "@tanstack/react-query";
@@ -66,32 +66,22 @@ const SearchPage: React.FC = () => {
   const { favourites, setFavourites, pendingFavouritesActions } =
     useFavouritesStore();
 
-  // refs
-  const favouritesChangedRef = useRef(favouritesChanged);
-  const setFavouritesChangedRef = useRef(setFavouritesChanged);
-
   // API hooks
   const { mutate: addFavourite } = useAddFavouriteItem();
   const { mutate: removeFavourite } = useRemoveFavouriteItem();
 
   useEffect(() => {
-    favouritesChangedRef.current = favouritesChanged;
-  }, [favouritesChanged]);
-
-  useEffect(() => {
-    setFavouritesChangedRef.current = setFavouritesChanged;
-
     return () => {
       // Invalidate the favourites query if there are changes
       // when the component unmounts or dependencies change
-      if (favouritesChangedRef.current) {
+      if (favouritesChanged) {
         queryClient.invalidateQueries({
           queryKey: QUERY_KEY_MY_FAVOURITE(currentUser?.id || ""),
         });
-        setFavouritesChangedRef.current(false);
+        setFavouritesChanged(false);
       }
     };
-  }, [setFavouritesChanged, queryClient, currentUser?.id]);
+  }, [setFavouritesChanged, queryClient, currentUser?.id, favouritesChanged]);
 
   // Filter books based on search term and selected filter
   const filteredBooks = filterBooks(books, searchTerm, selectedFilter);
@@ -121,26 +111,27 @@ const SearchPage: React.FC = () => {
     };
 
     const updateOnError = () => setFavourites(prevFavourites);
-    const updateOnSuccess = () => setFavouritesChanged(true);
 
+    // Remove favourite
     if (isFavorite) {
-      // Remove
       const updated = prevFavourites.filter((fav) => fav.bookId !== book.id);
       setFavourites(updated);
+      setFavouritesChanged(true);
 
       removeFavourite(favouriteItem, {
-        onSuccess: updateOnSuccess,
         onError: updateOnError,
       });
-    } else {
-      // Add
-      setFavourites([...prevFavourites, favouriteItem]);
 
-      addFavourite(favouriteItem, {
-        onSuccess: updateOnSuccess,
-        onError: updateOnError,
-      });
+      return;
     }
+
+    // Add favourite
+    setFavourites([...prevFavourites, favouriteItem]);
+    setFavouritesChanged(true);
+
+    addFavourite(favouriteItem, {
+      onError: updateOnError,
+    });
   };
 
   const hasApiError = isErrorBooks || isErrorFavourites || isErrorShelf;
