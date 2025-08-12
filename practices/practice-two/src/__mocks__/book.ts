@@ -1,4 +1,4 @@
-import { Book, FavouriteItem, ShelfItem } from "@/types";
+import { Book, UserBook, ShelfItem } from "@/types";
 
 export const MOCK_BOOKS: Book[] = [
   {
@@ -40,7 +40,7 @@ export const MOCK_SHELVES: ShelfItem[] = [
   },
 ];
 
-export const MOCK_FAVOURITES: FavouriteItem[] = [
+export const MOCK_FAVOURITES: UserBook[] = [
   {
     id: "favourite-1",
     bookId: "11",

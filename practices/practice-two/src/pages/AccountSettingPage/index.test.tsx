@@ -1,4 +1,9 @@
-import { render, screen, fireEvent, waitFor } from "@/helpers/test-utils";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+} from "@/components/Test/test-utils";
 import AccountSettingPage from ".";
 import { useUpdateUser } from "@/hooks";
 import { useUserStore } from "@/stores";

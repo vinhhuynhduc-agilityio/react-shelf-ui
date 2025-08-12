@@ -2,7 +2,10 @@
 import { API_ENDPOINTS } from "@/constants";
 
 // services
-import { API_BASE_URL, apiRequest } from "@/services";
+import { API_BASE_URL } from "@/services";
+
+// helpers
+import { apiRequest } from "@/helpers";
 
 // types
 import { ShelfItem } from "@/types";

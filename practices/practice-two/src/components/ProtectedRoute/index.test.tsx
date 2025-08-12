@@ -1,4 +1,4 @@
-import { render, screen, wrapper } from "@/helpers/test-utils";
+import { render, screen, wrapper } from "@/components/Test/test-utils";
 import ProtectedRoute from ".";
 import { useUserStore } from "@/stores";
 

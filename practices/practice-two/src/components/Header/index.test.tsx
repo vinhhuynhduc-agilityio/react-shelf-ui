@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@/helpers/test-utils";
+import { render, screen, fireEvent } from "@/components/Test/test-utils";
 import Header from ".";
 import { useSearchStore, useUserStore } from "@/stores";
 

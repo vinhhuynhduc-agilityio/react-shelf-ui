@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@/helpers/test-utils";
+import { render, screen, fireEvent } from "@/components/Test/test-utils";
 import BookPreviewPage from ".";
 import { MOCK_BOOKS } from "@/__mocks__/book";
 import { MOCK_USER } from "@/__mocks__/user";

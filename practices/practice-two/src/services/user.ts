@@ -1,5 +1,8 @@
 // services
-import { API_BASE_URL, apiRequest } from "@/services";
+import { API_BASE_URL } from "@/services";
+
+// helpers
+import { apiRequest } from "@/helpers";
 
 // types
 import { User } from "@/types";

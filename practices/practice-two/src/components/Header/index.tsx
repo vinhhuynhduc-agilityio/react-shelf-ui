@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSearchStore, useUserStore } from "@/stores";
 
 // constants
-import { profileOptions, ROUTE, searchOptions } from "@/constants";
+import { PROFILE_OPTIONS, ROUTE, SEARCH_OPTIONS } from "@/constants";
 
 // components
 import { Avatar, Dropdown, IconButton } from "@/components";
@@ -116,7 +116,7 @@ const Header: React.FC = () => {
         />
         {/* Dropdown for search filter */}
         <Dropdown
-          options={searchOptions}
+          options={SEARCH_OPTIONS}
           onSelect={(option) => {
             setSelectedFilter(option.label);
             setFilterMenuOpen(false);
@@ -163,7 +163,7 @@ const Header: React.FC = () => {
         />
         {/* Dropdown for Profile Menu */}
         <Dropdown
-          options={profileOptions}
+          options={PROFILE_OPTIONS}
           onSelect={handleProfileMenuSelection}
           isOpen={isProfileMenuOpen}
           setIsOpen={setProfileMenuOpen}

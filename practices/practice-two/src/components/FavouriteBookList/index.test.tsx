@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import FavouriteBookList from "./index";
-import { Book, FavouriteItem, ShelfItem } from "@/types";
+import { Book, UserBook, ShelfItem } from "@/types";
 
 // Mock BookRow to test rendering and props
 jest.mock("@/components", () => ({
@@ -45,9 +45,7 @@ describe("FavouriteBookList", () => {
     { id: "1", title: "Book 1" } as Book,
     { id: "2", title: "Book 2" } as Book,
   ];
-  const favourites: FavouriteItem[] = [
-    { bookId: "2", id: "fav2" } as FavouriteItem,
-  ];
+  const favourites: UserBook[] = [{ bookId: "2", id: "fav2" } as UserBook];
   const shelves: ShelfItem[] = [{ bookId: "1" } as ShelfItem];
   const pendingFavouritesActions = ["2"];
   const onClickPreview = jest.fn();

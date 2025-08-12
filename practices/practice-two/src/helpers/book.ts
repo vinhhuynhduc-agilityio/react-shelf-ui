@@ -1,4 +1,4 @@
-import { Book, FavouriteItem, ShelfItem } from "@/types";
+import { Book, UserBook, ShelfItem } from "@/types";
 
 type AuthorAndYear = {
   authorName: string;
@@ -41,7 +41,7 @@ export const filterBooks = (
  */
 export const filterFavouritedBooks = (
   books: Book[],
-  favourites: FavouriteItem[] | undefined
+  favourites: UserBook[] | undefined
 ): Book[] => {
   // Return empty list if no favourites exist
   if (!favourites || favourites.length === 0) return [];
@@ -55,7 +55,7 @@ export const filterFavouritedBooks = (
 export const getBookStatus = (
   bookId: string,
   shelves: ShelfItem[] = [],
-  favourites: FavouriteItem[] = [],
+  favourites: UserBook[] = [],
   pendingFavouritesActions: string[] = [],
   isBookInShelf: (bookId: string, shelf: ShelfItem[]) => boolean
 ) => {

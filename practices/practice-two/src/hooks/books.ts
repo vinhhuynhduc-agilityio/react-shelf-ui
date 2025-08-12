@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 // services
-import { getBooks } from "@/services/bookService";
+import { getBooks } from "@/services/book";
 
 // constants
 import { ERROR_MESSAGE, QUERY_KEY_BOOKS } from "@/constants";

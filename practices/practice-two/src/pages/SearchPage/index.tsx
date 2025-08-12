@@ -21,7 +21,7 @@ import {
 } from "@/stores";
 
 // types
-import { Book, FavouriteItem } from "@/types";
+import { Book, UserBook } from "@/types";
 
 // helpers
 import { filterBooks, isBookInShelf } from "@/helpers";
@@ -119,7 +119,7 @@ const SearchPage: React.FC = () => {
     const userId = currentUser?.id || "";
     const prevFavourites = favourites || [];
 
-    const favouriteItem: FavouriteItem = {
+    const favouriteItem: UserBook = {
       id: favouriteId || uuidv4(),
       bookId: book.id,
       userId,

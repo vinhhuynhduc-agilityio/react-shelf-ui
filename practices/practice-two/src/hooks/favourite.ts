@@ -6,13 +6,13 @@ import { ERROR_MESSAGE, QUERY_KEY_MY_FAVOURITE } from "@/constants";
 
 // services
 import {
-	addFavouriteItem,
-	getFavourites,
-	removeFavouriteItem,
+  addFavouriteItem,
+  getFavourites,
+  removeFavouriteItem,
 } from "@/services";
 
 // types
-import { FavouriteItem } from "@/types";
+import { UserBook } from "@/types";
 
 // stores
 import { useFavouritesStore, usePendingFavouritesStore } from "@/stores";
@@ -21,65 +21,65 @@ import { useFavouritesStore, usePendingFavouritesStore } from "@/stores";
 import { showDefaultErrorToast } from "@/helpers";
 
 export const useGetFavourites = (userId: string) => {
-	return useQuery({
-		queryKey: QUERY_KEY_MY_FAVOURITE(userId),
-		queryFn: () => getFavourites(userId),
-		meta: { errorMessage: ERROR_MESSAGE.FAVOURITES_FETCH_ERROR },
-	});
+  return useQuery({
+    queryKey: QUERY_KEY_MY_FAVOURITE(userId),
+    queryFn: () => getFavourites(userId),
+    meta: { errorMessage: ERROR_MESSAGE.FAVOURITES_FETCH_ERROR },
+  });
 };
 
 export const useFetchFavourites = (userId: string) => {
-	const { favourites, setFavourites } = useFavouritesStore();
-	const {
-		data: queryFavourites,
-		isLoading,
-		isError,
-		error,
-		isSuccess,
-		isFetching,
-	} = useGetFavourites(userId);
+  const { favourites, setFavourites } = useFavouritesStore();
+  const {
+    data: queryFavourites,
+    isLoading,
+    isError,
+    error,
+    isSuccess,
+    isFetching,
+  } = useGetFavourites(userId);
 
-	useEffect(() => {
-		if (isSuccess && Array.isArray(queryFavourites)) {
-			setFavourites(queryFavourites || []);
-		}
-	}, [isSuccess, queryFavourites, setFavourites]);
+  useEffect(() => {
+    if (isSuccess && Array.isArray(queryFavourites)) {
+      setFavourites(queryFavourites || []);
+    }
+  }, [isSuccess, queryFavourites, setFavourites]);
 
-	return {
-		favourites,
-		isLoading,
-		isError,
-		error,
-		isFetching,
-	};
+  return {
+    favourites,
+    isLoading,
+    isError,
+    error,
+    isFetching,
+  };
 };
 
 export const useAddFavouriteItem = () => {
-	const { addPending, removePending } = usePendingFavouritesStore();
+  const { addFavourite, removeFavourite } = usePendingFavouritesStore();
 
-	return useMutation({
-		mutationFn: addFavouriteItem,
-		onMutate: (item: FavouriteItem) => {
-			addPending(item.bookId);
-		},
-		onSettled: (_data, _error, item: FavouriteItem) => {
-			removePending(item.bookId);
-		},
-		onError: () => showDefaultErrorToast(),
-	});
+  return useMutation({
+    mutationFn: addFavouriteItem,
+    onMutate: (item: UserBook) => {
+      addFavourite(item.bookId);
+    },
+    onSettled: (_data, _error, item: UserBook) => {
+      removeFavourite(item.bookId);
+    },
+    onError: () => showDefaultErrorToast(),
+  });
 };
 
 export const useRemoveFavouriteItem = () => {
-	const { addPending, removePending } = usePendingFavouritesStore();
+  const { addFavourite, removeFavourite } = usePendingFavouritesStore();
 
-	return useMutation({
-		mutationFn: removeFavouriteItem,
-		onMutate: (item: FavouriteItem) => {
-			addPending(item.bookId);
-		},
-		onSettled: (_data, _error, item: FavouriteItem) => {
-			removePending(item.bookId);
-		},
-		onError: () => showDefaultErrorToast(),
-	});
+  return useMutation({
+    mutationFn: removeFavouriteItem,
+    onMutate: (item: UserBook) => {
+      addFavourite(item.bookId);
+    },
+    onSettled: (_data, _error, item: UserBook) => {
+      removeFavourite(item.bookId);
+    },
+    onError: () => showDefaultErrorToast(),
+  });
 };

@@ -1,8 +1,8 @@
-import { renderHook, waitFor, wrapper } from "@/helpers/test-utils";
+import { renderHook, waitFor, wrapper } from "@/components/Test/test-utils";
 import { useBooksQuery } from "../books";
-import { getBooks } from "@/services/bookService";
+import { getBooks } from "@/services/book";
 
-jest.mock("@/services/bookService", () => ({
+jest.mock("@/services/book.ts", () => ({
   getBooks: jest.fn(),
 }));
 

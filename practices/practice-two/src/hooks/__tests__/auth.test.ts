@@ -1,6 +1,6 @@
 import { waitFor } from "@testing-library/react";
 import { renderHook } from "@testing-library/react";
-import { wrapper } from "@/helpers/test-utils";
+import { wrapper } from "@/components/Test/test-utils";
 import { registerUser } from "@/services";
 import { useRegisterUser } from "../auth";
 

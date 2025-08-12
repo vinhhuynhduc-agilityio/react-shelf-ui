@@ -10,21 +10,12 @@ export interface Book {
   isFavorite?: boolean;
 }
 
-export interface RecentReading {
+export interface UserBook {
+  id: string;
   bookId: string;
   userId: string;
-  id: string;
 }
 
-export interface ShelfItem {
-  id: string;
-  bookId: string;
-  userId: string;
-  borrowedDate: string;
-}
-
-export interface FavouriteItem {
-  id: string;
-  bookId: string;
-  userId: string;
+export interface ShelfItem extends UserBook {
+  borrowedDate?: string;
 }

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import BookSearchList from "./index";
-import { Book, FavouriteItem, ShelfItem } from "@/types";
+import { Book, UserBook, ShelfItem } from "@/types";
 
 // Strictly type the BookRow props for mocking
 type BookRowProps = {
@@ -36,9 +36,7 @@ describe("BookSearchList", () => {
     { id: "2", title: "Book 2" } as Book,
   ];
   const shelves: ShelfItem[] = [{ bookId: "1" } as ShelfItem];
-  const favourites: FavouriteItem[] = [
-    { bookId: "2", id: "fav2" } as FavouriteItem,
-  ];
+  const favourites: UserBook[] = [{ bookId: "2", id: "fav2" } as UserBook];
   const pendingFavouritesActions = ["2"];
   const handleClickPreview = jest.fn();
   const handleFavoriteClick = jest.fn();

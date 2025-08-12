@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 // hooks
-import { Book, FavouriteItem, ShelfItem } from "@/types";
+import { Book, UserBook, ShelfItem } from "@/types";
 
 // components
 import { BookRow } from "@/components/common";
@@ -12,7 +12,7 @@ import { getBookStatus } from "@/helpers";
 interface BookSearchListProps {
   books: Book[];
   shelves: ShelfItem[];
-  favourites: FavouriteItem[];
+  favourites: UserBook[];
   pendingFavouritesActions: string[];
   handleClickPreview: (book: Book) => void;
   handleFavoriteClick: (

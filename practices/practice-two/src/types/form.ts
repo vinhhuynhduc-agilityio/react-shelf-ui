@@ -1,11 +1,9 @@
-export interface User {
-  id: string;
+export interface AccountFormValues {
   fullName: string;
   email: string;
-  password: string;
-  avatarUrl: string;
   registerNumber: string;
   phoneNumber: string;
   bio: string;
+  avatar: string;
   countryCode: string;
 }

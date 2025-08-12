@@ -5,7 +5,8 @@ import { ERROR_MESSAGE } from "@/constants";
 import { useToastStore } from "@/stores";
 
 export const showDefaultErrorToast = () => {
-	const { showToast } = useToastStore.getState();
+  const { showToast } = useToastStore.getState();
 
-	showToast(ERROR_MESSAGE.DEFAULT, "error");
+  showToast(ERROR_MESSAGE.DEFAULT, "error");
 };
+// -> error

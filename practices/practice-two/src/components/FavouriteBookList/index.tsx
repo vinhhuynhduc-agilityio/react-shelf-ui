@@ -1,5 +1,5 @@
 // types
-import { Book, FavouriteItem, ShelfItem } from "@/types";
+import { Book, UserBook, ShelfItem } from "@/types";
 
 // components
 import { BookRow } from "@/components";
@@ -9,7 +9,7 @@ import { isBookInShelf } from "@/helpers";
 
 interface FavouriteBookListProps {
   books: Book[];
-  favourites: FavouriteItem[];
+  favourites: UserBook[];
   shelves: ShelfItem[];
   pendingFavouritesActions: string[];
   onClickPreview: (book: Book) => void;

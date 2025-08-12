@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 
 // constants
-import { ROUTE } from "@/constants/userRoutes";
+import { ROUTE } from "@/constants/routes";
 
 // pages
 import { SignInPage } from "@/pages";

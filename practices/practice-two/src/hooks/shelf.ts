@@ -55,14 +55,14 @@ export const useFetchMySHelf = (
 };
 
 export const useAddShelfItem = (id: string) => {
-  const { addPending, removePending } = usePendingShelfStore();
+  const { addShelf, removeShelf } = usePendingShelfStore();
   const queryClient = useQueryClient();
   const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: addShelfItem,
     onMutate: (shelfItem: ShelfItem) => {
-      addPending(shelfItem.bookId);
+      addShelf(shelfItem.bookId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -71,7 +71,7 @@ export const useAddShelfItem = (id: string) => {
       showToast(SUCCESS_MESSAGE.BOOK_BORROWED, "success");
     },
     onSettled: (_data, _error, shelfItem: ShelfItem) => {
-      removePending(shelfItem.bookId);
+      removeShelf(shelfItem.bookId);
     },
     onError: () => {
       showDefaultErrorToast();
@@ -80,15 +80,15 @@ export const useAddShelfItem = (id: string) => {
 };
 
 export const useRemoveShelfItem = () => {
-  const { addPending, removePending } = usePendingShelfStore();
+  const { addShelf, removeShelf } = usePendingShelfStore();
 
   return useMutation({
     mutationFn: removeShelfItem,
     onMutate: (shelfItem: ShelfItem) => {
-      addPending(shelfItem.bookId);
+      addShelf(shelfItem.bookId);
     },
     onSettled: (_data, _error, shelfItem: ShelfItem) => {
-      removePending(shelfItem.bookId);
+      removeShelf(shelfItem.bookId);
     },
     onError: () => {
       showDefaultErrorToast();

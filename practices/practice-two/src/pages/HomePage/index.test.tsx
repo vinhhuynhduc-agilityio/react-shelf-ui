@@ -1,4 +1,4 @@
-import { screen, render } from "@/helpers/test-utils";
+import { screen, render } from "@/components/Test/test-utils";
 import HomePage from ".";
 import { useUserStore } from "@/stores";
 import { useBooksQuery, useGetMyShelf } from "@/hooks";

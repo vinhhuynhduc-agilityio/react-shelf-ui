@@ -1,9 +1,9 @@
-import { FavouriteItem } from "@/types";
+import { UserBook } from "@/types";
 import { create } from "zustand";
 
 interface FavouriteStore {
-  favourites: FavouriteItem[];
-  setFavourites: (favourites: FavouriteItem[]) => void;
+  favourites: UserBook[];
+  setFavourites: (favourites: UserBook[]) => void;
 }
 
 export const useFavouritesStore = create<FavouriteStore>((set) => ({
