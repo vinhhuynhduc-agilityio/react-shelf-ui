@@ -1,4 +1,4 @@
 export * from "./books";
 export * from "./user";
-export * from "./typesDropdown";
+export * from "./dropdown";
 export * from "./form";
