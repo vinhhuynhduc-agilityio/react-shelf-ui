@@ -6,7 +6,7 @@ export { default as Avatar } from "./Avatar";
 export { default as BookItem } from "./BookItem";
 export { default as BookRow } from "./BookRow";
 export { default as HeaderRow } from "./HeaderRow";
-export { default as StatusBadge } from "./StatusBadge";
+export { default as Badge } from "./Badge";
 export { default as Toast } from "./Toast";
 export { default as RatingStars } from "./RatingStars";
 export { FavouriteIcon } from "./FavouriteIcon";

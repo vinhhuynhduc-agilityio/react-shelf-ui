@@ -4,7 +4,10 @@ import { memo, useCallback } from "react";
 import { Book } from "@/types";
 
 // components
-import { Button, StatusBadge, FavouriteIcon } from "@/components";
+import { Button, Badge, FavouriteIcon } from "@/components";
+
+// constants
+import { STATUS_BADGE_STYLES } from "@/constants";
 
 interface RowBookProps {
   book: Book;
@@ -33,6 +36,8 @@ const BookRow: React.FC<RowBookProps> = memo(
     const onClickFavorite = useCallback(() => {
       handleFavoriteClick(book, favouriteId);
     }, [handleFavoriteClick, book, favouriteId]);
+
+    const statusLabel = isInShelf ? "In-Shelf" : "None";
 
     return (
       <div className="grid xl:grid-cols-[340px_100px_130px_130px_60px_auto] lg:grid-cols-[280px_60px_80px_85px_20px_auto] md:grid-cols-[110px_80px_100px_88px_28px_auto] grid-cols-[95px_80px_30px_auto] gap-4 p-4 border border-gray-200 rounded-[10px] shadow-sm bg-white items-center sm:grid-cols-[95px_80px_90px_30px_auto]">
@@ -65,7 +70,10 @@ const BookRow: React.FC<RowBookProps> = memo(
         </div>
         {/* status */}
         <div className="text-left">
-          <StatusBadge status={isInShelf ? "In-Shelf" : "None"} />
+          <Badge
+            label={statusLabel}
+            className={STATUS_BADGE_STYLES[statusLabel]}
+          />
         </div>
         <button
           className="hover:scale-110 transition-all"

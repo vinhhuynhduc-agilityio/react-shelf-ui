@@ -2,14 +2,14 @@
 import { Book } from "@/types";
 
 // components
-import {
-  Button,
-  ParagraphMessage,
-  RatingStars,
-  StatusBadge,
-} from "@/components";
+import { Button, ParagraphMessage, RatingStars, Badge } from "@/components";
 import { CheckmarkIcon } from "@/components/icons";
+
+// hooks
 import { parseAuthorAndYear } from "@/helpers";
+
+// constants
+import { STATUS_BADGE_STYLES } from "@/constants";
 
 export const BookDetailInfo = ({
   book,
@@ -27,6 +27,7 @@ export const BookDetailInfo = ({
   availability: string[];
 }) => {
   const { authorName, publishedYear } = parseAuthorAndYear(book.authorAndYear);
+  const statusLabel = isInShelf ? "In-Shelf" : "None";
 
   return (
     <div className="flex flex-col md:w-[433px] sm:w-[483px] w-[370px]">
@@ -71,7 +72,10 @@ export const BookDetailInfo = ({
           <h3 className="lg:text-[18px] md:text-[16px] font-medium mb-[12px] text-[#4D4D4D]">
             Status
           </h3>
-          <StatusBadge status={isInShelf ? "In-Shelf" : "None"} />
+          <Badge
+            label={statusLabel}
+            className={STATUS_BADGE_STYLES[statusLabel]}
+          />
         </div>
       </div>
       <Button
