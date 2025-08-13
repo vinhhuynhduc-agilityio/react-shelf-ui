@@ -10,7 +10,7 @@ import { User } from "@/types";
 // constants
 import { API_ENDPOINTS } from "@/constants";
 
-export const fetchUserByEmail = async (email: string): Promise<User | null> => {
+export const getUserByEmail = async (email: string): Promise<User | null> => {
   const data = await apiRequest<null, User[]>(
     "GET",
     `${API_BASE_URL}${API_ENDPOINTS.LOGIN}?email=${email}`

@@ -7,7 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   useAddFavouriteItem,
   useBooksQuery,
-  useFetchAndStoreFavourites,
+  useGetAndStoreFavourites,
   useGetMyShelf,
   useRemoveFavouriteItem,
 } from "@/hooks";
@@ -23,7 +23,7 @@ import { filterBooks, isBookInShelf } from "@/helpers";
 
 // components
 import {
-  ApiErrorNotice,
+  ErrorAlert,
   BookRowSkeleton,
   BookSearchList,
   HeaderRow,
@@ -31,7 +31,10 @@ import {
 } from "@/components";
 
 // constants
-import { QUERY_KEY_MY_FAVOURITE, ROUTE } from "@/constants";
+import { ROUTE } from "@/constants";
+
+// services
+import { QUERY_KEY_MY_FAVOURITE } from "@/services";
 
 const SearchPage: React.FC = () => {
   const navigate = useNavigate();
@@ -50,7 +53,7 @@ const SearchPage: React.FC = () => {
     isError: isErrorFavourites,
     isFetching: isFetchingFavourites,
     error: errorFavourites,
-  } = useFetchAndStoreFavourites(currentUser?.id || "");
+  } = useGetAndStoreFavourites(currentUser?.id || "");
   const {
     data: shelves,
     isFetching: isFetchingShelf,
@@ -154,7 +157,7 @@ const SearchPage: React.FC = () => {
     ];
 
     return (
-      <ApiErrorNotice
+      <ErrorAlert
         title="Failed to load search data"
         errors={apiErrorMessages}
       />

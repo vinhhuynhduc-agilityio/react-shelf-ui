@@ -10,7 +10,7 @@ import { Book } from "@/types";
 
 // components
 import {
-  ApiErrorNotice,
+  ErrorAlert,
   IconButton,
   BookRowSkeleton,
   HeaderRow,
@@ -22,16 +22,19 @@ import { ArrowBackIcon } from "@/components/icons";
 // hooks
 import {
   useBooksQuery,
-  useFetchAndStoreFavourites,
+  useGetAndStoreFavourites,
   useGetMyShelf,
   useRemoveFavouriteItem,
 } from "@/hooks";
 
 // constants
-import { QUERY_KEY_MY_FAVOURITE, ROUTE } from "@/constants";
+import { ROUTE } from "@/constants";
 
 // helpers
 import { filterFavouritedBooks } from "@/helpers";
+
+// services
+import { QUERY_KEY_MY_FAVOURITE } from "@/services";
 
 const FavouritePage: React.FC = () => {
   const navigate = useNavigate();
@@ -50,7 +53,7 @@ const FavouritePage: React.FC = () => {
     isError: isErrorFavourites,
     isFetching: isFetchingFavourites,
     error: errorFavourites,
-  } = useFetchAndStoreFavourites(currentUser?.id || "");
+  } = useGetAndStoreFavourites(currentUser?.id || "");
   const { data: shelves } = useGetMyShelf(currentUser?.id || "");
 
   // states
@@ -122,7 +125,7 @@ const FavouritePage: React.FC = () => {
   const renderSkeleton = () => <BookRowSkeleton />;
 
   const renderApiError = () => (
-    <ApiErrorNotice
+    <ErrorAlert
       title="Failed to load favourites data"
       errors={[
         isErrorBooks ? errorBooks?.message : null,

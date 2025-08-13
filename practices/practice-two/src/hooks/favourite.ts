@@ -2,12 +2,13 @@ import { useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 // constants
-import { ERROR_MESSAGE, QUERY_KEY_MY_FAVOURITE } from "@/constants";
+import { ERROR_MESSAGE } from "@/constants";
 
 // services
 import {
   addFavouriteItem,
   getFavourites,
+  QUERY_KEY_MY_FAVOURITE,
   removeFavouriteItem,
 } from "@/services";
 
@@ -28,7 +29,7 @@ export const useGetFavourites = (userId: string) => {
   });
 };
 
-export const useFetchAndStoreFavourites = (userId: string) => {
+export const useGetAndStoreFavourites = (userId: string) => {
   const { favourites, setFavourites } = useFavouritesStore();
   const {
     data: queryFavourites,

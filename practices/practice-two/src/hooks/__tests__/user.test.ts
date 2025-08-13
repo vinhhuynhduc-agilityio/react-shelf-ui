@@ -1,12 +1,12 @@
 import { waitFor } from "@testing-library/react";
 import { renderHook } from "@testing-library/react";
 import { wrapper } from "@/components/Test/test-utils";
-import { fetchUserByEmail, updateUser } from "@/services";
+import { getUserByEmail, updateUser } from "@/services";
 import { useGetUser, useUpdateUser } from "../user";
 import { useToastStore, useUserStore } from "@/stores";
 
 jest.mock("@/services", () => ({
-  fetchUserByEmail: jest.fn(),
+  getUserByEmail: jest.fn(),
   updateUser: jest.fn(),
 }));
 jest.mock("@/helpers", () => ({
@@ -39,17 +39,17 @@ describe("useGetUser", () => {
     jest.clearAllMocks();
   });
 
-  it("should call fetchUserByEmail and return user", async () => {
-    (fetchUserByEmail as jest.Mock).mockResolvedValue(MOCK_USER);
+  it("should call getUserByEmail and return user", async () => {
+    (getUserByEmail as jest.Mock).mockResolvedValue(MOCK_USER);
     const { result } = renderHook(() => useGetUser(), { wrapper });
     await result.current.mutateAsync("test@email.com");
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(fetchUserByEmail).toHaveBeenCalledWith("test@email.com");
+    expect(getUserByEmail).toHaveBeenCalledWith("test@email.com");
   });
 
   it("should call showToast on error", async () => {
     const error = { response: { data: { error: "err" } } };
-    (fetchUserByEmail as jest.Mock).mockRejectedValue(error);
+    (getUserByEmail as jest.Mock).mockRejectedValue(error);
     const { result } = renderHook(() => useGetUser(), { wrapper });
     await expect(result.current.mutateAsync("fail@email.com")).rejects.toBe(
       error

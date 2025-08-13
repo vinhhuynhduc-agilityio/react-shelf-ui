@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import ApiErrorNotice from "./index";
+import ErrorAlert from "./index";
 
-const meta: Meta<typeof ApiErrorNotice> = {
-  title: "Components/ApiErrorNotice",
-  component: ApiErrorNotice,
+const meta: Meta<typeof ErrorAlert> = {
+  title: "Components/ErrorAlert",
+  component: ErrorAlert,
   parameters: {
     docs: {
       description: {
@@ -46,7 +46,7 @@ const meta: Meta<typeof ApiErrorNotice> = {
 
 export default meta;
 
-type Story = StoryObj<typeof ApiErrorNotice>;
+type Story = StoryObj<typeof ErrorAlert>;
 
 export const BasicUsage: Story = {
   name: "Basic usage",

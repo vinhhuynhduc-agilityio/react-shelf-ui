@@ -7,7 +7,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 
 // constants
-import { AVAILABILITY, ROUTE } from "@/constants";
+import { BOOK_FORMATS, ROUTE } from "@/constants";
 
 // components
 import {
@@ -103,7 +103,7 @@ const BookPreviewPage = () => {
             isPending={isPendingBorrowedBook}
             isFetching={isFetchingShelf}
             onBorrow={handleBorrow}
-            availability={AVAILABILITY}
+            availability={BOOK_FORMATS}
           />
         </div>
         <AuthorCard name={authorName} bio={book.authorBio ?? ""} />

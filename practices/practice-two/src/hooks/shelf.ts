@@ -2,14 +2,15 @@ import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // services
-import { addShelfItem, getShelves, removeShelfItem } from "@/services";
+import {
+  addShelfItem,
+  getShelves,
+  QUERY_KEY_MY_SHELF,
+  removeShelfItem,
+} from "@/services";
 
 // constants
-import {
-  ERROR_MESSAGE,
-  QUERY_KEY_MY_SHELF,
-  SUCCESS_MESSAGE,
-} from "@/constants";
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "@/constants";
 
 // stores
 import { usePendingShelfStore, useToastStore } from "@/stores";
@@ -27,7 +28,7 @@ export const useGetMyShelf = (userId: string) =>
     meta: { errorMessage: ERROR_MESSAGE.SHELF_FETCH_ERROR },
   });
 
-export const useFetchAndStoreMyShelf = (
+export const useGetAndStoreMyShelf = (
   userId: string,
   setShelf: (shelf: ShelfItem[]) => void
 ) => {

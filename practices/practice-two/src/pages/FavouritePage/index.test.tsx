@@ -5,7 +5,7 @@ import { MOCK_USER } from "@/__mocks__/user";
 import { useUserStore, useFavouritesStore } from "@/stores";
 import {
   useBooksQuery,
-  useFetchAndStoreFavourites,
+  useGetAndStoreFavourites,
   useGetMyShelf,
   useRemoveFavouriteItem,
 } from "@/hooks";
@@ -17,7 +17,7 @@ jest.mock("@/stores", () => ({
 }));
 jest.mock("@/hooks", () => ({
   useBooksQuery: jest.fn(),
-  useFetchAndStoreFavourites: jest.fn(),
+  useGetAndStoreFavourites: jest.fn(),
   useGetMyShelf: jest.fn(),
   useRemoveFavouriteItem: jest.fn(),
 }));
@@ -25,7 +25,7 @@ jest.mock("@/hooks", () => ({
 const mockedUseUserStore = useUserStore as unknown as jest.Mock;
 const mockedUseFavouritesStore = useFavouritesStore as unknown as jest.Mock;
 const mockedUseBooksQuery = useBooksQuery as jest.Mock;
-const mockedUseFetchFavourites = useFetchAndStoreFavourites as jest.Mock;
+const mockedUseGetFavourites = useGetAndStoreFavourites as jest.Mock;
 const mockedUseGetMyShelf = useGetMyShelf as jest.Mock;
 const mockedUseRemoveFavouriteItem = useRemoveFavouriteItem as jest.Mock;
 
@@ -37,7 +37,7 @@ describe("FavouritePage", () => {
       isError: false,
       error: null,
     });
-    mockedUseFetchFavourites.mockReturnValue({
+    mockedUseGetFavourites.mockReturnValue({
       isLoading: false,
       isError: false,
       error: null,
@@ -63,7 +63,7 @@ describe("FavouritePage", () => {
       isError: false,
       error: null,
     });
-    mockedUseFetchFavourites.mockReturnValue({
+    mockedUseGetFavourites.mockReturnValue({
       isLoading: true,
       isError: false,
       error: null,
@@ -79,7 +79,7 @@ describe("FavouritePage", () => {
       isError: true,
       error: { message: "fail" },
     });
-    mockedUseFetchFavourites.mockReturnValue({
+    mockedUseGetFavourites.mockReturnValue({
       isLoading: false,
       isError: true,
       error: { message: "fail2" },

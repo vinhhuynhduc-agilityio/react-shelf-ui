@@ -7,7 +7,7 @@ import { useToastStore, useUserStore } from "@/stores";
 import { User } from "@/types/user";
 
 // services
-import { fetchUserByEmail, updateUser } from "@/services";
+import { getUserByEmail, updateUser } from "@/services";
 
 // helpers
 import { showDefaultErrorToast } from "@/helpers";
@@ -19,7 +19,7 @@ export const useGetUser = () => {
   const { showToast } = useToastStore();
 
   return useMutation({
-    mutationFn: (email: string) => fetchUserByEmail(email),
+    mutationFn: (email: string) => getUserByEmail(email),
     onError: (error: unknown) => {
       const err = error as { response?: { data?: { error?: string } } };
       const message = err.response?.data?.error || ERROR_MESSAGE.DEFAULT;

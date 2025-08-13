@@ -1,13 +1,13 @@
-import { fetchUserByEmail, updateUser } from "../user";
+import { getUserByEmail, updateUser } from "../user";
 import { apiRequest } from "../../helpers/api";
 import { MOCK_USER } from "@/__mocks__/user";
 
 jest.mock("../../helpers/api");
 
-describe("fetchUserByEmail", () => {
+describe("getUserByEmail", () => {
   it("returns user if found", async () => {
     (apiRequest as jest.Mock).mockResolvedValue([MOCK_USER]);
-    const result = await fetchUserByEmail("huongque@gmail.com");
+    const result = await getUserByEmail("huongque@gmail.com");
     expect(apiRequest).toHaveBeenCalledWith(
       "GET",
       expect.stringContaining("email=huongque@gmail.com")
@@ -16,7 +16,7 @@ describe("fetchUserByEmail", () => {
   });
   it("returns null if not found", async () => {
     (apiRequest as jest.Mock).mockResolvedValue([]);
-    const result = await fetchUserByEmail("notfound@email.com");
+    const result = await getUserByEmail("notfound@email.com");
     expect(result).toBeNull();
   });
 });

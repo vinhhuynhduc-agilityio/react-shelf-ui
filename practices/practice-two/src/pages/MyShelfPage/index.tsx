@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 // hooks
 import {
   useBooksQuery,
-  useFetchAndStoreMyShelf,
+  useGetAndStoreMyShelf,
   useRemoveShelfItem,
 } from "@/hooks";
 
@@ -14,7 +14,7 @@ import { usePendingShelfStore, useUserStore } from "@/stores";
 
 // components
 import {
-  ApiErrorNotice,
+  ErrorAlert,
   Button,
   MyShelfBookCardSkeleton,
   MyShelfBookList,
@@ -22,13 +22,16 @@ import {
 } from "@/components";
 
 // constants
-import { QUERY_KEY_MY_SHELF, ROUTE } from "@/constants";
+import { ROUTE } from "@/constants";
 
 // helpers
 import { filterBooksByShelves } from "@/helpers";
 
 // types
 import { ShelfItem } from "@/types";
+
+// services
+import { QUERY_KEY_MY_SHELF } from "@/services";
 
 const MyShelfPage: React.FC = () => {
   const navigate = useNavigate();
@@ -51,7 +54,7 @@ const MyShelfPage: React.FC = () => {
     isError: isErrorShelf,
     isFetching: isFetchingShelf,
     error: errorShelf,
-  } = useFetchAndStoreMyShelf(currentUser?.id || "", setShelf);
+  } = useGetAndStoreMyShelf(currentUser?.id || "", setShelf);
 
   // store
   const { pendingShelfActions } = usePendingShelfStore();
@@ -110,7 +113,7 @@ const MyShelfPage: React.FC = () => {
   };
 
   const renderApiError = () => (
-    <ApiErrorNotice
+    <ErrorAlert
       title="Failed to load shelf data"
       errors={[
         isErrorBooks ? errorBooks?.message : null,

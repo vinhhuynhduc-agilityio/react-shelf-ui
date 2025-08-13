@@ -2,12 +2,7 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 // components
-import {
-  ApiErrorNotice,
-  BookItem,
-  ParagraphMessage,
-  Skeleton,
-} from "@/components";
+import { ErrorAlert, BookItem, ParagraphMessage, Skeleton } from "@/components";
 
 // constants
 import { ERROR_MESSAGE, ROUTE } from "@/constants";
@@ -48,7 +43,7 @@ const BookHomeList: React.FC<BookListProps> = ({
   const showNoBooksAvailable = !isError && !showSkeleton && !hasBooksData;
 
   const renderApiError = () => (
-    <ApiErrorNotice title="Failed to load books data" errors={[errorMessage]} />
+    <ErrorAlert title="Failed to load books data" errors={[errorMessage]} />
   );
 
   const renderSkeleton = () => {

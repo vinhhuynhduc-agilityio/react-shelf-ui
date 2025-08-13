@@ -5,7 +5,7 @@ import { MOCK_USER } from "@/__mocks__/user";
 import { usePendingShelfStore, useUserStore } from "@/stores";
 import {
   useBooksQuery,
-  useFetchAndStoreMyShelf,
+  useGetAndStoreMyShelf,
   useRemoveShelfItem,
 } from "@/hooks";
 import React from "react";
@@ -17,13 +17,13 @@ jest.mock("@/stores", () => ({
 }));
 jest.mock("@/hooks", () => ({
   useBooksQuery: jest.fn(),
-  useFetchAndStoreMyShelf: jest.fn(),
+  useGetAndStoreMyShelf: jest.fn(),
   useRemoveShelfItem: jest.fn(),
 }));
 
 const mockedUseUserStore = useUserStore as unknown as jest.Mock;
 const mockedUsePendingShelfStore = usePendingShelfStore as unknown as jest.Mock;
-const mockedUseFetchMySHelf = useFetchAndStoreMyShelf as jest.Mock;
+const mockedUseGetMySHelf = useGetAndStoreMyShelf as jest.Mock;
 const mockedUseRemoveShelfItem = useRemoveShelfItem as jest.Mock;
 const mockedUseBooksQuery = useBooksQuery as jest.Mock;
 
@@ -37,7 +37,7 @@ describe("MyShelfPage", () => {
     });
     mockedUseUserStore.mockImplementation(() => ({ currentUser: MOCK_USER }));
     mockedUsePendingShelfStore.mockReturnValue({ pendingShelfActions: [] });
-    mockedUseFetchMySHelf.mockImplementation((userId, setShelf) => {
+    mockedUseGetMySHelf.mockImplementation((userId, setShelf) => {
       // Avoid direct setShelf call to prevent re-render loop
       React.useEffect(() => {
         setShelf(MOCK_SHELVES);
@@ -61,7 +61,7 @@ describe("MyShelfPage", () => {
       isError: true,
       error: { message: "Book error" },
     });
-    mockedUseFetchMySHelf.mockReturnValue({
+    mockedUseGetMySHelf.mockReturnValue({
       isError: true,
       isFetching: false,
       error: { message: "Shelf error" },
@@ -79,7 +79,7 @@ describe("MyShelfPage", () => {
       isError: false,
       error: null,
     });
-    mockedUseFetchMySHelf.mockImplementation((userId, setShelf) => {
+    mockedUseGetMySHelf.mockImplementation((userId, setShelf) => {
       // Avoid direct setShelf call to prevent re-render loop
       React.useEffect(() => {
         setShelf([]);
@@ -101,7 +101,7 @@ describe("MyShelfPage", () => {
       isError: false,
       error: null,
     });
-    mockedUseFetchMySHelf.mockImplementation((userId, setShelf) => {
+    mockedUseGetMySHelf.mockImplementation((userId, setShelf) => {
       // Avoid direct setShelf call to prevent re-render loop
       React.useEffect(() => {
         setShelf(MOCK_SHELVES);

@@ -18,3 +18,5 @@ export { default as BookSearchList } from "./BookSearchList";
 export { default as MyShelfBookList } from "./MyShelfBookList";
 export { default as FavouriteBookList } from "./FavouriteBookList";
 export { default as BookListWithBoundary } from "./BookListWithBoundary";
+export { default as HeaderRow } from "./HeaderRow";
+export { default as BookItem } from "./BookItem";

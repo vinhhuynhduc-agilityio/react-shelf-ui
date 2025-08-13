@@ -35,11 +35,11 @@ const SignInPage: React.FC = () => {
     formState: { errors },
   } = useForm<LoginFormValues>();
 
-  const { mutate: fetchUser, isPending } = useGetUser();
+  const { mutate: getUser, isPending } = useGetUser();
 
   // Handle form submission
   const onSubmit = (data: LoginFormValues) => {
-    fetchUser(data.email, {
+    getUser(data.email, {
       onSuccess: (user) => {
         if (!user || user.password !== data.password) {
           setErrorMessage("Invalid email or password");
