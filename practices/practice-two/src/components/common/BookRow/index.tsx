@@ -14,9 +14,8 @@ interface RowBookProps {
   isInShelf: boolean;
   isFavorite: boolean;
   disabled?: boolean;
-  favouriteId?: string;
   onClickPreview: (book: Book) => void;
-  handleFavoriteClick: (book: Book, favouriteId?: string) => void;
+  handleFavoriteClick: () => void;
 }
 
 const BookRow: React.FC<RowBookProps> = memo(
@@ -25,17 +24,12 @@ const BookRow: React.FC<RowBookProps> = memo(
     isInShelf,
     isFavorite,
     disabled = false,
-    favouriteId,
     onClickPreview,
     handleFavoriteClick,
   }) => {
     const handlePreviewClick = useCallback(() => {
       onClickPreview(book);
     }, [onClickPreview, book]);
-
-    const onClickFavorite = useCallback(() => {
-      handleFavoriteClick(book, favouriteId);
-    }, [handleFavoriteClick, book, favouriteId]);
 
     const statusLabel = isInShelf ? "In-Shelf" : "None";
 
@@ -77,7 +71,7 @@ const BookRow: React.FC<RowBookProps> = memo(
         </div>
         <button
           className="hover:scale-110 transition-all"
-          onClick={onClickFavorite}
+          onClick={handleFavoriteClick}
           aria-label="Toggle favorite"
           disabled={disabled}
         >

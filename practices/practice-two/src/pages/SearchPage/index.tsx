@@ -19,13 +19,13 @@ import { useFavouritesStore, useSearchStore, useUserStore } from "@/stores";
 import { Book, UserBook } from "@/types";
 
 // helpers
-import { filterBooks, isBookInShelf } from "@/helpers";
+import { filterBooks } from "@/helpers";
 
 // components
 import {
   ErrorAlert,
   BookRowSkeleton,
-  BookSearchList,
+  BookList,
   HeaderRow,
   ParagraphMessage,
 } from "@/components";
@@ -101,8 +101,8 @@ const SearchPage: React.FC = () => {
   // Handle favorite click to add/remove from favourites
   const handleFavoriteClick = (
     book: Book,
-    isFavorite: boolean,
-    favouriteId?: string
+    favouriteId: string,
+    isFavorite?: boolean
   ) => {
     const userId = currentUser?.id || "";
     const prevFavourites = favourites || [];
@@ -178,14 +178,13 @@ const SearchPage: React.FC = () => {
   );
 
   const renderBookSearchList = () => (
-    <BookSearchList
+    <BookList
       books={filteredBooks}
       shelves={shelves ?? []}
       favourites={favourites ?? []}
       pendingFavouritesActions={pendingFavouritesActions}
-      handleClickPreview={handleClickPreview}
+      onClickPreview={handleClickPreview}
       handleFavoriteClick={handleFavoriteClick}
-      isBookInShelf={isBookInShelf}
     />
   );
 

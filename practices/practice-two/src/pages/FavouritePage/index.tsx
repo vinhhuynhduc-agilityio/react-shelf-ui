@@ -15,7 +15,7 @@ import {
   BookRowSkeleton,
   HeaderRow,
   ParagraphMessage,
-  FavouriteBookList,
+  BookList,
 } from "@/components";
 import { ArrowBackIcon } from "@/components/icons";
 
@@ -142,13 +142,13 @@ const FavouritePage: React.FC = () => {
   );
 
   const renderFavouritesBookList = () => (
-    <FavouriteBookList
+    <BookList
       books={filteredBooks}
       favourites={favourites ?? []}
       shelves={shelves ?? []}
       pendingFavouritesActions={pendingFavouritesActions}
       onClickPreview={handleCLickPreview}
-      onRemoveFavourite={handleFavoriteClick}
+      handleFavoriteClick={handleFavoriteClick}
     />
   );
 

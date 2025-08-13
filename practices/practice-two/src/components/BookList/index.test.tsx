@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import BookSearchList from "./index";
+import BookList from "./index";
 import { Book, UserBook, ShelfItem } from "@/types";
 
 // Strictly type the BookRow props for mocking
@@ -30,7 +30,7 @@ jest.mock("@/components/common", () => ({
   ),
 }));
 
-describe("BookSearchList", () => {
+describe("BookList", () => {
   const books: Book[] = [
     { id: "1", title: "Book 1" } as Book,
     { id: "2", title: "Book 2" } as Book,
@@ -40,8 +40,6 @@ describe("BookSearchList", () => {
   const pendingFavouritesActions = ["2"];
   const handleClickPreview = jest.fn();
   const handleFavoriteClick = jest.fn();
-  const isBookInShelf = (bookId: string, shelf: ShelfItem[]) =>
-    shelf.some((s) => s.bookId === bookId);
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -49,14 +47,13 @@ describe("BookSearchList", () => {
 
   it("renders a BookRow for each book", () => {
     render(
-      <BookSearchList
+      <BookList
         books={books}
         shelves={shelves}
         favourites={favourites}
         pendingFavouritesActions={pendingFavouritesActions}
-        handleClickPreview={handleClickPreview}
+        onClickPreview={handleClickPreview}
         handleFavoriteClick={handleFavoriteClick}
-        isBookInShelf={isBookInShelf}
       />
     );
     expect(screen.getAllByTestId("book-row")).toHaveLength(2);
@@ -66,14 +63,13 @@ describe("BookSearchList", () => {
 
   it("calls handleClickPreview when preview button is clicked", () => {
     render(
-      <BookSearchList
+      <BookList
         books={books}
         shelves={shelves}
         favourites={favourites}
         pendingFavouritesActions={pendingFavouritesActions}
-        handleClickPreview={handleClickPreview}
+        onClickPreview={handleClickPreview}
         handleFavoriteClick={handleFavoriteClick}
-        isBookInShelf={isBookInShelf}
       />
     );
     fireEvent.click(screen.getAllByTestId("preview-btn")[0]);
@@ -82,18 +78,17 @@ describe("BookSearchList", () => {
 
   it("calls handleFavoriteClick with correct args when favorite button is clicked", () => {
     render(
-      <BookSearchList
+      <BookList
         books={books}
         shelves={shelves}
         favourites={favourites}
         pendingFavouritesActions={pendingFavouritesActions}
-        handleClickPreview={handleClickPreview}
+        onClickPreview={handleClickPreview}
         handleFavoriteClick={handleFavoriteClick}
-        isBookInShelf={isBookInShelf}
       />
     );
     fireEvent.click(screen.getAllByTestId("fav-btn")[1]);
     // Book 2 is favorite, favouriteId is "fav2"
-    expect(handleFavoriteClick).toHaveBeenCalledWith(books[1], true, "fav2");
+    expect(handleFavoriteClick).toHaveBeenCalledWith(books[1], "fav2", true);
   });
 });

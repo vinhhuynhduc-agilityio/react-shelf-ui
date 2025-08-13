@@ -7,34 +7,32 @@ import { Book, UserBook, ShelfItem } from "@/types";
 import { BookRow } from "@/components/common";
 
 // helpers
-import { getBookStatus } from "@/helpers";
+import { getBookStatus, isBookInShelf } from "@/helpers";
 
-interface BookSearchListProps {
+interface BookListProps {
   books: Book[];
-  shelves: ShelfItem[];
   favourites: UserBook[];
+  shelves: ShelfItem[];
   pendingFavouritesActions: string[];
-  handleClickPreview: (book: Book) => void;
+  onClickPreview: (book: Book) => void;
   handleFavoriteClick: (
     book: Book,
-    isFavorite: boolean,
-    favouriteId?: string
+    favouriteId: string,
+    isFavorite?: boolean
   ) => void;
-  isBookInShelf: (bookId: string, shelf: ShelfItem[]) => boolean;
 }
 
-const BookSearchList: React.FC<BookSearchListProps> = ({
+const BookList: React.FC<BookListProps> = ({
   books,
   shelves,
   favourites,
   pendingFavouritesActions,
-  handleClickPreview,
+  onClickPreview,
   handleFavoriteClick,
-  isBookInShelf,
 }) => {
   const getFavoriteHandler = useCallback(
-    (book: Book, isFavorite: boolean, favouriteId?: string) => () =>
-      handleFavoriteClick(book, isFavorite, favouriteId),
+    (book: Book, favouriteId: string, isFavorite?: boolean) => () =>
+      handleFavoriteClick(book, favouriteId, isFavorite),
     [handleFavoriteClick]
   );
 
@@ -56,11 +54,11 @@ const BookSearchList: React.FC<BookSearchListProps> = ({
             book={book}
             isInShelf={isInShelf}
             isFavorite={!!isFavorite}
-            onClickPreview={handleClickPreview}
+            onClickPreview={onClickPreview}
             handleFavoriteClick={getFavoriteHandler(
               book,
-              !!isFavorite,
-              favouriteId
+              favouriteId ?? "",
+              !!isFavorite
             )}
             disabled={isDisabled}
           />
@@ -70,4 +68,4 @@ const BookSearchList: React.FC<BookSearchListProps> = ({
   );
 };
 
-export default BookSearchList;
+export default BookList;
