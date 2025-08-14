@@ -13,7 +13,7 @@ import { BOOK_FORMATS, ROUTE } from "@/constants";
 import {
   IconButton,
   AuthorCard,
-  BookMediaCard,
+  BookPreviewCard,
   BookDetailInfo,
 } from "@/components";
 import { ArrowBackIcon } from "@/components/icons";
@@ -96,7 +96,7 @@ const BookPreviewPage = () => {
       />
       <div className="flex xl:flex-row flex-col justify-between xl:space-x-6">
         <div className="flex md:flex-row flex-col justify-start mb-16">
-          <BookMediaCard imageUrl={book.imageUrl} title={book.title} />
+          <BookPreviewCard imageUrl={book.imageUrl} title={book.title} />
           <BookDetailInfo
             book={book}
             isInShelf={isInShelf}

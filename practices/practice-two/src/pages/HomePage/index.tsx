@@ -5,7 +5,7 @@ import { useBooksQuery, useGetMyShelf } from "@/hooks";
 import { useUserStore } from "@/stores";
 
 // components
-import { BookListWithBoundary, TodayQuote } from "@/components";
+import { BookHomeListWithBoundary, TodayQuote } from "@/components";
 
 // types
 import { Book } from "@/types/books";
@@ -40,14 +40,14 @@ const HomePage: React.FC = () => {
       <h1 className="mb-4 mt-10 text-[35px] font-semibold text-gray-600">
         Good Morning
       </h1>
-      <BookListWithBoundary
+      <BookHomeListWithBoundary
         title="Recommended for You"
         books={recommendedBooks}
         isLoading={isLoadingBooks}
         isError={isError}
         errorMessage={error?.message}
       />
-      <BookListWithBoundary
+      <BookHomeListWithBoundary
         title="Recent Readings"
         books={recentReadings}
         isLoading={isLoadingRecent}

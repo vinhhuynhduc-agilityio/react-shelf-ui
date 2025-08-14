@@ -16,8 +16,8 @@ import { usePendingShelfStore, useUserStore } from "@/stores";
 import {
   ErrorAlert,
   Button,
-  MyShelfBookCardSkeleton,
-  MyShelfBookList,
+  BookShelfCardSkeleton,
+  BookShelfList,
   ParagraphMessage,
 } from "@/components";
 
@@ -108,7 +108,7 @@ const MyShelfPage: React.FC = () => {
 
   const renderSkeleton = () => {
     return Array.from({ length: 4 }).map((_, idx) => (
-      <MyShelfBookCardSkeleton key={idx} />
+      <BookShelfCardSkeleton key={idx} />
     ));
   };
 
@@ -130,7 +130,7 @@ const MyShelfPage: React.FC = () => {
   );
 
   const renderMyShelfBookList = () => (
-    <MyShelfBookList
+    <BookShelfList
       books={borrowedBooks}
       shelf={shelf ?? []}
       pendingShelfActions={pendingShelfActions}

@@ -13,7 +13,7 @@ import {
   ErrorAlert,
   IconButton,
   BookRowSkeleton,
-  HeaderRow,
+  BookListHeader,
   ParagraphMessage,
   BookList,
 } from "@/components";
@@ -168,7 +168,7 @@ const FavouritePage: React.FC = () => {
 
       <div className="overflow-x-auto text-[#4D4D4D]">
         {/* Header */}
-        <HeaderRow />
+        <BookListHeader />
 
         {/* Main content */}
         <div className="space-y-4 mt-4">

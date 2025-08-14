@@ -1,14 +1,3 @@
-export { HomeIcon } from "./HomeIcon";
-export { SearchIcon } from "./SearchIcon";
-export { ShelfIcon } from "./ShelfIcon";
-export { ReviewIcon } from "./ReviewIcon";
-export { NotesIcon } from "./NotesIcon";
-export { ShareIcon } from "./ShareIcon";
-export { CheckmarkIcon } from "./CheckmarkIcon";
-export { EyeOffIcon } from "./EyeOffIcon";
-export { EyeOnIcon } from "./EyeOnIcon";
-export { EditIcon } from "./EditIcon";
-export { CancelIcon } from "./CancelIcon";
-export { ArrowBackIcon } from "./ArrowBackIcon";
-export { FilterDropdownIcon } from "./FilterDropdownIcon";
-export { SearchIconFilled } from "./SearchIconFilled";
+export * from "./actions";
+export * from "./navigation";
+export * from "./forms";

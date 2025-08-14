@@ -15,6 +15,7 @@ import { useFavouritesStore } from "@/stores";
 import { UserBook } from "@/types";
 
 jest.mock("@/services", () => ({
+  ...jest.requireActual("@/services"),
   getFavourites: jest.fn(),
   addFavouriteItem: jest.fn(),
   removeFavouriteItem: jest.fn(),

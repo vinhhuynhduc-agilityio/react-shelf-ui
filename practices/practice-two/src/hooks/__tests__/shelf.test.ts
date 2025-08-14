@@ -12,6 +12,7 @@ import { ShelfItem } from "@/types";
 import { SUCCESS_MESSAGE } from "@/constants";
 
 jest.mock("@/services", () => ({
+  ...jest.requireActual("@/services"),
   getShelves: jest.fn(),
   addShelfItem: jest.fn(),
   removeShelfItem: jest.fn(),

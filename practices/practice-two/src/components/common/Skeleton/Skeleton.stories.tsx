@@ -110,7 +110,7 @@ export const CustomClassSkeleton: Story = {
   },
 };
 
-export const MyShelfBookCardSkeleton: Story = {
+export const BookShelfCardSkeleton: Story = {
   render: () => (
     <div className="flex items-center bg-white rounded-lg shadow-md p-4 w-[308px] h-[260px]">
       <div className="w-3/5">
@@ -130,7 +130,7 @@ export const MyShelfBookCardSkeleton: Story = {
       </div>
     </div>
   ),
-  name: "My Shelf Book Card Skeleton",
+  name: "Book Shelf Card Skeleton",
   parameters: {
     docs: {
       description: {

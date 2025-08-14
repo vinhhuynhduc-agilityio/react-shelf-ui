@@ -26,7 +26,7 @@ import {
   ErrorAlert,
   BookRowSkeleton,
   BookList,
-  HeaderRow,
+  BookListHeader,
   ParagraphMessage,
 } from "@/components";
 
@@ -54,6 +54,7 @@ const SearchPage: React.FC = () => {
     isFetching: isFetchingFavourites,
     error: errorFavourites,
   } = useGetAndStoreFavourites(currentUser?.id || "");
+
   const {
     data: shelves,
     isFetching: isFetchingShelf,
@@ -191,7 +192,7 @@ const SearchPage: React.FC = () => {
   return (
     <div className="overflow-x-auto text-[#4D4D4D]">
       {/* Header */}
-      <HeaderRow />
+      <BookListHeader />
 
       {/* Rows */}
       <div className="space-y-4 mt-4">
