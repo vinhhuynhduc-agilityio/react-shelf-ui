@@ -1,14 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { scan } from "react-scan";
 
-// styles
+// Global styles
 import "./index.css";
 
-// components
-import App from "./App";
-
-scan({ enabled: true });
+// Component
+import App from "./App.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
