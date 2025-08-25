@@ -1,0 +1,206 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`HomePage matches snapshot 1`] = `
+<div>
+  <div>
+    <div
+      class="relative sm:max-w-[400px] md:max-w-[547px] max-w-[400px] h-[160px] sm:h-[180px] md:h-[233px] bg-gradient-to-tr from-[#EB5231] to-[#571FCF] bg-opacity-10 rounded-lg p-4 sm:p-4 md:p-6"
+    >
+      <h2
+        class="text-white font-medium text-[18px] sm:text-[20px] md:text-[25px] leading-[24px] sm:leading-[28px] md:leading-[32px]"
+      >
+        Today’s Quote
+      </h2>
+      <p
+        class="text-white font-normal text-[14px] sm:text-[16px] md:text-[20px] leading-[20px] sm:leading-[24px] md:leading-[30px] mt-3 sm:mt-4"
+      >
+        “There is more treasure in books than in all the pirate’s loot on Treasure Island.”
+      </p>
+      <p
+        class="text-white font-normal text-[14px] sm:text-[16px] md:text-[20px] leading-[18px] sm:leading-[22px] md:leading-[26px] text-right mt-3 sm:mt-4"
+      >
+        - Walt Disney
+      </p>
+    </div>
+    <h1
+      class="mb-4 mt-10 text-[35px] font-semibold text-gray-600"
+    >
+      Good Morning
+    </h1>
+    <div
+      class="mb-6 w-full"
+    >
+      <h2
+        class="text-[22px] sm:text-[24px] md:text-[25px] text-gray-500 mb-4 font-normal"
+      >
+        Recommended for You
+      </h2>
+      <div
+        class="w-full md:overflow-x-auto sm:overflow-x-auto md:whitespace-nowrap"
+      >
+        <div
+          class="grid grid-cols-2 gap-y-4 md:flex md:space-x-4 sm:flex sm:space-x-4"
+        >
+          <div
+            class="flex-shrink-0"
+          >
+            <div
+              class="w-[160px] bg-white p-4 rounded-lg shadow-sm h-[260px] flex flex-col items-center cursor-pointer"
+              role="button"
+              tabindex="0"
+            >
+              <img
+                alt="Don't Make Me Think"
+                class="w-[130px] h-[170px] object-cover rounded-lg mx-auto"
+                src="https://i.postimg.cc/qvgQxTNW/4aa430788b3938ca7d778a99fe0ff1587c81c67e.jpg"
+              />
+              <h2
+                class="w-[130px] text-[12px] font-normal mt-2 truncate text-[#4D4D4D] mx-auto"
+              >
+                Don't Make Me Think
+              </h2>
+              <p
+                class="w-[130px] text-[10px] text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden mx-auto"
+              >
+                Steve Krug, 2000
+              </p>
+              <p
+                class="w-[130px] text-[10px] text-[#4D4D4D] mx-auto"
+              >
+                4.5
+                <span
+                  class="text-[#A7A7A7]"
+                >
+                  /5
+                </span>
+              </p>
+            </div>
+          </div>
+          <div
+            class="flex-shrink-0"
+          >
+            <div
+              class="w-[160px] bg-white p-4 rounded-lg shadow-sm h-[260px] flex flex-col items-center cursor-pointer"
+              role="button"
+              tabindex="0"
+            >
+              <img
+                alt="The Design of Everyday Things"
+                class="w-[130px] h-[170px] object-cover rounded-lg mx-auto"
+                src="https://i.postimg.cc/Mp16pvwY/cc2b60105e5d1b5aeba05608803badb375872868.jpg"
+              />
+              <h2
+                class="w-[130px] text-[12px] font-normal mt-2 truncate text-[#4D4D4D] mx-auto"
+              >
+                The Design of Everyday Things
+              </h2>
+              <p
+                class="w-[130px] text-[10px] text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden mx-auto"
+              >
+                Don Norman, 1988
+              </p>
+              <p
+                class="w-[130px] text-[10px] text-[#4D4D4D] mx-auto"
+              >
+                4.5
+                <span
+                  class="text-[#A7A7A7]"
+                >
+                  /5
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="mb-6 w-full"
+    >
+      <h2
+        class="text-[22px] sm:text-[24px] md:text-[25px] text-gray-500 mb-4 font-normal"
+      >
+        Recent Readings
+      </h2>
+      <div
+        class="w-full md:overflow-x-auto sm:overflow-x-auto md:whitespace-nowrap"
+      >
+        <div
+          class="grid grid-cols-2 gap-y-4 md:flex md:space-x-4 sm:flex sm:space-x-4"
+        >
+          <div
+            class="flex-shrink-0"
+          >
+            <div
+              class="w-[160px] bg-white p-4 rounded-lg shadow-sm h-[260px] flex flex-col items-center cursor-pointer"
+              role="button"
+              tabindex="0"
+            >
+              <img
+                alt="Don't Make Me Think"
+                class="w-[130px] h-[170px] object-cover rounded-lg mx-auto"
+                src="https://i.postimg.cc/qvgQxTNW/4aa430788b3938ca7d778a99fe0ff1587c81c67e.jpg"
+              />
+              <h2
+                class="w-[130px] text-[12px] font-normal mt-2 truncate text-[#4D4D4D] mx-auto"
+              >
+                Don't Make Me Think
+              </h2>
+              <p
+                class="w-[130px] text-[10px] text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden mx-auto"
+              >
+                Steve Krug, 2000
+              </p>
+              <p
+                class="w-[130px] text-[10px] text-[#4D4D4D] mx-auto"
+              >
+                4.5
+                <span
+                  class="text-[#A7A7A7]"
+                >
+                  /5
+                </span>
+              </p>
+            </div>
+          </div>
+          <div
+            class="flex-shrink-0"
+          >
+            <div
+              class="w-[160px] bg-white p-4 rounded-lg shadow-sm h-[260px] flex flex-col items-center cursor-pointer"
+              role="button"
+              tabindex="0"
+            >
+              <img
+                alt="The Design of Everyday Things"
+                class="w-[130px] h-[170px] object-cover rounded-lg mx-auto"
+                src="https://i.postimg.cc/Mp16pvwY/cc2b60105e5d1b5aeba05608803badb375872868.jpg"
+              />
+              <h2
+                class="w-[130px] text-[12px] font-normal mt-2 truncate text-[#4D4D4D] mx-auto"
+              >
+                The Design of Everyday Things
+              </h2>
+              <p
+                class="w-[130px] text-[10px] text-[#4D4D4D] overflow-ellipsis whitespace-nowrap overflow-hidden mx-auto"
+              >
+                Don Norman, 1988
+              </p>
+              <p
+                class="w-[130px] text-[10px] text-[#4D4D4D] mx-auto"
+              >
+                4.5
+                <span
+                  class="text-[#A7A7A7]"
+                >
+                  /5
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

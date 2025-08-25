@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Avatar matches snapshot 1`] = `
+<div>
+  <div
+    class="md:w-[100px] md:h-[100px] w-[80px] h-[80px] rounded-full overflow-hidden flex-shrink-0 border border-gray-300 "
+    data-testid="avatar"
+  >
+    <img
+      alt="Snapshot"
+      class="w-full h-full object-cover"
+      src="avatar.png"
+    />
+  </div>
+</div>
+`;

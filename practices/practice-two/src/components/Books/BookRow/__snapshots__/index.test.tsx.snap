@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`BookRow matches snapshot 1`] = `
+<div>
+  <div
+    class="grid xl:grid-cols-[340px_100px_130px_130px_60px_auto] lg:grid-cols-[280px_60px_80px_85px_20px_auto] md:grid-cols-[110px_80px_100px_88px_28px_auto] grid-cols-[95px_80px_30px_auto] gap-4 p-4 border border-gray-200 rounded-[10px] shadow-sm bg-white items-center sm:grid-cols-[95px_80px_90px_30px_auto]"
+  >
+    <div
+      class="flex items-center space-x-3"
+    >
+      <div
+        class="w-[75px] h-[99px] min-w-[75px] min-h-[99px] flex items-center justify-center"
+      >
+        <img
+          alt="Don't Make Me Think"
+          class="w-full h-full object-cover border border-gray-200 rounded-[6px]"
+          src="https://i.postimg.cc/qvgQxTNW/4aa430788b3938ca7d778a99fe0ff1587c81c67e.jpg"
+        />
+      </div>
+      <div
+        class="hidden lg:flex flex-col"
+      >
+        <p
+          class="font-medium text-[16px] leading-[22px] max-w-[200px] overflow-hidden text-ellipsis line-clamp-2"
+        >
+          Don't Make Me Think
+        </p>
+        <p
+          class="text-gray-500 lg:text-[15px] text-[13px]"
+        >
+          Steve Krug, 2000
+        </p>
+      </div>
+    </div>
+    <div
+      class="text-left lg:text-[15px] text-[13px] hidden md:block"
+    >
+      4.5
+      /5
+    </div>
+    <div
+      class="text-left lg:text-[15px] text-[13px] hidden sm:block"
+    >
+      Computer Science
+    </div>
+    <div
+      class="text-left"
+    >
+      <span
+        class="inline-flex items-center justify-center rounded-[5px] text-sm font-normal lg:w-[85px] lg:h-[26px] lg:text-sm w-[70px] h-[22px] text-[12px] bg-[#42BB4E] text-white"
+      >
+        In-Shelf
+      </span>
+    </div>
+    <button
+      aria-label="Toggle favorite"
+      class="hover:scale-110 transition-all"
+    >
+      <svg
+        class="lg:w-[20px] lg:h-[18px] w-[17px] h-[15px]"
+        fill="none"
+        height="18"
+        viewBox="0 0 20 18"
+        width="20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M9.645 17.9107L9.6384 17.9072L9.6158 17.8949C9.5965 17.8844 9.5689 17.8693 9.5336 17.8496C9.4629 17.8101 9.3612 17.7524 9.233 17.6769C8.9765 17.5261 8.6132 17.3039 8.1785 17.015C7.3107 16.4381 6.1512 15.5901 4.9886 14.5063C2.6878 12.3615 0.25 9.1751 0.25 5.25C0.25 2.3219 2.7136 0 5.6875 0C7.4364 0 9.0023 0.7991 10 2.0516C10.9977 0.7991 12.5636 0 14.3125 0C17.2864 0 19.75 2.3219 19.75 5.25C19.75 9.1751 17.3122 12.3615 15.0114 14.5063C13.8488 15.5901 12.6893 16.4381 11.8215 17.015C11.3868 17.3039 11.0235 17.5261 10.767 17.6769C10.6388 17.7524 10.5371 17.8101 10.4664 17.8496C10.4311 17.8693 10.4035 17.8844 10.3842 17.8949L10.3616 17.9072L10.355 17.9107L10.3523 17.9121C10.1323 18.0289 9.8677 18.0289 9.6477 17.9121L9.645 17.9107Z"
+          fill="#F34040"
+        />
+      </svg>
+    </button>
+    <div
+      class="text-center"
+    >
+      <button
+        class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all text-[12px] w-[70px] h-[25px] md:w-[85px] md:h-[30px] lg:w-[90px] lg:h-[35px] md:text-[14px] rounded-[5px] p-[4px] [object Object]"
+        type="button"
+      >
+        Preview
+      </button>
+    </div>
+  </div>
+</div>
+`;

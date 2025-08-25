@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ProtectedRoute redirects to login if no user 1`] = `<div />`;
+
+exports[`ProtectedRoute renders children if user exists 1`] = `
+<div>
+  <div>
+    Protected Content
+  </div>
+</div>
+`;

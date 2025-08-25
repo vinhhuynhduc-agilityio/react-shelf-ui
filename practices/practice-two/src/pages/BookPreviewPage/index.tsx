@@ -1,0 +1,115 @@
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+
+// constants
+import { BOOK_FORMATS, ROUTE } from "@/constants";
+
+// components
+import {
+  IconButton,
+  AuthorCard,
+  BookPreviewCard,
+  BookDetailInfo,
+} from "@/components";
+import { ArrowBackIcon } from "@/components/icons";
+
+// stores
+import { usePendingShelfStore, useUserStore } from "@/stores";
+
+// helpers
+import {
+  formatBorrowedDate,
+  isBookInShelf,
+  parseAuthorAndYear,
+} from "@/helpers";
+
+// hooks
+import { useAddShelfItem, useBooksQuery, useGetMyShelf } from "@/hooks";
+
+// types
+import { Book } from "@/types";
+
+const BookPreviewPage = () => {
+  const { bookId } = useParams();
+  const location = useLocation();
+
+  const { data: books = [] } = useBooksQuery();
+  const book: Book | undefined = books.find((b) => b.id.toString() === bookId);
+
+  const navigate = useNavigate();
+  const { currentUser } = useUserStore();
+
+  // Fetch shelves from the API
+  const { data: shelves, isFetching: isFetchingShelf } = useGetMyShelf(
+    currentUser?.id || ""
+  );
+
+  // stores
+  const { pendingShelfActions } = usePendingShelfStore();
+
+  // hooks
+  const { mutate: addShelf } = useAddShelfItem(currentUser?.id || "");
+
+  const isPendingBorrowedBook = book?.id
+    ? pendingShelfActions.includes(book.id)
+    : false;
+  const isInShelf = isBookInShelf(book?.id ?? "", shelves ?? []);
+
+  const handleBorrow = () => {
+    if (!book?.id) return; // Prevent borrowing if book id is missing
+
+    const borrowedBook = {
+      bookId: book.id,
+      borrowedDate: formatBorrowedDate(),
+      userId: currentUser?.id || "",
+      id: uuidv4(),
+    };
+
+    addShelf(borrowedBook);
+  };
+
+  const handleClickBackToResult = () => {
+    const from = location.state?.from || ROUTE.SEARCH;
+    navigate(from);
+  };
+
+  if (!book) {
+    return <Navigate to="*" replace />;
+  }
+
+  const { authorName } = parseAuthorAndYear(book.authorAndYear);
+
+  return (
+    <>
+      <IconButton
+        icon={ArrowBackIcon}
+        label="Back to results"
+        iconPosition="left"
+        onClick={handleClickBackToResult}
+        additionalClasses="flex items-center text-gray-600 hover:text-gray-800 transition-all mb-4"
+        classNameIcon="mr-[9px]"
+      />
+      <div className="flex xl:flex-row flex-col justify-between xl:space-x-6">
+        <div className="flex md:flex-row flex-col justify-start mb-16">
+          <BookPreviewCard imageUrl={book.imageUrl} title={book.title} />
+          <BookDetailInfo
+            book={book}
+            isInShelf={isInShelf}
+            isPending={isPendingBorrowedBook}
+            isFetching={isFetchingShelf}
+            onBorrow={handleBorrow}
+            availability={BOOK_FORMATS}
+          />
+        </div>
+        <AuthorCard name={authorName} bio={book.authorBio ?? ""} />
+      </div>
+    </>
+  );
+};
+
+export default BookPreviewPage;

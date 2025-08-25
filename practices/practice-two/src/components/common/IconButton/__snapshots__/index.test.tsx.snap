@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`IconButton matches snapshot 1`] = `
+<div>
+  <button
+    class="flex items-center transition-all"
+    data-testid=""
+    type="button"
+  >
+    <svg
+      class=""
+      data-testid="mock-icon"
+    />
+    Snapshot
+  </button>
+</div>
+`;

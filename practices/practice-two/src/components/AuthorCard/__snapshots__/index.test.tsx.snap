@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`AuthorCard matches snapshot 1`] = `
+<div>
+  <div
+    class="xl:w-[445px] xl:h-[418px] bg-white p-6 rounded-[10px]"
+  >
+    <h3
+      class="text-[20px] font-semibold text-[#4D4D4D] mb-3"
+    >
+      <span
+        class="text-[#F27851]"
+      >
+        About
+      </span>
+       Author
+    </h3>
+    <h4
+      class="text-[20px] text-[#4D4D4D] mb-8"
+    >
+      Snapshot Name
+    </h4>
+    <p
+      class="text-[13px] text-[#4D4D4D]"
+    >
+      Snapshot Bio
+    </p>
+  </div>
+</div>
+`;
