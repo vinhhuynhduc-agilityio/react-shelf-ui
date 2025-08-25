@@ -1,0 +1,11 @@
+export interface User {
+  id: string;
+  fullName: string;
+  email: string;
+  password: string;
+  avatarUrl: string;
+  registerNumber: string;
+  phoneNumber: string;
+  bio: string;
+  countryCode: string;
+}

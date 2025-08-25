@@ -1,0 +1,140 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SignInPage matches snapshot 1`] = `
+<div>
+  <div
+    class="flex justify-center items-center min-h-screen bg-gradient-to-r from-[#FA7C54] to-[#EC2C5A] p-4 sm:p-6 md:p-8"
+  >
+    <div
+      class="bg-white shadow-lg rounded-lg p-6 sm:p-8 w-[320px] h-[90%] sm:w-[500px] sm:h-[80%] md:w-[565px] md:h-[70%] flex flex-col overflow-auto"
+    >
+      <div
+        class="flex justify-center mb-4 sm:mb-6"
+      >
+        <img
+          alt="My Book Shelf Logo"
+          class="w-[120px] h-[60px] sm:w-[150px] sm:h-[75px] md:w-[180px] md:h-[90px]"
+          src="https://i.ibb.co/0Yx3BN3/Book-Shelf.png"
+        />
+      </div>
+      <h1
+        class="text-center text-[18px] sm:text-[20px] font-normal leading-[24px] mb-2 sm:mb-4"
+      >
+        Welcome Back!
+      </h1>
+      <p
+        class="text-center text-gray-500 text-sm sm:text-base mb-6"
+      >
+        Sign in to continue to your Digital Library
+      </p>
+      <form
+        class="flex flex-col gap-4 flex-grow"
+      >
+        <div
+          class="flex [object Object]"
+        >
+          <label
+            class="w-30 text-gray-700 font-semibold text-base md:text-lg"
+            for="email"
+          >
+            Email
+          </label>
+          <div
+            class="relative"
+          >
+            <input
+              class="flex-1 p-2 border rounded-md text-[#4C535F] w-full pr-10 h-[40px] sm:h-[48px] md:h-[56px] text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px]"
+              data-testid="textfield-input"
+              id="email"
+              maxlength="255"
+              name="email"
+              placeholder="username@collegename.ac.in"
+              type="email"
+            />
+          </div>
+        </div>
+        <div
+          class="flex [object Object]"
+        >
+          <label
+            class="w-30 text-gray-700 font-semibold text-base md:text-lg"
+            for="password"
+          >
+            Password
+          </label>
+          <div
+            class="relative"
+          >
+            <input
+              class="flex-1 p-2 border rounded-md text-[#4C535F] w-full pr-10 h-[40px] sm:h-[48px] md:h-[56px] text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-[17.5px]"
+              data-testid="textfield-input"
+              id="password"
+              maxlength="255"
+              name="password"
+              placeholder="******"
+              type="password"
+            />
+            <button
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              data-testid="toggle-password-visibility"
+              type="button"
+            >
+              <svg
+                data-testid="eye-on"
+                fill="none"
+                height="17"
+                viewBox="0 0 20 17"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.84546 5.36842L12.7273 8.19579V8.05263C12.7273 7.34073 12.4399 6.65799 11.9285 6.15461C11.417 5.65122 10.7233 5.36842 10 5.36842H9.84546ZM5.93636 6.08421L7.34545 7.47105C7.3 7.65895 7.27273 7.84684 7.27273 8.05263C7.27273 8.76453 7.56006 9.44727 8.07153 9.95065C8.58299 10.454 9.27668 10.7368 10 10.7368C10.2 10.7368 10.4 10.71 10.5909 10.6653L12 12.0521C11.3909 12.3474 10.7182 12.5263 10 12.5263C8.79447 12.5263 7.63832 12.055 6.78588 11.216C5.93344 10.377 5.45455 9.23913 5.45455 8.05263C5.45455 7.34579 5.63636 6.68368 5.93636 6.08421ZM0.909091 1.13632L2.98182 3.17632L3.39091 3.57895C1.89091 4.74211 0.709091 6.26316 0 8.05263C1.57273 11.9805 5.45455 14.7632 10 14.7632C11.4091 14.7632 12.7545 14.4947 13.9818 14.0116L14.3727 14.3874L17.0273 17L18.1818 15.8637L2.06364 0M10 3.57895C11.2055 3.57895 12.3617 4.05028 13.2141 4.88926C14.0666 5.72824 14.5455 6.86614 14.5455 8.05263C14.5455 8.62526 14.4273 9.18 14.2182 9.68105L16.8818 12.3026C18.2455 11.1842 19.3364 9.71684 20 8.05263C18.4273 4.12474 14.5455 1.34211 10 1.34211C8.72727 1.34211 7.50909 1.56579 6.36364 1.96842L8.33636 3.89211C8.85455 3.69526 9.40909 3.57895 10 3.57895Z"
+                  fill="#8EA2B9"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div
+          class="flex justify-between items-center text-sm sm:text-base md:text-lg"
+        >
+          <label
+            class="flex items-center text-gray-600"
+          >
+            <input
+              class="mr-2"
+              type="checkbox"
+            />
+            Remember me
+          </label>
+          <a
+            class="text-right text-[#4D4D4D] underline underline-offset-[4.335px]"
+            href="#"
+          >
+            Forgot password?
+          </a>
+        </div>
+        <button
+          class="flex items-center justify-center focus:outline-none focus:ring-2 transition-all bg-[#FA7C54] text-white py-2 rounded-md hover:bg-[#ec6945] transition-opacity min-w-[120px] [object Object] mt-4"
+          type="submit"
+        >
+          Login
+        </button>
+      </form>
+      <p
+        class="text-center text-sm sm:text-base md:text-lg text-[#4D4D4D] mt-6"
+      >
+        New User?
+         
+        <a
+          class="underline underline-offset-[4.335px] text-sm sm:text-base md:text-lg"
+          data-discover="true"
+          href="/register"
+        >
+          Register Here
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+`;

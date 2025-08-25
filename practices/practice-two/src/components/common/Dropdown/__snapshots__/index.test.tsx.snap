@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Dropdown matches snapshot (left) 1`] = `
+<div>
+  <button>
+    Trigger
+  </button>
+</div>
+`;
+
+exports[`Dropdown matches snapshot (right) 1`] = `
+<div>
+  <button>
+    Trigger
+  </button>
+</div>
+`;

@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`BookHomeList matches snapshot 1`] = `
+<div>
+  <div
+    class="mb-6 w-full"
+  >
+    <h2
+      class="text-[22px] sm:text-[24px] md:text-[25px] text-gray-500 mb-4 font-normal"
+    >
+      Snapshot Title
+    </h2>
+    <div
+      class="w-full md:overflow-x-auto sm:overflow-x-auto md:whitespace-nowrap"
+    >
+      <div
+        class="grid grid-cols-2 gap-y-4 md:flex md:space-x-4 sm:flex sm:space-x-4"
+      >
+        <div
+          class="flex-shrink-0"
+        >
+          <div
+            data-testid="book-item"
+            role="button"
+          >
+            Don't Make Me Think
+          </div>
+        </div>
+        <div
+          class="flex-shrink-0"
+        >
+          <div
+            data-testid="book-item"
+            role="button"
+          >
+            The Design of Everyday Things
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
