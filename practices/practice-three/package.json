@@ -10,24 +10,30 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@storybook/addon-docs": "^9.1.3",
-    "@storybook/addon-essentials": "^8.6.14",
-    "@storybook/addon-interactions": "^8.6.14",
-    "@storybook/addon-links": "^9.1.3",
-    "@storybook/react": "^9.1.3",
-    "@storybook/react-vite": "^9.1.3",
+    "@storybook/addon-docs": "8.6.14",
+    "@storybook/addon-essentials": "8.6.14",
+    "@storybook/addon-interactions": "8.6.14",
+    "@storybook/addon-links": "8.6.14",
+    "@storybook/addon-onboarding": "8.6.14",
+    "@storybook/blocks": "8.6.14",
+    "@storybook/builder-vite": "8.6.14",
+    "@storybook/react": "8.6.14",
+    "@storybook/react-vite": "8.6.14",
+    "@storybook/test": "8.6.14",
     "@tanstack/react-query": "^5.85.5",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
     "clsx": "^2.1.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-resizable": "^3.0.5",
     "react-scan": "^0.4.3",
     "uuid": "^11.1.0",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@tailwindcss/vite": "^4.1.12",
     "@types/node": "^24.3.0",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
@@ -47,6 +53,6 @@
     "ts-jest": "^29.4.1",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1",
-    "vite": "^7.1.2"
+    "vite": "5.4.8"
   }
 }
