@@ -1,23 +1,27 @@
 interface DesktopIconProps {
-  id: string;
-  key: string;
   image: string;
   title: string;
 }
 
-export const DesktopIcon: React.FC<DesktopIconProps> = ({
-  id,
-  key,
-  image,
-  title,
-}) => {
+export const DesktopIcon: React.FC<DesktopIconProps> = ({ image, title }) => {
   return (
     <div
-      key={key}
-      id={id}
-      className="flex flex-col items-center justify-center w-24 h-28 min-w-24 min-h-28 overflow-hidden box-border text-xs border-none drag-handle"
+      className="flex flex-col items-center justify-center w-full h-full overflow-hidden box-border text-xs border-none drag-handle"
+      style={{
+        maxWidth: "100px",
+        maxHeight: "120px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
     >
-      <img src={image} alt={title} className="w-12 h-12" />
+      <img
+        src={image}
+        alt={title}
+        className="w-full h-auto"
+        style={{ maxWidth: "60px", maxHeight: "60px" }}
+      />
       <span className="mt-2 text-white font-bold text-sm">{title}</span>
     </div>
   );
