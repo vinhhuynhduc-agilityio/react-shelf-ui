@@ -1,10 +1,13 @@
 import React from "react";
 
+// Store
+import { WindowName } from "@/stores";
+
 interface DesktopIconProps {
   image: string;
   title: string;
-  keyIcon: string;
-  onIconClick: (keyIcon: string) => void;
+  keyIcon: WindowName;
+  onIconClick: (keyIcon: WindowName) => void;
 }
 
 export const DesktopIcon = React.forwardRef<HTMLDivElement, DesktopIconProps>(
