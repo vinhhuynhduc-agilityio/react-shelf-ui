@@ -19,9 +19,9 @@ const WindowHeader = ({
         <img
           src={src}
           alt={title}
-          className="w-[18px] h-[18px] mx-[10px] ml-[8px] text-[10px]"
+          className="w-[18px] h-[18px] mx-[10px] ml-[8px] text-[10px] pointer-events-none"
         />
-        <span className="text-[16px] font-medium text-[#475466] tracking-normal">
+        <span className="text-[16px] font-medium text-[#475466] tracking-normal cursor-default">
           {title}
         </span>
       </div>

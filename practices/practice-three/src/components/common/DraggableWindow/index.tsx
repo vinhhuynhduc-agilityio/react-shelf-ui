@@ -7,18 +7,22 @@ interface DraggableWindowProps {
   src: string;
   title: string;
   children: React.ReactNode;
+  zIndex: number;
   onClose: () => void;
   onMaximize: () => void;
   onMinimize: () => void;
+  onMouseDown: () => void;
 }
 
 const DraggableWindow = ({
   src,
   title,
   children,
+  zIndex,
   onClose,
   onMaximize,
   onMinimize,
+  onMouseDown,
 }: DraggableWindowProps) => {
   return (
     <Rnd
@@ -34,8 +38,9 @@ const DraggableWindow = ({
       dragHandleClassName="drag-handle"
       style={{
         position: "absolute",
-        zIndex: 9999,
+        zIndex,
       }}
+      onMouseDown={onMouseDown}
     >
       <div className="bg-white shadow-lg overflow-hidden text-[#475466] w-full h-full">
         <WindowHeader
