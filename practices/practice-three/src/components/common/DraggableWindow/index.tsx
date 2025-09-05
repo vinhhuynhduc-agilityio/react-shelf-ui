@@ -1,6 +1,6 @@
+import { memo } from "react";
 import { Rnd } from "react-rnd";
 
-// Components
 import WindowHeader from "../WindowHeader";
 
 interface DraggableWindowProps {
@@ -14,46 +14,49 @@ interface DraggableWindowProps {
   onMouseDown: () => void;
 }
 
-const DraggableWindow = ({
-  src,
-  title,
-  children,
-  zIndex,
-  onClose,
-  onMaximize,
-  onMinimize,
-  onMouseDown,
-}: DraggableWindowProps) => {
-  return (
-    <Rnd
-      default={{
-        x: (window.innerWidth - 800) / 2,
-        y: (window.innerHeight - 450) / 2,
-        width: 800,
-        height: 450,
-      }}
-      minWidth={300}
-      minHeight={200}
-      bounds="parent"
-      dragHandleClassName="drag-handle"
-      style={{
-        position: "absolute",
-        zIndex,
-      }}
-      onMouseDown={onMouseDown}
-    >
-      <div className="bg-white shadow-lg overflow-hidden text-[#475466] w-full h-full">
-        <WindowHeader
-          src={src}
-          title={title}
-          onClose={onClose}
-          onMaximize={onMaximize}
-          onMinimize={onMinimize}
-        />
-        <div className="mt-4 p-2">{children}</div>
-      </div>
-    </Rnd>
-  );
-};
+const DraggableWindow = memo(
+  ({
+    src,
+    title,
+    children,
+    zIndex,
+    onClose,
+    onMaximize,
+    onMinimize,
+    onMouseDown,
+  }: DraggableWindowProps) => {
+    return (
+      <Rnd
+        default={{
+          x: (window.innerWidth - 800) / 2,
+          y: (window.innerHeight - 450) / 2,
+          width: 800,
+          height: 450,
+        }}
+        minWidth={300}
+        minHeight={200}
+        bounds="parent"
+        dragHandleClassName="drag-handle"
+        style={{
+          position: "absolute",
+          zIndex,
+          border: "1px solid #DADEE0",
+        }}
+        onMouseDown={onMouseDown}
+      >
+        <div className="bg-white shadow-lg overflow-auto text-[#475466] w-full h-full">
+          <WindowHeader
+            src={src}
+            title={title}
+            onClose={onClose}
+            onMaximize={onMaximize}
+            onMinimize={onMinimize}
+          />
+          <div>{children}</div>
+        </div>
+      </Rnd>
+    );
+  }
+);
 
 export default DraggableWindow;

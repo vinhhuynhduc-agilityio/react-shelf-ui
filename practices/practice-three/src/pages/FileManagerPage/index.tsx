@@ -20,14 +20,17 @@ const FileManagerPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
-  const { setZIndexOrder } = useWindowStore(
+  const { zIndexOrder, setZIndexOrder } = useWindowStore(
     useShallow((state) => ({
+      zIndexOrder: state.zIndexOrder,
       setZIndexOrder: state.setZIndexOrder,
     }))
   );
 
   const handleMouseDown = () => {
-    setZIndexOrder(WindowKeys.FILE_MANAGER);
+    if (zIndexOrder[zIndexOrder.length - 1] !== WindowKeys.FILE_MANAGER) {
+      setZIndexOrder(WindowKeys.FILE_MANAGER);
+    }
   };
 
   return (

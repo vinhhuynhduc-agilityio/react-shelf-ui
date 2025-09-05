@@ -14,7 +14,7 @@ const WindowHeader = ({
   onMinimize,
 }: WindowHeaderProps) => {
   return (
-    <div className="drag-handle bg-white flex justify-between items-center border-b border-[#DADEE0] w-full h-[30px]">
+    <div className="drag-handle bg-white flex justify-between items-center border-b-[1.3px] border-[#DADEE0] w-full h-[30px]">
       <div className="inline-flex items-center justify-center space-x-2">
         <img
           src={src}
