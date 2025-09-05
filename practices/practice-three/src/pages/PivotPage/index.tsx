@@ -20,14 +20,17 @@ const PivotPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
-  const { setZIndexOrder } = useWindowStore(
+  const { zIndexOrder, setZIndexOrder } = useWindowStore(
     useShallow((state) => ({
+      zIndexOrder: state.zIndexOrder,
       setZIndexOrder: state.setZIndexOrder,
     }))
   );
 
   const handleMouseDown = () => {
-    setZIndexOrder(WindowKeys.PIVOT);
+    if (zIndexOrder[zIndexOrder.length - 1] !== WindowKeys.PIVOT) {
+      setZIndexOrder(WindowKeys.PIVOT);
+    }
   };
 
   return (

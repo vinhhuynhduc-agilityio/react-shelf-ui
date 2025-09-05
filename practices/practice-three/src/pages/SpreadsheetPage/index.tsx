@@ -1,4 +1,6 @@
+import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
+import Spreadsheet from "react-spreadsheet";
 
 // Components
 import { DraggableWindow } from "@/components";
@@ -20,15 +22,36 @@ const SpreadsheetPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
-  const { setZIndexOrder } = useWindowStore(
+  const { zIndexOrder, setZIndexOrder } = useWindowStore(
     useShallow((state) => ({
+      zIndexOrder: state.zIndexOrder,
       setZIndexOrder: state.setZIndexOrder,
     }))
   );
 
   const handleMouseDown = () => {
-    setZIndexOrder(WindowKeys.SPREADSHEET);
+    if (zIndexOrder[zIndexOrder.length - 1] !== WindowKeys.SPREADSHEET) {
+      setZIndexOrder(WindowKeys.SPREADSHEET);
+    }
   };
+
+  const data = useMemo(
+    () =>
+      Array.from({ length: 24 }, () =>
+        Array.from({ length: 12 }, () => ({ value: "" }))
+      ),
+    []
+  );
+
+  const columnLabels = useMemo(
+    () => ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
+    []
+  );
+
+  const rowLabels = useMemo(
+    () => Array.from({ length: 24 }, (_, index) => `${index + 1}`),
+    []
+  );
 
   return (
     <DraggableWindow
@@ -40,7 +63,12 @@ const SpreadsheetPage = ({
       zIndex={zIndex}
       onMouseDown={handleMouseDown}
     >
-      <h2>Spreadsheet Content</h2>
+      <Spreadsheet
+        data={data}
+        columnLabels={columnLabels}
+        rowLabels={rowLabels}
+        onChange={(newData) => console.log(newData)}
+      />
     </DraggableWindow>
   );
 };

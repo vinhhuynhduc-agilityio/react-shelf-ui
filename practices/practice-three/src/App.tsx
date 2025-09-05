@@ -101,8 +101,6 @@ const App = () => {
 
     const toggleWindowIfClosed = (isOpen: boolean, toggle: () => void) => {
       if (!isOpen) {
-        console.log("isOpen:");
-
         toggle();
       }
     };
@@ -123,13 +121,9 @@ const App = () => {
 
   return (
     <div
-      className="w-screen min-h-screen p-2 relative"
+      className="w-screen min-h-screen p-2 relative bg-cover bg-center overflow-hidden h-screen"
       style={{
         backgroundImage: `url('/images/background-desktop.jpg')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        overflow: "hidden",
-        height: "100vh",
       }}
     >
       <GridLayout
