@@ -52,7 +52,7 @@ const DraggableWindow = memo(
             onMaximize={onMaximize}
             onMinimize={onMinimize}
           />
-          <div>{children}</div>
+          {children}
         </div>
       </Rnd>
     );
