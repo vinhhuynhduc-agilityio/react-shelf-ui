@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortune-sheet/react": "^1.0.2",
     "@storybook/addon-docs": "8.6.14",
     "@storybook/addon-essentials": "8.6.14",
     "@storybook/addon-interactions": "8.6.14",
@@ -32,7 +33,6 @@
     "react-resizable": "^3.0.5",
     "react-rnd": "^10.5.2",
     "react-scan": "^0.4.3",
-    "react-spreadsheet": "^0.10.1",
     "scheduler": "^0.26.0",
     "uuid": "^11.1.0",
     "zustand": "^5.0.8"

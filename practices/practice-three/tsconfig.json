@@ -16,13 +16,13 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["vite/client", "jest"]
   },
   "include": ["src", "jest.config.ts", "setupTests.ts"],
   "references": [
     {
       "path": "./tsconfig.node.json"
     }
-  ],
-  "types": ["jest"]
+  ]
 }

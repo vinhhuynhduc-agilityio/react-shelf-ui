@@ -1,12 +1,8 @@
-import { useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import Spreadsheet, {
-  RangeSelection,
-  Selection,
-  Point,
-  CellBase,
-  Matrix,
-} from "react-spreadsheet";
+
+// FortuneSheet
+import { Workbook } from "@fortune-sheet/react";
+import "@fortune-sheet/react/dist/index.css";
 
 // Components
 import { DraggableWindow } from "@/components";
@@ -16,9 +12,6 @@ import { WindowKeys } from "@/constant";
 
 // Store
 import { useWindowStore } from "@/stores";
-
-// Helpers
-import { getSelectedRange, removeSelectedClass } from "./helpers";
 
 const SpreadsheetPage = ({
   onClose,
@@ -31,25 +24,6 @@ const SpreadsheetPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
-  const [previousSelectedCell, setPreviousSelectedCell] = useState<{
-    row: number;
-    column: number;
-  } | null>(null);
-
-  const [data, setData] = useState<Matrix<CellBase<string>>>(() =>
-    Array.from({ length: 24 }, () =>
-      Array.from({ length: 12 }, () => ({ value: "" }))
-    )
-  );
-  const [selectedRange, setSelectedRange] = useState<string>("");
-
-  // Undo/Redo stacks
-  const [undoStack, setUndoStack] = useState<Matrix<CellBase<string>>[]>([]);
-  const [redoStack, setRedoStack] = useState<Matrix<CellBase<string>>[]>([]);
-  const [pendingUndo, setPendingUndo] = useState<Matrix<
-    CellBase<string>
-  > | null>(null);
-
   // store
   const { zIndexOrder, setZIndexOrder } = useWindowStore(
     useShallow((state) => ({
@@ -58,103 +32,18 @@ const SpreadsheetPage = ({
     }))
   );
 
-  const columnLabels = useMemo(
-    () => ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
-    []
-  );
-
-  const rowLabels = useMemo(
-    () => Array.from({ length: 24 }, (_, index) => `${index + 1}`),
-    []
-  );
+  const data = [
+    {
+      name: "Sheet1",
+      celldata: [],
+      row: 50,
+      column: 20,
+    },
+  ];
 
   const handleMouseDown = () => {
     if (zIndexOrder[zIndexOrder.length - 1] !== WindowKeys.SPREADSHEET) {
       setZIndexOrder(WindowKeys.SPREADSHEET);
-    }
-  };
-
-  const handleSelectCell = (selected: Selection) => {
-    // highlight headers based on selection and update selectedRange state string for display input box
-    const rangeStr = getSelectedRange(selected, columnLabels, rowLabels);
-    setSelectedRange(rangeStr);
-
-    // highlight selected cell's row and column headers
-    if (selected instanceof RangeSelection) {
-      const rowIndex = selected.range.start.row;
-      const colIndex = selected.range.start.column + 1;
-
-      const columnHeader = document.querySelector(
-        `.Spreadsheet__header:nth-child(${colIndex + 1})`
-      );
-      const rowHeader = document.querySelector(`tr[row="${rowIndex}"] th`);
-
-      // Remove "selected" class from previous cell
-      if (previousSelectedCell) {
-        removeSelectedClass(
-          previousSelectedCell.row,
-          previousSelectedCell.column
-        );
-      }
-
-      // Using setTimeout to ensure the DOM is updated before adding the class
-      setTimeout(() => {
-        columnHeader?.classList.add("header_selected");
-        rowHeader?.classList.add("header_selected");
-      }, 0);
-
-      setPreviousSelectedCell({ row: rowIndex, column: colIndex });
-    } else {
-      // Remove the selection class if no selection
-      if (previousSelectedCell) {
-        removeSelectedClass(
-          previousSelectedCell.row,
-          previousSelectedCell.column
-        );
-      }
-    }
-  };
-
-  const cloneData = (dataToClone: typeof data) =>
-    JSON.parse(JSON.stringify(dataToClone));
-
-  const handleChange = (newData: typeof data) => {
-    setData(newData);
-  };
-
-  const handleModeChange = (newMode: "view" | "edit") => {
-    if (newMode === "edit") {
-      setPendingUndo(cloneData(data));
-    }
-  };
-
-  const handleCellCommit = (
-    prevCell: CellBase | null,
-    nextCell: CellBase | null,
-    coords: Point | null
-  ) => {
-    if (pendingUndo && coords) {
-      setUndoStack((prev) => [...prev, pendingUndo]);
-      setRedoStack([]);
-      setPendingUndo(null);
-    }
-  };
-
-  const handleUndo = () => {
-    if (undoStack.length > 0) {
-      const previousData = cloneData(undoStack[undoStack.length - 1]);
-      setRedoStack((prev) => [...prev, cloneData(data)]);
-      setData(previousData);
-      setUndoStack((prev) => prev.slice(0, -1));
-    }
-  };
-
-  const handleRedo = () => {
-    if (redoStack.length > 0) {
-      const nextData = cloneData(redoStack[redoStack.length - 1]);
-      setUndoStack((prev) => [...prev, cloneData(data)]);
-      setData(nextData);
-      setRedoStack((prev) => prev.slice(0, -1));
     }
   };
 
@@ -168,40 +57,13 @@ const SpreadsheetPage = ({
       zIndex={zIndex}
       onMouseDown={handleMouseDown}
     >
-      <div className="flex flex-col">
-        <div className="flex items-center border-b border-gray-300 p-1 space-x-1 bg-[#f4f4f4]">
-          <input
-            type="text"
-            value={selectedRange}
-            readOnly
-            className="border border-gray-300 p-1 bg-white w-24 rounded focus:outline-none ml-1"
-            placeholder="Select cell"
-          />
-          <button
-            onClick={handleUndo}
-            className="p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer"
-            title="Undo"
-          >
-            <i className="fa-solid fa-arrow-rotate-left"></i>
-          </button>
-          <button
-            onClick={handleRedo}
-            className="p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer"
-            title="Redo"
-          >
-            <i className="fa-solid fa-rotate-right"></i>
-          </button>
-        </div>
-
-        <Spreadsheet
-          data={data}
-          columnLabels={columnLabels}
-          rowLabels={rowLabels}
-          onChange={handleChange}
-          onSelect={handleSelectCell}
-          onModeChange={handleModeChange}
-          onCellCommit={handleCellCommit}
-        />
+      <div
+        style={{
+          width: "2300px",
+          height: "1200px",
+        }}
+      >
+        <Workbook data={data} showToolbar showFormulaBar showSheetTabs />
       </div>
     </DraggableWindow>
   );
