@@ -5,6 +5,7 @@ import Spreadsheet, {
   Selection,
   Point,
   CellBase,
+  Matrix,
 } from "react-spreadsheet";
 
 // Components
@@ -35,14 +36,17 @@ const SpreadsheetPage = ({
     row: number;
     column: number;
   } | null>(null);
-  const [data, setData] = useState(() =>
+
+  const [data, setData] = useState<Matrix<CellBase<string>>>(() =>
     Array.from({ length: 24 }, () =>
       Array.from({ length: 12 }, () => ({ value: "" }))
     )
   );
-  const [undoStack, setUndoStack] = useState<(typeof data)[]>([]);
-  const [redoStack, setRedoStack] = useState<(typeof data)[]>([]);
-  const [pendingUndo, setPendingUndo] = useState<typeof data | null>(null);
+  const [undoStack, setUndoStack] = useState<Matrix<CellBase<string>>[]>([]);
+  const [redoStack, setRedoStack] = useState<Matrix<CellBase<string>>[]>([]);
+  const [pendingUndo, setPendingUndo] = useState<Matrix<
+    CellBase<string>
+  > | null>(null);
 
   // store
   const { zIndexOrder, setZIndexOrder } = useWindowStore(
