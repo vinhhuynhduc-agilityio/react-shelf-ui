@@ -1,6 +1,11 @@
 import { useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import Spreadsheet, { RangeSelection, Selection } from "react-spreadsheet";
+import Spreadsheet, {
+  RangeSelection,
+  Selection,
+  Point,
+  CellBase,
+} from "react-spreadsheet";
 
 // Components
 import { DraggableWindow } from "@/components";
@@ -25,30 +30,26 @@ const SpreadsheetPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
+  // State
   const [previousSelectedCell, setPreviousSelectedCell] = useState<{
     row: number;
     column: number;
   } | null>(null);
+  const [data, setData] = useState(() =>
+    Array.from({ length: 24 }, () =>
+      Array.from({ length: 12 }, () => ({ value: "" }))
+    )
+  );
+  const [undoStack, setUndoStack] = useState<(typeof data)[]>([]);
+  const [redoStack, setRedoStack] = useState<(typeof data)[]>([]);
+  const [pendingUndo, setPendingUndo] = useState<typeof data | null>(null);
 
+  // store
   const { zIndexOrder, setZIndexOrder } = useWindowStore(
     useShallow((state) => ({
       zIndexOrder: state.zIndexOrder,
       setZIndexOrder: state.setZIndexOrder,
     }))
-  );
-
-  const handleMouseDown = () => {
-    if (zIndexOrder[zIndexOrder.length - 1] !== WindowKeys.SPREADSHEET) {
-      setZIndexOrder(WindowKeys.SPREADSHEET);
-    }
-  };
-
-  const data = useMemo(
-    () =>
-      Array.from({ length: 24 }, () =>
-        Array.from({ length: 12 }, () => ({ value: "" }))
-      ),
-    []
   );
 
   const columnLabels = useMemo(
@@ -60,6 +61,12 @@ const SpreadsheetPage = ({
     () => Array.from({ length: 24 }, (_, index) => `${index + 1}`),
     []
   );
+
+  const handleMouseDown = () => {
+    if (zIndexOrder[zIndexOrder.length - 1] !== WindowKeys.SPREADSHEET) {
+      setZIndexOrder(WindowKeys.SPREADSHEET);
+    }
+  };
 
   const handleSelectCell = (selected: Selection) => {
     if (selected instanceof RangeSelection) {
@@ -100,6 +107,49 @@ const SpreadsheetPage = ({
     }
   };
 
+  const cloneData = (dataToClone: typeof data) =>
+    JSON.parse(JSON.stringify(dataToClone));
+
+  const handleChange = (newData: typeof data) => {
+    setData(newData);
+  };
+
+  const handleModeChange = (newMode: "view" | "edit") => {
+    if (newMode === "edit") {
+      setPendingUndo(cloneData(data));
+    }
+  };
+
+  const handleCellCommit = (
+    prevCell: CellBase | null,
+    nextCell: CellBase | null,
+    coords: Point | null
+  ) => {
+    if (pendingUndo && coords) {
+      setUndoStack((prev) => [...prev, pendingUndo]);
+      setRedoStack([]);
+      setPendingUndo(null);
+    }
+  };
+
+  const handleUndo = () => {
+    if (undoStack.length > 0) {
+      const previousData = cloneData(undoStack[undoStack.length - 1]);
+      setRedoStack((prev) => [...prev, cloneData(data)]);
+      setData(previousData);
+      setUndoStack((prev) => prev.slice(0, -1));
+    }
+  };
+
+  const handleRedo = () => {
+    if (redoStack.length > 0) {
+      const nextData = cloneData(redoStack[redoStack.length - 1]);
+      setUndoStack((prev) => [...prev, cloneData(data)]);
+      setData(nextData);
+      setRedoStack((prev) => prev.slice(0, -1));
+    }
+  };
+
   return (
     <DraggableWindow
       src="/images/spreadsheet.png"
@@ -110,13 +160,34 @@ const SpreadsheetPage = ({
       zIndex={zIndex}
       onMouseDown={handleMouseDown}
     >
-      <Spreadsheet
-        data={data}
-        columnLabels={columnLabels}
-        rowLabels={rowLabels}
-        onChange={(newData) => console.log(newData)}
-        onSelect={handleSelectCell}
-      />
+      <div className="flex flex-col">
+        <div className="flex items-center border-b border-gray-300 p-1 space-x-1">
+          <button
+            onClick={handleUndo}
+            className="p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer"
+            title="Undo"
+          >
+            <i className="fa-solid fa-arrow-rotate-left"></i>
+          </button>
+          <button
+            onClick={handleRedo}
+            className="p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer"
+            title="Redo"
+          >
+            <i className="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
+
+        <Spreadsheet
+          data={data}
+          columnLabels={columnLabels}
+          rowLabels={rowLabels}
+          onChange={handleChange}
+          onSelect={handleSelectCell}
+          onModeChange={handleModeChange}
+          onCellCommit={handleCellCommit}
+        />
+      </div>
     </DraggableWindow>
   );
 };
