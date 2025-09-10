@@ -5,6 +5,7 @@ import Spreadsheet, {
   Selection,
   Point,
   CellBase,
+  Matrix,
 } from "react-spreadsheet";
 
 // Components
@@ -17,7 +18,7 @@ import { WindowKeys } from "@/constant";
 import { useWindowStore } from "@/stores";
 
 // Helpers
-import { removeSelectedClass } from "./helpers";
+import { getSelectedRange, removeSelectedClass } from "./helpers";
 
 const SpreadsheetPage = ({
   onClose,
@@ -30,19 +31,24 @@ const SpreadsheetPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
-  // State
   const [previousSelectedCell, setPreviousSelectedCell] = useState<{
     row: number;
     column: number;
   } | null>(null);
-  const [data, setData] = useState(() =>
+
+  const [data, setData] = useState<Matrix<CellBase<string>>>(() =>
     Array.from({ length: 24 }, () =>
       Array.from({ length: 12 }, () => ({ value: "" }))
     )
   );
-  const [undoStack, setUndoStack] = useState<(typeof data)[]>([]);
-  const [redoStack, setRedoStack] = useState<(typeof data)[]>([]);
-  const [pendingUndo, setPendingUndo] = useState<typeof data | null>(null);
+  const [selectedRange, setSelectedRange] = useState<string>("");
+
+  // Undo/Redo stacks
+  const [undoStack, setUndoStack] = useState<Matrix<CellBase<string>>[]>([]);
+  const [redoStack, setRedoStack] = useState<Matrix<CellBase<string>>[]>([]);
+  const [pendingUndo, setPendingUndo] = useState<Matrix<
+    CellBase<string>
+  > | null>(null);
 
   // store
   const { zIndexOrder, setZIndexOrder } = useWindowStore(
@@ -69,9 +75,14 @@ const SpreadsheetPage = ({
   };
 
   const handleSelectCell = (selected: Selection) => {
+    // highlight headers based on selection and update selectedRange state string for display input box
+    const rangeStr = getSelectedRange(selected, columnLabels, rowLabels);
+    setSelectedRange(rangeStr);
+
+    // highlight selected cell's row and column headers
     if (selected instanceof RangeSelection) {
-      const rowIndex = selected?.range?.start?.row;
-      const colIndex = selected?.range?.start?.column + 1;
+      const rowIndex = selected.range.start.row;
+      const colIndex = selected.range.start.column + 1;
 
       const columnHeader = document.querySelector(
         `.Spreadsheet__header:nth-child(${colIndex + 1})`
@@ -87,9 +98,6 @@ const SpreadsheetPage = ({
       }
 
       // Using setTimeout to ensure the DOM is updated before adding the class
-      // This is necessary when clicking on the intersection of column and row headers,
-      // and then clicking on a cell. This causes the DOM to change, so we need to wait
-      // until the DOM is fully updated before adding the class.
       setTimeout(() => {
         columnHeader?.classList.add("header_selected");
         rowHeader?.classList.add("header_selected");
@@ -161,7 +169,14 @@ const SpreadsheetPage = ({
       onMouseDown={handleMouseDown}
     >
       <div className="flex flex-col">
-        <div className="flex items-center border-b border-gray-300 p-1 space-x-1">
+        <div className="flex items-center border-b border-gray-300 p-1 space-x-1 bg-[#f4f4f4]">
+          <input
+            type="text"
+            value={selectedRange}
+            readOnly
+            className="border border-gray-300 p-1 bg-white w-24 rounded focus:outline-none ml-1"
+            placeholder="Select cell"
+          />
           <button
             onClick={handleUndo}
             className="p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer"
