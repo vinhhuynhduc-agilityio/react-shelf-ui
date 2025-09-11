@@ -43,8 +43,9 @@ const DraggableWindow = memo(
           border: "1px solid #DADEE0",
         }}
         onMouseDown={onMouseDown}
+        onResizeStop={() => window.dispatchEvent(new Event("resize"))}
       >
-        <div className="bg-white shadow-lg overflow-auto text-[#475466] w-full h-full">
+        <div className="bg-white shadow-lg text-[#475466] w-full h-full flex flex-col overflow-hidden">
           <WindowHeader
             src={src}
             title={title}
@@ -52,7 +53,7 @@ const DraggableWindow = memo(
             onMaximize={onMaximize}
             onMinimize={onMinimize}
           />
-          {children}
+          <div className="flex-1">{children}</div>
         </div>
       </Rnd>
     );
