@@ -37,7 +37,7 @@ const SpreadsheetPage = ({
       name: "Sheet1",
       celldata: [],
       row: 50,
-      column: 20,
+      column: 21,
     },
   ];
 
@@ -57,13 +57,8 @@ const SpreadsheetPage = ({
       zIndex={zIndex}
       onMouseDown={handleMouseDown}
     >
-      <div
-        style={{
-          width: "2300px",
-          height: "1200px",
-        }}
-      >
-        <Workbook data={data} showToolbar showFormulaBar showSheetTabs />
+      <div className="w-[1660px] h-[1200px]">
+        <Workbook data={data} />
       </div>
     </DraggableWindow>
   );
