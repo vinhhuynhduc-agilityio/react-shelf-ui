@@ -20,10 +20,11 @@ const KanbanPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
-  const { zIndexOrder, setZIndexOrder } = useWindowStore(
+  const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
     useShallow((state) => ({
       zIndexOrder: state.zIndexOrder,
       setZIndexOrder: state.setZIndexOrder,
+      isMinimized: state.windows[WindowKeys.KANBAN].isMinimized,
     }))
   );
 
@@ -37,10 +38,11 @@ const KanbanPage = ({
     <DraggableWindow
       src="/images/kanban.png"
       title="Kanban"
+      hidden={isMinimized}
+      zIndex={zIndex}
       onClose={onClose}
       onMaximize={onMaximize}
       onMinimize={onMinimize}
-      zIndex={zIndex}
       onMouseDown={handleMouseDown}
     >
       <h2>Kanban Content</h2>

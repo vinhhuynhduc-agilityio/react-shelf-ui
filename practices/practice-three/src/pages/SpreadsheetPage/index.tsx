@@ -25,10 +25,11 @@ const SpreadsheetPage = ({
   zIndex: number;
 }) => {
   // store
-  const { zIndexOrder, setZIndexOrder } = useWindowStore(
+  const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
     useShallow((state) => ({
       zIndexOrder: state.zIndexOrder,
       setZIndexOrder: state.setZIndexOrder,
+      isMinimized: state.windows[WindowKeys.SPREADSHEET].isMinimized,
     }))
   );
 
@@ -51,10 +52,11 @@ const SpreadsheetPage = ({
     <DraggableWindow
       src="/images/spreadsheet.png"
       title="Spreadsheet"
+      hidden={isMinimized}
+      zIndex={zIndex}
       onClose={onClose}
       onMaximize={onMaximize}
       onMinimize={onMinimize}
-      zIndex={zIndex}
       onMouseDown={handleMouseDown}
     >
       <Workbook data={data} />

@@ -1,53 +1,81 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-
-// Types
-import { WindowKey, Windows } from "@/types";
+import type { WindowKey, Windows } from "@/types";
 
 export interface WindowStore {
   windows: Windows;
   zIndexOrder: WindowKey[];
-  toggleWindow: (windowKey: WindowKey) => void;
+  setZIndexOrder: (windowKey: WindowKey) => void;
+  toggleWindow: (windowKey: WindowKey) => void; // desktop icon behavior
   maximizeWindow: (windowKey: WindowKey) => void;
   minimizeWindow: (windowKey: WindowKey) => void;
+  restoreWindow: (windowKey: WindowKey) => void;
   closeWindow: (windowKey: WindowKey) => void;
-  setZIndexOrder: (windowKey: WindowKey) => void;
 }
+
+const DEFAULT_WINDOW = {
+  isOpen: false,
+  isMaximized: false,
+  isMinimized: false,
+};
 
 export const useWindowStore = create<WindowStore>()(
   immer((set) => ({
     windows: {
-      spreadsheet: { isOpen: false, isMaximized: false, isMinimized: false },
-      fileManager: { isOpen: false, isMaximized: false, isMinimized: false },
-      pivot: { isOpen: false, isMaximized: false, isMinimized: false },
-      kanban: { isOpen: false, isMaximized: false, isMinimized: false },
+      spreadsheet: { ...DEFAULT_WINDOW },
+      fileManager: { ...DEFAULT_WINDOW },
+      pivot: { ...DEFAULT_WINDOW },
+      kanban: { ...DEFAULT_WINDOW },
     },
     zIndexOrder: [],
-    toggleWindow: (windowKey) =>
-      set((state) => {
-        state.windows[windowKey].isOpen = true;
-      }),
-    maximizeWindow: (windowKey) =>
-      set((state) => {
-        state.windows[windowKey].isMaximized = true;
-        state.windows[windowKey].isMinimized = false;
-      }),
-    minimizeWindow: (windowKey) =>
-      set((state) => {
-        state.windows[windowKey].isMinimized = true;
-        state.windows[windowKey].isMaximized = false;
-      }),
-    closeWindow: (windowKey) =>
-      set((state) => {
-        state.windows[windowKey].isOpen = false;
-      }),
+
     setZIndexOrder: (windowKey) =>
       set((state) => {
-        const newOrder: WindowKey[] = [
-          ...state.zIndexOrder.filter((item: WindowKey) => item !== windowKey),
+        state.zIndexOrder = [
+          ...state.zIndexOrder.filter((k) => k !== windowKey),
           windowKey,
         ];
-        state.zIndexOrder = newOrder;
+      }),
+
+    toggleWindow: (windowKey) =>
+      set((state) => {
+        const w = state.windows[windowKey];
+
+        if (!w.isOpen) {
+          w.isOpen = true;
+          w.isMinimized = false;
+          return;
+        }
+
+        if (w.isMinimized) {
+          w.isMinimized = false;
+          return;
+        }
+      }),
+
+    maximizeWindow: (windowKey) =>
+      set((state) => {
+        const w = state.windows[windowKey];
+        w.isMaximized = true;
+        w.isMinimized = false;
+      }),
+
+    minimizeWindow: (windowKey) =>
+      set((state) => {
+        const w = state.windows[windowKey];
+        w.isMinimized = true;
+        w.isMaximized = false;
+      }),
+
+    restoreWindow: (windowKey) =>
+      set((state) => {
+        state.windows[windowKey].isMinimized = false;
+      }),
+
+    closeWindow: (windowKey) =>
+      set((state) => {
+        state.windows[windowKey] = { ...DEFAULT_WINDOW };
+        state.zIndexOrder = state.zIndexOrder.filter((k) => k !== windowKey);
       }),
   }))
 );

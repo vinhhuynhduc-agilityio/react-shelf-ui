@@ -4,27 +4,31 @@ import { useShallow } from "zustand/react/shallow";
 import { useWindowStore } from "@/stores";
 
 // Types
-import { WindowKey, Windows } from "@/types";
+import type { WindowKey, Windows } from "@/types";
 
-export const useWindowState = (windowKey: WindowKey) => {
-  return useWindowStore(
+export const useWindowState = (windowKey: WindowKey) =>
+  useWindowStore(
     useShallow((state) => ({
       isOpen: state.windows[windowKey].isOpen,
       isMaximized: state.windows[windowKey].isMaximized,
       isMinimized: state.windows[windowKey].isMinimized,
     }))
   );
-};
 
 export const useWindowActions = (windowKey: keyof Windows) => {
-  const { toggleWindow, maximizeWindow, minimizeWindow, closeWindow } =
-    useWindowStore();
+  const {
+    toggleWindow,
+    maximizeWindow,
+    minimizeWindow,
+    restoreWindow,
+    closeWindow,
+  } = useWindowStore();
 
-  // Return actions for the specific window
   return {
     toggle: () => toggleWindow(windowKey),
     maximize: () => maximizeWindow(windowKey),
     minimize: () => minimizeWindow(windowKey),
+    restore: () => restoreWindow(windowKey),
     close: () => closeWindow(windowKey),
   };
 };
