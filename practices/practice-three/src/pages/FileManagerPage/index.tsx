@@ -20,10 +20,11 @@ const FileManagerPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
-  const { zIndexOrder, setZIndexOrder } = useWindowStore(
+  const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
     useShallow((state) => ({
       zIndexOrder: state.zIndexOrder,
       setZIndexOrder: state.setZIndexOrder,
+      isMinimized: state.windows[WindowKeys.FILE_MANAGER].isMinimized,
     }))
   );
 
@@ -37,10 +38,11 @@ const FileManagerPage = ({
     <DraggableWindow
       src="/images/file-manager.png"
       title="File Manager"
+      hidden={isMinimized}
+      zIndex={zIndex}
       onClose={onClose}
       onMaximize={onMaximize}
       onMinimize={onMinimize}
-      zIndex={zIndex}
       onMouseDown={handleMouseDown}
     >
       <h2>File Manager Content</h2>

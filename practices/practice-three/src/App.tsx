@@ -2,20 +2,20 @@ import { useState } from "react";
 import GridLayout, { Layout } from "react-grid-layout";
 import { useShallow } from "zustand/react/shallow";
 
-// Components
-import { DesktopIcon } from "./components";
+// Store
+import { useWindowStore } from "@/stores";
+
+// Hook
+import { useWindowActions, useWindowState } from "@/hook";
 
 // Constant
 import { DESKTOP_ICONS, WindowKeys } from "./constant";
 
-// Store
-import { useWindowStore } from "@/stores";
-
-// Custom hooks to get state and actions for each window
-import { useWindowActions, useWindowState } from "@/hook";
-
 // Types
-import { WindowKey } from "@/types";
+import type { WindowKey } from "@/types";
+
+// Components
+import { DesktopIcon, Taskbar } from "./components";
 
 // Pages
 import {
@@ -27,64 +27,22 @@ import {
 
 const App = () => {
   const { SPREADSHEET, FILE_MANAGER, PIVOT, KANBAN } = WindowKeys;
+  const rowHeight = 110;
+  const cols = Math.floor(window.innerWidth / 110);
+  const maxRows = Math.floor(window.innerHeight / rowHeight);
 
-  // Layout state for react-grid-layout
-  const [layout, setLayout] = useState<Layout[]>([
-    { i: SPREADSHEET, x: 0, y: 0, w: 1, h: 1 },
-    { i: FILE_MANAGER, x: 0, y: 1, w: 1, h: 1 },
-    { i: PIVOT, x: 0, y: 2, w: 1, h: 1 },
-    { i: KANBAN, x: 0, y: 3, w: 1, h: 1 },
-  ]);
+  // State
+  const [selectedIcon, setSelectedIcon] = useState<WindowKey | null>(null);
+  const [layout, setLayout] = useState<Layout[]>(
+    DESKTOP_ICONS.map((icon, idx) => ({
+      i: icon.key,
+      x: 0,
+      y: idx,
+      w: 1,
+      h: 1,
+    }))
+  );
 
-  // Get window states using the custom hook for each window
-  const {
-    isOpen: isSpreadsheetOpen,
-    // isMaximized: isSpreadsheetMaximized,
-    // isMinimized: isSpreadsheetMinimized,
-  } = useWindowState(SPREADSHEET);
-  const {
-    isOpen: isPivotOpen,
-    // isMaximized: isPivotMaximized,
-    // isMinimized: isPivotMinimized,
-  } = useWindowState(PIVOT);
-  const {
-    isOpen: isKanbanOpen,
-    // isMaximized: isKanbanMaximized,
-    // isMinimized: isKanbanMinimized,
-  } = useWindowState(KANBAN);
-  const {
-    isOpen: isFileManagerOpen,
-    // isMaximized: isFileManagerMaximized,
-    // isMinimized: isFileManagerMinimized,
-  } = useWindowState(FILE_MANAGER);
-
-  // Get window actions using the custom hook for each window
-  const {
-    toggle: toggleSpreadsheet,
-    maximize: maximizeSpreadsheet,
-    minimize: minimizeSpreadsheet,
-    close: closeSpreadsheet,
-  } = useWindowActions(SPREADSHEET);
-  const {
-    toggle: togglePivot,
-    maximize: maximizePivot,
-    minimize: minimizePivot,
-    close: closePivot,
-  } = useWindowActions(PIVOT);
-  const {
-    toggle: toggleKanban,
-    maximize: maximizeKanban,
-    minimize: minimizeKanban,
-    close: closeKanban,
-  } = useWindowActions(KANBAN);
-  const {
-    toggle: toggleFileManager,
-    maximize: maximizeFileManager,
-    minimize: minimizeFileManager,
-    close: closeFileManager,
-  } = useWindowActions(FILE_MANAGER);
-
-  // zIndexOrder to manage window stacking
   const { zIndexOrder, setZIndexOrder } = useWindowStore(
     useShallow((state) => ({
       zIndexOrder: state.zIndexOrder,
@@ -92,101 +50,146 @@ const App = () => {
     }))
   );
 
-  const rowHeight = 120;
-  const maxRows = Math.floor(window.innerHeight / rowHeight);
-  const cols = Math.floor(window.innerWidth / 120);
+  const ss = useWindowState(SPREADSHEET);
+  const pv = useWindowState(PIVOT);
+  const kb = useWindowState(KANBAN);
+  const fm = useWindowState(FILE_MANAGER);
 
-  const handleIconClick = (keyIcon: WindowKey) => {
-    setZIndexOrder(keyIcon);
+  const ssAct = useWindowActions(SPREADSHEET);
+  const pvAct = useWindowActions(PIVOT);
+  const kbAct = useWindowActions(KANBAN);
+  const fmAct = useWindowActions(FILE_MANAGER);
 
-    const toggleWindowIfClosed = (isOpen: boolean, toggle: () => void) => {
-      if (!isOpen) {
-        toggle();
-      }
-    };
+  const handleIconClick = (key: WindowKey) => {
+    if (selectedIcon !== key) {
+      setSelectedIcon(key);
+    }
 
-    const windowActions: Record<
-      WindowKey,
-      { isOpen: boolean; toggle: () => void }
-    > = {
-      [SPREADSHEET]: { isOpen: isSpreadsheetOpen, toggle: toggleSpreadsheet },
-      [PIVOT]: { isOpen: isPivotOpen, toggle: togglePivot },
-      [KANBAN]: { isOpen: isKanbanOpen, toggle: toggleKanban },
-      [FILE_MANAGER]: { isOpen: isFileManagerOpen, toggle: toggleFileManager },
-    };
+    // current state for each window
+    const stateMap = {
+      [SPREADSHEET]: ss,
+      [PIVOT]: pv,
+      [KANBAN]: kb,
+      [FILE_MANAGER]: fm,
+    } as const;
 
-    const { isOpen, toggle } = windowActions[keyIcon];
-    toggleWindowIfClosed(isOpen, toggle);
+    // actions for each window
+    const actionMap = {
+      [SPREADSHEET]: ssAct,
+      [PIVOT]: pvAct,
+      [KANBAN]: kbAct,
+      [FILE_MANAGER]: fmAct,
+    } as const;
+
+    const st = stateMap[key];
+    const act = actionMap[key];
+
+    const topMost = zIndexOrder[zIndexOrder.length - 1];
+    const isTop = topMost === key;
+
+    if (!st.isOpen) {
+      // closed -> open
+      act.toggle();
+      setZIndexOrder(key);
+      return;
+    }
+
+    if (st.isMinimized) {
+      // open & minimized -> restore
+      act.restore();
+      setZIndexOrder(key);
+      return;
+    }
+
+    if (!isTop) {
+      // open & not minimized & not top-most -> bring to front
+      setZIndexOrder(key);
+      return;
+    }
+  };
+
+  const zIndexFor = (key: WindowKey) =>
+    (zIndexOrder.indexOf(key) >= 0 ? zIndexOrder.indexOf(key) : -1) + 1;
+
+  const handleBackgroundMouseDown: React.MouseEventHandler<HTMLDivElement> = (
+    e
+  ) => {
+    const t = e.target as HTMLElement;
+    if (t !== e.currentTarget && t.closest(".desktop-icon")) return;
+    setSelectedIcon(null);
   };
 
   return (
     <div
       className="w-screen min-h-screen p-2 relative bg-cover bg-center overflow-hidden h-screen"
-      style={{
-        backgroundImage: `url('/images/background-desktop.jpg')`,
-      }}
+      style={{ backgroundImage: `url('/images/background-desktop.jpg')` }}
+      onMouseDown={handleBackgroundMouseDown}
     >
-      <GridLayout
-        className="layout"
-        layout={layout}
-        rowHeight={rowHeight}
-        width={window.innerWidth}
-        isDraggable={true}
-        isResizable={false}
-        margin={[10, 10]}
-        containerPadding={[20, 20]}
-        onLayoutChange={setLayout}
-        compactType={null}
-        allowOverlap={false}
-        preventCollision={true}
-        draggableHandle=".drag-handle"
-        verticalCompact={true}
-        maxRows={maxRows}
-        cols={cols}
-      >
-        {DESKTOP_ICONS.map((icon) => (
-          <div key={icon.key}>
-            <DesktopIcon
-              image={icon.image}
-              title={icon.title}
-              keyIcon={icon.key}
-              onIconClick={handleIconClick}
-            />
-          </div>
-        ))}
-      </GridLayout>
-      {isSpreadsheetOpen && (
-        <SpreadsheetPage
-          onClose={closeSpreadsheet}
-          onMaximize={maximizeSpreadsheet}
-          onMinimize={minimizeSpreadsheet}
-          zIndex={zIndexOrder.indexOf(SPREADSHEET) + 1}
-        />
-      )}
-      {isPivotOpen && (
-        <PivotPage
-          onClose={closePivot}
-          onMaximize={maximizePivot}
-          onMinimize={minimizePivot}
-          zIndex={zIndexOrder.indexOf(PIVOT) + 1}
-        />
-      )}
-      {isKanbanOpen && (
-        <KanbanPage
-          onClose={closeKanban}
-          onMaximize={maximizeKanban}
-          onMinimize={minimizeKanban}
-          zIndex={zIndexOrder.indexOf(KANBAN) + 1}
-        />
-      )}
-      {isFileManagerOpen && (
-        <FileManagerPage
-          onClose={closeFileManager}
-          onMaximize={maximizeFileManager}
-          onMinimize={minimizeFileManager}
-          zIndex={zIndexOrder.indexOf(FILE_MANAGER) + 1}
-        />
-      )}
+      <div className="absolute inset-x-0 top-0 bottom-[44px]">
+        <GridLayout
+          className="layout"
+          layout={layout}
+          rowHeight={rowHeight}
+          width={window.innerWidth}
+          isDraggable
+          isResizable={false}
+          margin={[10, 10]}
+          containerPadding={[20, 20]}
+          onLayoutChange={setLayout}
+          compactType={null}
+          allowOverlap={false}
+          preventCollision
+          draggableHandle=".drag-handle"
+          verticalCompact
+          maxRows={maxRows}
+          cols={cols}
+        >
+          {DESKTOP_ICONS.map((icon) => (
+            <div key={icon.key}>
+              <DesktopIcon
+                image={icon.image}
+                title={icon.title}
+                keyIcon={icon.key}
+                onIconClick={handleIconClick}
+                isSelected={selectedIcon === icon.key}
+              />
+            </div>
+          ))}
+        </GridLayout>
+        {ss.isOpen && (
+          <SpreadsheetPage
+            onClose={ssAct.close}
+            onMaximize={ssAct.maximize}
+            onMinimize={ssAct.minimize}
+            zIndex={zIndexFor(SPREADSHEET)}
+          />
+        )}
+        {pv.isOpen && (
+          <PivotPage
+            onClose={pvAct.close}
+            onMaximize={pvAct.maximize}
+            onMinimize={pvAct.minimize}
+            zIndex={zIndexFor(PIVOT)}
+          />
+        )}
+        {kb.isOpen && (
+          <KanbanPage
+            onClose={kbAct.close}
+            onMaximize={kbAct.maximize}
+            onMinimize={kbAct.minimize}
+            zIndex={zIndexFor(KANBAN)}
+          />
+        )}
+        {fm.isOpen && (
+          <FileManagerPage
+            onClose={fmAct.close}
+            onMaximize={fmAct.maximize}
+            onMinimize={fmAct.minimize}
+            zIndex={zIndexFor(FILE_MANAGER)}
+          />
+        )}
+      </div>
+      <Taskbar />
     </div>
   );
 };

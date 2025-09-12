@@ -8,6 +8,7 @@ interface DraggableWindowProps {
   title: string;
   children: React.ReactNode;
   zIndex: number;
+  hidden?: boolean;
   onClose: () => void;
   onMaximize: () => void;
   onMinimize: () => void;
@@ -20,16 +21,19 @@ const DraggableWindow = memo(
     title,
     children,
     zIndex,
+    hidden = false,
     onClose,
     onMaximize,
     onMinimize,
     onMouseDown,
   }: DraggableWindowProps) => {
+    const availH = Math.max(0, window.innerHeight - 44);
+
     return (
       <Rnd
         default={{
           x: (window.innerWidth - 800) / 2,
-          y: (window.innerHeight - 450) / 2,
+          y: (availH - 450) / 2,
           width: 800,
           height: 450,
         }}
@@ -41,6 +45,7 @@ const DraggableWindow = memo(
           position: "absolute",
           zIndex,
           border: "1px solid #DADEE0",
+          display: hidden ? "none" : "block",
         }}
         onMouseDown={onMouseDown}
         onResizeStop={() => window.dispatchEvent(new Event("resize"))}

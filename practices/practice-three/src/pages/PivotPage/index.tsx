@@ -20,10 +20,11 @@ const PivotPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
-  const { zIndexOrder, setZIndexOrder } = useWindowStore(
+  const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
     useShallow((state) => ({
       zIndexOrder: state.zIndexOrder,
       setZIndexOrder: state.setZIndexOrder,
+      isMinimized: state.windows[WindowKeys.PIVOT].isMinimized,
     }))
   );
 
@@ -37,10 +38,11 @@ const PivotPage = ({
     <DraggableWindow
       src="/images/pivot.png"
       title="Pivot"
+      hidden={isMinimized}
+      zIndex={zIndex}
       onClose={onClose}
       onMaximize={onMaximize}
       onMinimize={onMinimize}
-      zIndex={zIndex}
       onMouseDown={handleMouseDown}
     >
       <h2>Pivot Content</h2>
