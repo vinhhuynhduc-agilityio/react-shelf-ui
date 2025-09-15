@@ -4,7 +4,7 @@ import { useShallow } from "zustand/react/shallow";
 import { DraggableWindow } from "@/components";
 
 // Constant
-import { WindowKeys } from "@/constant";
+import { WINDOW_KEYS } from "@/constant";
 
 // Store
 import { useWindowStore } from "@/stores";
@@ -24,13 +24,13 @@ const FileManagerPage = ({
     useShallow((state) => ({
       zIndexOrder: state.zIndexOrder,
       setZIndexOrder: state.setZIndexOrder,
-      isMinimized: state.windows[WindowKeys.FILE_MANAGER].isMinimized,
+      isMinimized: state.windows[WINDOW_KEYS.FILE_MANAGER].isMinimized,
     }))
   );
 
   const handleMouseDown = () => {
-    if (zIndexOrder[zIndexOrder.length - 1] !== WindowKeys.FILE_MANAGER) {
-      setZIndexOrder(WindowKeys.FILE_MANAGER);
+    if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.FILE_MANAGER) {
+      setZIndexOrder(WINDOW_KEYS.FILE_MANAGER);
     }
   };
 

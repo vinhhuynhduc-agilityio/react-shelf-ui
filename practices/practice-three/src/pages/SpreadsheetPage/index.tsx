@@ -8,7 +8,7 @@ import "@fortune-sheet/react/dist/index.css";
 import { DraggableWindow } from "@/components";
 
 // Constant
-import { WindowKeys } from "@/constant";
+import { WINDOW_KEYS } from "@/constant";
 
 // Store
 import { useWindowStore } from "@/stores";
@@ -29,7 +29,7 @@ const SpreadsheetPage = ({
     useShallow((state) => ({
       zIndexOrder: state.zIndexOrder,
       setZIndexOrder: state.setZIndexOrder,
-      isMinimized: state.windows[WindowKeys.SPREADSHEET].isMinimized,
+      isMinimized: state.windows[WINDOW_KEYS.SPREADSHEET].isMinimized,
     }))
   );
 
@@ -43,8 +43,8 @@ const SpreadsheetPage = ({
   ];
 
   const handleMouseDown = () => {
-    if (zIndexOrder[zIndexOrder.length - 1] !== WindowKeys.SPREADSHEET) {
-      setZIndexOrder(WindowKeys.SPREADSHEET);
+    if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.SPREADSHEET) {
+      setZIndexOrder(WINDOW_KEYS.SPREADSHEET);
     }
   };
 

@@ -9,7 +9,7 @@ import { useWindowStore } from "@/stores";
 import { useWindowActions, useWindowState } from "@/hook";
 
 // Constant
-import { DESKTOP_ICONS, WindowKeys } from "./constant";
+import { DESKTOP_ICONS, WINDOW_KEYS } from "./constant";
 
 // Types
 import type { WindowKey } from "@/types";
@@ -26,7 +26,7 @@ import {
 } from "./pages";
 
 const App = () => {
-  const { SPREADSHEET, FILE_MANAGER, PIVOT, KANBAN } = WindowKeys;
+  const { SPREADSHEET, FILE_MANAGER, PIVOT, KANBAN } = WINDOW_KEYS;
   const rowHeight = 110;
   const cols = Math.floor(window.innerWidth / 110);
   const maxRows = Math.floor(window.innerHeight / rowHeight);
@@ -50,15 +50,15 @@ const App = () => {
     }))
   );
 
-  const ss = useWindowState(SPREADSHEET);
-  const pv = useWindowState(PIVOT);
-  const kb = useWindowState(KANBAN);
-  const fm = useWindowState(FILE_MANAGER);
+  const spreadsheetState = useWindowState(SPREADSHEET);
+  const pivotState = useWindowState(PIVOT);
+  const kanbanState = useWindowState(KANBAN);
+  const fileManagerState = useWindowState(FILE_MANAGER);
 
-  const ssAct = useWindowActions(SPREADSHEET);
-  const pvAct = useWindowActions(PIVOT);
-  const kbAct = useWindowActions(KANBAN);
-  const fmAct = useWindowActions(FILE_MANAGER);
+  const spreadsheetActions = useWindowActions(SPREADSHEET);
+  const pivotActions = useWindowActions(PIVOT);
+  const kanbanActions = useWindowActions(KANBAN);
+  const fileManagerActions = useWindowActions(FILE_MANAGER);
 
   const handleIconClick = (key: WindowKey) => {
     if (selectedIcon !== key) {
@@ -67,36 +67,36 @@ const App = () => {
 
     // current state for each window
     const stateMap = {
-      [SPREADSHEET]: ss,
-      [PIVOT]: pv,
-      [KANBAN]: kb,
-      [FILE_MANAGER]: fm,
+      [SPREADSHEET]: spreadsheetState,
+      [PIVOT]: pivotState,
+      [KANBAN]: kanbanState,
+      [FILE_MANAGER]: fileManagerState,
     } as const;
 
     // actions for each window
     const actionMap = {
-      [SPREADSHEET]: ssAct,
-      [PIVOT]: pvAct,
-      [KANBAN]: kbAct,
-      [FILE_MANAGER]: fmAct,
+      [SPREADSHEET]: spreadsheetActions,
+      [PIVOT]: pivotActions,
+      [KANBAN]: kanbanActions,
+      [FILE_MANAGER]: fileManagerActions,
     } as const;
 
-    const st = stateMap[key];
-    const act = actionMap[key];
+    const currentWindowState = stateMap[key];
+    const currentWindowActions = actionMap[key];
 
     const topMost = zIndexOrder[zIndexOrder.length - 1];
     const isTop = topMost === key;
 
-    if (!st.isOpen) {
+    if (!currentWindowState.isOpen) {
       // closed -> open
-      act.toggle();
+      currentWindowActions.toggle();
       setZIndexOrder(key);
       return;
     }
 
-    if (st.isMinimized) {
+    if (currentWindowState.isMinimized) {
       // open & minimized -> restore
-      act.restore();
+      currentWindowActions.restore();
       setZIndexOrder(key);
       return;
     }
@@ -156,35 +156,35 @@ const App = () => {
             </div>
           ))}
         </GridLayout>
-        {ss.isOpen && (
+        {spreadsheetState.isOpen && (
           <SpreadsheetPage
-            onClose={ssAct.close}
-            onMaximize={ssAct.maximize}
-            onMinimize={ssAct.minimize}
+            onClose={spreadsheetActions.close}
+            onMaximize={spreadsheetActions.maximize}
+            onMinimize={spreadsheetActions.minimize}
             zIndex={zIndexFor(SPREADSHEET)}
           />
         )}
-        {pv.isOpen && (
+        {pivotState.isOpen && (
           <PivotPage
-            onClose={pvAct.close}
-            onMaximize={pvAct.maximize}
-            onMinimize={pvAct.minimize}
+            onClose={pivotActions.close}
+            onMaximize={pivotActions.maximize}
+            onMinimize={pivotActions.minimize}
             zIndex={zIndexFor(PIVOT)}
           />
         )}
-        {kb.isOpen && (
+        {kanbanState.isOpen && (
           <KanbanPage
-            onClose={kbAct.close}
-            onMaximize={kbAct.maximize}
-            onMinimize={kbAct.minimize}
+            onClose={kanbanActions.close}
+            onMaximize={kanbanActions.maximize}
+            onMinimize={kanbanActions.minimize}
             zIndex={zIndexFor(KANBAN)}
           />
         )}
-        {fm.isOpen && (
+        {fileManagerState.isOpen && (
           <FileManagerPage
-            onClose={fmAct.close}
-            onMaximize={fmAct.maximize}
-            onMinimize={fmAct.minimize}
+            onClose={fileManagerActions.close}
+            onMaximize={fileManagerActions.maximize}
+            onMinimize={fileManagerActions.minimize}
             zIndex={zIndexFor(FILE_MANAGER)}
           />
         )}

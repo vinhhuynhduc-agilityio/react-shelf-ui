@@ -83,7 +83,9 @@ const Taskbar = () => {
         })}
       </div>
       {/* RIGHT: system tray */}
-      <div className="ml-auto text-xs text-white/80 px-2">ENG | Desktop</div>
+      <div className="ml-auto flex items-center text-xs text-white/80 px-2">
+        ENG | Desktop
+      </div>
     </div>
   );
 };
