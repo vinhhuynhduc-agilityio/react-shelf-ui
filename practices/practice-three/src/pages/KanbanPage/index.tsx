@@ -4,7 +4,7 @@ import { useShallow } from "zustand/react/shallow";
 import { DraggableWindow } from "@/components";
 
 // Constant
-import { WindowKeys } from "@/constant";
+import { WINDOW_KEYS } from "@/constant";
 
 // Store
 import { useWindowStore } from "@/stores";
@@ -24,18 +24,19 @@ const KanbanPage = ({
     useShallow((state) => ({
       zIndexOrder: state.zIndexOrder,
       setZIndexOrder: state.setZIndexOrder,
-      isMinimized: state.windows[WindowKeys.KANBAN].isMinimized,
+      isMinimized: state.windows[WINDOW_KEYS.KANBAN].isMinimized,
     }))
   );
 
   const handleMouseDown = () => {
-    if (zIndexOrder[zIndexOrder.length - 1] !== WindowKeys.KANBAN) {
-      setZIndexOrder(WindowKeys.KANBAN);
+    if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.KANBAN) {
+      setZIndexOrder(WINDOW_KEYS.KANBAN);
     }
   };
 
   return (
     <DraggableWindow
+      windowKey={WINDOW_KEYS.KANBAN}
       src="/images/kanban.png"
       title="Kanban"
       hidden={isMinimized}

@@ -1,4 +1,13 @@
+import { useShallow } from "zustand/react/shallow";
+
+// Store
+import { useWindowStore } from "@/stores";
+
+// Types
+import { WindowKey } from "@/types";
+
 interface WindowHeaderProps {
+  windowKey: WindowKey;
   title: string;
   src: string;
   onClose: () => void;
@@ -7,12 +16,21 @@ interface WindowHeaderProps {
 }
 
 const WindowHeader = ({
+  windowKey,
   src,
   title,
   onClose,
   onMaximize,
   onMinimize,
 }: WindowHeaderProps) => {
+  const { win } = useWindowStore(
+    useShallow((state) => ({
+      win: state.windows[windowKey],
+    }))
+  );
+
+  const isMaximized = !!win?.isMaximized;
+
   return (
     <div className="drag-handle bg-white flex justify-between items-center border-b-[1.3px] border-[#DADEE0] w-full h-[30px]">
       <div className="inline-flex items-center justify-center space-x-2">
@@ -36,7 +54,11 @@ const WindowHeader = ({
           className="text-white text-lg p-1 w-[26px] h-[26px] cursor-pointer flex justify-center items-center rounded-full"
           onClick={onMaximize}
         >
-          <i className="fa-regular fa-square text-[#94A1B3] px-[4px] py-[3px] hover:bg-gray-100 rounded-full"></i>
+          {isMaximized ? (
+            <i className="fa-regular fa-window-restore text-[#94A1B3] px-[4px] py-[3px] hover:bg-gray-100 rounded-full"></i>
+          ) : (
+            <i className="fa-regular fa-square text-[#94A1B3] px-[4px] py-[3px] hover:bg-gray-100 rounded-full"></i>
+          )}
         </button>
         <button
           className="text-white text-lg p-1 w-[26px] h-[26px] cursor-pointer flex justify-center items-center rounded-full"

@@ -1,4 +1,4 @@
-export const WindowKeys = {
+export const WINDOW_KEYS = {
   SPREADSHEET: "spreadsheet",
   FILE_MANAGER: "fileManager",
   PIVOT: "pivot",
@@ -7,15 +7,15 @@ export const WindowKeys = {
 
 export const DESKTOP_ICONS = [
   {
-    key: WindowKeys.SPREADSHEET,
+    key: WINDOW_KEYS.SPREADSHEET,
     image: "images/spreadsheet.png",
     title: "Spreadsheet",
   },
   {
-    key: WindowKeys.FILE_MANAGER,
+    key: WINDOW_KEYS.FILE_MANAGER,
     image: "images/file-manager.png",
     title: "File Manager",
   },
-  { key: WindowKeys.PIVOT, image: "images/pivot.png", title: "Pivot" },
-  { key: WindowKeys.KANBAN, image: "images/kanban.png", title: "Kanban" },
+  { key: WINDOW_KEYS.PIVOT, image: "images/pivot.png", title: "Pivot" },
+  { key: WINDOW_KEYS.KANBAN, image: "images/kanban.png", title: "Kanban" },
 ];

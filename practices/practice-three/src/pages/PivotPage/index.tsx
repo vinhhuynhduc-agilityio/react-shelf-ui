@@ -4,7 +4,7 @@ import { useShallow } from "zustand/react/shallow";
 import { DraggableWindow } from "@/components";
 
 // Constant
-import { WindowKeys } from "@/constant";
+import { WINDOW_KEYS } from "@/constant";
 
 // Store
 import { useWindowStore } from "@/stores";
@@ -24,18 +24,19 @@ const PivotPage = ({
     useShallow((state) => ({
       zIndexOrder: state.zIndexOrder,
       setZIndexOrder: state.setZIndexOrder,
-      isMinimized: state.windows[WindowKeys.PIVOT].isMinimized,
+      isMinimized: state.windows[WINDOW_KEYS.PIVOT].isMinimized,
     }))
   );
 
   const handleMouseDown = () => {
-    if (zIndexOrder[zIndexOrder.length - 1] !== WindowKeys.PIVOT) {
-      setZIndexOrder(WindowKeys.PIVOT);
+    if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.PIVOT) {
+      setZIndexOrder(WINDOW_KEYS.PIVOT);
     }
   };
 
   return (
     <DraggableWindow
+      windowKey={WINDOW_KEYS.PIVOT}
       src="/images/pivot.png"
       title="Pivot"
       hidden={isMinimized}
