@@ -36,6 +36,7 @@ const FileManagerPage = ({
 
   return (
     <DraggableWindow
+      windowKey={WINDOW_KEYS.FILE_MANAGER}
       src="/images/file-manager.png"
       title="File Manager"
       hidden={isMinimized}

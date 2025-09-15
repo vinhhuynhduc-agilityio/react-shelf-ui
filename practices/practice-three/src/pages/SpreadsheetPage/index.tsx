@@ -50,6 +50,7 @@ const SpreadsheetPage = ({
 
   return (
     <DraggableWindow
+      windowKey={WINDOW_KEYS.SPREADSHEET}
       src="/images/spreadsheet.png"
       title="Spreadsheet"
       hidden={isMinimized}

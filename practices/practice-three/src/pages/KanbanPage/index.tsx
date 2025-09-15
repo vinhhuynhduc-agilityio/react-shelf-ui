@@ -36,6 +36,7 @@ const KanbanPage = ({
 
   return (
     <DraggableWindow
+      windowKey={WINDOW_KEYS.KANBAN}
       src="/images/kanban.png"
       title="Kanban"
       hidden={isMinimized}

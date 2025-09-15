@@ -36,6 +36,7 @@ const PivotPage = ({
 
   return (
     <DraggableWindow
+      windowKey={WINDOW_KEYS.PIVOT}
       src="/images/pivot.png"
       title="Pivot"
       hidden={isMinimized}
