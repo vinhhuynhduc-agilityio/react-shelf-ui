@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { Rnd } from "react-rnd";
 import { useShallow } from "zustand/react/shallow";
 
@@ -9,7 +9,7 @@ import { useWindowStore } from "@/stores";
 import type { WindowKey } from "@/types";
 
 // Helpers
-import { updateFrame } from "@/helpers";
+import { clampToViewport, updateFrame } from "@/helpers";
 
 // Components
 import WindowHeader from "../WindowHeader";
@@ -51,6 +51,26 @@ const DraggableWindow = memo((props: DraggableWindowProps) => {
 
   const isMaximized = !!win?.isMaximized;
 
+  useEffect(() => {
+    const onResize = () => {
+      if (isMaximized) return;
+
+      const next = clampToViewport(frame);
+      if (
+        next.x !== frame.x ||
+        next.y !== frame.y ||
+        next.width !== frame.width ||
+        next.height !== frame.height
+      ) {
+        requestAnimationFrame(() => setFrame(windowKey, next));
+      }
+    };
+
+    window.addEventListener("resize", onResize);
+
+    return () => window.removeEventListener("resize", onResize);
+  }, [isMaximized, frame, windowKey, setFrame]);
+
   return (
     <Rnd
       size={
@@ -59,7 +79,7 @@ const DraggableWindow = memo((props: DraggableWindowProps) => {
           : { width: frame.width, height: frame.height }
       }
       position={isMaximized ? { x: 0, y: 0 } : { x: frame.x, y: frame.y }}
-      minWidth={300}
+      minWidth={200}
       minHeight={200}
       bounds="parent"
       dragHandleClassName="drag-handle"

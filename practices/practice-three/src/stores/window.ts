@@ -1,6 +1,11 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
+
+// types
 import type { WindowKey, Windows } from "@/types";
+
+// helpers
+import { emitResizeNextFrame } from "@/helpers";
 
 type Rect = { x: number; y: number; width: number; height: number };
 
@@ -93,9 +98,7 @@ export const useWindowStore = create<WindowStore>()(
         }
 
         // trigger resize event to make content adapt to new size
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() => window.dispatchEvent(new Event("resize")))
-        );
+        emitResizeNextFrame();
       }),
 
     minimizeWindow: (windowKey) =>
