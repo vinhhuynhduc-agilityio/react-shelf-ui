@@ -8,6 +8,9 @@ import { useWindowStore } from "@/stores";
 // Types
 import type { WindowKey } from "@/types";
 
+// Helpers
+import { updateFrame } from "@/helpers";
+
 // Components
 import WindowHeader from "../WindowHeader";
 
@@ -74,17 +77,15 @@ const DraggableWindow = memo((props: DraggableWindowProps) => {
 
         setFrame(windowKey, { ...frame, x: d.x, y: d.y });
       }}
-      onResizeStop={(_, __, ref, ___, position) => {
+      onResize={(_, __, ref, ___, pos) => {
         if (isMaximized) return;
 
-        setFrame(windowKey, {
-          x: position.x,
-          y: position.y,
-          width: ref.getBoundingClientRect().width,
-          height: ref.getBoundingClientRect().height,
-        });
+        updateFrame(setFrame, windowKey, ref as HTMLElement, pos);
+      }}
+      onResizeStop={(_, __, ref, ___, pos) => {
+        if (isMaximized) return;
 
-        window.dispatchEvent(new Event("resize"));
+        updateFrame(setFrame, windowKey, ref as HTMLElement, pos);
       }}
     >
       <div className="bg-white shadow-lg text-[#475466] w-full h-full flex flex-col overflow-hidden">
