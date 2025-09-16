@@ -1,6 +1,1 @@
 @import "tailwindcss";
-
-div.Spreadsheet .header_selected {
-    background: #5f6268;
-    color: #fff;
-}
