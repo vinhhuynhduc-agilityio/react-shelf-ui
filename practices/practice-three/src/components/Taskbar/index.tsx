@@ -60,25 +60,29 @@ const Taskbar = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-[44px] bg-black/50 backdrop-blur-md border-t border-white/10 px-2 flex items-stretch z-[9999]">
+    <div className="fixed bottom-0 left-0 right-0 h-[44px] bg-[#33353c] border-t border-white/10 px-2 flex z-[9999]">
       {/* LEFT: running windows */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2 ">
         {openKeys.map((key) => {
           const icon = metaOf(key);
+          const isActive = topMost === key;
 
           return (
-            <button
+            <div
               key={`task-${key}`}
-              title={icon.title}
-              onClick={() => handleTaskClick(key)}
-              className={clsx(
-                "h-full px-2 flex items-center gap-2 select-none",
-                "hover:bg-white/10"
-              )}
+              className={clsx("hover:bg-white/10 h-full", {
+                "bg-white/10": isActive,
+              })}
             >
-              <img src={icon.image} alt="" className="h-[26px] w-[26px]" />
-              <span className="text-xs text-white/90">{icon.title}</span>
-            </button>
+              <button
+                title={icon.title}
+                onClick={() => handleTaskClick(key)}
+                className="h-[36px] px-2 flex items-center select-none"
+              >
+                <img src={icon.image} alt="" className="h-[26px] w-[26px]" />
+              </button>
+              <div className="h-[2px] bg-[#1ca1c1]" />
+            </div>
           );
         })}
       </div>
