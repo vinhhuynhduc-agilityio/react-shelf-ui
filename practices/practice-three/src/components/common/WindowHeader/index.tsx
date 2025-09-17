@@ -6,6 +6,9 @@ import { useWindowStore } from "@/stores";
 // Types
 import { WindowKey } from "@/types";
 
+// Components
+import { IconButton } from "@/components";
+
 interface WindowHeaderProps {
   windowKey: WindowKey;
   title: string;
@@ -44,28 +47,25 @@ const WindowHeader = ({
         </span>
       </div>
       <div className="flex items-center justify-center space-x-2 mr-3">
-        <button
-          className="text-white text-lg p-1 w-[26px] h-[26px] cursor-pointer flex justify-center items-center rounded-full"
+        <IconButton
+          icon="fa-solid fa-minus"
+          iconStyles="rounded-full px-[4px] py-[3px]"
           onClick={onMinimize}
-        >
-          <i className="fa-solid fa-minus text-[#94A1B3] hover:bg-gray-100 rounded-full px-[4px] py-[3px]"></i>
-        </button>
-        <button
-          className="text-white text-lg p-1 w-[26px] h-[26px] cursor-pointer flex justify-center items-center rounded-full"
+        />
+        <IconButton
+          icon={
+            isMaximized
+              ? "fa-regular fa-window-restore"
+              : "fa-regular fa-square"
+          }
+          iconStyles="rounded-full px-[4px] py-[3px]"
           onClick={onMaximize}
-        >
-          {isMaximized ? (
-            <i className="fa-regular fa-window-restore text-[#94A1B3] px-[4px] py-[3px] hover:bg-gray-100 rounded-full"></i>
-          ) : (
-            <i className="fa-regular fa-square text-[#94A1B3] px-[4px] py-[3px] hover:bg-gray-100 rounded-full"></i>
-          )}
-        </button>
-        <button
-          className="text-white text-lg p-1 w-[26px] h-[26px] cursor-pointer flex justify-center items-center rounded-full"
+        />
+        <IconButton
+          icon="fa-solid fa-xmark"
+          iconStyles="rounded-full px-[6px] py-[3px]"
           onClick={onClose}
-        >
-          <i className="fa-solid fa-xmark text-[#94A1B3] hover:bg-gray-100 rounded-full py-[3px] px-[6px]"></i>
-        </button>
+        />
       </div>
     </div>
   );
