@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import GridLayout, { Layout } from "react-grid-layout";
 import { useShallow } from "zustand/react/shallow";
 
@@ -28,8 +28,12 @@ import {
 const App = () => {
   const { SPREADSHEET, FILE_MANAGER, PIVOT, KANBAN } = WINDOW_KEYS;
   const rowHeight = 110;
-  const cols = useMemo(() => Math.floor(window.innerWidth / 110), []);
-  const maxRows = useMemo(() => Math.floor(window.innerHeight / rowHeight), []);
+  const fixedItemWidth = 100;
+
+  const [cols, setCols] = useState(
+    Math.floor(window.innerWidth / fixedItemWidth)
+  );
+  const gridWidth = cols * fixedItemWidth;
 
   // State
   const [selectedIcon, setSelectedIcon] = useState<WindowKey | null>(null);
@@ -49,6 +53,19 @@ const App = () => {
       setZIndexOrder: state.setZIndexOrder,
     }))
   );
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newCols = Math.floor(window.innerWidth / 110);
+      setCols(newCols);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   // Windows state & actions
   const windows = {
@@ -178,7 +195,7 @@ const App = () => {
 
   return (
     <div
-      className="w-screen min-h-screen p-2 relative bg-cover bg-center overflow-hidden h-screen"
+      className="w-screen min-h-screen relative bg-cover bg-center overflow-hidden h-screen"
       style={{ backgroundImage: `url('/images/background-desktop.jpg')` }}
       onMouseDown={handleBackgroundMouseDown}
     >
@@ -187,18 +204,16 @@ const App = () => {
           className="layout"
           layout={layout}
           rowHeight={rowHeight}
-          width={window.innerWidth}
+          width={gridWidth}
           isDraggable
           isResizable={false}
-          margin={[10, 10]}
-          containerPadding={[20, 20]}
+          margin={[0, 0]}
           onLayoutChange={setLayout}
           compactType={null}
           allowOverlap={false}
           preventCollision
           draggableHandle=".drag-handle"
           verticalCompact
-          maxRows={maxRows}
           cols={cols}
         >
           {renderDesktopIcons()}
