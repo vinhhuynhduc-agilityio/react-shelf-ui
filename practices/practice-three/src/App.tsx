@@ -17,6 +17,9 @@ import type { WindowKey } from "@/types";
 // Components
 import { DesktopIcon, Taskbar } from "./components";
 
+// Helpers
+import { rearrangeLayoutOnResize } from "@/helpers";
+
 // Pages
 import {
   FileManagerPage,
@@ -32,6 +35,9 @@ const App = () => {
 
   const [cols, setCols] = useState(
     Math.floor(window.innerWidth / fixedItemWidth)
+  );
+  const [maxRows, setMaxRows] = useState(
+    Math.floor((window.innerHeight - 44) / rowHeight)
   );
   const gridWidth = cols * fixedItemWidth;
 
@@ -56,8 +62,17 @@ const App = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      const newCols = Math.floor(window.innerWidth / 110);
+      const newCols = Math.floor(window.innerWidth / fixedItemWidth);
+      const newMaxRows = Math.floor((window.innerHeight - 44) / rowHeight);
+
+      let updatedLayout = layout;
+      if (newCols < cols || newMaxRows < maxRows) {
+        updatedLayout = rearrangeLayoutOnResize(layout, newCols, newMaxRows);
+        setLayout(updatedLayout);
+      }
+
       setCols(newCols);
+      setMaxRows(newMaxRows);
     };
 
     window.addEventListener("resize", handleResize);
@@ -65,7 +80,7 @@ const App = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [layout, cols, maxRows]);
 
   // Windows state & actions
   const windows = {
@@ -215,6 +230,7 @@ const App = () => {
           draggableHandle=".drag-handle"
           verticalCompact
           cols={cols}
+          maxRows={maxRows}
         >
           {renderDesktopIcons()}
         </GridLayout>
