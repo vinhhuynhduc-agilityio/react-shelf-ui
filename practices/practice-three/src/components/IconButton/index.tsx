@@ -3,6 +3,7 @@ interface IconButtonProps {
   onClick: () => void;
   buttonStyles?: string;
   iconStyles?: string;
+  ariaLabel?: string;
 }
 
 const IconButton = ({
@@ -10,11 +11,13 @@ const IconButton = ({
   onClick,
   buttonStyles = "p-1 w-[26px] h-[26px] flex justify-center items-center rounded-full",
   iconStyles = "",
+  ariaLabel = "",
 }: IconButtonProps) => {
   return (
     <button
       className={`text-lg cursor-pointer ${buttonStyles}`}
       onClick={onClick}
+      aria-label={ariaLabel}
     >
       <i
         className={`${icon} text-[#94A1B3] hover:bg-gray-100 ${iconStyles}`}
