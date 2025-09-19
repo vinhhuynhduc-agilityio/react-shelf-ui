@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useLayoutEffect } from "react";
 import GridLayout, { Layout } from "react-grid-layout";
 import { useShallow } from "zustand/react/shallow";
 
@@ -60,7 +60,7 @@ const App = () => {
     }))
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const handleResize = () => {
       const newCols = Math.floor(window.innerWidth / fixedItemWidth);
       const newMaxRows = Math.floor((window.innerHeight - 44) / rowHeight);
@@ -117,12 +117,14 @@ const App = () => {
       setZIndexOrder(key);
       return;
     }
+
     if (currentWindow.state.isMinimized) {
       // open & minimized -> restore
       currentWindow.actions.restore();
       setZIndexOrder(key);
       return;
     }
+
     if (!isTop) {
       // open & not minimized & not top-most -> bring to front
       setZIndexOrder(key);

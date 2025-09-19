@@ -61,8 +61,7 @@ const Taskbar = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 h-[44px] bg-[#33353c] border-t border-white/10 px-2 flex z-[9999]">
-      {/* LEFT: running windows */}
-      <div className="flex items-center gap-2 ">
+      <div className="flex items-center gap-2">
         {openKeys.map((key) => {
           const icon = metaOf(key);
           const isActive = topMost === key;
@@ -70,7 +69,7 @@ const Taskbar = () => {
           return (
             <div
               key={`task-${key}`}
-              className={clsx("hover:bg-white/10 h-full", {
+              className={clsx("hover:bg-white/10 h-full flex-shrink-0", {
                 "bg-white/10": isActive,
               })}
             >
@@ -85,10 +84,6 @@ const Taskbar = () => {
             </div>
           );
         })}
-      </div>
-      {/* RIGHT: system tray */}
-      <div className="ml-auto flex items-center text-xs text-white/80 px-2">
-        ENG | Desktop
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { memo, useEffect } from "react";
+import { memo, useLayoutEffect } from "react";
 import { Rnd } from "react-rnd";
 import { useShallow } from "zustand/react/shallow";
 
@@ -51,7 +51,7 @@ const DraggableWindow = memo((props: DraggableWindowProps) => {
 
   const isMaximized = !!win?.isMaximized;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const onResize = () => {
       if (isMaximized) return;
 
