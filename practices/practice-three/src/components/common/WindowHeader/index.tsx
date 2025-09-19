@@ -35,18 +35,18 @@ const WindowHeader = ({
   const isMaximized = !!win?.isMaximized;
 
   return (
-    <div className="drag-handle bg-white flex justify-between items-center border-b-[1.3px] border-[#DADEE0] w-full h-[30px]">
+    <div className="drag-handle bg-white flex justify-between items-center border-b-[1.3px] border-[#DADEE0] w-full h-[30px] relative">
       <div className="inline-flex items-center justify-center space-x-2">
         <img
           src={src}
           alt={title}
           className="w-[18px] h-[18px] mx-[10px] ml-[8px] text-[10px] pointer-events-none"
         />
-        <span className="text-[16px] font-medium text-[#475466] tracking-normal cursor-default">
+        <span className="text-[16px] font-medium text-[#475466] cursor-default whitespace-nowrap">
           {title}
         </span>
       </div>
-      <div className="flex items-center justify-center space-x-2 mr-3">
+      <div className="flex items-center justify-center space-x-2 absolute right-0 mr-3">
         <IconButton
           icon="fa-solid fa-minus"
           iconStyles="rounded-full px-[4px] py-[3px]"
