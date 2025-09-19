@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`IconButton matches snapshot 1`] = `
+<div>
+  <button
+    aria-label="Snapshot"
+    class="text-lg cursor-pointer p-1 w-[26px] h-[26px] flex justify-center items-center rounded-full"
+  >
+    <i
+      class="fa-regular fa-box text-[#94A1B3] hover:bg-gray-100 "
+    />
+  </button>
+</div>
+`;
