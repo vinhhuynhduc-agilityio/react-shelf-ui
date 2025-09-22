@@ -1,6 +1,7 @@
 import { useState, useLayoutEffect } from "react";
 import GridLayout, { Layout } from "react-grid-layout";
 import { useShallow } from "zustand/react/shallow";
+import { QueryClientProvider } from "@tanstack/react-query";
 
 // Store
 import { useWindowStore } from "@/stores";
@@ -18,7 +19,7 @@ import type { WindowKey } from "@/types";
 import { DesktopIcon, Taskbar } from "./components";
 
 // Helpers
-import { rearrangeLayoutOnResize } from "@/helpers";
+import { queryClient, rearrangeLayoutOnResize } from "@/helpers";
 
 // Pages
 import {
@@ -211,35 +212,37 @@ const App = () => {
   };
 
   return (
-    <div
-      className="w-screen min-h-screen relative bg-cover bg-center overflow-hidden h-screen"
-      style={{ backgroundImage: `url('/images/background-desktop.jpg')` }}
-      onMouseDown={handleBackgroundMouseDown}
-    >
-      <div className="absolute inset-x-0 top-0 bottom-[44px]">
-        <GridLayout
-          className="layout"
-          layout={layout}
-          rowHeight={rowHeight}
-          width={gridWidth}
-          isDraggable
-          isResizable={false}
-          margin={[0, 0]}
-          onLayoutChange={setLayout}
-          compactType={null}
-          allowOverlap={false}
-          preventCollision
-          draggableHandle=".drag-handle"
-          verticalCompact
-          cols={cols}
-          maxRows={maxRows}
-        >
-          {renderDesktopIcons()}
-        </GridLayout>
-        {renderPages()}
+    <QueryClientProvider client={queryClient}>
+      <div
+        className="w-screen min-h-screen relative bg-cover bg-center overflow-hidden h-screen"
+        style={{ backgroundImage: `url('/images/background-desktop.jpg')` }}
+        onMouseDown={handleBackgroundMouseDown}
+      >
+        <div className="absolute inset-x-0 top-0 bottom-[44px]">
+          <GridLayout
+            className="layout"
+            layout={layout}
+            rowHeight={rowHeight}
+            width={gridWidth}
+            isDraggable
+            isResizable={false}
+            margin={[0, 0]}
+            onLayoutChange={setLayout}
+            compactType={null}
+            allowOverlap={false}
+            preventCollision
+            draggableHandle=".drag-handle"
+            verticalCompact
+            cols={cols}
+            maxRows={maxRows}
+          >
+            {renderDesktopIcons()}
+          </GridLayout>
+          {renderPages()}
+        </div>
+        <Taskbar />
       </div>
-      <Taskbar />
-    </div>
+    </QueryClientProvider>
   );
 };
 
