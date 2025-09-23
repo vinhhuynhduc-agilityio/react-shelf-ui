@@ -82,7 +82,7 @@ const DraggableWindow = memo((props: DraggableWindowProps) => {
       minWidth={200}
       minHeight={200}
       bounds="parent"
-      dragHandleClassName="drag-handle"
+      dragHandleClassName="window-drag-handle"
       enableResizing={!isMaximized}
       disableDragging={isMaximized}
       style={{

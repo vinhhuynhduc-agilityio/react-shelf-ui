@@ -1,4 +1,7 @@
+import { useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { Table } from "antd";
+import clsx from "clsx";
 
 // Components
 import { DraggableWindow } from "@/components";
@@ -8,6 +11,15 @@ import { WINDOW_KEYS } from "@/constant";
 
 // Store
 import { useWindowStore } from "@/stores";
+
+// Hook
+import { usePivotQuery } from "@/hook";
+
+// Helpers
+import { generatePivotTableColumns, generateDataSource } from "@/helpers";
+
+// Types
+import { DataSourceItem } from "@/types";
 
 const PivotPage = ({
   onClose,
@@ -20,6 +32,10 @@ const PivotPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
+  // state
+  const [currentView, setCurrentView] = useState<string>("table");
+
+  // store
   const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
     useShallow((state) => ({
       zIndexOrder: state.zIndexOrder,
@@ -27,6 +43,21 @@ const PivotPage = ({
       isMinimized: state.windows[WINDOW_KEYS.PIVOT].isMinimized,
     }))
   );
+
+  // hook
+  const {
+    data: pivot = [],
+    // isLoading,
+    // error,
+    // isError,
+  } = usePivotQuery();
+
+  const dataSource: DataSourceItem[] = useMemo(
+    () => generateDataSource(pivot),
+    [pivot]
+  );
+
+  const columns = useMemo(() => generatePivotTableColumns(), []);
 
   const handleMouseDown = () => {
     if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.PIVOT) {
@@ -46,7 +77,56 @@ const PivotPage = ({
       onMinimize={onMinimize}
       onMouseDown={handleMouseDown}
     >
-      <h2>Pivot Content</h2>
+      <div>
+        <div className="flex justify-end items-center space-x-2 mr-[10px] h-[44px]">
+          <button
+            onClick={() => setCurrentView("table")}
+            className={clsx(
+              currentView === "table"
+                ? "bg-[#1ca1c1] text-white"
+                : "bg-transparent text-[#475466]",
+              "text-sm rounded-md h-[26px] w-[80px] font-medium cursor-pointer"
+            )}
+          >
+            Table
+          </button>
+          <button
+            onClick={() => setCurrentView("tree")}
+            className={clsx(
+              currentView === "tree"
+                ? "bg-[#1ca1c1] text-white"
+                : "bg-transparent text-[#475466]",
+              "text-sm rounded-md h-[26px] w-[80px] font-medium cursor-pointer"
+            )}
+          >
+            Tree
+          </button>
+          <button
+            onClick={() => setCurrentView("chart")}
+            className={clsx(
+              currentView === "chart"
+                ? "bg-[#1ca1c1] text-white"
+                : "bg-transparent text-[#475466]",
+              "text-sm rounded-md h-[26px] w-[80px] font-medium cursor-pointer"
+            )}
+          >
+            Chart
+          </button>
+        </div>
+
+        {currentView === "table" && (
+          <Table
+            columns={columns}
+            dataSource={dataSource}
+            pagination={false}
+            scroll={{
+              x: "max-content",
+            }}
+          />
+        )}
+        {currentView === "tree" && <div>Tree View Content</div>}
+        {currentView === "chart" && <div>Chart View Content</div>}
+      </div>
     </DraggableWindow>
   );
 };
