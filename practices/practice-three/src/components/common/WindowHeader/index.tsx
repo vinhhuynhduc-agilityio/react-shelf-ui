@@ -35,7 +35,7 @@ const WindowHeader = ({
   const isMaximized = !!win?.isMaximized;
 
   return (
-    <div className="drag-handle bg-white flex justify-between items-center border-b-[1.3px] border-[#DADEE0] w-full h-[30px] relative">
+    <div className="window-drag-handle bg-white flex justify-between items-center border-b-[1.3px] border-[#DADEE0] w-full h-[30px] relative">
       <div className="inline-flex items-center justify-center space-x-2">
         <img
           src={src}

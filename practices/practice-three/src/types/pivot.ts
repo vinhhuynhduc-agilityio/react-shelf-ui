@@ -8,3 +8,11 @@ export interface Pivot {
   balance: number;
   key: number;
 }
+
+type DynamicFields = Record<string, number | string>;
+
+export interface DataSourceItem extends DynamicFields {
+  key: number;
+  form: string;
+  name: string;
+}

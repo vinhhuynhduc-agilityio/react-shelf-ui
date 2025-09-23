@@ -26,7 +26,7 @@ export const DesktopIcon = ({
     <div
       className={clsx(
         "flex flex-col items-center justify-center overflow-hidden box-border text-xs border-none",
-        "desktop-icon drag-handle",
+        "desktop-icon grid-drag-handle",
         "w-[100px] h-[110px]",
         "hover:bg-[rgba(255,255,255,0.2)] hover:[border:2px_solid_rgba(255,255,255,0.2)]",
         isSelected &&
