@@ -43,8 +43,8 @@ export const generateDataSource = (pivot: Pivot[]): DataSourceItem[] => {
 };
 
 export const generatePivotTableColumns = (): ColumnsType<DataSourceItem> => [
-  { title: "form", dataIndex: "form", key: "form", width: 200 },
-  { title: "name", dataIndex: "name", key: "name", width: 200 },
+  { title: "form", dataIndex: "form", key: "form", width: 200, fixed: "left" },
+  { title: "name", dataIndex: "name", key: "name", width: 200, fixed: "left" },
   {
     title: "2005",
     key: "2005",
