@@ -148,6 +148,7 @@ const PivotPage = ({
             columns={columns}
             dataSource={dataSource}
             pagination={false}
+            bordered
             scroll={{
               x: "max-content",
               y: tableHeight > 0 ? tableHeight : undefined,
