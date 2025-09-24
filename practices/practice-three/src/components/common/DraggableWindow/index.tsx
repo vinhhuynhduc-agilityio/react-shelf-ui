@@ -117,7 +117,7 @@ const DraggableWindow = memo((props: DraggableWindowProps) => {
           onMaximize={onMaximize}
           onMinimize={onMinimize}
         />
-        <div className="flex-1">{children}</div>
+        {children}
       </div>
     </Rnd>
   );

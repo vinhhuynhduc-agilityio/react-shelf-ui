@@ -60,7 +60,9 @@ const SpreadsheetPage = ({
       onMinimize={onMinimize}
       onMouseDown={handleMouseDown}
     >
-      <Workbook data={data} />
+      <div className="flex-1">
+        <Workbook data={data} />
+      </div>
     </DraggableWindow>
   );
 };

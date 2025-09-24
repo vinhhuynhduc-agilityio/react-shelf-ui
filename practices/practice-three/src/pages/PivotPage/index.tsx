@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { Table } from "antd";
 import clsx from "clsx";
@@ -32,8 +32,11 @@ const PivotPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   // state
   const [currentView, setCurrentView] = useState<string>("table");
+  const [tableHeight, setTableHeight] = useState<number>(0);
 
   // store
   const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
@@ -65,6 +68,33 @@ const PivotPage = ({
     }
   };
 
+  useLayoutEffect(() => {
+    const containerElement = containerRef.current;
+
+    const updateHeight = () => {
+      if (containerElement) {
+        const buttonBarHeight = 44;
+        const tableHeaderHeight = 109;
+        const availableHeight =
+          containerElement.clientHeight - buttonBarHeight - tableHeaderHeight;
+        setTableHeight(Math.max(availableHeight, 100));
+      }
+    };
+
+    const observer = new ResizeObserver(updateHeight);
+    if (containerElement) {
+      observer.observe(containerElement);
+    }
+
+    updateHeight();
+
+    return () => {
+      if (containerElement) {
+        observer.unobserve(containerElement);
+      }
+    };
+  }, [currentView]);
+
   return (
     <DraggableWindow
       windowKey={WINDOW_KEYS.PIVOT}
@@ -77,7 +107,7 @@ const PivotPage = ({
       onMinimize={onMinimize}
       onMouseDown={handleMouseDown}
     >
-      <div>
+      <div className="flex-1 h-full w-full overflow-hidden" ref={containerRef}>
         <div className="flex justify-end items-center space-x-2 mr-[10px] h-[44px]">
           <button
             onClick={() => setCurrentView("table")}
@@ -113,7 +143,6 @@ const PivotPage = ({
             Chart
           </button>
         </div>
-
         {currentView === "table" && (
           <Table
             columns={columns}
@@ -121,6 +150,7 @@ const PivotPage = ({
             pagination={false}
             scroll={{
               x: "max-content",
+              y: tableHeight > 0 ? tableHeight : undefined,
             }}
           />
         )}
