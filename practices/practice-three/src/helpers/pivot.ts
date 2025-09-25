@@ -3,10 +3,25 @@ import { ColumnsType } from "antd/es/table";
 // Types
 import { DataSourceItem, Pivot } from "@/types";
 
+interface TreeDataChild {
+  key: string;
+  name: string;
+  [key: string]: number | string; // For dynamic year-based keys like 2005_oil_min, etc.
+}
+
+interface TreeData {
+  key: string;
+  name: string;
+  children: TreeDataChild[];
+  [key: string]: number | string | TreeDataChild[]; // For dynamic year-based keys like 2005_oil_min, etc.
+}
+
+export const getUniqueSortedYears = (pivot: Pivot[]): number[] =>
+  Array.from(new Set(pivot.map((item) => item.year))).sort((a, b) => a - b) ||
+  [];
+
 export const generateDataSource = (pivot: Pivot[]): DataSourceItem[] => {
-  const years: number[] = [
-    2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013,
-  ];
+  const years: number[] = getUniqueSortedYears(pivot);
 
   const dataSourceMap: { [key: string]: DataSourceItem } = {};
 
@@ -42,169 +57,160 @@ export const generateDataSource = (pivot: Pivot[]): DataSourceItem[] => {
   return dataSource;
 };
 
-export const generatePivotTableColumns = (): ColumnsType<DataSourceItem> => [
-  { title: "form", dataIndex: "form", key: "form", width: 200, fixed: "left" },
-  { title: "name", dataIndex: "name", key: "name", width: 200, fixed: "left" },
-  {
-    title: "2005",
-    key: "2005",
-    children: [
-      {
-        title: "oil min",
-        dataIndex: "2005_oil_min",
-        key: "2005_oil_min",
-        width: 140,
-      },
-      {
-        title: "oil sum",
-        dataIndex: "2005_oil_sum",
-        key: "2005_oil_sum",
-        width: 140,
-      },
-    ],
-  },
-  {
-    title: "2006",
-    key: "2006",
-    children: [
-      {
-        title: "oil min",
-        dataIndex: "2006_oil_min",
-        key: "2006_oil_min",
-        width: 140,
-      },
-      {
-        title: "oil sum",
-        dataIndex: "2006_oil_sum",
-        key: "2006_oil_sum",
-        width: 140,
-      },
-    ],
-  },
-  {
-    title: "2007",
-    key: "2007",
-    children: [
-      {
-        title: "oil min",
-        dataIndex: "2007_oil_min",
-        key: "2007_oil_min",
-        width: 140,
-      },
-      {
-        title: "oil sum",
-        dataIndex: "2007_oil_sum",
-        key: "2007_oil_sum",
-        width: 140,
-      },
-    ],
-  },
-  {
-    title: "2008",
-    key: "2008",
-    children: [
-      {
-        title: "oil min",
-        dataIndex: "2008_oil_min",
-        key: "2008_oil_min",
-        width: 140,
-      },
-      {
-        title: "oil sum",
-        dataIndex: "2008_oil_sum",
-        key: "2008_oil_sum",
-        width: 140,
-      },
-    ],
-  },
-  {
-    title: "2009",
-    key: "2009",
-    children: [
-      {
-        title: "oil min",
-        dataIndex: "2009_oil_min",
-        key: "2009_oil_min",
-        width: 140,
-      },
-      {
-        title: "oil sum",
-        dataIndex: "2009_oil_sum",
-        key: "2009_oil_sum",
-        width: 140,
-      },
-    ],
-  },
-  {
-    title: "2010",
-    key: "2010",
-    children: [
-      {
-        title: "oil min",
-        dataIndex: "2010_oil_min",
-        key: "2010_oil_min",
-        width: 140,
-      },
-      {
-        title: "oil sum",
-        dataIndex: "2010_oil_sum",
-        key: "2010_oil_sum",
-        width: 140,
-      },
-    ],
-  },
-  {
-    title: "2011",
-    key: "2011",
-    children: [
-      {
-        title: "oil min",
-        dataIndex: "2011_oil_min",
-        key: "2011_oil_min",
-        width: 140,
-      },
-      {
-        title: "oil sum",
-        dataIndex: "2011_oil_sum",
-        key: "2011_oil_sum",
-        width: 140,
-      },
-    ],
-  },
-  {
-    title: "2012",
-    key: "2012",
-    children: [
-      {
-        title: "oil min",
-        dataIndex: "2012_oil_min",
-        key: "2012_oil_min",
-        width: 140,
-      },
-      {
-        title: "oil sum",
-        dataIndex: "2012_oil_sum",
-        key: "2012_oil_sum",
-        width: 140,
-      },
-    ],
-  },
-  {
-    title: "2013",
-    key: "2013",
-    children: [
-      {
-        title: "oil min",
-        dataIndex: "2013_oil_min",
-        key: "2013_oil_min",
-        width: 140,
-      },
-      {
-        title: "oil sum",
-        dataIndex: "2013_oil_sum",
-        key: "2013_oil_sum",
-        width: 140,
-      },
-    ],
-  },
-];
+export const generatePivotTableColumns = (
+  pivot: Pivot[]
+): ColumnsType<DataSourceItem> => {
+  const years: number[] = getUniqueSortedYears(pivot);
+
+  const columns: ColumnsType<DataSourceItem> = [
+    {
+      title: "form",
+      dataIndex: "form",
+      key: "form",
+      width: 200,
+      fixed: "left",
+    },
+    {
+      title: "name",
+      dataIndex: "name",
+      key: "name",
+      width: 200,
+      fixed: "left",
+    },
+  ];
+
+  years.forEach((year) => {
+    columns.push({
+      title: year.toString(),
+      key: year.toString(),
+      align: "left",
+      children: [
+        {
+          title: "oil min",
+          dataIndex: `${year}_oil_min`,
+          key: `${year}_oil_min`,
+          width: 140,
+        },
+        {
+          title: "oil sum",
+          dataIndex: `${year}_oil_sum`,
+          key: `${year}_oil_sum`,
+          width: 140,
+        },
+      ],
+    });
+  });
+
+  return columns;
+};
+
+export const generatePivotTreeColumns = (
+  pivot: Pivot[]
+): ColumnsType<TreeData> => {
+  const years: number[] = getUniqueSortedYears(pivot);
+
+  const columns: ColumnsType<TreeData> = [
+    {
+      title: "Form > name",
+      dataIndex: "name",
+      key: "name",
+      width: 300,
+      fixed: "left",
+    },
+  ];
+
+  years.forEach((year) => {
+    columns.push({
+      title: year.toString(),
+      key: year.toString(),
+      align: "left",
+      children: [
+        {
+          title: "oil min",
+          dataIndex: `${year}_oil_min`,
+          key: `${year}_oil_min`,
+          width: 140,
+        },
+        {
+          title: "oil sum",
+          dataIndex: `${year}_oil_sum`,
+          key: `${year}_oil_sum`,
+          width: 140,
+        },
+      ],
+    });
+  });
+
+  return columns;
+};
+
+export const generateTreeData = (pivot: Pivot[]): TreeData[] => {
+  const dataMap: { [key: string]: TreeData } = {}; // Group data by form and name
+  const years: number[] = getUniqueSortedYears(pivot);
+
+  pivot.forEach((item) => {
+    const formKey = item.form;
+    const nameKey = item.name;
+    const year = item.year;
+    const oil = item.oil || 0;
+
+    // Initialize form if it doesn't exist
+    if (!dataMap[formKey]) {
+      dataMap[formKey] = {
+        key: formKey,
+        name: formKey,
+        children: [],
+      };
+    }
+
+    // Initialize name if it doesn't exist
+    let nameEntry = dataMap[formKey].children.find(
+      (child: TreeDataChild) => child.name === nameKey
+    );
+    if (!nameEntry) {
+      nameEntry = {
+        key: `${formKey}-${nameKey}`,
+        name: nameKey,
+      };
+      dataMap[formKey].children.push(nameEntry);
+    }
+
+    // Assign oil values directly for each year
+    nameEntry[`${year}_oil_min`] = oil;
+    nameEntry[`${year}_oil_sum`] = oil;
+  });
+
+  // Convert dataMap to final treeData
+  const treeData: TreeData[] = Object.values(dataMap).map((form: TreeData) => ({
+    ...form,
+    children: form.children.map((child: TreeDataChild) => ({
+      ...child,
+      // Ensure all years are initialized with 0 if missing
+      ...years.reduce((acc, year) => {
+        const minKey = `${year}_oil_min`;
+        const sumKey = `${year}_oil_sum`;
+        acc[minKey] = Number(child[minKey]) || 0;
+        acc[sumKey] = Number(child[sumKey]) || 0;
+        return acc;
+      }, {} as { [key: string]: number }),
+    })),
+    // Calculate oil min and sum for form based on children
+    ...years.reduce((acc, year) => {
+      const min = Math.min(
+        ...form.children.map(
+          (child: TreeDataChild) => Number(child[`${year}_oil_min`]) || 0
+        )
+      );
+      const sum = form.children.reduce(
+        (total: number, child: TreeDataChild) =>
+          total + Number(child[`${year}_oil_sum`] || 0),
+        0
+      );
+      acc[`${year}_oil_min`] = min;
+      acc[`${year}_oil_sum`] = sum;
+      return acc;
+    }, {} as { [key: string]: number }),
+  }));
+
+  return treeData;
+};

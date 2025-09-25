@@ -16,7 +16,12 @@ import { useWindowStore } from "@/stores";
 import { usePivotQuery } from "@/hook";
 
 // Helpers
-import { generatePivotTableColumns, generateDataSource } from "@/helpers";
+import {
+  generateTreeData,
+  generatePivotTableColumns,
+  generateDataSource,
+  generatePivotTreeColumns,
+} from "@/helpers";
 
 // Types
 import { DataSourceItem } from "@/types";
@@ -55,12 +60,13 @@ const PivotPage = ({
     // isError,
   } = usePivotQuery();
 
-  const dataSource: DataSourceItem[] = useMemo(
+  const tableData: DataSourceItem[] = useMemo(
     () => generateDataSource(pivot),
     [pivot]
   );
-
-  const columns = useMemo(() => generatePivotTableColumns(), []);
+  const treeData = useMemo(() => generateTreeData(pivot), [pivot]);
+  const tableColumns = useMemo(() => generatePivotTableColumns(pivot), [pivot]);
+  const treeColumns = useMemo(() => generatePivotTreeColumns(pivot), [pivot]);
 
   const handleMouseDown = () => {
     if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.PIVOT) {
@@ -93,7 +99,7 @@ const PivotPage = ({
         observer.unobserve(containerElement);
       }
     };
-  }, [currentView]);
+  }, []);
 
   return (
     <DraggableWindow
@@ -145,8 +151,8 @@ const PivotPage = ({
         </div>
         {currentView === "table" && (
           <Table
-            columns={columns}
-            dataSource={dataSource}
+            columns={tableColumns}
+            dataSource={tableData}
             pagination={false}
             bordered
             scroll={{
@@ -155,7 +161,19 @@ const PivotPage = ({
             }}
           />
         )}
-        {currentView === "tree" && <div>Tree View Content</div>}
+        {currentView === "tree" && (
+          <Table
+            columns={treeColumns}
+            dataSource={treeData}
+            pagination={false}
+            bordered
+            defaultExpandedRowKeys={treeData.map((item) => item.key)}
+            scroll={{
+              x: "max-content",
+              y: tableHeight > 0 ? tableHeight : undefined,
+            }}
+          />
+        )}
         {currentView === "chart" && <div>Chart View Content</div>}
       </div>
     </DraggableWindow>
