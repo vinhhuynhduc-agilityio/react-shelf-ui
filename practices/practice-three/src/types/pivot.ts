@@ -15,4 +15,5 @@ export interface DataSourceItem extends DynamicFields {
   key: number;
   form: string;
   name: string;
+  [key: string]: number | string; // For dynamic year-based keys like 2005_oil_min, etc.
 }
