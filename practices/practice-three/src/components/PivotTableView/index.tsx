@@ -13,9 +13,11 @@ import { DataTable } from "@/components";
 const PivotTableView = ({
   pivot,
   tableHeight,
+  isLoading,
 }: {
   pivot: Pivot[];
   tableHeight: number;
+  isLoading: boolean;
 }) => {
   const tableData: DataSourceItem[] = useMemo(
     () => generateDataSource(pivot),
@@ -28,6 +30,7 @@ const PivotTableView = ({
       columns={tableColumns}
       dataSource={tableData}
       tableHeight={tableHeight}
+      isLoading={isLoading}
     />
   );
 };

@@ -6,6 +6,7 @@ interface CustomTableProps<T>
   columns: TableProps<T>["columns"];
   dataSource: T[];
   tableHeight: number;
+  isLoading?: boolean;
 }
 
 // Reusable DataTable component
@@ -13,6 +14,7 @@ const DataTable = <T,>({
   columns,
   dataSource,
   tableHeight,
+  isLoading = false,
   ...rest
 }: CustomTableProps<T>) => {
   return (
@@ -25,7 +27,7 @@ const DataTable = <T,>({
         x: "max-content",
         y: tableHeight > 0 ? tableHeight : undefined,
       }}
-      defaultExpandAllRows
+      loading={isLoading}
       {...rest}
     />
   );

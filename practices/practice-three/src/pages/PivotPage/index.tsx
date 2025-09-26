@@ -28,7 +28,7 @@ const PivotPage = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   // state
-  const [currentView, setCurrentView] = useState<string>("table");
+  const [currentView, setCurrentView] = useState<string>("tree");
   const [tableHeight, setTableHeight] = useState<number>(0);
 
   // store
@@ -41,7 +41,7 @@ const PivotPage = ({
   );
 
   // hook
-  const { data: pivot = [] } = usePivotQuery();
+  const { data: pivot = [], isLoading } = usePivotQuery();
 
   const handleMouseDown = () => {
     if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.PIVOT) {
@@ -125,10 +125,18 @@ const PivotPage = ({
           </button>
         </div>
         {currentView === "table" && (
-          <PivotTableView pivot={pivot} tableHeight={tableHeight} />
+          <PivotTableView
+            pivot={pivot}
+            tableHeight={tableHeight}
+            isLoading={isLoading}
+          />
         )}
         {currentView === "tree" && (
-          <PivotTreeView pivot={pivot} tableHeight={tableHeight} />
+          <PivotTreeView
+            pivot={pivot}
+            tableHeight={tableHeight}
+            isLoading={isLoading}
+          />
         )}
         {currentView === "chart" && <div>Chart View Content</div>}
       </div>
