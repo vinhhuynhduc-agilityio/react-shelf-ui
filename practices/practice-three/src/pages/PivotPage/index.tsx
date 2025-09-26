@@ -1,10 +1,9 @@
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { Table } from "antd";
 import clsx from "clsx";
 
 // Components
-import { DraggableWindow } from "@/components";
+import { DraggableWindow, PivotTableView, PivotTreeView } from "@/components";
 
 // Constant
 import { WINDOW_KEYS } from "@/constant";
@@ -14,17 +13,6 @@ import { useWindowStore } from "@/stores";
 
 // Hook
 import { usePivotQuery } from "@/hook";
-
-// Helpers
-import {
-  generateTreeData,
-  generatePivotTableColumns,
-  generateDataSource,
-  generatePivotTreeColumns,
-} from "@/helpers";
-
-// Types
-import { DataSourceItem } from "@/types";
 
 const PivotPage = ({
   onClose,
@@ -53,20 +41,7 @@ const PivotPage = ({
   );
 
   // hook
-  const {
-    data: pivot = [],
-    // isLoading,
-    // error,
-    // isError,
-  } = usePivotQuery();
-
-  const tableData: DataSourceItem[] = useMemo(
-    () => generateDataSource(pivot),
-    [pivot]
-  );
-  const treeData = useMemo(() => generateTreeData(pivot), [pivot]);
-  const tableColumns = useMemo(() => generatePivotTableColumns(pivot), [pivot]);
-  const treeColumns = useMemo(() => generatePivotTreeColumns(pivot), [pivot]);
+  const { data: pivot = [] } = usePivotQuery();
 
   const handleMouseDown = () => {
     if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.PIVOT) {
@@ -150,29 +125,10 @@ const PivotPage = ({
           </button>
         </div>
         {currentView === "table" && (
-          <Table
-            columns={tableColumns}
-            dataSource={tableData}
-            pagination={false}
-            bordered
-            scroll={{
-              x: "max-content",
-              y: tableHeight > 0 ? tableHeight : undefined,
-            }}
-          />
+          <PivotTableView pivot={pivot} tableHeight={tableHeight} />
         )}
         {currentView === "tree" && (
-          <Table
-            columns={treeColumns}
-            dataSource={treeData}
-            pagination={false}
-            bordered
-            defaultExpandedRowKeys={treeData.map((item) => item.key)}
-            scroll={{
-              x: "max-content",
-              y: tableHeight > 0 ? tableHeight : undefined,
-            }}
-          />
+          <PivotTreeView pivot={pivot} tableHeight={tableHeight} />
         )}
         {currentView === "chart" && <div>Chart View Content</div>}
       </div>
