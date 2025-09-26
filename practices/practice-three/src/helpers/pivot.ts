@@ -1,20 +1,7 @@
 import { ColumnsType } from "antd/es/table";
 
 // Types
-import { DataSourceItem, Pivot } from "@/types";
-
-interface TreeDataChild {
-  key: string;
-  name: string;
-  [key: string]: number | string; // For dynamic year-based keys like 2005_oil_min, etc.
-}
-
-interface TreeData {
-  key: string;
-  name: string;
-  children: TreeDataChild[];
-  [key: string]: number | string | TreeDataChild[]; // For dynamic year-based keys like 2005_oil_min, etc.
-}
+import { DataSourceItem, Pivot, TreeData, TreeDataChild } from "@/types";
 
 export const getUniqueSortedYears = (pivot: Pivot[]): number[] =>
   Array.from(new Set(pivot.map((item) => item.year))).sort((a, b) => a - b) ||
