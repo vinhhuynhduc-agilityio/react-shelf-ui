@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { generateTreeData, generatePivotTreeColumns } from "@/helpers";
 
 // Types
-import { Pivot, TreeData } from "@/types";
+import { CustomExpandIconProps, Pivot, TreeData } from "@/types";
 
 // Components
 import { DataTable } from "@/components";
@@ -31,6 +31,35 @@ const PivotTreeView = ({
     }
   }, [isLoading, treeData]);
 
+  const customExpandIcon = ({
+    expanded,
+    onExpand,
+    record,
+  }: CustomExpandIconProps) => {
+    const isParent = record.children && record.children.length > 0;
+
+    if (!isParent) {
+      return null;
+    }
+
+    // Render the icon for parent rows
+    return (
+      <span
+        className="flex items-center mr-[8px] cursor-pointer"
+        onClick={(e) => onExpand(record, e)}
+      >
+        {expanded ? (
+          <i className="fa-solid fa-sort-down" style={{ color: "#94A1B3" }}></i>
+        ) : (
+          <i
+            className="fa-solid fa-caret-right"
+            style={{ color: "#94A1B3" }}
+          ></i>
+        )}
+      </span>
+    );
+  };
+
   return (
     <DataTable
       columns={treeColumns}
@@ -44,6 +73,9 @@ const PivotTreeView = ({
         } else {
           setExpandedKeys((prev) => prev.filter((key) => key !== record.key));
         }
+      }}
+      expandable={{
+        expandIcon: customExpandIcon,
       }}
     />
   );

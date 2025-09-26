@@ -28,3 +28,12 @@ export interface TreeData {
   children: TreeDataChild[];
   [key: string]: number | string | TreeDataChild[]; // For dynamic year-based keys like 2005_oil_min, etc.
 }
+
+export interface CustomExpandIconProps {
+  expanded: boolean;
+  onExpand: (
+    record: TreeData,
+    e: React.MouseEvent<HTMLElement, MouseEvent>
+  ) => void;
+  record: TreeData;
+}

@@ -77,12 +77,14 @@ export const generatePivotTableColumns = (
           dataIndex: `${year}_oil_min`,
           key: `${year}_oil_min`,
           width: 140,
+          render: (value: number) => value.toFixed(3),
         },
         {
           title: "oil sum",
           dataIndex: `${year}_oil_sum`,
           key: `${year}_oil_sum`,
           width: 140,
+          render: (value: number) => value.toFixed(3),
         },
       ],
     });
@@ -98,11 +100,43 @@ export const generatePivotTreeColumns = (
 
   const columns: ColumnsType<TreeData> = [
     {
-      title: "Form > name",
+      title: (
+        <span>
+          form{" "}
+          <i
+            className="fa-solid fa-greater-than"
+            style={{ color: "#94A1B3" }}
+          />{" "}
+          name
+        </span>
+      ),
       dataIndex: "name",
       key: "name",
       width: 300,
       fixed: "left",
+      className: "flex items-center gap-1",
+      render: (text: string, record: TreeData) => {
+        const isParent = record.children && record.children.length > 0;
+        const icon = isParent ? (
+          <i
+            className="fa-solid fa-folder-open fa-lg"
+            style={{ color: "#DADEE0" }}
+          ></i>
+        ) : (
+          <i
+            className="fa-solid fa-file fa-lg"
+            style={{ color: "#DADEE0" }}
+          ></i>
+        );
+        const marginLeft = isParent ? "" : "ml-[36px]";
+
+        return (
+          <span className={`flex items-center ${marginLeft}`}>
+            {icon}
+            <span className="ml-[10px]">{text}</span>
+          </span>
+        );
+      },
     },
   ];
 
@@ -117,12 +151,14 @@ export const generatePivotTreeColumns = (
           dataIndex: `${year}_oil_min`,
           key: `${year}_oil_min`,
           width: 140,
+          render: (value: number) => value.toFixed(3),
         },
         {
           title: "oil sum",
           dataIndex: `${year}_oil_sum`,
           key: `${year}_oil_sum`,
           width: 140,
+          render: (value: number) => value.toFixed(3),
         },
       ],
     });

@@ -3,3 +3,8 @@
 .ant-table-header {
   border-bottom: 1px solid #1ca1c1;
 }
+
+/* TODO: Find an alternative solution to avoid using !important for padding */
+.ant-table-cell {
+  padding: 7px !important;
+}
