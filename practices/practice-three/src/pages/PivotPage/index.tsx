@@ -55,7 +55,7 @@ const PivotPage = ({
     const updateHeight = () => {
       if (containerElement) {
         const buttonBarHeight = 44;
-        const tableHeaderHeight = 109;
+        const tableHeaderHeight = 74;
         const availableHeight =
           containerElement.clientHeight - buttonBarHeight - tableHeaderHeight;
         setTableHeight(Math.max(availableHeight, 100));
