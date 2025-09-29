@@ -237,3 +237,26 @@ export const generateTreeData = (pivot: Pivot[]): TreeData[] => {
 
   return treeData;
 };
+
+export const generateChartData = (
+  pivot: Pivot[]
+): { year: string; type: string; value: number }[] => {
+  const years = getUniqueSortedYears(pivot);
+
+  return years.reduce((data, year) => {
+    const yearData = pivot.filter((item) => item.year === year);
+
+    if (yearData.length > 0) {
+      const oils = yearData.map((item) => item.oil || 0);
+
+      const minOil = Math.round(Math.min(...oils) * 1000) / 1000;
+      const sumOil =
+        Math.round(oils.reduce((acc, curr) => acc + curr, 0) * 1000) / 1000;
+
+      data.push({ year: year.toString(), type: "oil (min)", value: minOil });
+      data.push({ year: year.toString(), type: "oil (sum)", value: sumOil });
+    }
+
+    return data;
+  }, [] as { year: string; type: string; value: number }[]);
+};
