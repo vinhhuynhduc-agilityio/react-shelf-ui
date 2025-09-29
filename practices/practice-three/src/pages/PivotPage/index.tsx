@@ -3,7 +3,12 @@ import { useShallow } from "zustand/react/shallow";
 import clsx from "clsx";
 
 // Components
-import { DraggableWindow, PivotTableView, PivotTreeView } from "@/components";
+import {
+  ChartView,
+  DraggableWindow,
+  PivotTableView,
+  PivotTreeView,
+} from "@/components";
 
 // Constant
 import { WINDOW_KEYS } from "@/constant";
@@ -138,7 +143,9 @@ const PivotPage = ({
             isLoading={isLoading}
           />
         )}
-        {currentView === "chart" && <div>Chart View Content</div>}
+        {currentView === "chart" && (
+          <ChartView pivot={pivot} height={tableHeight + 74} />
+        )}
       </div>
     </DraggableWindow>
   );

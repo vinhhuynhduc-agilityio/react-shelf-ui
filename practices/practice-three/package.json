@@ -12,6 +12,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "@ant-design/plots": "^2.6.5",
     "@fortune-sheet/react": "^1.0.2",
     "@heroicons/react": "^2.2.0",
     "@storybook/addon-docs": "8.6.14",

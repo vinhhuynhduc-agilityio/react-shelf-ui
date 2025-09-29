@@ -9,7 +9,6 @@ interface CustomTableProps<T>
   isLoading?: boolean;
 }
 
-// Reusable DataTable component
 const DataTable = <T,>({
   columns,
   dataSource,
