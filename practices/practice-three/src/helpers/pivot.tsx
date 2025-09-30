@@ -114,7 +114,6 @@ export const generatePivotTreeColumns = (
       key: "name",
       width: 300,
       fixed: "left",
-      className: "flex items-center gap-1",
       render: (text: string, record: TreeData) => {
         const isParent = record.children && record.children.length > 0;
         const icon = isParent ? (
@@ -128,10 +127,10 @@ export const generatePivotTreeColumns = (
             style={{ color: "#DADEE0" }}
           ></i>
         );
-        const marginLeft = isParent ? "" : "ml-[36px]";
+        const marginLeft = isParent ? "ml-[12px]" : "ml-[42px]";
 
         return (
-          <span className={`flex items-center ${marginLeft}`}>
+          <span className={`${marginLeft}`}>
             {icon}
             <span className="ml-[10px]">{text}</span>
           </span>

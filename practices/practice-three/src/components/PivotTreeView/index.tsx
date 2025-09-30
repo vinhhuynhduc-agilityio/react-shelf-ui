@@ -45,7 +45,7 @@ const PivotTreeView = ({
     // Render the icon for parent rows
     return (
       <span
-        className="flex items-center mr-[8px] cursor-pointer"
+        className="ml-[10px] cursor-pointer"
         onClick={(e) => onExpand(record, e)}
       >
         {expanded ? (
