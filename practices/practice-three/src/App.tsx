@@ -220,7 +220,7 @@ const App = () => {
       >
         <div className="absolute inset-x-0 top-0 bottom-[44px]">
           <GridLayout
-            className="layout"
+            className="layout select-none"
             layout={layout}
             rowHeight={rowHeight}
             width={gridWidth}
