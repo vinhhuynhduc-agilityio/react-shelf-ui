@@ -31,11 +31,16 @@ const KanbanPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
+  // Ref
   const containerRef = useRef<HTMLDivElement>(null);
+  const hasFetchedOnce = useRef(false);
+  const canUpdateLayout = useRef(false);
 
+  // State
   const [gridWidth, setGridWidth] = useState(0);
   const [layout, setLayout] = useState<Layout[]>([]);
 
+  // Store
   const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
     useShallow((state) => ({
       zIndexOrder: state.zIndexOrder,
@@ -44,21 +49,23 @@ const KanbanPage = ({
     }))
   );
 
-  // hook
-  const { data: kanbans = [], isLoading } = useKanbanQuery();
+  // Fetch kanban data
+  const { data: kanbans = [], isLoading, isSuccess } = useKanbanQuery();
 
-  // Set layout from kanbans' status and order
+  // Initialize layout when data is available
   useEffect(() => {
-    setLayout(
-      kanbans.map((item) => ({
+    if (isSuccess && !hasFetchedOnce.current) {
+      const newLayout = kanbans.map((item) => ({
         i: item.id,
         x: STATUSES.indexOf(item.status),
         y: item.order,
         w: 1,
         h: 1,
-      }))
-    );
-  }, [kanbans]);
+      }));
+      setLayout(newLayout);
+      hasFetchedOnce.current = true;
+    }
+  }, [kanbans, isSuccess]);
 
   // Responsive width
   useLayoutEffect(() => {
@@ -79,13 +86,23 @@ const KanbanPage = ({
     }
   };
 
+  const handleLayoutChange = (newLayout: Layout[]) => {
+    if (canUpdateLayout.current) {
+      setLayout(newLayout);
+    }
+  };
+
+  const handleDragStop = () => {
+    if (!canUpdateLayout.current) canUpdateLayout.current = true;
+  };
+
   const renderHeaders = () => (
     <div className="flex mt-[10px] ml-[10px] mr-[10px] h-[42px]">
       {STATUSES.map((status, idx) => (
         <div
           key={status}
           className={`
-          flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] cursor-pointer border border-[#DADEE0] bg-[#ffffff]
+          flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] border border-[#DADEE0] bg-[#ffffff]
           ${idx < STATUSES.length - 1 ? "mr-[10px]" : ""}
         `}
         >
@@ -105,7 +122,7 @@ const KanbanPage = ({
   const renderItem = (item: KanbanItem) => (
     <div
       key={item.id}
-      className="bg-white border-l-3 border-l-[#1CA1C1] flex flex-col cursor-pointer"
+      className="bg-white border-l-3 border-l-[#1CA1C1] flex flex-col cursor-pointer item-drag-handle"
     >
       <div className="flex justify-between items-center min-h-[24px] overflow-hidden pt-[14px] pr-[8px] pb-[8px] pl-[12px]">
         <span className="text-[14px] font-medium leading-[20px]">
@@ -119,7 +136,7 @@ const KanbanPage = ({
         {item.tags.map((tag) => (
           <span
             key={tag}
-            className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs"
+            className="bg-[rgba(228,230,240,0.8)] text-[#475466] text-sm font-normal h-[26px] leading-[24px] px-2 py-0 rounded-[12px] mt-0 mr-2 mb-0.5 ml-0"
           >
             {tag}
           </span>
@@ -153,9 +170,9 @@ const KanbanPage = ({
         {isLoading ? (
           <p>Loading...</p>
         ) : (
-          <div className="flex-1 overflow-auto">
+          <div className="flex-1 overflow-auto relative top-0">
             <GridLayout
-              className="layout"
+              className="layout select-none"
               layout={layout}
               cols={cols}
               rowHeight={rowHeight}
@@ -165,7 +182,9 @@ const KanbanPage = ({
               isResizable={false}
               compactType="vertical"
               preventCollision={false}
-              onLayoutChange={setLayout}
+              onLayoutChange={handleLayoutChange}
+              onDragStop={handleDragStop}
+              draggableHandle=".item-drag-handle"
             >
               {kanbans.map((item) => renderItem(item))}
             </GridLayout>
