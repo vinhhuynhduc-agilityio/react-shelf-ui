@@ -1,24 +1,23 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import GridLayout, { Layout } from "react-grid-layout";
 import { useShallow } from "zustand/react/shallow";
+import { v4 as uuidv4 } from "uuid";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Components
 import { DraggableWindow, IconButton } from "@/components";
 
 // Constant
-import { STATUSES, WINDOW_KEYS } from "@/constant";
+import { QUERY_KEY_KANBAN, STATUSES, WINDOW_KEYS } from "@/constant";
 
 // Store
 import { useWindowStore } from "@/stores";
 
 // Hook
-import { useKanbanQuery } from "@/hook";
+import { useAddKanbanItem, useKanbanQuery } from "@/hook";
 
 // Types
 import type { KanbanItem } from "@/types";
-
-const rowHeight = 80;
-const cols = STATUSES.length;
 
 const KanbanPage = ({
   onClose,
@@ -31,14 +30,17 @@ const KanbanPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
+  const queryClient = useQueryClient();
+
   // Ref
   const containerRef = useRef<HTMLDivElement>(null);
-  const hasFetchedOnce = useRef(false);
   const canUpdateLayout = useRef(false);
 
   // State
   const [gridWidth, setGridWidth] = useState(0);
   const [layout, setLayout] = useState<Layout[]>([]);
+  const [kanbans, setKanbans] = useState<KanbanItem[]>([]);
+  const [kanbansChanged, setKanbansChanged] = useState(false);
 
   // Store
   const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
@@ -49,23 +51,24 @@ const KanbanPage = ({
     }))
   );
 
-  // Fetch kanban data
-  const { data: kanbans = [], isLoading, isSuccess } = useKanbanQuery();
+  // API
+  const { data: kanbanData = [], isLoading, isSuccess } = useKanbanQuery();
+  const { mutate: addKanbanItem } = useAddKanbanItem();
 
   // Initialize layout when data is available
   useEffect(() => {
-    if (isSuccess && !hasFetchedOnce.current) {
-      const newLayout = kanbans.map((item) => ({
+    if (isSuccess) {
+      setKanbans(kanbanData);
+      const newLayout = kanbanData.map((item) => ({
         i: item.id,
-        x: STATUSES.indexOf(item.status),
-        y: item.order,
+        x: item.x,
+        y: item.y,
         w: 1,
         h: 1,
       }));
       setLayout(newLayout);
-      hasFetchedOnce.current = true;
     }
-  }, [kanbans, isSuccess]);
+  }, [kanbanData, isSuccess]);
 
   // Responsive width
   useLayoutEffect(() => {
@@ -79,6 +82,18 @@ const KanbanPage = ({
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    return () => {
+      // Invalidate the kanbans query if there are changes
+      // when the component unmounts or dependencies change
+      if (kanbansChanged) {
+        queryClient.invalidateQueries({
+          queryKey: QUERY_KEY_KANBAN,
+        });
+      }
+    };
+  }, [kanbansChanged, queryClient]);
 
   const handleMouseDown = () => {
     if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.KANBAN) {
@@ -96,6 +111,31 @@ const KanbanPage = ({
     if (!canUpdateLayout.current) canUpdateLayout.current = true;
   };
 
+  // Add new Kanban Item
+  const handleAddItem = () => {
+    const maxYInBacklog = layout
+      .filter((item) => item.x === 0)
+      .reduce((max, item) => Math.max(max, item.y), -1);
+    const newY = maxYInBacklog + 1;
+    const newItem: KanbanItem = {
+      id: uuidv4(),
+      text: `New Task ${newY + 1}`,
+      tags: [],
+      x: 0,
+      y: newY,
+    };
+
+    setKanbans((prevKanbans) => [...prevKanbans, newItem]);
+    setLayout((prevLayout) => [
+      ...prevLayout,
+      { i: newItem.id, x: 0, y: newY, w: 1, h: 1 },
+    ]);
+    setKanbansChanged(true);
+
+    addKanbanItem(newItem);
+  };
+
+  // Render Headers (for each status)
   const renderHeaders = () => (
     <div className="flex mt-[10px] ml-[10px] mr-[10px] h-[42px]">
       {STATUSES.map((status, idx) => (
@@ -109,7 +149,7 @@ const KanbanPage = ({
           {idx === 0 && (
             <IconButton
               icon="fa-solid fa-circle-plus fa-sm"
-              onClick={() => {}}
+              onClick={handleAddItem}
               iconStyles="text-gray-500 mr-2"
             />
           )}
@@ -174,8 +214,8 @@ const KanbanPage = ({
             <GridLayout
               className="layout select-none"
               layout={layout}
-              cols={cols}
-              rowHeight={rowHeight}
+              cols={STATUSES.length}
+              rowHeight={80}
               width={gridWidth}
               margin={[10, 10]}
               isDraggable
