@@ -52,7 +52,7 @@ const KanbanPage = ({
   );
 
   // API
-  const { data: kanbanData = [], isLoading, isSuccess } = useKanbanQuery();
+  const { data: kanbanData = [], isFetching, isSuccess } = useKanbanQuery();
   const { mutate: addKanbanItem } = useAddKanbanItem();
 
   // Initialize layout when data is available
@@ -207,7 +207,7 @@ const KanbanPage = ({
         className="w-full h-full flex flex-col bg-[#EBEDF0] overflow-hidden"
       >
         {renderHeaders()}
-        {isLoading ? (
+        {isFetching ? (
           <p>Loading...</p>
         ) : (
           <div className="flex-1 overflow-auto relative top-0">
