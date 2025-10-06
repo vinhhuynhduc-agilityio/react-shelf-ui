@@ -8,7 +8,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import { DraggableWindow, IconButton } from "@/components";
 
 // Constant
-import { QUERY_KEY_KANBAN, STATUSES, WINDOW_KEYS } from "@/constant";
+import {
+  QUERY_KEY_KANBAN,
+  STATUS_TO_COLUMN,
+  STATUSES,
+  WINDOW_KEYS,
+} from "@/constant";
 
 // Store
 import { useWindowStore } from "@/stores";
@@ -61,8 +66,8 @@ const KanbanPage = ({
       setKanbans(kanbanData);
       const newLayout = kanbanData.map((item) => ({
         i: item.id,
-        x: item.x,
-        y: item.y,
+        x: STATUS_TO_COLUMN[item.progressStatus],
+        y: item.order,
         w: 1,
         h: 1,
       }));
@@ -121,8 +126,8 @@ const KanbanPage = ({
       id: uuidv4(),
       text: `New Task ${newY + 1}`,
       tags: [],
-      x: 0,
-      y: newY,
+      progressStatus: "New",
+      order: newY,
     };
 
     setKanbans((prevKanbans) => [...prevKanbans, newItem]);
