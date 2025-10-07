@@ -1,9 +1,9 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import clsx from "clsx";
 
 // Components
 import {
+  Button,
   ChartView,
   DraggableWindow,
   PivotTableView,
@@ -95,39 +95,30 @@ const PivotPage = ({
     >
       <div className="flex-1 h-full w-full overflow-hidden" ref={containerRef}>
         <div className="flex justify-end items-center space-x-2 mr-[10px] h-[44px]">
-          <button
+          <Button
+            variant="segment"
+            active={currentView === "table"}
             onClick={() => setCurrentView("table")}
-            className={clsx(
-              currentView === "table"
-                ? "bg-[#1ca1c1] text-white"
-                : "bg-transparent text-[#475466]",
-              "text-sm rounded-md h-[26px] w-[80px] font-medium cursor-pointer"
-            )}
+            className="w-[80px]"
           >
             Table
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="segment"
+            active={currentView === "tree"}
             onClick={() => setCurrentView("tree")}
-            className={clsx(
-              currentView === "tree"
-                ? "bg-[#1ca1c1] text-white"
-                : "bg-transparent text-[#475466]",
-              "text-sm rounded-md h-[26px] w-[80px] font-medium cursor-pointer"
-            )}
+            className="w-[80px]"
           >
             Tree
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="segment"
+            active={currentView === "chart"}
             onClick={() => setCurrentView("chart")}
-            className={clsx(
-              currentView === "chart"
-                ? "bg-[#1ca1c1] text-white"
-                : "bg-transparent text-[#475466]",
-              "text-sm rounded-md h-[26px] w-[80px] font-medium cursor-pointer"
-            )}
+            className="w-[80px]"
           >
             Chart
-          </button>
+          </Button>
         </div>
         {currentView === "table" && (
           <PivotTableView
