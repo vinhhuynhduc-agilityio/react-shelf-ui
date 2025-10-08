@@ -5,7 +5,14 @@ import { v4 as uuidv4 } from "uuid";
 import { useQueryClient } from "@tanstack/react-query";
 
 // Components
-import { DraggableWindow, IconButton } from "@/components";
+import {
+  Button,
+  DraggableWindow,
+  IconButton,
+  Modal,
+  MultiSelect,
+  SingleSelect,
+} from "@/components";
 
 // Constant
 import {
@@ -22,7 +29,7 @@ import { useWindowStore } from "@/stores";
 import { useAddKanbanItem, useKanbanQuery } from "@/hook";
 
 // Types
-import type { KanbanItem } from "@/types";
+import type { KanbanColumn, KanbanItem } from "@/types";
 
 const KanbanPage = ({
   onClose,
@@ -46,6 +53,14 @@ const KanbanPage = ({
   const [layout, setLayout] = useState<Layout[]>([]);
   const [kanbans, setKanbans] = useState<KanbanItem[]>([]);
   const [kanbansChanged, setKanbansChanged] = useState(false);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<KanbanItem | null>(null);
+  const [formData, setFormData] = useState<KanbanColumn>({
+    text: "",
+    tags: [],
+    progressStatus: "",
+  });
 
   // Store
   const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
@@ -140,6 +155,46 @@ const KanbanPage = ({
     addKanbanItem(newItem);
   };
 
+  // Open edit modal
+  const handleEditItem = (item: KanbanItem) => {
+    setEditingItem(item);
+    setFormData({
+      text: item.text,
+      tags: item.tags,
+      progressStatus: item.progressStatus,
+    });
+    setIsModalOpen(true);
+  };
+
+  // Handle form change
+  const handleFormChange = (field: string, value: string | string[]) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // Save changes
+  const handleSave = () => {
+    if (editingItem) {
+      const updatedItem = { ...editingItem, ...formData };
+      setKanbans((prev) =>
+        prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+      );
+      setKanbansChanged(true);
+      // TODO: Call mutate for update if hook exists
+    }
+    setIsModalOpen(false);
+  };
+
+  // Remove item
+  const handleRemove = () => {
+    if (editingItem) {
+      setKanbans((prev) => prev.filter((item) => item.id !== editingItem.id));
+      setLayout((prev) => prev.filter((l) => l.i !== editingItem.id));
+      setKanbansChanged(true);
+      // TODO: Call mutate for delete if hook exists
+    }
+    setIsModalOpen(false);
+  };
+
   // Render Headers (for each status)
   const renderHeaders = () => (
     <div className="flex mt-[10px] ml-[10px] mr-[10px] h-[42px]">
@@ -188,55 +243,109 @@ const KanbanPage = ({
         ))}
         <IconButton
           icon="fa-solid fa-pencil fa-xs"
-          onClick={() => {}}
+          onMouseDown={() => handleEditItem(item)}
           iconStyles="text-[#94a1b3] hover:text-[#1CA1C1]"
         />
       </div>
     </div>
   );
 
-  return (
-    <DraggableWindow
-      windowKey={WINDOW_KEYS.KANBAN}
-      src="/images/kanban.png"
-      title="Kanban"
-      hidden={isMinimized}
-      zIndex={zIndex}
-      onClose={onClose}
-      onMaximize={onMaximize}
-      onMinimize={onMinimize}
-      onMouseDown={handleMouseDown}
-    >
-      <div
-        ref={containerRef}
-        className="w-full h-full flex flex-col bg-[#EBEDF0] overflow-hidden"
-      >
-        {renderHeaders()}
-        {isFetching ? (
-          <p>Loading...</p>
-        ) : (
-          <div className="flex-1 overflow-auto relative top-0">
-            <GridLayout
-              className="layout select-none"
-              layout={layout}
-              cols={STATUSES.length}
-              rowHeight={80}
-              width={gridWidth}
-              margin={[10, 10]}
-              isDraggable
-              isResizable={false}
-              compactType="vertical"
-              preventCollision={false}
-              onLayoutChange={handleLayoutChange}
-              onDragStop={handleDragStop}
-              draggableHandle=".item-drag-handle"
-            >
-              {kanbans.map((item) => renderItem(item))}
-            </GridLayout>
-          </div>
-        )}
+  // Modal content
+  const modalBody = (
+    <div className="mt-4 space-y-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Text
+        </label>
+        <textarea
+          value={formData.text}
+          onChange={(e) => handleFormChange("text", e.target.value)}
+          className="w-full border border-[#DADEE0] rounded-[2px] px-2 py-1 text-sm text-[#475466] h-[70px] focus:outline-none focus:border-[#1CA1C1]"
+        />
       </div>
-    </DraggableWindow>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Tags
+        </label>
+        <MultiSelect
+          options={["webix", "jet", "easy"]}
+          selected={formData.tags}
+          onChange={(tags) => handleFormChange("tags", tags)}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Status
+        </label>
+        <SingleSelect
+          options={["New", "Work", "Test", "Done"]}
+          value={formData.progressStatus}
+          onChange={(status) => handleFormChange("progressStatus", status)}
+          className="h-[32px]"
+        />
+      </div>
+      <div className="flex justify-between">
+        <Button variant="success" onClick={handleRemove}>
+          Remove
+        </Button>
+        <Button variant="success" onClick={handleSave}>
+          Save
+        </Button>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      <DraggableWindow
+        windowKey={WINDOW_KEYS.KANBAN}
+        src="/images/kanban.png"
+        title="Kanban"
+        hidden={isMinimized}
+        zIndex={zIndex}
+        onClose={onClose}
+        onMaximize={onMaximize}
+        onMinimize={onMinimize}
+        onMouseDown={handleMouseDown}
+      >
+        <div
+          ref={containerRef}
+          className="w-full h-full flex flex-col bg-[#EBEDF0] overflow-hidden"
+        >
+          {renderHeaders()}
+          {isFetching ? (
+            <p>Loading...</p>
+          ) : (
+            <div className="flex-1 overflow-auto relative top-0">
+              <GridLayout
+                className="layout select-none"
+                layout={layout}
+                cols={STATUSES.length}
+                rowHeight={80}
+                width={gridWidth}
+                margin={[10, 10]}
+                isDraggable
+                isResizable={false}
+                compactType="vertical"
+                preventCollision={false}
+                onLayoutChange={handleLayoutChange}
+                onDragStop={handleDragStop}
+                draggableHandle=".item-drag-handle"
+              >
+                {kanbans.map((item) => renderItem(item))}
+              </GridLayout>
+            </div>
+          )}
+        </div>
+      </DraggableWindow>
+      <Modal
+        isOpen={isModalOpen}
+        title="Edit card"
+        onClose={() => setIsModalOpen(false)}
+      >
+        {modalBody}
+      </Modal>
+    </>
   );
 };
 

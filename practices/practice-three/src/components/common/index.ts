@@ -4,3 +4,6 @@ export { default as DraggableWindow } from "./DraggableWindow";
 export { default as Toast } from "./Toast";
 export { default as DataTable } from "./DataTable";
 export { default as Button } from "./Button";
+export { default as Modal } from "./Modal";
+export { default as MultiSelect } from "./MultiSelect";
+export { default as SingleSelect } from "./SingleSelect";

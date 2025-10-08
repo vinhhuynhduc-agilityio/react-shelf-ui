@@ -5,3 +5,9 @@ export interface KanbanItem {
   progressStatus: string;
   order: number;
 }
+
+export interface KanbanColumn {
+  text: string;
+  tags: string[];
+  progressStatus: string;
+}
