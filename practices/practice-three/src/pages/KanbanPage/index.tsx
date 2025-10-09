@@ -15,12 +15,7 @@ import {
 } from "@/components";
 
 // Constant
-import {
-  QUERY_KEY_KANBAN,
-  STATUS_TO_COLUMN,
-  STATUSES,
-  WINDOW_KEYS,
-} from "@/constant";
+import { QUERY_KEY_KANBAN, STATUSES, WINDOW_KEYS } from "@/constant";
 
 // Store
 import { useWindowStore } from "@/stores";
@@ -30,6 +25,9 @@ import { useAddKanbanItem, useKanbanQuery } from "@/hook";
 
 // Types
 import type { KanbanColumn, KanbanItem } from "@/types";
+
+// Helpers
+import { generateLayout, updateKanbanItems } from "@/helpers";
 
 const KanbanPage = ({
   onClose,
@@ -52,6 +50,7 @@ const KanbanPage = ({
   const [gridWidth, setGridWidth] = useState(0);
   const [layout, setLayout] = useState<Layout[]>([]);
   const [kanbans, setKanbans] = useState<KanbanItem[]>([]);
+  console.log("kanbans:", kanbans);
   const [kanbansChanged, setKanbansChanged] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -79,14 +78,7 @@ const KanbanPage = ({
   useEffect(() => {
     if (isSuccess) {
       setKanbans(kanbanData);
-      const newLayout = kanbanData.map((item) => ({
-        i: item.id,
-        x: STATUS_TO_COLUMN[item.progressStatus],
-        y: item.order,
-        w: 1,
-        h: 1,
-      }));
-      setLayout(newLayout);
+      setLayout(generateLayout(kanbanData));
     }
   }, [kanbanData, isSuccess]);
 
@@ -174,10 +166,14 @@ const KanbanPage = ({
   // Save changes
   const handleSave = () => {
     if (editingItem) {
-      const updatedItem = { ...editingItem, ...formData };
-      setKanbans((prev) =>
-        prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
-      );
+      setKanbans((prev) => {
+        const newKanbans = updateKanbanItems(prev, editingItem, formData);
+
+        // Regenerate layout based on updated kanbans
+        setLayout(generateLayout(newKanbans));
+        return newKanbans;
+      });
+
       setKanbansChanged(true);
       // TODO: Call mutate for update if hook exists
     }
