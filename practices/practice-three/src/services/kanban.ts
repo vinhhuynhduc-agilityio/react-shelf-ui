@@ -1,24 +1,30 @@
-// constant
-import { API_ENDPOINTS } from "@/constant";
-
 // helpers
 import { apiRequest } from "@/helpers";
 
 // services
 import { API_BASE_URL } from "@/services";
 
-// types
-import { KanbanItem } from "@/types";
+// Types
+import { BoardColumn, Task } from "@/types";
 
-export const getKanbanData = async (): Promise<KanbanItem[]> => {
-  const url = `${API_BASE_URL}${API_ENDPOINTS.KANBANS}`;
-  return apiRequest<null, KanbanItem[]>("GET", url);
-};
+/* Tasks */
+export const getTasks = async (): Promise<Task[]> =>
+  apiRequest("GET", `${API_BASE_URL}/tasks`);
 
-export const addKanbanItem = async (item: KanbanItem) => {
-  return apiRequest<KanbanItem, KanbanItem>(
-    "POST",
-    `${API_BASE_URL}${API_ENDPOINTS.KANBANS}`,
-    item
-  );
-};
+export const addTask = async (task: Omit<Task, "id">): Promise<Task> =>
+  apiRequest("POST", `${API_BASE_URL}/tasks`, task);
+
+export const updateTask = async (task: Task): Promise<Task> =>
+  apiRequest("PUT", `${API_BASE_URL}/tasks/${task.id}`, task);
+
+export const deleteTask = async (id: string): Promise<void> =>
+  apiRequest("DELETE", `${API_BASE_URL}/tasks/${id}`);
+
+/* Board */
+export const getBoard = async (): Promise<BoardColumn[]> =>
+  apiRequest("GET", `${API_BASE_URL}/board`);
+
+export const updateBoardColumn = async (
+  column: BoardColumn
+): Promise<BoardColumn> =>
+  apiRequest("PUT", `${API_BASE_URL}/board/${column.id}`, column);

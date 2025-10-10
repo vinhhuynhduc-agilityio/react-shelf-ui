@@ -15,16 +15,29 @@ import {
 } from "@/components";
 
 // Constant
-import { QUERY_KEY_KANBAN, STATUSES, WINDOW_KEYS } from "@/constant";
+import {
+  QUERY_KEY_BOARD,
+  QUERY_KEY_TASKS,
+  STATUSES,
+  STATUS_TO_COLUMN,
+  WINDOW_KEYS,
+} from "@/constant";
 
 // Store
 import { useWindowStore } from "@/stores";
 
 // Hook
-import { useAddKanbanItem, useKanbanQuery } from "@/hook";
+import {
+  useAddTask,
+  useDeleteTask,
+  useUpdateTask,
+  useBoardQuery,
+  useTasksQuery,
+  useUpdateBoardColumn,
+} from "@/hook";
 
 // Types
-import type { KanbanColumn, KanbanItem } from "@/types";
+import type { BoardColumn, Task } from "@/types";
 
 // Helpers
 import { generateLayout, updateKanbanItems } from "@/helpers";
@@ -49,17 +62,34 @@ const KanbanPage = ({
   // State
   const [gridWidth, setGridWidth] = useState(0);
   const [layout, setLayout] = useState<Layout[]>([]);
-  const [kanbans, setKanbans] = useState<KanbanItem[]>([]);
-  console.log("kanbans:", kanbans);
-  const [kanbansChanged, setKanbansChanged] = useState(false);
+  const [board, setBoard] = useState<BoardColumn[]>([]);
+  const [tasks, setTasks] = useState<Record<string, Task>>({});
+  const [boardChanged, setBoardChanged] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<KanbanItem | null>(null);
-  const [formData, setFormData] = useState<KanbanColumn>({
-    text: "",
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState<{
+    title: string;
+    tags: string[];
+    progressStatus: string;
+  }>({
+    title: "",
     tags: [],
     progressStatus: "",
   });
+
+  // Refs for unmount cleanup
+  const boardRef = useRef(board);
+  const boardChangedRef = useRef(boardChanged);
+
+  // Update refs when state changes
+  useEffect(() => {
+    boardRef.current = board;
+  }, [board]);
+
+  useEffect(() => {
+    boardChangedRef.current = boardChanged;
+  }, [boardChanged]);
 
   // Store
   const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
@@ -71,16 +101,34 @@ const KanbanPage = ({
   );
 
   // API
-  const { data: kanbanData = [], isFetching, isSuccess } = useKanbanQuery();
-  const { mutate: addKanbanItem } = useAddKanbanItem();
+  const { data: boardData = [], isFetching: isFetchingBoard } = useBoardQuery();
+  const { data: tasksData = [], isFetching: isFetchingTasks } = useTasksQuery();
+  const { mutate: addTask } = useAddTask();
+  const { mutate: updateTask } = useUpdateTask();
+  const { mutate: deleteTask } = useDeleteTask();
+  const { mutate: updateBoardColumn } = useUpdateBoardColumn();
 
-  // Initialize layout when data is available
+  // Initialize state from data
   useEffect(() => {
-    if (isSuccess) {
-      setKanbans(kanbanData);
-      setLayout(generateLayout(kanbanData));
-    }
-  }, [kanbanData, isSuccess]);
+    const newTasks = tasksData.reduce(
+      (acc, task) => ({ ...acc, [task.id]: task }),
+      {}
+    );
+    setBoard(boardData);
+    setTasks(newTasks);
+    setLayout(generateLayout(boardData, newTasks));
+  }, [boardData, tasksData]);
+
+  // Save board changes on unmount only
+  useEffect(() => {
+    return () => {
+      if (boardChangedRef.current) {
+        Promise.all(boardRef.current.map((col) => updateBoardColumn(col)));
+        queryClient.invalidateQueries({ queryKey: QUERY_KEY_BOARD });
+        queryClient.invalidateQueries({ queryKey: QUERY_KEY_TASKS });
+      }
+    };
+  }, [updateBoardColumn, queryClient]);
 
   // Responsive width
   useLayoutEffect(() => {
@@ -95,18 +143,6 @@ const KanbanPage = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    return () => {
-      // Invalidate the kanbans query if there are changes
-      // when the component unmounts or dependencies change
-      if (kanbansChanged) {
-        queryClient.invalidateQueries({
-          queryKey: QUERY_KEY_KANBAN,
-        });
-      }
-    };
-  }, [kanbansChanged, queryClient]);
-
   const handleMouseDown = () => {
     if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.KANBAN) {
       setZIndexOrder(WINDOW_KEYS.KANBAN);
@@ -116,6 +152,43 @@ const KanbanPage = ({
   const handleLayoutChange = (newLayout: Layout[]) => {
     if (canUpdateLayout.current) {
       setLayout(newLayout);
+
+      // Sync board taskIds from newLayout
+      const newBoard = [...board];
+      const groups: Record<number, { id: string; y: number }[]> = {};
+
+      newLayout.forEach((item) => {
+        if (!groups[item.x]) groups[item.x] = [];
+        groups[item.x].push({ id: item.i, y: item.y });
+      });
+
+      Object.entries(groups).forEach(([colStr, items]) => {
+        const col = parseInt(colStr);
+        const sortedItems = items.sort((a, b) => a.y - b.y);
+        const sortedIds = sortedItems.map((i) => i.id);
+        const colIndex = newBoard.findIndex(
+          (c) => STATUS_TO_COLUMN[c.progressStatus] === col
+        );
+        if (colIndex >= 0) {
+          newBoard[colIndex].taskIds = sortedIds;
+          newBoard[colIndex].taskOrders = {};
+          sortedIds.forEach((id, index) => {
+            newBoard[colIndex].taskOrders[id] = index;
+          });
+        }
+      });
+
+      // Clear empty columns not present in groups
+      newBoard.forEach((col, colIndex) => {
+        const colNum = STATUS_TO_COLUMN[col.progressStatus];
+        if (!(colNum in groups)) {
+          newBoard[colIndex].taskIds = [];
+          newBoard[colIndex].taskOrders = {};
+        }
+      });
+
+      setBoard(newBoard);
+      setBoardChanged(true);
     }
   };
 
@@ -123,37 +196,51 @@ const KanbanPage = ({
     if (!canUpdateLayout.current) canUpdateLayout.current = true;
   };
 
-  // Add new Kanban Item
+  // Add new Task
   const handleAddItem = () => {
-    const maxYInBacklog = layout
-      .filter((item) => item.x === 0)
-      .reduce((max, item) => Math.max(max, item.y), -1);
-    const newY = maxYInBacklog + 1;
-    const newItem: KanbanItem = {
-      id: uuidv4(),
-      text: `New Task ${newY + 1}`,
+    const newId = uuidv4();
+    const newTask: Task = {
+      id: newId,
+      title: `New Task ${board[0].taskIds.length + 1}`,
       tags: [],
-      progressStatus: "New",
-      order: newY,
     };
 
-    setKanbans((prevKanbans) => [...prevKanbans, newItem]);
-    setLayout((prevLayout) => [
-      ...prevLayout,
-      { i: newItem.id, x: 0, y: newY, w: 1, h: 1 },
-    ]);
-    setKanbansChanged(true);
+    const prevTasks = { ...tasks };
+    const prevBoard = [...board];
+    const prevLayout = [...layout];
 
-    addKanbanItem(newItem);
+    setTasks((prev) => ({ ...prev, [newId]: newTask }));
+    setBoard((prev) => {
+      const newBoard = [...prev];
+      newBoard[0].taskIds.push(newId);
+      newBoard[0].taskOrders[newId] = newBoard[0].taskIds.length - 1;
+      const updatedTasks = { ...tasks, [newId]: newTask };
+      setLayout(generateLayout(newBoard, updatedTasks));
+      setBoardChanged(true);
+
+      return newBoard;
+    });
+
+    addTask(newTask, {
+      onError: () => {
+        // Revert on error
+        setTasks(prevTasks);
+        setBoard(prevBoard);
+        setLayout(prevLayout);
+      },
+    });
   };
 
   // Open edit modal
-  const handleEditItem = (item: KanbanItem) => {
-    setEditingItem(item);
+  const handleEditItem = (id: string) => {
+    const task = tasks[id];
+    const status =
+      board.find((col) => col.taskIds.includes(id))?.progressStatus || "";
+    setEditingId(id);
     setFormData({
-      text: item.text,
-      tags: item.tags,
-      progressStatus: item.progressStatus,
+      title: task.title,
+      tags: task.tags,
+      progressStatus: status,
     });
     setIsModalOpen(true);
   };
@@ -165,33 +252,85 @@ const KanbanPage = ({
 
   // Save changes
   const handleSave = () => {
-    if (editingItem) {
-      setKanbans((prev) => {
-        const newKanbans = updateKanbanItems(prev, editingItem, formData);
+    if (editingId) {
+      const updatedTask: Task = {
+        ...tasks[editingId],
+        title: formData.title,
+        tags: formData.tags as string[],
+      };
 
-        // Regenerate layout based on updated kanbans
-        setLayout(generateLayout(newKanbans));
-        return newKanbans;
+      const prevTasks = { ...tasks };
+      const prevBoard = [...board];
+      const prevLayout = [...layout];
+
+      setTasks((prev) => ({ ...prev, [editingId]: updatedTask }));
+      setBoard((prev) => {
+        const newBoard = updateKanbanItems(prev, editingId, formData);
+        const updatedTasks = { ...tasks, [editingId]: updatedTask };
+        setLayout(generateLayout(newBoard, updatedTasks));
+        setBoardChanged(true);
+
+        return newBoard;
       });
 
-      setKanbansChanged(true);
-      // TODO: Call mutate for update if hook exists
+      updateTask(updatedTask, {
+        onError: () => {
+          // Revert on error
+          setTasks(prevTasks);
+          setBoard(prevBoard);
+          setLayout(prevLayout);
+        },
+      });
     }
     setIsModalOpen(false);
   };
 
   // Remove item
   const handleRemove = () => {
-    if (editingItem) {
-      setKanbans((prev) => prev.filter((item) => item.id !== editingItem.id));
-      setLayout((prev) => prev.filter((l) => l.i !== editingItem.id));
-      setKanbansChanged(true);
-      // TODO: Call mutate for delete if hook exists
+    if (editingId) {
+      const prevTasks = { ...tasks };
+      const prevBoard = [...board];
+      const prevLayout = [...layout];
+
+      const newBoard = [...board];
+      const colIndex = newBoard.findIndex((col) =>
+        col.taskIds.includes(editingId)
+      );
+      if (colIndex >= 0) {
+        newBoard[colIndex].taskIds = newBoard[colIndex].taskIds.filter(
+          (id) => id !== editingId
+        );
+        delete newBoard[colIndex].taskOrders[editingId];
+
+        // Shift orders in column
+        newBoard[colIndex].taskIds.forEach((id, index) => {
+          newBoard[colIndex].taskOrders[id] = index;
+        });
+      }
+
+      setBoard(newBoard);
+      setBoardChanged(true);
+
+      setTasks((prev) => {
+        const newTasks = { ...prev };
+        delete newTasks[editingId];
+        setLayout(generateLayout(newBoard, newTasks));
+        return newTasks;
+      });
+
+      deleteTask(editingId, {
+        onError: () => {
+          // Revert on error
+          setTasks(prevTasks);
+          setBoard(prevBoard);
+          setLayout(prevLayout);
+        },
+      });
     }
     setIsModalOpen(false);
   };
 
-  // Render Headers (for each status)
+  // Render Headers
   const renderHeaders = () => (
     <div className="flex mt-[10px] ml-[10px] mr-[10px] h-[42px]">
       {STATUSES.map((status, idx) => (
@@ -215,21 +354,21 @@ const KanbanPage = ({
     </div>
   );
 
-  const renderItem = (item: KanbanItem) => (
+  const renderItem = (task: Task) => (
     <div
-      key={item.id}
+      key={task.id}
       className="bg-white border-l-3 border-l-[#1CA1C1] flex flex-col cursor-pointer item-drag-handle"
     >
       <div className="flex justify-between items-center min-h-[24px] overflow-hidden pt-[14px] pr-[8px] pb-[8px] pl-[12px]">
         <span className="text-[14px] font-medium leading-[20px]">
-          {item.text}
+          {task.title}
         </span>
         <div className="flex justify-center items-center w-[32px] h-[32px] hover:shadow-[0_0_2px_1px_#1CA1C1] bg-[rgba(228,230,240,0.8)] rounded-full">
           <i className="fa-solid fa-user fa-lg text-[#94a1b3]" />
         </div>
       </div>
       <div className="flex justify-between pl-[8px] pr-[8px] mb-[6px] items-center">
-        {item.tags.map((tag) => (
+        {task.tags.map((tag) => (
           <span
             key={tag}
             className="bg-[rgba(228,230,240,0.8)] text-[#475466] text-sm font-normal h-[26px] leading-[24px] px-2 py-0 rounded-[12px] mt-0 mr-2 mb-0.5 ml-0"
@@ -239,7 +378,7 @@ const KanbanPage = ({
         ))}
         <IconButton
           icon="fa-solid fa-pencil fa-xs"
-          onMouseDown={() => handleEditItem(item)}
+          onMouseDown={() => handleEditItem(task.id)}
           iconStyles="text-[#94a1b3] hover:text-[#1CA1C1]"
         />
       </div>
@@ -251,11 +390,11 @@ const KanbanPage = ({
     <div className="mt-4 space-y-4">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Text
+          Title
         </label>
         <textarea
-          value={formData.text}
-          onChange={(e) => handleFormChange("text", e.target.value)}
+          value={formData.title}
+          onChange={(e) => handleFormChange("title", e.target.value)}
           className="w-full border border-[#DADEE0] rounded-[2px] px-2 py-1 text-sm text-[#475466] h-[70px] focus:outline-none focus:border-[#1CA1C1]"
         />
       </div>
@@ -290,6 +429,8 @@ const KanbanPage = ({
       </div>
     </div>
   );
+
+  const isFetching = isFetchingBoard || isFetchingTasks;
 
   return (
     <>
@@ -328,7 +469,7 @@ const KanbanPage = ({
                 onDragStop={handleDragStop}
                 draggableHandle=".item-drag-handle"
               >
-                {kanbans.map((item) => renderItem(item))}
+                {Object.values(tasks).map((task) => renderItem(task))}
               </GridLayout>
             </div>
           )}

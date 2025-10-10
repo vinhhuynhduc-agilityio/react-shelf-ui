@@ -1,21 +1,44 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-
-// constant
-import { ERROR_MESSAGE, QUERY_KEY_KANBAN } from "@/constant";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 // services
-import { addKanbanItem, getKanbanData } from "@/services";
+import {
+  getBoard,
+  updateBoardColumn,
+  getTasks,
+  addTask,
+  updateTask,
+  deleteTask,
+} from "@/services";
 
-export const useKanbanQuery = () => {
-  return useQuery({
-    queryKey: QUERY_KEY_KANBAN,
-    queryFn: getKanbanData,
-    meta: { errorMessage: ERROR_MESSAGE.KANBAN_FETCH_ERROR },
+// constants
+import { QUERY_KEY_BOARD, QUERY_KEY_TASKS } from "@/constant";
+
+export const useBoardQuery = () =>
+  useQuery({ queryKey: QUERY_KEY_BOARD, queryFn: getBoard });
+
+export const useTasksQuery = () =>
+  useQuery({ queryKey: QUERY_KEY_TASKS, queryFn: getTasks });
+
+export const useAddTask = () => {
+  return useMutation({
+    mutationFn: addTask,
   });
 };
 
-export const useAddKanbanItem = () => {
+export const useUpdateTask = () => {
   return useMutation({
-    mutationFn: addKanbanItem,
+    mutationFn: updateTask,
+  });
+};
+
+export const useDeleteTask = () => {
+  return useMutation({
+    mutationFn: deleteTask,
+  });
+};
+
+export const useUpdateBoardColumn = () => {
+  return useMutation({
+    mutationFn: updateBoardColumn,
   });
 };
