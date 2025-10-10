@@ -4,67 +4,67 @@ import { Layout } from "react-grid-layout";
 import { STATUS_TO_COLUMN } from "@/constant";
 
 // Types
-import { KanbanColumn, KanbanItem } from "@/types";
+import { BoardColumn, Task } from "@/types";
 
-export const generateLayout = (kanbans: KanbanItem[]): Layout[] => {
-  return kanbans.map((item) => ({
-    i: item.id,
-    x: STATUS_TO_COLUMN[item.progressStatus],
-    y: item.order,
-    w: 1,
-    h: 1,
-  }));
+export const generateLayout = (
+  board: BoardColumn[],
+  tasks: Record<string, Task>
+): Layout[] => {
+  const layout: Layout[] = [];
+  board.forEach((column) => {
+    const colIndex = STATUS_TO_COLUMN[column.progressStatus] ?? 0;
+    const sortedTaskIds = [...column.taskIds].sort(
+      (a, b) => (column.taskOrders[a] ?? 0) - (column.taskOrders[b] ?? 0)
+    );
+    sortedTaskIds.forEach((taskId, index) => {
+      if (tasks[taskId]) {
+        layout.push({
+          i: taskId,
+          x: colIndex,
+          y: column.taskOrders[taskId] ?? index,
+          w: 1,
+          h: 1,
+        });
+      }
+    });
+  });
+  return layout;
 };
 
 export const updateKanbanItems = (
-  prevKanbans: KanbanItem[],
-  editingItem: KanbanItem,
-  formData: KanbanColumn
-): KanbanItem[] => {
-  let newKanbans = [...prevKanbans];
-  const oldStatus = editingItem.progressStatus;
+  prevBoard: BoardColumn[],
+  editingId: string,
+  formData: { title: string; tags: string[]; progressStatus: string }
+): BoardColumn[] => {
+  const newBoard = [...prevBoard];
+  const oldStatus = prevBoard.find((col) =>
+    col.taskIds.includes(editingId)
+  )?.progressStatus;
   const newStatus = formData.progressStatus;
-  const oldOrder = editingItem.order;
 
-  if (oldStatus !== newStatus) {
-    // Adjust orders in old column: decrease orders of items below the moved item
-    newKanbans = newKanbans.map((item) => {
-      if (
-        item.progressStatus === oldStatus &&
-        item.id !== editingItem.id &&
-        item.order > oldOrder
-      ) {
-        return { ...item, order: item.order - 1 };
-      }
-      return item;
+  if (oldStatus && oldStatus !== newStatus) {
+    // Remove from old column
+    const oldColIndex = newBoard.findIndex(
+      (col) => col.progressStatus === oldStatus
+    );
+    newBoard[oldColIndex].taskIds = newBoard[oldColIndex].taskIds.filter(
+      (id) => id !== editingId
+    );
+    delete newBoard[oldColIndex].taskOrders[editingId];
+
+    // Shift orders in old column
+    newBoard[oldColIndex].taskIds.forEach((id, index) => {
+      newBoard[oldColIndex].taskOrders[id] = index;
     });
 
-    // Calculate new order in new column: max order + 1
-    const newColumnItems = newKanbans.filter(
-      (item) => item.progressStatus === newStatus
+    // Add to new column at end
+    const newColIndex = newBoard.findIndex(
+      (col) => col.progressStatus === newStatus
     );
-    const maxOrderInNewColumn =
-      newColumnItems.length > 0
-        ? Math.max(...newColumnItems.map((item) => item.order))
-        : -1;
-    const newOrder = maxOrderInNewColumn + 1;
-
-    // Update the item with new status and order
-    const updatedItemWithOrder = {
-      ...editingItem,
-      ...formData,
-      order: newOrder,
-    };
-    newKanbans = newKanbans.map((item) =>
-      item.id === updatedItemWithOrder.id ? updatedItemWithOrder : item
-    );
-  } else {
-    // If status not changed, just update other fields
-    const updatedItem = { ...editingItem, ...formData };
-    newKanbans = newKanbans.map((item) =>
-      item.id === updatedItem.id ? updatedItem : item
-    );
+    newBoard[newColIndex].taskIds.push(editingId);
+    newBoard[newColIndex].taskOrders[editingId] =
+      newBoard[newColIndex].taskIds.length - 1;
   }
 
-  return newKanbans;
+  return newBoard;
 };

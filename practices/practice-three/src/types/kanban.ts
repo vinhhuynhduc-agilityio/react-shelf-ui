@@ -1,13 +1,18 @@
-export interface KanbanItem {
+export interface Task {
   id: string;
-  text: string;
+  title: string;
   tags: string[];
-  progressStatus: string;
-  order: number;
 }
 
-export interface KanbanColumn {
-  text: string;
-  tags: string[];
+export interface BoardColumn {
+  id: string;
   progressStatus: string;
+  taskIds: string[];
+  taskOrders: Record<string, number>;
+}
+
+export interface KanbanItem extends Task {
+  id: string;
+  progressStatus: string;
+  order: number;
 }
