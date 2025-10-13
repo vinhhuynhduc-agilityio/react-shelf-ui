@@ -1,3 +1,15 @@
+import { UseMutateFunction } from "@tanstack/react-query";
+
+interface SaveKanbanBoardParams {
+  board: BoardColumn[];
+  updateBoardColumn: UseMutateFunction<
+    BoardColumn,
+    Error,
+    BoardColumn,
+    unknown
+  >;
+}
+
 // helpers
 import { apiRequest } from "@/helpers";
 
@@ -28,3 +40,10 @@ export const updateBoardColumn = async (
   column: BoardColumn
 ): Promise<BoardColumn> =>
   apiRequest("PUT", `${API_BASE_URL}/board/${column.id}`, column);
+
+export const saveKanbanBoard = async ({
+  board,
+  updateBoardColumn,
+}: SaveKanbanBoardParams) => {
+  await Promise.all(board.map((col) => updateBoardColumn(col)));
+};
