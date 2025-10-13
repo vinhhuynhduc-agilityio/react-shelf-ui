@@ -58,6 +58,7 @@ const KanbanPage = ({
   // Ref
   const containerRef = useRef<HTMLDivElement>(null);
   const canUpdateLayout = useRef(false);
+  const skipSyncOnLayoutChange = useRef(false);
 
   // State
   const [gridWidth, setGridWidth] = useState(0);
@@ -150,6 +151,14 @@ const KanbanPage = ({
   };
 
   const handleLayoutChange = (newLayout: Layout[]) => {
+    // Skip sync on layout change if action related to adding/editing/removing tasks
+    if (skipSyncOnLayoutChange.current) {
+      skipSyncOnLayoutChange.current = false;
+
+      return;
+    }
+
+    // Update layout and board state only if action related to reordering tasks (drag & drop)
     if (canUpdateLayout.current) {
       setLayout(newLayout);
 
@@ -215,6 +224,8 @@ const KanbanPage = ({
       newBoard[0].taskIds.push(newId);
       newBoard[0].taskOrders[newId] = newBoard[0].taskIds.length - 1;
       const updatedTasks = { ...tasks, [newId]: newTask };
+      skipSyncOnLayoutChange.current = true;
+
       setLayout(generateLayout(newBoard, updatedTasks));
       setBoardChanged(true);
 
@@ -267,9 +278,10 @@ const KanbanPage = ({
       setBoard((prev) => {
         const newBoard = updateKanbanItems(prev, editingId, formData);
         const updatedTasks = { ...tasks, [editingId]: updatedTask };
+        skipSyncOnLayoutChange.current = true;
+
         setLayout(generateLayout(newBoard, updatedTasks));
         setBoardChanged(true);
-
         return newBoard;
       });
 
@@ -314,7 +326,10 @@ const KanbanPage = ({
       setTasks((prev) => {
         const newTasks = { ...prev };
         delete newTasks[editingId];
+        skipSyncOnLayoutChange.current = true;
+
         setLayout(generateLayout(newBoard, newTasks));
+
         return newTasks;
       });
 
