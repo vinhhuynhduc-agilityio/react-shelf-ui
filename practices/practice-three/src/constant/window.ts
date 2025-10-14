@@ -1,6 +1,6 @@
 export const WINDOW_KEYS = {
   SPREADSHEET: "spreadsheet",
-  FILE_MANAGER: "fileManager",
+  FILE_MANAGER: "filemanager",
   PIVOT: "pivot",
   KANBAN: "kanban",
 } as const;

@@ -4,11 +4,11 @@ export interface WindowState {
   isMinimized: boolean;
 }
 
-export type WindowKey = "spreadsheet" | "fileManager" | "pivot" | "kanban";
+export type WindowKey = "spreadsheet" | "filemanager" | "pivot" | "kanban";
 
 export interface Windows {
   spreadsheet: WindowState;
-  fileManager: WindowState;
+  filemanager: WindowState;
   pivot: WindowState;
   kanban: WindowState;
 }

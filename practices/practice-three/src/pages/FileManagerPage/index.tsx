@@ -1,15 +1,24 @@
+import { useCallback, useMemo } from "react";
+import { Tree } from "antd";
+import type { DataNode } from "antd/es/tree";
 import { useShallow } from "zustand/react/shallow";
 
-// components
-import { DraggableWindow } from "@/components";
-
-// Constant
+// constant
 import { WINDOW_KEYS } from "@/constant";
 
-// Store
+// store
 import { useWindowStore } from "@/stores";
 
-const FileManagerPage = ({
+// hook
+import { useFilemanagerQuery } from "@/hook";
+
+// components
+import { Button, DraggableWindow } from "@/components";
+
+// types
+import { FileItem } from "@/types";
+
+const FilemanagerPage = ({
   onClose,
   onMaximize,
   onMinimize,
@@ -34,6 +43,48 @@ const FileManagerPage = ({
     }
   };
 
+  const { data: files = [] } = useFilemanagerQuery();
+
+  const buildTree = useCallback(
+    (items: FileItem[], parentId: string | number): DataNode[] => {
+      return items
+        .filter((item) => item.parentId === parentId && item.type === "folder")
+        .map((item) => ({
+          title: (
+            <span>
+              <i
+                className="fa-solid fa-folder fa-lg"
+                style={{ marginRight: "5px", color: "#a4b1c6" }}
+              ></i>
+              {item.name}
+            </span>
+          ),
+          key: item.id,
+          children: buildTree(items, item.id),
+        }));
+    },
+    []
+  );
+
+  const treeData = useMemo(() => {
+    const rootChildren = buildTree(files, "root");
+    return [
+      {
+        title: (
+          <span>
+            <i
+              className="fa-solid fa-folder fa-lg"
+              style={{ marginRight: "5px", color: "#a4b1c6" }}
+            ></i>
+            My Files
+          </span>
+        ),
+        key: "root",
+        children: rootChildren,
+      },
+    ];
+  }, [files, buildTree]);
+
   return (
     <DraggableWindow
       windowKey={WINDOW_KEYS.FILE_MANAGER}
@@ -46,9 +97,21 @@ const FileManagerPage = ({
       onMinimize={onMinimize}
       onMouseDown={handleMouseDown}
     >
-      <h2>File Manager Content</h2>
+      <div className="flex h-full">
+        <div className="w-[250px] border-r border-gray-200 flex flex-col">
+          <Button variant="primary" className="mx-6 mt-[8px] mb-[8px]">
+            Add New
+          </Button>
+          <Tree
+            treeData={treeData}
+            onSelect={() => {}}
+            defaultExpandedKeys={["root"]}
+          />
+        </div>
+        <div>Details of Selected Folder</div>
+      </div>
     </DraggableWindow>
   );
 };
 
-export default FileManagerPage;
+export default FilemanagerPage;
