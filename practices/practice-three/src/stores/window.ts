@@ -41,7 +41,7 @@ export const useWindowStore = create<WindowStore>()(
   immer((set) => ({
     windows: {
       spreadsheet: { ...DEFAULT_WINDOW },
-      fileManager: { ...DEFAULT_WINDOW },
+      filemanager: { ...DEFAULT_WINDOW },
       pivot: { ...DEFAULT_WINDOW },
       kanban: { ...DEFAULT_WINDOW },
     },
@@ -49,7 +49,7 @@ export const useWindowStore = create<WindowStore>()(
 
     frames: {
       spreadsheet: defaultFrame(),
-      fileManager: defaultFrame(),
+      filemanager: defaultFrame(),
       pivot: defaultFrame(),
       kanban: defaultFrame(),
     },

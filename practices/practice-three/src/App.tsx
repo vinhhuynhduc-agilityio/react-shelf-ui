@@ -23,7 +23,7 @@ import { queryClient, rearrangeLayoutOnResize } from "@/helpers";
 
 // Pages
 import {
-  FileManagerPage,
+  FilemanagerPage,
   KanbanPage,
   PivotPage,
   SpreadsheetPage,
@@ -198,7 +198,7 @@ const App = () => {
 
     if (windows[FILE_MANAGER]?.state.isOpen) {
       pages.push(
-        <FileManagerPage
+        <FilemanagerPage
           key={FILE_MANAGER}
           onClose={windows[FILE_MANAGER]?.actions.close}
           onMaximize={windows[FILE_MANAGER]?.actions.maximize}
