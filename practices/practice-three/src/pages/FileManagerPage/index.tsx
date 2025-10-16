@@ -13,7 +13,7 @@ import { useWindowStore } from "@/stores";
 import { useFilemanagerQuery } from "@/hook";
 
 // components
-import { Button, DraggableWindow } from "@/components";
+import { Button, DraggableWindow, IconButton } from "@/components";
 
 // types
 import { FileItem } from "@/types";
@@ -52,10 +52,7 @@ const FilemanagerPage = ({
         .map((item) => ({
           title: (
             <span>
-              <i
-                className="fa-solid fa-folder fa-lg"
-                style={{ marginRight: "5px", color: "#a4b1c6" }}
-              ></i>
+              <i className="fa-solid fa-folder fa-lg mr-[5px] text-[#94A1B3]"></i>
               {item.name}
             </span>
           ),
@@ -72,10 +69,7 @@ const FilemanagerPage = ({
       {
         title: (
           <span>
-            <i
-              className="fa-solid fa-folder fa-lg"
-              style={{ marginRight: "5px", color: "#a4b1c6" }}
-            ></i>
+            <i className="fa-solid fa-folder fa-lg mr-5px] text-[#94A1B3]"></i>
             My Files
           </span>
         ),
@@ -97,18 +91,55 @@ const FilemanagerPage = ({
       onMinimize={onMinimize}
       onMouseDown={handleMouseDown}
     >
-      <div className="flex h-full">
-        <div className="w-[250px] border-r border-gray-200 flex flex-col">
-          <Button variant="primary" className="mx-6 mt-[8px] mb-[8px]">
-            Add New
-          </Button>
-          <Tree
-            treeData={treeData}
-            onSelect={() => {}}
-            defaultExpandedKeys={["root"]}
-          />
+      <div className="flex flex-col h-full bg-[#EBEDF0]">
+        {/* Header */}
+        <div className="bg-[#FFFFFF] h-[56px] w-full box-content rounded-[2px] border border-[#DADEE0] text-[#475466] flex justify-between items-center">
+          <div className="flex items-center ml-[12px]">
+            <span className="font-medium mr-4 text-[#475466]">Files</span>
+            <div className="w-[300px] min-w-[10px] flex items-center h-[32px] relative overflow-hidden">
+              <input
+                name="search"
+                type="text"
+                placeholder="Search files and folders"
+                className="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#94A1B3] text-sm px-2 focus:outline-none w-full h-full"
+                maxLength={26}
+              />
+              <IconButton
+                iconStyles="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
+                buttonStyles="p-1 flex justify-center items-center rounded-full w-[32px] h-[32px] absolute right-[2px]"
+                onClick={() => {}}
+              />
+            </div>
+          </div>
+          <div className="flex items-center space-x-1 mr-[12px]">
+            <IconButton
+              buttonStyles="p-1 flex justify-center items-center w-[60px] h-[38px] bg-[#daddeb] hover:bg-[#E4E6F0]"
+              iconStyles="fa-solid fa-eye text-[#1CA1C1] text-sm"
+              onClick={() => {}}
+            />
+            <IconButton
+              buttonStyles="p-1 flex justify-center items-center w-[40px] h-[38px] bg-[#1CA1C1] hover:bg-[#1992af]"
+              iconStyles="fa-solid fa-bars fa-lg text-[#FFFFFF] text-sm"
+              onClick={() => {}}
+            />
+          </div>
         </div>
-        <div>Details of Selected Folder</div>
+        {/* Body */}
+        <div className="flex flex-1 bg-[#EBEDF0]">
+          <div className="w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] box-content rounded-[2px] border border-[#DADEE0] text-[#475466]">
+            <Button variant="primary" className="mx-4 mt-[8px] mb-[8px]">
+              Add New
+            </Button>
+            <Tree
+              treeData={treeData}
+              onSelect={() => {}}
+              defaultExpandedKeys={["root"]}
+            />
+          </div>
+          <div className="flex-1 bg-[#FFFFFF] mt-[10px] box-content rounded-[2px] border border-[#DADEE0] text-[#475466]">
+            Details of Selected Folder
+          </div>
+        </div>
       </div>
     </DraggableWindow>
   );

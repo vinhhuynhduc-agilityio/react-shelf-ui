@@ -367,9 +367,8 @@ const KanbanPage = ({
         >
           {idx === 0 && (
             <IconButton
-              icon="fa-solid fa-circle-plus fa-sm"
               onClick={handleAddItem}
-              iconStyles="text-gray-500 mr-2"
+              iconStyles="fa-solid fa-circle-plus fa-sm text-gray-500 mr-2"
             />
           )}
           {status}
@@ -404,9 +403,8 @@ const KanbanPage = ({
           ))}
         </div>
         <IconButton
-          icon="fa-solid fa-pencil fa-xs"
           onMouseDown={() => handleEditItem(task.id)}
-          iconStyles="text-[#94a1b3] hover:text-[#1CA1C1]"
+          iconStyles="fa-solid fa-pencil fa-xs text-[#94a1b3] hover:text-[#1CA1C1]"
         />
       </div>
     </div>

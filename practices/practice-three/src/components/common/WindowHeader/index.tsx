@@ -48,22 +48,19 @@ const WindowHeader = ({
       </div>
       <div className="flex items-center justify-center space-x-2 absolute right-0 mr-3">
         <IconButton
-          icon="fa-solid fa-minus"
-          iconStyles="rounded-full px-[4px] py-[3px] hover:bg-gray-100"
+          iconStyles="fa-solid fa-minus text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
           onClick={onMinimize}
         />
         <IconButton
-          icon={
+          iconStyles={
             isMaximized
-              ? "fa-regular fa-window-restore"
-              : "fa-regular fa-square"
+              ? "fa-regular fa-window-restore text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
+              : "fa-regular fa-square text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
           }
-          iconStyles="rounded-full px-[4px] py-[3px] hover:bg-gray-100"
           onClick={onMaximize}
         />
         <IconButton
-          icon="fa-solid fa-xmark"
-          iconStyles="rounded-full px-[6px] py-[3px] hover:bg-gray-100"
+          iconStyles="fa-solid fa-xmark text-[#94A1B3] rounded-full px-[6px] py-[3px] hover:bg-gray-100"
           onClick={onClose}
         />
       </div>

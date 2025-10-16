@@ -4,14 +4,12 @@ interface IconButtonProps {
   // In other places without react-grid-layout, onClick can still be used normally.
   onMouseDown?: (e: React.MouseEvent) => void;
   onClick?: (e: React.MouseEvent) => void;
-  icon: string;
   buttonStyles?: string;
   iconStyles?: string;
   ariaLabel?: string;
 }
 
 const IconButton = ({
-  icon,
   onClick,
   onMouseDown,
   buttonStyles = "p-1 w-[26px] h-[26px] flex justify-center items-center rounded-full",
@@ -35,7 +33,7 @@ const IconButton = ({
       }}
       aria-label={ariaLabel}
     >
-      <i className={`${icon} text-[#94A1B3] ${iconStyles}`}></i>
+      <i className={`${iconStyles}`}></i>
     </button>
   );
 };
