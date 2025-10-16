@@ -55,10 +55,9 @@ const MultiSelect = ({
           >
             {tag}
             <IconButton
-              icon="fa-solid fa-times fa-xs"
               buttonStyles="p-1 flex justify-center items-center rounded-full w-[18px] h-[18px] bg-[#94A1B3]"
               onClick={() => removeTag(tag)}
-              iconStyles="mt-[2px] text-[#f2f2f2]"
+              iconStyles="fa-solid fa-times fa-xs mt-[2px] text-[#f2f2f2]"
             />
           </span>
         ))}

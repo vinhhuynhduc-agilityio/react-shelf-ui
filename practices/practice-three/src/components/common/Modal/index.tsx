@@ -49,9 +49,8 @@ const ModalContent = ({
             {title}
           </h2>
           <IconButton
-            icon="fa-solid fa-x fa-xs"
             onClick={onClose}
-            iconStyles="text-[#94A1B3] hover:text-[#1CA1C1] text-lg leading-none px-3 py-4 rounded-full"
+            iconStyles="fa-solid fa-x fa-xs text-[#94A1B3] hover:text-[#1CA1C1] text-lg leading-none px-3 py-4 rounded-full"
           />
         </div>
 
