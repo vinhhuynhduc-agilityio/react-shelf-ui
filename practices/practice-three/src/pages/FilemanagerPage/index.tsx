@@ -78,7 +78,7 @@ const FilemanagerPage = ({
     }
   };
 
-  const { data: files = [] } = useFilemanagerQuery();
+  const { data: files = [], isLoading } = useFilemanagerQuery();
 
   const buildTree = useCallback(
     (items: FileItem[], parentId: string | number): DataNode[] => {
@@ -239,6 +239,7 @@ const FilemanagerPage = ({
               columns={columns}
               dataSource={filteredItems}
               tableHeight={tableHeight}
+              loading={isLoading}
             />
           </div>
         </div>
