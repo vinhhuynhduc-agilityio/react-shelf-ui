@@ -93,10 +93,10 @@ const FilemanagerPage = ({
     >
       <div className="flex flex-col h-full bg-[#EBEDF0]">
         {/* Header */}
-        <div className="bg-[#FFFFFF] h-[56px] w-full box-content rounded-[2px] border border-[#DADEE0] text-[#475466] flex justify-between items-center">
-          <div className="flex items-center ml-[12px]">
+        <div className="bg-[#FFFFFF] h-[56px] w-full box-content rounded-[2px] border border-[#DADEE0] text-[#475466] flex items-center">
+          <div className="flex flex-1 items-center ml-[12px]">
             <span className="font-medium mr-4 text-[#475466]">Files</span>
-            <div className="w-[300px] min-w-[10px] flex items-center h-[32px] relative overflow-hidden">
+            <div className="flex-1 max-w-[300px] min-w-[10px] flex items-center h-[32px] relative overflow-hidden">
               <input
                 name="search"
                 type="text"
@@ -106,7 +106,7 @@ const FilemanagerPage = ({
               />
               <IconButton
                 iconStyles="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
-                buttonStyles="p-1 flex justify-center items-center rounded-full w-[32px] h-[32px] absolute right-[2px]"
+                buttonStyles="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
                 onClick={() => {}}
               />
             </div>
