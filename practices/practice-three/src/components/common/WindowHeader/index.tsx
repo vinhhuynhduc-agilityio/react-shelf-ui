@@ -42,11 +42,11 @@ const WindowHeader = ({
           alt={title}
           className="w-[18px] h-[18px] mx-[10px] ml-[8px] text-[10px] pointer-events-none"
         />
-        <span className="text-[16px] font-medium text-[#475466] cursor-default whitespace-nowrap">
+        <span className="text-[16px] font-medium text-[#475466] cursor-default">
           {title}
         </span>
       </div>
-      <div className="flex items-center justify-center space-x-2 absolute right-0 mr-3">
+      <div className="flex items-center justify-center space-x-2 absolute right-0 mr-3 bg-white">
         <IconButton
           iconStyles="fa-solid fa-minus text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
           onClick={onMinimize}
