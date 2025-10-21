@@ -19,6 +19,9 @@ import { Button, DataTable, DraggableWindow, IconButton } from "@/components";
 // types
 import { FileItem } from "@/types";
 
+// helpers
+import { formatSize, getLocation, getPreviewImageSrc } from "@/helpers";
+
 const FilemanagerPage = ({
   onClose,
   onMaximize,
@@ -35,6 +38,8 @@ const FilemanagerPage = ({
   // state
   const [tableHeight, setTableHeight] = useState<number>(0);
   const [selectedFolder, setSelectedFolder] = useState<string>("root");
+  const [previewMode, setPreviewMode] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<FileItem | null>(null);
 
   // store
   const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
@@ -148,7 +153,7 @@ const FilemanagerPage = ({
         key: "size",
         width: 100,
         align: "left",
-        render: (size: number) => `${size} KB`,
+        render: (size: number) => (size === null ? "" : `${size} KB`),
       },
       {
         title: "Date",
@@ -168,6 +173,83 @@ const FilemanagerPage = ({
     ],
     []
   );
+
+  // Handle table row click to select item
+  const handleRowClick = (item: FileItem) => {
+    setSelectedItem(item);
+  };
+
+  const togglePreview = () => {
+    setPreviewMode(!previewMode);
+  };
+
+  // Preview component
+  const PreviewPane = () => {
+    const currentItem = selectedItem || null;
+    const imageSrc = getPreviewImageSrc(currentItem);
+    const hasItem = !!currentItem;
+
+    return (
+      <div className="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] ">
+        {/* Top Card: File Preview */}
+        <div className="border border-[#DADEE0] bg-[#FFFFFF] w-[470px] h-1/2 min-h-[450px]">
+          {hasItem && (
+            <h3 className="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]">
+              {currentItem.name}
+            </h3>
+          )}
+          <div className="h-[calc(100%-42px)]">
+            <img
+              src={imageSrc}
+              alt={hasItem ? currentItem.name : "Preview"}
+              className="h-full w-full"
+            />
+          </div>
+        </div>
+
+        {/* Bottom Card: Information (only if item selected, else hide) */}
+        {hasItem && (
+          <div className="space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] h-1/2 min-h-[215px]">
+            <h4 className="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]">
+              Information
+            </h4>
+            <div className="p-4 text-[#475466] text-[14px]">
+              <div className="flex">
+                <span className="font-medium w-[40%] text-right p-[6px]">
+                  Type
+                </span>
+                <span className="w-[60%] p-[6px] capitalize">
+                  {currentItem.type}
+                </span>
+              </div>
+              <div className="flex">
+                <span className="font-medium w-[40%] text-right p-[6px]">
+                  Size
+                </span>
+                <span className="w-[60%] p-[6px]">
+                  {formatSize(currentItem.size)}
+                </span>
+              </div>
+              <div className="flex">
+                <span className="font-medium w-[40%] text-right p-[6px]">
+                  Date
+                </span>
+                <span className="w-[60%] p-[6px]">{currentItem.date}</span>
+              </div>
+              <div className="flex">
+                <span className="font-medium w-[40%] text-right p-[6px]">
+                  Location
+                </span>
+                <span className="w-[60%] p-[6px]">
+                  {getLocation(files, selectedFolder, currentItem)}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <DraggableWindow
@@ -208,7 +290,7 @@ const FilemanagerPage = ({
             <IconButton
               buttonStyles="p-1 flex justify-center items-center w-[60px] h-[38px] bg-[#F4F5F9] hover:bg-[#E4E6F0]"
               iconStyles="fa-solid fa-eye text-[#1CA1C1] text-sm"
-              onClick={() => {}}
+              onClick={togglePreview}
             />
             <IconButton
               buttonStyles="p-1 flex justify-center items-center w-[40px] h-[38px] bg-[#1CA1C1] hover:bg-[#1992af]"
@@ -228,6 +310,7 @@ const FilemanagerPage = ({
               onSelect={(keys) => {
                 if (keys.length > 0) {
                   setSelectedFolder(keys[0] as string);
+                  setSelectedItem(null);
                 }
               }}
               defaultExpandedKeys={["root"]}
@@ -240,8 +323,18 @@ const FilemanagerPage = ({
               dataSource={filteredItems}
               tableHeight={tableHeight}
               loading={isLoading}
+              onRow={(record) => ({
+                onClick: () => {
+                  setSelectedItem(record);
+                },
+                className:
+                  selectedItem?.id === record.id
+                    ? "ant-table-row-selected"
+                    : "",
+              })}
             />
           </div>
+          {previewMode && <PreviewPane />}
         </div>
       </div>
     </DraggableWindow>
