@@ -38,3 +38,24 @@ export const getLocation = (
 
   return `/${parentFolder?.name || selectedFolder}`;
 };
+
+export const getBasicInfo = (
+  currentItem: FileItem,
+  files: FileItem[],
+  selectedFolder: string | null
+): { label: string; value: string }[] => {
+  return [
+    {
+      label: "Type",
+      value: currentItem.type
+        ? currentItem.type.charAt(0).toUpperCase() + currentItem.type.slice(1)
+        : "",
+    },
+    { label: "Size", value: formatSize(currentItem.size) },
+    { label: "Date", value: currentItem.date },
+    {
+      label: "Location",
+      value: getLocation(files, selectedFolder, currentItem),
+    },
+  ];
+};

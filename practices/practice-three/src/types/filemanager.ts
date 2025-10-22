@@ -6,5 +6,5 @@ export interface FileItem {
   date: string;
   parentId: string;
   imageUrl: string;
-  ExtraInfo?: { [key: string]: string };
+  extraInfo?: { [key: string]: string };
 }
