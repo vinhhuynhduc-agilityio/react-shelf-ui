@@ -9,6 +9,7 @@ interface ButtonProps {
   className?: string;
   variant?: "success" | "primary" | "segment";
   active?: boolean;
+  ref?: React.Ref<HTMLButtonElement>;
 }
 
 const Button = ({
@@ -19,6 +20,7 @@ const Button = ({
   type = "button",
   className = "",
   active = false,
+  ref,
 }: ButtonProps) => {
   const baseClasses =
     "inline-flex items-center justify-center rounded-[2px] font-medium transition-colors duration-200 shadow-none px-3 cursor-pointer disabled:cursor-not-allowed border-none";
@@ -40,6 +42,7 @@ const Button = ({
       onClick={onClick}
       disabled={disabled}
       className={clsx(baseClasses, variantClasses[variant], className)}
+      ref={ref}
     >
       {children}
     </button>
