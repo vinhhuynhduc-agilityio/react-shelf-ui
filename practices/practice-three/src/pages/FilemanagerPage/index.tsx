@@ -6,7 +6,7 @@ import type { ColumnsType } from "antd/es/table";
 import { useShallow } from "zustand/react/shallow";
 
 // constant
-import { WINDOW_KEYS } from "@/constant";
+import { dropdownOptions, WINDOW_KEYS } from "@/constant";
 
 // store
 import { useWindowStore } from "@/stores";
@@ -15,10 +15,16 @@ import { useWindowStore } from "@/stores";
 import { useFilemanagerQuery } from "@/hook";
 
 // components
-import { Button, DataTable, DraggableWindow, IconButton } from "@/components";
+import {
+  Button,
+  DataTable,
+  DraggableWindow,
+  IconButton,
+  Dropdown,
+} from "@/components";
 
 // types
-import { FileItem } from "@/types";
+import { FileItem, DropdownOption } from "@/types";
 
 // helpers
 import { getBasicInfo, getPreviewImageSrc } from "@/helpers";
@@ -35,12 +41,14 @@ const FilemanagerPage = ({
   zIndex: number;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   // state
   const [tableHeight, setTableHeight] = useState<number>(0);
   const [selectedFolder, setSelectedFolder] = useState<string>("root");
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<FileItem | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // store
   const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
@@ -179,6 +187,14 @@ const FilemanagerPage = ({
     setPreviewMode(!previewMode);
   };
 
+  const handleSelect = (option: DropdownOption) => {
+    console.log(`Selected: ${option.label}`);
+  };
+
+  const handleAddNewIem = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   // Preview component
   const PreviewPane = () => {
     const currentItem = selectedItem || null;
@@ -309,9 +325,23 @@ const FilemanagerPage = ({
         {/* Body */}
         <div className="flex flex-1 bg-[#EBEDF0]">
           <div className="w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]">
-            <Button variant="primary" className="mx-4 mt-[8px] mb-[8px]">
-              Add New
-            </Button>
+            <div className="flex items-center justify-center w-full mt-[8px] mb-[8px]">
+              <Button
+                variant="primary"
+                className="w-[calc(100%-32px)]"
+                onClick={handleAddNewIem}
+                ref={buttonRef}
+              >
+                Add New
+              </Button>
+            </div>
+            <Dropdown
+              options={dropdownOptions}
+              onSelect={handleSelect}
+              isOpen={isDropdownOpen}
+              setIsOpen={setIsDropdownOpen}
+              triggerRef={buttonRef}
+            />
             <Tree
               treeData={treeData}
               onSelect={(keys) => {
