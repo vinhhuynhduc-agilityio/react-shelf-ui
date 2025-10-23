@@ -8,3 +8,8 @@ export interface FileItem {
   imageUrl: string;
   extraInfo?: { [key: string]: string };
 }
+
+export type AddConfig = Record<
+  string,
+  { type: "file" | "folder"; name: string }
+>;
