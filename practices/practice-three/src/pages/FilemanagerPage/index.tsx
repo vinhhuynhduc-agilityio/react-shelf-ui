@@ -6,7 +6,7 @@ import type { ColumnsType } from "antd/es/table";
 import { useShallow } from "zustand/react/shallow";
 
 // constant
-import { dropdownOptions, WINDOW_KEYS } from "@/constant";
+import { addConfigs, dropdownOptions, WINDOW_KEYS } from "@/constant";
 
 // store
 import { useWindowStore } from "@/stores";
@@ -21,6 +21,7 @@ import {
   DraggableWindow,
   IconButton,
   Dropdown,
+  Modal,
 } from "@/components";
 
 // types
@@ -49,6 +50,10 @@ const FilemanagerPage = ({
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<FileItem | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [addType, setAddType] = useState<"file" | "folder" | null>(null);
+  console.log("addType:", addType);
 
   // store
   const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
@@ -188,11 +193,24 @@ const FilemanagerPage = ({
   };
 
   const handleSelect = (option: DropdownOption) => {
-    console.log(`Selected: ${option.label}`);
+    const config = addConfigs[option.key];
+
+    if (config) {
+      setAddType(config.type);
+      setNewName(config.name);
+      setIsAddModalOpen(true);
+    } else {
+      console.log(`Selected: ${option.label}`);
+    }
+    setIsDropdownOpen(false);
   };
 
-  const handleAddNewIem = () => {
+  const handleAddNewItem = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleAdd = () => {
+    setIsAddModalOpen(false);
   };
 
   // Preview component
@@ -329,7 +347,7 @@ const FilemanagerPage = ({
               <Button
                 variant="primary"
                 className="w-[calc(100%-32px)]"
-                onClick={handleAddNewIem}
+                onClick={handleAddNewItem}
                 ref={buttonRef}
               >
                 Add New
@@ -374,6 +392,28 @@ const FilemanagerPage = ({
           {previewMode && <PreviewPane />}
         </div>
       </div>
+      <Modal
+        isOpen={isAddModalOpen}
+        title="Enter a new name"
+        onClose={() => setIsAddModalOpen(false)}
+      >
+        <div className="flex mt-[6px]">
+          <input
+            type="text"
+            name="name"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            className="flex-1 border-b border-[#1CA1C1] px-4 py-1 text-[14px] text-[#475466] focus:outline-none"
+          />
+          <Button
+            variant="primary"
+            onClick={handleAdd}
+            className="w-[96px] h-[32px] ml-[17px]"
+          >
+            Add
+          </Button>
+        </div>
+      </Modal>
     </DraggableWindow>
   );
 };
