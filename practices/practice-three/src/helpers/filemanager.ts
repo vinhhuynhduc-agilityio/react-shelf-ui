@@ -3,21 +3,24 @@ import { FileItem } from "@/types";
 // Get icon URL based on type or undefined
 export const getPreviewImageSrc = (item: FileItem | null) => {
   if (!item) {
-    return "/images/undefined.svg";
+    return "/images/folder-placeholder-image.svg";
   }
   switch (item.type) {
     case "code":
-      return "/images/code.svg";
+      return "/images/code-placeholder-image.svg";
     case "folder":
-      return "/images/folder.svg";
+      return "/images/folder-detail-placeholder.svg";
     case "audio":
-      return "/images/mp3.svg";
+      return "/images/mp3-placeholder-image.svg";
     default:
       return item.imageUrl;
   }
 };
 
-export const formatSize = (size: number) => {
+export const formatSize = (size: number | null) => {
+  if (size === null || typeof size !== "number") {
+    return "0 B";
+  }
   if (size >= 1000 * 1000) {
     return `${(size / (1000 * 1000)).toFixed(1)} MB`;
   } else if (size >= 1000) {
@@ -51,8 +54,19 @@ export const getBasicInfo = (
         ? currentItem.type.charAt(0).toUpperCase() + currentItem.type.slice(1)
         : "",
     },
-    { label: "Size", value: formatSize(currentItem.size) },
-    { label: "Date", value: currentItem.date },
+    {
+      label: "Date",
+      value: new Date()
+        .toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        })
+        .replace(/ /g, " "),
+    },
+    ...(currentItem.size !== null
+      ? [{ label: "Size", value: formatSize(currentItem.size) }]
+      : []),
     {
       label: "Location",
       value: getLocation(files, selectedFolder, currentItem),
