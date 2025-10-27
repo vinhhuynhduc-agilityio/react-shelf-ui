@@ -1,9 +1,19 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  Key,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import clsx from "clsx";
 import { Tree } from "antd";
 import type { DataNode } from "antd/es/tree";
 import type { ColumnsType } from "antd/es/table";
 import { useShallow } from "zustand/react/shallow";
+import { v4 as uuidv4 } from "uuid";
+import { useForm, Controller } from "react-hook-form";
 
 // constant
 import { addConfigs, dropdownOptions, WINDOW_KEYS } from "@/constant";
@@ -12,7 +22,7 @@ import { addConfigs, dropdownOptions, WINDOW_KEYS } from "@/constant";
 import { useWindowStore } from "@/stores";
 
 // hook
-import { useFilemanagerQuery } from "@/hook";
+import { useAddFileItem, useFilemanagerQuery } from "@/hook";
 
 // components
 import {
@@ -29,6 +39,10 @@ import { FileItem, DropdownOption } from "@/types";
 
 // helpers
 import { getBasicInfo, getPreviewImageSrc } from "@/helpers";
+
+interface FormData {
+  name: string;
+}
 
 const FilemanagerPage = ({
   onClose,
@@ -51,9 +65,22 @@ const FilemanagerPage = ({
   const [selectedItem, setSelectedItem] = useState<FileItem | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [addType, setAddType] = useState<"file" | "folder" | null>(null);
+  const [addType, setAddType] = useState<string | null>(null);
+  const [files, setFiles] = useState<FileItem[]>([]);
+  const [expandedKeys, setExpandedKeys] = useState<Key[]>(["root"]);
   console.log("addType:", addType);
+
+  // React Hook Form
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setError,
+  } = useForm<FormData>({
+    defaultValues: { name: "" },
+    mode: "onChange",
+  });
 
   // store
   const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
@@ -63,6 +90,19 @@ const FilemanagerPage = ({
       isMinimized: state.windows[WINDOW_KEYS.FILE_MANAGER].isMinimized,
     }))
   );
+
+  // Fetch initial data
+  const {
+    data: initialFiles = [],
+    isLoading,
+    isSuccess,
+  } = useFilemanagerQuery();
+
+  useEffect(() => {
+    if (isSuccess && Array.isArray(initialFiles)) {
+      setFiles(initialFiles);
+    }
+  }, [isSuccess, initialFiles, setFiles]);
 
   useLayoutEffect(() => {
     const containerElement = containerRef.current;
@@ -97,7 +137,7 @@ const FilemanagerPage = ({
     }
   };
 
-  const { data: files = [], isLoading } = useFilemanagerQuery();
+  const { mutate: addItem } = useAddFileItem();
 
   const buildTree = useCallback(
     (items: FileItem[], parentId: string | number): DataNode[] => {
@@ -197,7 +237,7 @@ const FilemanagerPage = ({
 
     if (config) {
       setAddType(config.type);
-      setNewName(config.name);
+      reset({ name: "New Folder" });
       setIsAddModalOpen(true);
     } else {
       console.log(`Selected: ${option.label}`);
@@ -209,8 +249,43 @@ const FilemanagerPage = ({
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleAdd = () => {
+  const handleAdd = (data: FormData) => {
+    // Validate duplicate name
+    const existing = files.find(
+      (item) => item.parentId === selectedFolder && item.name === data.name
+    );
+    if (existing) {
+      setError("name", {
+        type: "manual",
+        message: "Folder name already exists",
+      });
+      return;
+    }
+
+    const newItem: FileItem = {
+      id: uuidv4(),
+      name: data.name,
+      type: "folder",
+      parentId: selectedFolder,
+      size: null,
+      imageUrl: "",
+    };
+
+    setFiles((prev) => [...prev, newItem]);
+    setExpandedKeys((prev) => [...new Set([...prev, selectedFolder])]);
+
+    // Call API
+    addItem(newItem, {
+      onError: (error, newItem) => {
+        console.error("Add folder failed:", error);
+
+        // Revert optimistic update
+        setFiles((prev) => prev.filter((item) => item.id !== newItem.id));
+      },
+    });
+
     setIsAddModalOpen(false);
+    reset({ name: "" });
   };
 
   // Preview component
@@ -362,6 +437,8 @@ const FilemanagerPage = ({
             />
             <Tree
               treeData={treeData}
+              expandedKeys={expandedKeys}
+              onExpand={setExpandedKeys}
               onSelect={(keys) => {
                 if (keys.length > 0) {
                   setSelectedFolder(keys[0] as string);
@@ -395,24 +472,43 @@ const FilemanagerPage = ({
       <Modal
         isOpen={isAddModalOpen}
         title="Enter a new name"
-        onClose={() => setIsAddModalOpen(false)}
+        onClose={() => {
+          setIsAddModalOpen(false);
+          reset({ name: "" });
+        }}
       >
-        <div className="flex mt-[6px]">
-          <input
-            type="text"
-            name="name"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            className="flex-1 border-b border-[#1CA1C1] px-4 py-1 text-[14px] text-[#475466] focus:outline-none"
-          />
-          <Button
-            variant="primary"
-            onClick={handleAdd}
-            className="w-[96px] h-[32px] ml-[17px]"
-          >
-            Add
-          </Button>
-        </div>
+        <form
+          onSubmit={handleSubmit(handleAdd)}
+          className="flex flex-col mt-[6px]"
+        >
+          <div className="flex items-center">
+            <Controller
+              name="name"
+              control={control}
+              rules={{ required: "Folder name is required" }}
+              render={({ field }) => (
+                <input
+                  {...field}
+                  type="text"
+                  className="flex-1 border-b border-[#1CA1C1] px-4 py-1 text-[14px] text-[#475466] focus:outline-none mr-4"
+                  placeholder="Enter folder name"
+                  value={field.value || ""}
+                />
+              )}
+            />
+            <Button
+              variant="primary"
+              type="submit"
+              className="w-[96px] h-[32px]"
+              disabled={!!errors.name}
+            >
+              Add
+            </Button>
+          </div>
+          {errors.name && (
+            <p className="text-red-500 text-sm mt-2">{errors.name.message}</p>
+          )}
+        </form>
       </Modal>
     </DraggableWindow>
   );

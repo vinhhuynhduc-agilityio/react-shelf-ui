@@ -12,3 +12,6 @@ import { FileItem } from "@/types";
 
 export const getFilemanagerData = async (): Promise<FileItem[]> =>
   apiRequest("GET", `${API_BASE_URL}${API_ENDPOINTS.FILE_MANAGER}`);
+
+export const addFileItem = async (newItem: FileItem): Promise<FileItem> =>
+  apiRequest("POST", `${API_BASE_URL}${API_ENDPOINTS.FILE_MANAGER}`, newItem);

@@ -1,11 +1,10 @@
 export interface FileItem {
   id: string;
   name: string;
-  size: number;
-  type: string;
-  date: string;
+  size: number | null;
+  type: string | null;
   parentId: string;
-  imageUrl: string;
+  imageUrl?: string;
   extraInfo?: { [key: string]: string };
 }
 
