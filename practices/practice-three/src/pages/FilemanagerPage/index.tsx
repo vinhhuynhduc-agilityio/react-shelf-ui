@@ -12,11 +12,15 @@ import { Tree } from "antd";
 import type { DataNode } from "antd/es/tree";
 import type { ColumnsType } from "antd/es/table";
 import { useShallow } from "zustand/react/shallow";
-import { v4 as uuidv4 } from "uuid";
 import { useForm, Controller } from "react-hook-form";
 
 // constant
-import { addConfigs, dropdownOptions, WINDOW_KEYS } from "@/constant";
+import {
+  addConfigs,
+  dropdownOptions,
+  QUERY_KEY_FILE_MANAGER,
+  WINDOW_KEYS,
+} from "@/constant";
 
 // store
 import { useWindowStore } from "@/stores";
@@ -35,14 +39,11 @@ import {
 } from "@/components";
 
 // types
-import { FileItem, DropdownOption } from "@/types";
+import { FileItem, DropdownOption, FormData } from "@/types";
 
 // helpers
-import { getBasicInfo, getPreviewImageSrc } from "@/helpers";
-
-interface FormData {
-  name: string;
-}
+import { createNewItem, getBasicInfo, getPreviewImageSrc } from "@/helpers";
+import { useQueryClient } from "@tanstack/react-query";
 
 const FilemanagerPage = ({
   onClose,
@@ -55,8 +56,7 @@ const FilemanagerPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const queryClient = useQueryClient();
 
   // state
   const [tableHeight, setTableHeight] = useState<number>(0);
@@ -65,10 +65,15 @@ const FilemanagerPage = ({
   const [selectedItem, setSelectedItem] = useState<FileItem | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [addType, setAddType] = useState<string | null>(null);
+  const [addType, setAddType] = useState<"addFolder" | "addFile" | null>(null);
   const [files, setFiles] = useState<FileItem[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<Key[]>(["root"]);
-  console.log("addType:", addType);
+  const [hasChanged, setHasChanged] = useState(false);
+
+  // refs
+  const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const hasChangedRef = useRef(hasChanged);
 
   // React Hook Form
   const {
@@ -130,6 +135,20 @@ const FilemanagerPage = ({
       }
     };
   }, []);
+
+  // Update refs when state changes
+  useEffect(() => {
+    hasChangedRef.current = hasChanged;
+  }, [hasChanged]);
+
+  // Invalidate queries on unmount if changes occurred
+  useEffect(() => {
+    return () => {
+      if (hasChangedRef.current) {
+        queryClient.invalidateQueries({ queryKey: QUERY_KEY_FILE_MANAGER });
+      }
+    };
+  }, [queryClient]);
 
   const handleMouseDown = () => {
     if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.FILE_MANAGER) {
@@ -237,7 +256,7 @@ const FilemanagerPage = ({
 
     if (config) {
       setAddType(config.type);
-      reset({ name: "New Folder" });
+      reset({ name: config.name });
       setIsAddModalOpen(true);
     } else {
       console.log(`Selected: ${option.label}`);
@@ -257,35 +276,33 @@ const FilemanagerPage = ({
     if (existing) {
       setError("name", {
         type: "manual",
-        message: "Folder name already exists",
+        message: `${
+          addType === "addFolder" ? "Folder" : "File"
+        } name already exists`,
       });
       return;
     }
 
-    const newItem: FileItem = {
-      id: uuidv4(),
-      name: data.name,
-      type: "folder",
-      parentId: selectedFolder,
-      size: null,
-      imageUrl: "",
-    };
+    const newItem = createNewItem(addType, data, selectedFolder);
 
+    // Optimistic update
     setFiles((prev) => [...prev, newItem]);
     setExpandedKeys((prev) => [...new Set([...prev, selectedFolder])]);
 
     // Call API
     addItem(newItem, {
       onError: (error, newItem) => {
-        console.error("Add folder failed:", error);
-
-        // Revert optimistic update
+        console.error(
+          `Add ${addType === "addFolder" ? "folder" : "file"} failed:`,
+          error
+        );
         setFiles((prev) => prev.filter((item) => item.id !== newItem.id));
       },
     });
 
     setIsAddModalOpen(false);
     reset({ name: "" });
+    setHasChanged(true);
   };
 
   // Preview component

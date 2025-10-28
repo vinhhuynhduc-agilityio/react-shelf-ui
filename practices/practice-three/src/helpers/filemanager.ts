@@ -1,20 +1,12 @@
-import { FileItem } from "@/types";
+import { v4 as uuidv4 } from "uuid";
+
+// types
+import { FileItem, FormData } from "@/types";
 
 // Get icon URL based on type or undefined
 export const getPreviewImageSrc = (item: FileItem | null) => {
-  if (!item) {
-    return "/images/folder-placeholder-image.svg";
-  }
-  switch (item.type) {
-    case "code":
-      return "/images/code-placeholder-image.svg";
-    case "folder":
-      return "/images/folder-detail-placeholder.svg";
-    case "audio":
-      return "/images/mp3-placeholder-image.svg";
-    default:
-      return item.imageUrl;
-  }
+  if (!item) return "/images/folder-placeholder-image.svg";
+  return item.imageUrl || "/images/invalid-image.svg";
 };
 
 export const formatSize = (size: number | null) => {
@@ -72,4 +64,80 @@ export const getBasicInfo = (
       value: getLocation(files, selectedFolder, currentItem),
     },
   ];
+};
+
+const extensionMap = {
+  "txt css js html json sql": {
+    type: "code",
+    imageUrl: "/images/blank-white-image.png",
+  },
+  "db php less": {
+    type: "code",
+    imageUrl: "/images/code-placeholder-image.svg",
+  },
+  "doc xls xlsx": {
+    type: "document",
+    imageUrl: "/images/blank-white-image.png",
+  },
+  pdf: { type: "document", imageUrl: "/images/pdf-placeholder-image.svg" },
+  "jpg png jpeg gif svg webp": {
+    type: "image",
+    imageUrl: "/images/file-placeholder-image.svg",
+  },
+  "zip rar tar": {
+    type: "archive",
+    imageUrl: "/images/compressed-placeholder-image.svg",
+  },
+  "mp3 wav wma": {
+    type: "audio",
+    imageUrl: "/images/audio-placeholder-image.svg",
+  },
+};
+
+const mapExtension = (extension: string) => {
+  let type = "file";
+  let imageUrl = "/images/invalid-image.svg";
+
+  for (const [extList, config] of Object.entries(extensionMap)) {
+    if (extList.split(" ").includes(extension)) {
+      type = config.type;
+      imageUrl = config.imageUrl;
+      break;
+    }
+  }
+
+  return { type, imageUrl };
+};
+
+export const createNewItem = (
+  addType: "addFolder" | "addFile" | null,
+  data: FormData,
+  selectedFolder: string
+): FileItem => {
+  const extension = data.name.split(".").pop()?.toLowerCase() || "";
+  const itemCreators: Record<"addFolder" | "addFile", () => FileItem> = {
+    addFolder: () => ({
+      id: uuidv4(),
+      name: data.name,
+      type: "folder",
+      parentId: selectedFolder,
+      size: null,
+      imageUrl: "/images/folder-detail-placeholder.svg",
+    }),
+    addFile: () => {
+      const { type, imageUrl } = mapExtension(extension);
+
+      return {
+        id: uuidv4(),
+        name: data.name,
+        type,
+        parentId: selectedFolder,
+        size: 0,
+        imageUrl,
+      };
+    },
+  };
+  const key: "addFolder" | "addFile" = addType ?? "addFile";
+
+  return itemCreators[key]();
 };

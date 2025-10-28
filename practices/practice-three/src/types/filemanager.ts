@@ -10,5 +10,9 @@ export interface FileItem {
 
 export type AddConfig = Record<
   string,
-  { type: "file" | "folder"; name: string }
+  { type: "addFile" | "addFolder" | null; name: string }
 >;
+
+export interface FormData {
+  name: string;
+}

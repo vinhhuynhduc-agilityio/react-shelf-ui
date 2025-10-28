@@ -8,6 +8,6 @@ export const dropdownOptions: DropdownOption[] = [
 ];
 
 export const addConfigs: AddConfig = {
-  "create-file": { type: "file", name: "New file.txt" },
-  "create-folder": { type: "folder", name: "New folder" },
+  "create-file": { type: "addFile", name: "New file.txt" },
+  "create-folder": { type: "addFolder", name: "New folder" },
 };
