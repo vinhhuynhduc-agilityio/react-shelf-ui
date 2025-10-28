@@ -6,6 +6,3 @@ export const STATUS_TO_COLUMN: { [key: string]: number } = {
   Test: 2,
   Done: 3,
 };
-
-export const QUERY_KEY_BOARD = ["board"];
-export const QUERY_KEY_TASKS = ["tasks"];

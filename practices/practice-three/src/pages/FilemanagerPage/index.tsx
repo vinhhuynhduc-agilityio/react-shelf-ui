@@ -16,7 +16,12 @@ import { v4 as uuidv4 } from "uuid";
 import { useForm, Controller } from "react-hook-form";
 
 // constant
-import { addConfigs, dropdownOptions, WINDOW_KEYS } from "@/constant";
+import {
+  addConfigs,
+  dropdownOptions,
+  QUERY_KEY_FILE_MANAGER,
+  WINDOW_KEYS,
+} from "@/constant";
 
 // store
 import { useWindowStore } from "@/stores";
@@ -39,6 +44,7 @@ import { FileItem, DropdownOption } from "@/types";
 
 // helpers
 import { getBasicInfo, getPreviewImageSrc } from "@/helpers";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface FormData {
   name: string;
@@ -55,8 +61,7 @@ const FilemanagerPage = ({
   onMinimize: () => void;
   zIndex: number;
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const queryClient = useQueryClient();
 
   // state
   const [tableHeight, setTableHeight] = useState<number>(0);
@@ -68,7 +73,14 @@ const FilemanagerPage = ({
   const [addType, setAddType] = useState<string | null>(null);
   const [files, setFiles] = useState<FileItem[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<Key[]>(["root"]);
+  const [hasChanged, setHasChanged] = useState(false);
+
   console.log("addType:", addType);
+
+  // refs
+  const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const hasChangedRef = useRef(hasChanged);
 
   // React Hook Form
   const {
@@ -130,6 +142,20 @@ const FilemanagerPage = ({
       }
     };
   }, []);
+
+  // Update refs when state changes
+  useEffect(() => {
+    hasChangedRef.current = hasChanged;
+  }, [hasChanged]);
+
+  // Invalidate queries on unmount if changes occurred
+  useEffect(() => {
+    return () => {
+      if (hasChangedRef.current) {
+        queryClient.invalidateQueries({ queryKey: QUERY_KEY_FILE_MANAGER });
+      }
+    };
+  }, [queryClient]);
 
   const handleMouseDown = () => {
     if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.FILE_MANAGER) {
@@ -286,6 +312,7 @@ const FilemanagerPage = ({
 
     setIsAddModalOpen(false);
     reset({ name: "" });
+    setHasChanged(true);
   };
 
   // Preview component
