@@ -12,7 +12,6 @@ import { Tree } from "antd";
 import type { DataNode } from "antd/es/tree";
 import type { ColumnsType } from "antd/es/table";
 import { useShallow } from "zustand/react/shallow";
-import { v4 as uuidv4 } from "uuid";
 import { useForm, Controller } from "react-hook-form";
 
 // constant
@@ -40,15 +39,11 @@ import {
 } from "@/components";
 
 // types
-import { FileItem, DropdownOption } from "@/types";
+import { FileItem, DropdownOption, FormData } from "@/types";
 
 // helpers
-import { getBasicInfo, getPreviewImageSrc } from "@/helpers";
+import { createNewItem, getBasicInfo, getPreviewImageSrc } from "@/helpers";
 import { useQueryClient } from "@tanstack/react-query";
-
-interface FormData {
-  name: string;
-}
 
 const FilemanagerPage = ({
   onClose,
@@ -70,12 +65,10 @@ const FilemanagerPage = ({
   const [selectedItem, setSelectedItem] = useState<FileItem | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [addType, setAddType] = useState<string | null>(null);
+  const [addType, setAddType] = useState<"addFolder" | "addFile" | null>(null);
   const [files, setFiles] = useState<FileItem[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<Key[]>(["root"]);
   const [hasChanged, setHasChanged] = useState(false);
-
-  console.log("addType:", addType);
 
   // refs
   const containerRef = useRef<HTMLDivElement>(null);
@@ -263,7 +256,7 @@ const FilemanagerPage = ({
 
     if (config) {
       setAddType(config.type);
-      reset({ name: "New Folder" });
+      reset({ name: config.name });
       setIsAddModalOpen(true);
     } else {
       console.log(`Selected: ${option.label}`);
@@ -283,29 +276,26 @@ const FilemanagerPage = ({
     if (existing) {
       setError("name", {
         type: "manual",
-        message: "Folder name already exists",
+        message: `${
+          addType === "addFolder" ? "Folder" : "File"
+        } name already exists`,
       });
       return;
     }
 
-    const newItem: FileItem = {
-      id: uuidv4(),
-      name: data.name,
-      type: "folder",
-      parentId: selectedFolder,
-      size: null,
-      imageUrl: "",
-    };
+    const newItem = createNewItem(addType, data, selectedFolder);
 
+    // Optimistic update
     setFiles((prev) => [...prev, newItem]);
     setExpandedKeys((prev) => [...new Set([...prev, selectedFolder])]);
 
     // Call API
     addItem(newItem, {
       onError: (error, newItem) => {
-        console.error("Add folder failed:", error);
-
-        // Revert optimistic update
+        console.error(
+          `Add ${addType === "addFolder" ? "folder" : "file"} failed:`,
+          error
+        );
         setFiles((prev) => prev.filter((item) => item.id !== newItem.id));
       },
     });
