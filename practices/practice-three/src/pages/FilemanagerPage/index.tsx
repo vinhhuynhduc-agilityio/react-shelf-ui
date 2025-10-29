@@ -13,6 +13,8 @@ import type { DataNode } from "antd/es/tree";
 import type { ColumnsType } from "antd/es/table";
 import { useShallow } from "zustand/react/shallow";
 import { useForm, Controller } from "react-hook-form";
+import { v4 as uuidv4 } from "uuid";
+import { useQueryClient } from "@tanstack/react-query";
 
 // constant
 import {
@@ -42,8 +44,13 @@ import {
 import { FileItem, DropdownOption, FormData } from "@/types";
 
 // helpers
-import { createNewItem, getBasicInfo, getPreviewImageSrc } from "@/helpers";
-import { useQueryClient } from "@tanstack/react-query";
+import {
+  createNewItem,
+  generateBase64Image,
+  getBasicInfo,
+  getPreviewImageSrc,
+  mapExtension,
+} from "@/helpers";
 
 const FilemanagerPage = ({
   onClose,
@@ -74,6 +81,7 @@ const FilemanagerPage = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const hasChangedRef = useRef(hasChanged);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // React Hook Form
   const {
@@ -252,15 +260,30 @@ const FilemanagerPage = ({
   };
 
   const handleSelect = (option: DropdownOption) => {
-    const config = addConfigs[option.key];
+    const handleAddConfig = () => {
+      const config = addConfigs[option.key];
+      if (config) {
+        setAddType(config.type);
+        reset({ name: config.name });
+        setIsAddModalOpen(true);
+      } else {
+        console.log(`Selected: ${option.label}`);
+      }
+    };
 
-    if (config) {
-      setAddType(config.type);
-      reset({ name: config.name });
-      setIsAddModalOpen(true);
-    } else {
-      console.log(`Selected: ${option.label}`);
-    }
+    const actions: Record<string, () => void> = {
+      "upload-file": () => {
+        fileInputRef.current?.click();
+      },
+      "create-file": handleAddConfig,
+      "create-folder": handleAddConfig,
+      default: () => {
+        console.log(`Selected: ${option.label}`);
+      },
+    };
+
+    const action = actions[option.key] || actions.default;
+    action();
     setIsDropdownOpen(false);
   };
 
@@ -303,6 +326,50 @@ const FilemanagerPage = ({
     setIsAddModalOpen(false);
     reset({ name: "" });
     setHasChanged(true);
+  };
+
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const extension = file.name.split(".").pop()?.toLowerCase() || "";
+    const { type, imageUrl: defaultImage } = mapExtension(extension);
+    const imageUrl = (await generateBase64Image(file)) || defaultImage;
+
+    // Validate duplicate name
+    const existing = files.find(
+      (item) => item.parentId === selectedFolder && item.name === file.name
+    );
+    if (existing) {
+      alert("File name already exists");
+      return;
+    }
+
+    const newItem: FileItem = {
+      id: uuidv4(),
+      name: file.name,
+      size: Math.round(file.size / 1024),
+      type,
+      parentId: selectedFolder,
+      imageUrl,
+    };
+
+    // Optimistic update
+    setFiles((prev) => [...prev, newItem]);
+    setExpandedKeys((prev) => [...new Set([...prev, selectedFolder])]);
+
+    // Call API
+    addItem(newItem, {
+      onError: (error, newItem) => {
+        console.error("Upload failed:", error);
+        setFiles((prev) => prev.filter((item) => item.id !== newItem.id));
+      },
+    });
+
+    setHasChanged(true);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   // Preview component
@@ -546,10 +613,16 @@ const FilemanagerPage = ({
         <div className="flex flex-1 bg-[#EBEDF0]">
           {renderTableNavigation()}
           {renderTableDetail()}
-          {previewMode && renderPreview()}
+          {true && renderPreview()}
         </div>
       </div>
       {renderModal()}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        style={{ display: "none" }}
+      />
     </DraggableWindow>
   );
 };

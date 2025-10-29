@@ -11,4 +11,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"), // Base alias for `src`
     },
   },
+  server: {
+    watch: {
+      ignored: ["**/db.json"], // Ignore changes in db.json
+    },
+  },
 });
