@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import html2canvas from "html2canvas";
 
 // types
 import { FileItem, FormData } from "@/types";
@@ -67,7 +68,7 @@ export const getBasicInfo = (
 };
 
 const extensionMap = {
-  "txt css js html json sql": {
+  "txt css js ts html json sql": {
     type: "code",
     imageUrl: "/images/blank-white-image.png",
   },
@@ -94,7 +95,7 @@ const extensionMap = {
   },
 };
 
-const mapExtension = (extension: string) => {
+export const mapExtension = (extension: string) => {
   let type = "file";
   let imageUrl = "/images/invalid-image.svg";
 
@@ -140,4 +141,48 @@ export const createNewItem = (
   const key: "addFolder" | "addFile" = addType ?? "addFile";
 
   return itemCreators[key]();
+};
+
+export const generateBase64Image = async (file: File): Promise<string> => {
+  const extension = file.name.split(".").pop()?.toLowerCase() || "";
+  const snapshotExtensions = [
+    "doc",
+    "xls",
+    "xlsx",
+    "txt",
+    "js",
+    "ts",
+    "html",
+    "pdf",
+  ];
+  const imageExtensions = ["jpg", "png", "jpeg", "gif", "svg", "webp"];
+
+  if (imageExtensions.includes(extension)) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (snapshotExtensions.includes(extension)) {
+    const content = await file.text();
+    const tempDiv = document.createElement("div");
+    tempDiv.style.width = "500px";
+    tempDiv.style.height = "430px";
+    tempDiv.style.padding = "20px";
+    tempDiv.style.fontFamily = "monospace";
+    tempDiv.style.fontSize = "14px";
+    tempDiv.style.whiteSpace = "pre-wrap";
+    tempDiv.style.overflow = "hidden";
+    tempDiv.textContent = content.substring(0, 1000);
+    document.body.appendChild(tempDiv);
+
+    const canvas = await html2canvas(tempDiv, { scale: 1 });
+    document.body.removeChild(tempDiv);
+    return canvas.toDataURL("image/png");
+  }
+
+  return "";
 };
