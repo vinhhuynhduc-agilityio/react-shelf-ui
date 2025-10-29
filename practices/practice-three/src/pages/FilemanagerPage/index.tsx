@@ -613,7 +613,7 @@ const FilemanagerPage = ({
         <div className="flex flex-1 bg-[#EBEDF0]">
           {renderTableNavigation()}
           {renderTableDetail()}
-          {true && renderPreview()}
+          {previewMode && renderPreview()}
         </div>
       </div>
       {renderModal()}
