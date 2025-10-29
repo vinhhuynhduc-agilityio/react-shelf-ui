@@ -306,7 +306,7 @@ const FilemanagerPage = ({
   };
 
   // Preview component
-  const PreviewPane = () => {
+  const renderPreview = () => {
     const currentItem = selectedItem || null;
     const imageSrc = getPreviewImageSrc(currentItem);
     const hasItem = !!currentItem;
@@ -384,6 +384,145 @@ const FilemanagerPage = ({
     );
   };
 
+  const renderHeader = () => (
+    <div className="flex items-center h-[56px] flex-shrink-0 w-full rounded-[2px] border border-[#DADEE0] text-[#475466] bg-[#FFFFFF] ">
+      <div className="flex flex-1 items-center ml-[12px]">
+        <span className="font-medium mr-4 text-[#475466]">Files</span>
+        <div className="flex-1 max-w-[300px] min-w-[10px] flex items-center h-[32px] relative overflow-hidden">
+          <input
+            name="search"
+            type="text"
+            placeholder="Search files and folders"
+            className="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#94A1B3] text-sm px-2 focus:outline-none w-full h-full"
+            maxLength={26}
+          />
+          <IconButton
+            iconStyles="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
+            buttonStyles="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
+            onClick={() => {}}
+          />
+        </div>
+      </div>
+      <div className="flex items-center space-x-1 mr-[12px]">
+        <IconButton
+          buttonStyles="p-1 flex justify-center items-center w-[60px] h-[38px] bg-[#F4F5F9] hover:bg-[#E4E6F0]"
+          iconStyles="fa-solid fa-eye text-[#1CA1C1] text-sm"
+          onClick={togglePreview}
+        />
+        <IconButton
+          buttonStyles="p-1 flex justify-center items-center w-[40px] h-[38px] bg-[#1CA1C1] hover:bg-[#1992af]"
+          iconStyles="fa-solid fa-bars fa-lg text-[#FFFFFF] text-sm"
+          onClick={() => {}}
+        />
+      </div>
+    </div>
+  );
+
+  const renderTableNavigation = () => (
+    <div className="w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]">
+      <div className="flex items-center justify-center w-full mt-[8px] mb-[8px]">
+        <Button
+          variant="primary"
+          className="w-[calc(100%-32px)]"
+          onClick={handleAddNewItem}
+          ref={buttonRef}
+        >
+          Add New
+        </Button>
+      </div>
+      <Dropdown
+        options={dropdownOptions}
+        onSelect={handleSelect}
+        isOpen={isDropdownOpen}
+        setIsOpen={setIsDropdownOpen}
+        triggerRef={buttonRef}
+      />
+      <Tree
+        treeData={treeData}
+        expandedKeys={expandedKeys}
+        onExpand={setExpandedKeys}
+        onSelect={(keys) => {
+          if (keys.length > 0) {
+            setSelectedFolder(keys[0] as string);
+            setSelectedItem(null);
+          }
+        }}
+        defaultExpandedKeys={["root"]}
+        defaultSelectedKeys={["root"]}
+      />
+    </div>
+  );
+
+  const renderTableDetail = () => {
+    const sortedItems = [...filteredItems].sort((a, b) => {
+      if (a.type === "folder" && b.type !== "folder") return -1;
+      if (a.type !== "folder" && b.type === "folder") return 1;
+      return a.name.localeCompare(b.name);
+    });
+
+    return (
+      <div className="flex-1 bg-[#FFFFFF] mt-[10px] box-content rounded-[2px] border border-[#e0dada] text-[#475466] overflow-auto">
+        <DataTable
+          columns={columns}
+          dataSource={sortedItems}
+          tableHeight={tableHeight}
+          loading={isLoading}
+          onRow={(record) => ({
+            onClick: () => {
+              setSelectedItem(record);
+            },
+            className:
+              selectedItem?.id === record.id ? "ant-table-row-selected" : "",
+          })}
+        />
+      </div>
+    );
+  };
+
+  const renderModal = () => (
+    <Modal
+      isOpen={isAddModalOpen}
+      title="Enter a new name"
+      onClose={() => {
+        setIsAddModalOpen(false);
+        reset({ name: "" });
+      }}
+    >
+      <form
+        onSubmit={handleSubmit(handleAdd)}
+        className="flex flex-col mt-[6px]"
+      >
+        <div className="flex items-center">
+          <Controller
+            name="name"
+            control={control}
+            rules={{ required: "Folder name is required" }}
+            render={({ field }) => (
+              <input
+                {...field}
+                type="text"
+                className="flex-1 border-b border-[#1CA1C1] px-4 py-1 text-[14px] text-[#475466] focus:outline-none mr-4"
+                placeholder="Enter folder name"
+                value={field.value || ""}
+              />
+            )}
+          />
+          <Button
+            variant="primary"
+            type="submit"
+            className="w-[96px] h-[32px]"
+            disabled={!!errors.name}
+          >
+            Add
+          </Button>
+        </div>
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-2">{errors.name.message}</p>
+        )}
+      </form>
+    </Modal>
+  );
+
   return (
     <DraggableWindow
       windowKey={WINDOW_KEYS.FILE_MANAGER}
@@ -401,132 +540,16 @@ const FilemanagerPage = ({
         ref={containerRef}
       >
         {/* Header */}
-        <div className="flex items-center h-[56px] flex-shrink-0 w-full rounded-[2px] border border-[#DADEE0] text-[#475466] bg-[#FFFFFF] ">
-          <div className="flex flex-1 items-center ml-[12px]">
-            <span className="font-medium mr-4 text-[#475466]">Files</span>
-            <div className="flex-1 max-w-[300px] min-w-[10px] flex items-center h-[32px] relative overflow-hidden">
-              <input
-                name="search"
-                type="text"
-                placeholder="Search files and folders"
-                className="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#94A1B3] text-sm px-2 focus:outline-none w-full h-full"
-                maxLength={26}
-              />
-              <IconButton
-                iconStyles="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
-                buttonStyles="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
-                onClick={() => {}}
-              />
-            </div>
-          </div>
-          <div className="flex items-center space-x-1 mr-[12px]">
-            <IconButton
-              buttonStyles="p-1 flex justify-center items-center w-[60px] h-[38px] bg-[#F4F5F9] hover:bg-[#E4E6F0]"
-              iconStyles="fa-solid fa-eye text-[#1CA1C1] text-sm"
-              onClick={togglePreview}
-            />
-            <IconButton
-              buttonStyles="p-1 flex justify-center items-center w-[40px] h-[38px] bg-[#1CA1C1] hover:bg-[#1992af]"
-              iconStyles="fa-solid fa-bars fa-lg text-[#FFFFFF] text-sm"
-              onClick={() => {}}
-            />
-          </div>
-        </div>
+        {renderHeader()}
+
         {/* Body */}
         <div className="flex flex-1 bg-[#EBEDF0]">
-          <div className="w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]">
-            <div className="flex items-center justify-center w-full mt-[8px] mb-[8px]">
-              <Button
-                variant="primary"
-                className="w-[calc(100%-32px)]"
-                onClick={handleAddNewItem}
-                ref={buttonRef}
-              >
-                Add New
-              </Button>
-            </div>
-            <Dropdown
-              options={dropdownOptions}
-              onSelect={handleSelect}
-              isOpen={isDropdownOpen}
-              setIsOpen={setIsDropdownOpen}
-              triggerRef={buttonRef}
-            />
-            <Tree
-              treeData={treeData}
-              expandedKeys={expandedKeys}
-              onExpand={setExpandedKeys}
-              onSelect={(keys) => {
-                if (keys.length > 0) {
-                  setSelectedFolder(keys[0] as string);
-                  setSelectedItem(null);
-                }
-              }}
-              defaultExpandedKeys={["root"]}
-              defaultSelectedKeys={["root"]}
-            />
-          </div>
-          <div className="flex-1 bg-[#FFFFFF] mt-[10px] box-content rounded-[2px] border border-[#e0dada] text-[#475466] overflow-auto">
-            <DataTable
-              columns={columns}
-              dataSource={filteredItems}
-              tableHeight={tableHeight}
-              loading={isLoading}
-              onRow={(record) => ({
-                onClick: () => {
-                  setSelectedItem(record);
-                },
-                className:
-                  selectedItem?.id === record.id
-                    ? "ant-table-row-selected"
-                    : "",
-              })}
-            />
-          </div>
-          {previewMode && <PreviewPane />}
+          {renderTableNavigation()}
+          {renderTableDetail()}
+          {previewMode && renderPreview()}
         </div>
       </div>
-      <Modal
-        isOpen={isAddModalOpen}
-        title="Enter a new name"
-        onClose={() => {
-          setIsAddModalOpen(false);
-          reset({ name: "" });
-        }}
-      >
-        <form
-          onSubmit={handleSubmit(handleAdd)}
-          className="flex flex-col mt-[6px]"
-        >
-          <div className="flex items-center">
-            <Controller
-              name="name"
-              control={control}
-              rules={{ required: "Folder name is required" }}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  className="flex-1 border-b border-[#1CA1C1] px-4 py-1 text-[14px] text-[#475466] focus:outline-none mr-4"
-                  placeholder="Enter folder name"
-                  value={field.value || ""}
-                />
-              )}
-            />
-            <Button
-              variant="primary"
-              type="submit"
-              className="w-[96px] h-[32px]"
-              disabled={!!errors.name}
-            >
-              Add
-            </Button>
-          </div>
-          {errors.name && (
-            <p className="text-red-500 text-sm mt-2">{errors.name.message}</p>
-          )}
-        </form>
-      </Modal>
+      {renderModal()}
     </DraggableWindow>
   );
 };
