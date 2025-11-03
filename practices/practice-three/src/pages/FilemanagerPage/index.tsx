@@ -82,6 +82,7 @@ const FilemanagerPage = ({
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const hasChangedRef = useRef(hasChanged);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const folderInputRef = useRef<HTMLInputElement>(null);
 
   // React Hook Form
   const {
@@ -164,7 +165,7 @@ const FilemanagerPage = ({
     }
   };
 
-  const { mutate: addItem } = useAddFileItem();
+  const { mutate: addItem, mutateAsync: addItemAsync } = useAddFileItem();
 
   const buildTree = useCallback(
     (items: FileItem[], parentId: string | number): DataNode[] => {
@@ -275,6 +276,9 @@ const FilemanagerPage = ({
       "upload-file": () => {
         fileInputRef.current?.click();
       },
+      "upload-folder": () => {
+        folderInputRef.current?.click();
+      },
       "create-file": handleAddConfig,
       "create-folder": handleAddConfig,
       default: () => {
@@ -370,6 +374,140 @@ const FilemanagerPage = ({
 
     setHasChanged(true);
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleFolderUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const fileList = event.target.files;
+    if (!fileList || fileList.length === 0) return;
+
+    const rootName = fileList[0].webkitRelativePath.split("/")[0];
+
+    const existingRoot = files.find(
+      (item) => item.parentId === selectedFolder && item.name === rootName
+    );
+    if (existingRoot) {
+      alert("Folder name already exists");
+      return;
+    }
+
+    const rootClientId = uuidv4();
+    const rootItem: FileItem = {
+      id: rootClientId,
+      name: rootName,
+      type: "folder",
+      parentId: selectedFolder,
+      size: null,
+      imageUrl: "/images/folder-detail-placeholder.svg",
+    };
+
+    setFiles((prev) => [...prev, rootItem]);
+    setExpandedKeys((prev) => [...new Set([...prev, selectedFolder])]);
+
+    let serverRootId: string;
+    try {
+      const data = await addItemAsync(rootItem);
+      serverRootId = data.id;
+    } catch (err) {
+      console.error(`Add root folder failed:`, err);
+      setFiles((prev) => prev.filter((i) => i.id !== rootClientId));
+      return;
+    }
+
+    const parentMap: { [path: string]: string } = { "": serverRootId };
+    const paths = new Set<string>();
+
+    // Get all paths from fileList except root
+    for (const file of Array.from(fileList)) {
+      const parts = file.webkitRelativePath.split("/").slice(0, -1);
+      let currentPath = "";
+      for (const dir of parts) {
+        if (dir === rootName && currentPath === "") continue;
+        currentPath = currentPath ? `${currentPath}/${dir}` : dir;
+        paths.add(currentPath);
+      }
+    }
+
+    const sortedPaths = Array.from(paths).sort(
+      (a, b) => a.split("/").length - b.split("/").length
+    );
+
+    // Add subfolders first to maintain hierarchy
+    for (const path of sortedPaths) {
+      const dirName = path.split("/").pop()!;
+      const parentPath = path.split("/").slice(0, -1).join("/");
+      const parentId = parentMap[parentPath];
+
+      const clientId = uuidv4();
+      const dirItem: FileItem = {
+        id: clientId,
+        name: dirName,
+        type: "folder",
+        parentId,
+        size: null,
+        imageUrl: "/images/folder-detail-placeholder.svg",
+      };
+
+      setFiles((prev) => [...prev, dirItem]);
+
+      try {
+        const data = await addItemAsync(dirItem);
+        const serverDirId = data.id;
+        parentMap[path] = serverDirId;
+      } catch (err) {
+        console.error(`Add subfolder ${dirName} failed:`, err);
+        setFiles((prev) => prev.filter((i) => i.id !== clientId));
+      }
+    }
+
+    // Now add files to their respective folders and subfolders
+    for (const file of Array.from(fileList)) {
+      const parts = file.webkitRelativePath.split("/");
+      const fileName = parts.pop()!;
+      const parentPath = parts.slice(1).join("/");
+      const parentId = parentMap[parentPath] || serverRootId;
+
+      const existing = files.find(
+        (i) => i.parentId === parentId && i.name === fileName
+      );
+      if (existing) continue;
+
+      const extension = fileName.split(".").pop()?.toLowerCase() || "";
+      const { type, imageUrl: defaultImage } = mapExtension(extension);
+
+      let imageUrl: string;
+      try {
+        imageUrl = await generateBase64Image(file);
+      } catch (err) {
+        console.warn(`Base64 failed for ${fileName}, using placeholder`, err);
+        imageUrl = defaultImage;
+      }
+
+      const clientId = uuidv4();
+      const fileItem: FileItem = {
+        id: clientId,
+        name: fileName,
+        size: Math.round(file.size / 1024),
+        type,
+        parentId,
+        imageUrl,
+      };
+
+      setFiles((prev) => [...prev, fileItem]);
+
+      try {
+        await addItemAsync(fileItem);
+      } catch (err) {
+        console.error(`Add file ${fileName} failed:`, err);
+        setFiles((prev) => prev.filter((i) => i.id !== clientId));
+      }
+    }
+
+    setHasChanged(true);
+
+    // Reset inputs for future uploads
+    if (folderInputRef.current) folderInputRef.current.value = "";
   };
 
   // Preview component
@@ -476,11 +614,6 @@ const FilemanagerPage = ({
           iconStyles="fa-solid fa-eye text-[#1CA1C1] text-sm"
           onClick={togglePreview}
         />
-        <IconButton
-          buttonStyles="p-1 flex justify-center items-center w-[40px] h-[38px] bg-[#1CA1C1] hover:bg-[#1992af]"
-          iconStyles="fa-solid fa-bars fa-lg text-[#FFFFFF] text-sm"
-          onClick={() => {}}
-        />
       </div>
     </div>
   );
@@ -528,7 +661,7 @@ const FilemanagerPage = ({
     });
 
     return (
-      <div className="flex-1 bg-[#FFFFFF] mt-[10px] box-content rounded-[2px] border border-[#e0dada] text-[#475466] overflow-auto">
+      <div className="flex-1 bg-[#FFFFFF] mt-[10px] rounded-[2px] border border-[#e0dada] text-[#475466] overflow-auto">
         <DataTable
           columns={columns}
           dataSource={sortedItems}
@@ -621,7 +754,16 @@ const FilemanagerPage = ({
         type="file"
         ref={fileInputRef}
         onChange={handleFileUpload}
-        style={{ display: "none" }}
+        className="hidden"
+      />
+      <input
+        type="file"
+        ref={folderInputRef}
+        onChange={handleFolderUpload}
+        webkitdirectory=""
+        directory=""
+        multiple
+        className="hidden"
       />
     </DraggableWindow>
   );
