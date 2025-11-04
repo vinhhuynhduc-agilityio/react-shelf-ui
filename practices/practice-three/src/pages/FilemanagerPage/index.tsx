@@ -38,6 +38,7 @@ import {
   IconButton,
   Dropdown,
   Modal,
+  Breadcrumb,
 } from "@/components";
 
 // types
@@ -48,6 +49,8 @@ import {
   createNewItem,
   generateBase64Image,
   getBasicInfo,
+  getBreadcrumbPath,
+  getPathIds,
   getPreviewImageSrc,
   mapExtension,
 } from "@/helpers";
@@ -125,8 +128,12 @@ const FilemanagerPage = ({
       if (containerElement) {
         const buttonBarHeight = 70;
         const tableHeaderHeight = 37;
+        const breadcrumbHeight = 42;
+        const totalFixedHeight =
+          buttonBarHeight + tableHeaderHeight + breadcrumbHeight;
         const availableHeight =
-          containerElement.clientHeight - tableHeaderHeight - buttonBarHeight;
+          containerElement.clientHeight - totalFixedHeight;
+
         setTableHeight(Math.max(availableHeight, 100));
       }
     };
@@ -510,6 +517,24 @@ const FilemanagerPage = ({
     if (folderInputRef.current) folderInputRef.current.value = "";
   };
 
+  const breadcrumbPath = useMemo(() => {
+    return selectedFolder
+      ? getBreadcrumbPath(files, selectedFolder)
+      : [{ id: "root", name: "My Files" }];
+  }, [files, selectedFolder]);
+
+  const handleNavigate = useCallback(
+    (folderId: string) => {
+      setSelectedFolder(folderId);
+      setSelectedItem(null);
+
+      // Update expanded keys to show the navigated folder in the tree
+      const pathIds = getPathIds(files, folderId);
+      setExpandedKeys((prev) => [...new Set([...prev, ...pathIds])]);
+    },
+    [files]
+  );
+
   // Preview component
   const renderPreview = () => {
     const currentItem = selectedItem || null;
@@ -641,6 +666,7 @@ const FilemanagerPage = ({
         treeData={treeData}
         expandedKeys={expandedKeys}
         onExpand={setExpandedKeys}
+        selectedKeys={[selectedFolder]}
         onSelect={(keys) => {
           if (keys.length > 0) {
             setSelectedFolder(keys[0] as string);
@@ -648,7 +674,6 @@ const FilemanagerPage = ({
           }
         }}
         defaultExpandedKeys={["root"]}
-        defaultSelectedKeys={["root"]}
       />
     </div>
   );
@@ -661,20 +686,29 @@ const FilemanagerPage = ({
     });
 
     return (
-      <div className="flex-1 bg-[#FFFFFF] mt-[10px] rounded-[2px] border border-[#e0dada] text-[#475466] overflow-auto">
-        <DataTable
-          columns={columns}
-          dataSource={sortedItems}
-          tableHeight={tableHeight}
-          loading={isLoading}
-          onRow={(record) => ({
-            onClick: () => {
-              setSelectedItem(record);
-            },
-            className:
-              selectedItem?.id === record.id ? "ant-table-row-selected" : "",
-          })}
-        />
+      <div className="flex-1 flex flex-col bg-[#FFFFFF] mt-[10px] rounded-[2px] border border-[#e0dada] text-[#475466] overflow-auto">
+        <div className="flex items-center h-[42px] px-3 border-b border-[#DADEE0] bg-[#FFFFFF]">
+          <Breadcrumb
+            path={breadcrumbPath}
+            onNavigate={handleNavigate}
+            currentFolderId={selectedFolder}
+          />
+        </div>
+        <div className="flex-1 overflow-auto">
+          <DataTable
+            columns={columns}
+            dataSource={sortedItems}
+            tableHeight={tableHeight}
+            loading={isLoading}
+            onRow={(record) => ({
+              onClick: () => {
+                setSelectedItem(record);
+              },
+              className:
+                selectedItem?.id === record.id ? "ant-table-row-selected" : "",
+            })}
+          />
+        </div>
       </div>
     );
   };
