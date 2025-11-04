@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import html2canvas from "html2canvas";
 
 // types
-import { FileItem, FormData } from "@/types";
+import { BreadcrumbItem, FileItem, FormData } from "@/types";
 
 // Get icon URL based on type or undefined
 export const getPreviewImageSrc = (item: FileItem | null) => {
@@ -185,4 +185,44 @@ export const generateBase64Image = async (file: File): Promise<string> => {
   }
 
   return "";
+};
+
+export const getBreadcrumbPath = (
+  files: FileItem[],
+  selectedFolder: string
+): BreadcrumbItem[] => {
+  const path: BreadcrumbItem[] = [];
+  let currentId: string | null = selectedFolder;
+
+  while (currentId !== null) {
+    if (currentId === "root") {
+      path.push({ id: "root", name: "My Files" });
+      break;
+    }
+
+    const item = files.find((f) => f.id === currentId && f.type === "folder");
+    if (!item) break;
+
+    path.push({ id: item.id, name: item.name });
+    currentId = item.parentId;
+  }
+
+  return path.reverse();
+};
+
+export const getPathIds = (files: FileItem[], folderId: string): string[] => {
+  const ids: string[] = [];
+  let currentId: string | null = folderId;
+
+  while (currentId !== null) {
+    ids.push(currentId);
+    if (currentId === "root") break;
+
+    const item = files.find((f) => f.id === currentId && f.type === "folder");
+    if (!item) break;
+
+    currentId = item.parentId;
+  }
+
+  return ids.reverse();
 };

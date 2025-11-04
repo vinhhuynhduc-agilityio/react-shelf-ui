@@ -16,3 +16,8 @@ export type AddConfig = Record<
 export interface FormData {
   name: string;
 }
+
+export interface BreadcrumbItem {
+  id: string;
+  name: string;
+}
