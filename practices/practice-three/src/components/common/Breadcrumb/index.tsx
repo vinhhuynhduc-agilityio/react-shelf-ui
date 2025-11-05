@@ -6,15 +6,20 @@ interface BreadcrumbProps {
   path: BreadcrumbItem[];
   onNavigate: (folderId: string) => void;
   currentFolderId: string;
+  breadcrumbStyles?: string;
 }
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({
   path,
   onNavigate,
   currentFolderId,
+  breadcrumbStyles = "",
 }) => {
   return (
-    <nav className="flex items-center space-x-1" aria-label="Breadcrumb">
+    <nav
+      className={`flex items-center space-x-1 ${breadcrumbStyles}`}
+      aria-label="Breadcrumb"
+    >
       {path.map((item, index) => {
         const isLast = item.id === currentFolderId;
         const isClickable = !isLast;
