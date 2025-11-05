@@ -197,6 +197,7 @@ const FilemanagerPage = ({
     []
   );
 
+  // Get all child folder IDs recursively
   const getAllChildFolderIds = useCallback(
     (parentId: string): string[] => {
       const children = files
