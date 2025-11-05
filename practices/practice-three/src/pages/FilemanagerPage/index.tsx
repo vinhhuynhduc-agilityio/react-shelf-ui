@@ -28,7 +28,7 @@ import {
 import { useWindowStore } from "@/stores";
 
 // hook
-import { useAddFileItem, useDebounce, useFilemanagerQuery } from "@/hook";
+import { useAddFileItem, useFilemanagerQuery } from "@/hook";
 
 // components
 import {
@@ -68,7 +68,7 @@ const FilemanagerPage = ({
 }) => {
   const queryClient = useQueryClient();
 
-  // === STATE ===
+  // state
   const [tableHeight, setTableHeight] = useState<number>(0);
   const [selectedFolder, setSelectedFolder] = useState<string>("root");
   const [previewMode, setPreviewMode] = useState<boolean>(false);
@@ -79,11 +79,6 @@ const FilemanagerPage = ({
   const [files, setFiles] = useState<FileItem[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<Key[]>(["root"]);
   const [hasChanged, setHasChanged] = useState(false);
-
-  // Search state
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchMode, setIsSearchMode] = useState(false);
-  const debouncedSearch = useDebounce(searchQuery, 300);
 
   // refs
   const containerRef = useRef<HTMLDivElement>(null);
@@ -197,17 +192,6 @@ const FilemanagerPage = ({
     []
   );
 
-  const getAllChildFolderIds = useCallback(
-    (parentId: string): string[] => {
-      const children = files
-        .filter((f) => f.parentId === parentId && f.type === "folder")
-        .map((f) => f.id);
-
-      return children.flatMap((id) => [id, ...getAllChildFolderIds(id)]);
-    },
-    [files]
-  );
-
   const treeData = useMemo(() => {
     const rootChildren = buildTree(files, "root");
     return [
@@ -225,33 +209,13 @@ const FilemanagerPage = ({
   }, [files, buildTree]);
 
   const filteredItems = useMemo(() => {
-    // In search mode, filter items in the selected folder subtree
-    if (isSearchMode && debouncedSearch.trim()) {
-      const subtreeIds = [
-        selectedFolder,
-        ...getAllChildFolderIds(selectedFolder),
-      ];
-      let items = files
-        .filter((item) => subtreeIds.includes(item.parentId))
-        .map((item) => ({ ...item, key: item.id }));
-
-      const query = debouncedSearch.toLowerCase();
-      items = items.filter((item) => item.name.toLowerCase().includes(query));
-
-      return items;
-    }
-
-    // Normal mode: show items in the selected folder
     return files
       .filter((item) => item.parentId === selectedFolder)
-      .map((item) => ({ ...item, key: item.id }));
-  }, [
-    files,
-    selectedFolder,
-    isSearchMode,
-    debouncedSearch,
-    getAllChildFolderIds,
-  ]);
+      .map((item) => ({
+        ...item,
+        key: item.id,
+      }));
+  }, [files, selectedFolder]);
 
   const columns = useMemo<ColumnsType<FileItem>>(
     () => [
@@ -650,18 +614,6 @@ const FilemanagerPage = ({
     );
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setSearchQuery(newValue);
-    const trimmed = newValue.trim();
-
-    if (trimmed && !isSearchMode) {
-      setIsSearchMode(true);
-    } else if (!trimmed && isSearchMode) {
-      setIsSearchMode(false);
-    }
-  };
-
   const renderHeader = () => (
     <div className="flex items-center h-[56px] flex-shrink-0 w-full rounded-[2px] border border-[#DADEE0] text-[#475466] bg-[#FFFFFF] ">
       <div className="flex flex-1 items-center ml-[12px]">
@@ -671,9 +623,8 @@ const FilemanagerPage = ({
             name="search"
             type="text"
             placeholder="Search files and folders"
-            className="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#475466] text-sm px-2 focus:outline-none w-full h-full"
-            value={searchQuery}
-            onChange={handleSearchChange}
+            className="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#94A1B3] text-sm px-2 focus:outline-none w-full h-full"
+            maxLength={26}
           />
           <IconButton
             iconStyles="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
@@ -693,12 +644,7 @@ const FilemanagerPage = ({
   );
 
   const renderTableNavigation = () => (
-    <div
-      className={clsx(
-        "w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]",
-        isSearchMode && debouncedSearch.trim() && "hidden"
-      )}
-    >
+    <div className="w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]">
       <div className="flex items-center justify-center w-full mt-[8px] mb-[8px]">
         <Button
           variant="primary"
@@ -732,12 +678,6 @@ const FilemanagerPage = ({
     </div>
   );
 
-  // Compute search path for breadcrumb during search mode
-  const searchPath = useMemo(() => {
-    const path = getBreadcrumbPath(files, selectedFolder);
-    return path.map((p) => p.name).join("/");
-  }, [files, selectedFolder]);
-
   const renderTableDetail = () => {
     const sortedItems = [...filteredItems].sort((a, b) => {
       if (a.type === "folder" && b.type !== "folder") return -1;
@@ -746,35 +686,15 @@ const FilemanagerPage = ({
     });
 
     return (
-      <div className="flex-1 flex flex-col mt-[10px] rounded-[2px] border border-[#e0dada] text-[#475466] overflow-hidden">
-        <div className="flex items-center h-[42px] border-b border-[#DADEE0] bg-[#FFFFFF]">
-          {isSearchMode && debouncedSearch.trim() ? (
-            <div className="flex items-center w-full text-md ml-1">
-              <IconButton
-                onClick={() => {
-                  setIsSearchMode(false);
-                  setSearchQuery("");
-                }}
-                iconStyles="fa-solid fa-chevron-left fa-sm text-[#94A1B3]"
-                buttonStyles="p-1 w-[38px] h-[38px] flex justify-center items-center rounded-full hover:bg-[#F4F5F9] mr-1"
-              />
-              <span>Search results in {searchPath}</span>
-            </div>
-          ) : (
-            <Breadcrumb
-              path={breadcrumbPath}
-              onNavigate={handleNavigate}
-              currentFolderId={selectedFolder}
-              breadcrumbStyles="px-3"
-            />
-          )}
+      <div className="flex-1 flex flex-col bg-[#FFFFFF] mt-[10px] rounded-[2px] border border-[#e0dada] text-[#475466] overflow-auto">
+        <div className="flex items-center h-[42px] px-3 border-b border-[#DADEE0] bg-[#FFFFFF]">
+          <Breadcrumb
+            path={breadcrumbPath}
+            onNavigate={handleNavigate}
+            currentFolderId={selectedFolder}
+          />
         </div>
-        <div
-          className={clsx(
-            "flex-1 bg-[#FFFFFF]",
-            !sortedItems.length && "hidden"
-          )}
-        >
+        <div className="flex-1 overflow-auto">
           <DataTable
             columns={columns}
             dataSource={sortedItems}
@@ -783,13 +703,6 @@ const FilemanagerPage = ({
             onRow={(record) => ({
               onClick: () => {
                 setSelectedItem(record);
-              },
-              onDoubleClick: () => {
-                if (record.type === "folder") {
-                  handleNavigate(record.id);
-                  setIsSearchMode(false);
-                  setSearchQuery("");
-                }
               },
               className:
                 selectedItem?.id === record.id ? "ant-table-row-selected" : "",
