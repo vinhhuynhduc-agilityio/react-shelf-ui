@@ -208,6 +208,7 @@ const FilemanagerPage = ({
     [files]
   );
 
+  // Generate tree data
   const treeData = useMemo(() => {
     const rootChildren = buildTree(files, "root");
     return [
