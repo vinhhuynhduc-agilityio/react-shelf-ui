@@ -39,6 +39,7 @@ import {
   Dropdown,
   Modal,
   Breadcrumb,
+  StatusBar,
 } from "@/components";
 
 // types
@@ -70,6 +71,7 @@ const FilemanagerPage = ({
 
   // === STATE ===
   const [tableHeight, setTableHeight] = useState<number>(0);
+  const [treeHeight, setTreeHeight] = useState<number>(0);
   const [selectedFolder, setSelectedFolder] = useState<string>("root");
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<FileItem | null>(null);
@@ -79,6 +81,11 @@ const FilemanagerPage = ({
   const [files, setFiles] = useState<FileItem[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<Key[]>(["root"]);
   const [hasChanged, setHasChanged] = useState(false);
+  const [isUploadingFolder, setIsUploadingFolder] = useState(false);
+  const [statusBar, setStatusBar] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
@@ -177,7 +184,11 @@ const FilemanagerPage = ({
     }
   };
 
-  const { mutate: addItem, mutateAsync: addItemAsync } = useAddFileItem();
+  const {
+    mutate: addItem,
+    mutateAsync: addItemAsync,
+    isPending: isAdding,
+  } = useAddFileItem();
 
   const buildTree = useCallback(
     (items: FileItem[], parentId: string | number): DataNode[] => {
@@ -267,7 +278,7 @@ const FilemanagerPage = ({
                 record.type === "folder"
                   ? "fa-folder text-[#1f88dd]"
                   : "fa-file text-[#b3cae1]"
-              } fa-lg mr-[10px]`}
+              } fa-lg mr-[10px] ml-[5px]`}
             ></i>
             {text}
           </span>
@@ -311,8 +322,6 @@ const FilemanagerPage = ({
         setAddType(config.type);
         reset({ name: config.name });
         setIsAddModalOpen(true);
-      } else {
-        console.log(`Selected: ${option.label}`);
       }
     };
 
@@ -362,12 +371,19 @@ const FilemanagerPage = ({
 
     // Call API
     addItem(newItem, {
-      onError: (error, newItem) => {
-        console.error(
-          `Add ${addType === "addFolder" ? "folder" : "file"} failed:`,
-          error
-        );
-        setFiles((prev) => prev.filter((item) => item.id !== newItem.id));
+      onSuccess: () => {
+        const typeText = addType === "addFolder" ? "Folder" : "File";
+        setStatusBar({
+          message: `${typeText} created successfully`,
+          type: "success",
+        });
+      },
+      onError: () => {
+        setFiles((prev) => prev.filter((f) => f.id !== newItem.id));
+        setStatusBar({
+          message: "Failed to create item",
+          type: "error",
+        });
       },
     });
 
@@ -391,7 +407,7 @@ const FilemanagerPage = ({
       (item) => item.parentId === selectedFolder && item.name === file.name
     );
     if (existing) {
-      alert("File name already exists");
+      setStatusBar({ message: "File name already exists", type: "error" });
       return;
     }
 
@@ -408,11 +424,16 @@ const FilemanagerPage = ({
     setFiles((prev) => [...prev, newItem]);
     setExpandedKeys((prev) => [...new Set([...prev, selectedFolder])]);
 
-    // Call API
     addItem(newItem, {
-      onError: (error, newItem) => {
-        console.error("Upload failed:", error);
-        setFiles((prev) => prev.filter((item) => item.id !== newItem.id));
+      onSuccess: () => {
+        setStatusBar({
+          message: "File uploaded successfully",
+          type: "success",
+        });
+      },
+      onError: () => {
+        setFiles((prev) => prev.filter((f) => f.id !== newItem.id));
+        setStatusBar({ message: "Upload failed", type: "error" });
       },
     });
 
@@ -426,132 +447,140 @@ const FilemanagerPage = ({
     const fileList = event.target.files;
     if (!fileList || fileList.length === 0) return;
 
-    const rootName = fileList[0].webkitRelativePath.split("/")[0];
+    setIsUploadingFolder(true);
 
-    const existingRoot = files.find(
-      (item) => item.parentId === selectedFolder && item.name === rootName
-    );
-    if (existingRoot) {
-      alert("Folder name already exists");
-      return;
-    }
-
-    const rootClientId = uuidv4();
-    const rootItem: FileItem = {
-      id: rootClientId,
-      name: rootName,
-      type: "folder",
-      parentId: selectedFolder,
-      size: null,
-      imageUrl: "/images/folder-detail-placeholder.svg",
-    };
-
-    setFiles((prev) => [...prev, rootItem]);
-    setExpandedKeys((prev) => [...new Set([...prev, selectedFolder])]);
-
-    let serverRootId: string;
     try {
-      const data = await addItemAsync(rootItem);
-      serverRootId = data.id;
-    } catch (err) {
-      console.error(`Add root folder failed:`, err);
-      setFiles((prev) => prev.filter((i) => i.id !== rootClientId));
-      return;
-    }
-
-    const parentMap: { [path: string]: string } = { "": serverRootId };
-    const paths = new Set<string>();
-
-    // Get all paths from fileList except root
-    for (const file of Array.from(fileList)) {
-      const parts = file.webkitRelativePath.split("/").slice(0, -1);
-      let currentPath = "";
-      for (const dir of parts) {
-        if (dir === rootName && currentPath === "") continue;
-        currentPath = currentPath ? `${currentPath}/${dir}` : dir;
-        paths.add(currentPath);
+      const rootName = fileList[0].webkitRelativePath.split("/")[0];
+      const existingRoot = files.find(
+        (i) => i.parentId === selectedFolder && i.name === rootName
+      );
+      if (existingRoot) {
+        setStatusBar({ message: "Folder name already exists", type: "error" });
+        return;
       }
-    }
 
-    const sortedPaths = Array.from(paths).sort(
-      (a, b) => a.split("/").length - b.split("/").length
-    );
-
-    // Add subfolders first to maintain hierarchy
-    for (const path of sortedPaths) {
-      const dirName = path.split("/").pop()!;
-      const parentPath = path.split("/").slice(0, -1).join("/");
-      const parentId = parentMap[parentPath];
-
-      const clientId = uuidv4();
-      const dirItem: FileItem = {
-        id: clientId,
-        name: dirName,
+      // create root folder first
+      const rootClientId = uuidv4();
+      const rootItem: FileItem = {
+        id: rootClientId,
+        name: rootName,
         type: "folder",
-        parentId,
+        parentId: selectedFolder,
         size: null,
         imageUrl: "/images/folder-detail-placeholder.svg",
       };
 
-      setFiles((prev) => [...prev, dirItem]);
+      setFiles((prev) => [...prev, rootItem]);
 
+      let serverRootId: string;
       try {
-        const data = await addItemAsync(dirItem);
-        const serverDirId = data.id;
-        parentMap[path] = serverDirId;
-      } catch (err) {
-        console.error(`Add subfolder ${dirName} failed:`, err);
-        setFiles((prev) => prev.filter((i) => i.id !== clientId));
+        const data = await addItemAsync(rootItem);
+        serverRootId = data.id;
+      } catch {
+        setFiles((prev) => prev.filter((i) => i.id !== rootClientId));
+        setStatusBar({
+          message: "Failed to create root folder",
+          type: "error",
+        });
+        return;
       }
-    }
 
-    // Now add files to their respective folders and subfolders
-    for (const file of Array.from(fileList)) {
-      const parts = file.webkitRelativePath.split("/");
-      const fileName = parts.pop()!;
-      const parentPath = parts.slice(1).join("/");
-      const parentId = parentMap[parentPath] || serverRootId;
+      const parentMap: { [path: string]: string } = { "": serverRootId };
+      const paths = new Set<string>();
 
-      const existing = files.find(
-        (i) => i.parentId === parentId && i.name === fileName
+      // Get all paths from fileList except root
+      for (const file of Array.from(fileList)) {
+        const parts = file.webkitRelativePath.split("/").slice(0, -1);
+        let currentPath = "";
+        for (const dir of parts) {
+          if (dir === rootName && currentPath === "") continue;
+          currentPath = currentPath ? `${currentPath}/${dir}` : dir;
+          paths.add(currentPath);
+        }
+      }
+
+      const sortedPaths = Array.from(paths).sort(
+        (a, b) => a.split("/").length - b.split("/").length
       );
-      if (existing) continue;
 
-      const extension = fileName.split(".").pop()?.toLowerCase() || "";
-      const { type, imageUrl: defaultImage } = mapExtension(extension);
+      // Add subfolders first to maintain hierarchy
+      for (const path of sortedPaths) {
+        const dirName = path.split("/").pop()!;
+        const parentPath = path.split("/").slice(0, -1).join("/");
+        const parentId = parentMap[parentPath];
 
-      let imageUrl: string;
-      try {
-        imageUrl = await generateBase64Image(file);
-      } catch (err) {
-        console.warn(`Base64 failed for ${fileName}, using placeholder`, err);
-        imageUrl = defaultImage;
+        const clientId = uuidv4();
+        const dirItem: FileItem = {
+          id: clientId,
+          name: dirName,
+          type: "folder",
+          parentId,
+          size: null,
+          imageUrl: "/images/folder-detail-placeholder.svg",
+        };
+
+        setFiles((prev) => [...prev, dirItem]);
+
+        try {
+          const data = await addItemAsync(dirItem);
+          parentMap[path] = data.id;
+        } catch {
+          setFiles((prev) => prev.filter((i) => i.id !== clientId));
+          setStatusBar({
+            message: "Failed to create subfolder",
+            type: "error",
+          });
+          return;
+        }
       }
 
-      const clientId = uuidv4();
-      const fileItem: FileItem = {
-        id: clientId,
-        name: fileName,
-        size: Math.round(file.size / 1024),
-        type,
-        parentId,
-        imageUrl,
-      };
+      // Now add files to their respective folders and subfolders
+      for (const file of Array.from(fileList)) {
+        const parts = file.webkitRelativePath.split("/");
+        const fileName = parts.pop()!;
+        const parentPath = parts.slice(1).join("/");
+        const parentId = parentMap[parentPath] || serverRootId;
 
-      setFiles((prev) => [...prev, fileItem]);
+        const existing = files.find(
+          (i) => i.parentId === parentId && i.name === fileName
+        );
+        if (existing) continue;
 
-      try {
-        await addItemAsync(fileItem);
-      } catch (err) {
-        console.error(`Add file ${fileName} failed:`, err);
-        setFiles((prev) => prev.filter((i) => i.id !== clientId));
+        const extension = fileName.split(".").pop()?.toLowerCase() || "";
+        const { type, imageUrl: defaultImage } = mapExtension(extension);
+        const imageUrl = await generateBase64Image(file).catch(
+          () => defaultImage
+        );
+
+        const clientId = uuidv4();
+        const fileItem: FileItem = {
+          id: clientId,
+          name: fileName,
+          size: Math.round(file.size / 1024),
+          type,
+          parentId,
+          imageUrl,
+        };
+
+        setFiles((prev) => [...prev, fileItem]);
+
+        try {
+          await addItemAsync(fileItem);
+        } catch {
+          setFiles((prev) => prev.filter((i) => i.id !== clientId));
+          setStatusBar({ message: "Failed to upload file", type: "error" });
+          return;
+        }
       }
+
+      setStatusBar({
+        message: "Folder uploaded successfully",
+        type: "success",
+      });
+    } finally {
+      setIsUploadingFolder(false);
+      if (folderInputRef.current) folderInputRef.current.value = "";
     }
-
-    setHasChanged(true);
-
-    // Reset inputs for future uploads
-    if (folderInputRef.current) folderInputRef.current.value = "";
   };
 
   const breadcrumbPath = useMemo(() => {
@@ -694,44 +723,44 @@ const FilemanagerPage = ({
   );
 
   const renderTableNavigation = () => (
-    <div
-      className={clsx(
-        "w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]",
-        isSearchMode && debouncedSearch.trim() && "hidden"
-      )}
-    >
-      <div className="flex items-center justify-center w-full mt-[8px] mb-[8px]">
-        <Button
-          variant="primary"
-          className="w-[calc(100%-32px)]"
-          onClick={handleAddNewItem}
-          ref={buttonRef}
+      <div
+        className={clsx(
+          "w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]",
+          isSearchMode && debouncedSearch.trim() && "hidden"
+        )}
+      >
+        <div className="flex items-center justify-center w-full mt-[8px] mb-[8px]">
+          <Button
+            variant="primary"
+            className="w-[calc(100%-32px)]"
+            onClick={handleAddNewItem}
+            ref={buttonRef}
         >
           Add New
-        </Button>
+          </Button>
+        </div>
+        <Dropdown
+          options={dropdownOptions}
+          onSelect={handleSelect}
+          isOpen={isDropdownOpen}
+          setIsOpen={setIsDropdownOpen}
+          triggerRef={buttonRef}
+        />
+          <Tree
+            treeData={treeData}
+            expandedKeys={expandedKeys}
+            onExpand={setExpandedKeys}
+            selectedKeys={[selectedFolder]}
+            onSelect={(keys) => {
+              if (keys.length > 0) {
+                setSelectedFolder(keys[0] as string);
+                setSelectedItem(null);
+              }
+            }}
+            defaultExpandedKeys={["root"]}
+      />
       </div>
-      <Dropdown
-        options={dropdownOptions}
-        onSelect={handleSelect}
-        isOpen={isDropdownOpen}
-        setIsOpen={setIsDropdownOpen}
-        triggerRef={buttonRef}
-      />
-      <Tree
-        treeData={treeData}
-        expandedKeys={expandedKeys}
-        onExpand={setExpandedKeys}
-        selectedKeys={[selectedFolder]}
-        onSelect={(keys) => {
-          if (keys.length > 0) {
-            setSelectedFolder(keys[0] as string);
-            setSelectedItem(null);
-          }
-        }}
-        defaultExpandedKeys={["root"]}
-      />
-    </div>
-  );
+    );
 
   // Compute search path for breadcrumb during search mode
   const searchPath = useMemo(() => {
