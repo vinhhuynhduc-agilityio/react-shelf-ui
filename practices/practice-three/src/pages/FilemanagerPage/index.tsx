@@ -141,12 +141,15 @@ const FilemanagerPage = ({
         const buttonBarHeight = 70;
         const tableHeaderHeight = 37;
         const breadcrumbHeight = 42;
+        const buttonAddNewHeight = 48;
         const totalFixedHeight =
           buttonBarHeight + tableHeaderHeight + breadcrumbHeight;
-        const availableHeight =
-          containerElement.clientHeight - totalFixedHeight;
+        const tableHight = containerElement.clientHeight - totalFixedHeight;
+        const treeHight =
+          containerElement.clientHeight - buttonAddNewHeight - buttonBarHeight;
 
-        setTableHeight(Math.max(availableHeight, 100));
+        setTableHeight(Math.max(tableHight, 100));
+        setTreeHeight(Math.max(treeHight, 100));
       }
     };
 
@@ -722,21 +725,31 @@ const FilemanagerPage = ({
     </div>
   );
 
-  const renderTableNavigation = () => (
+  const renderTableNavigation = () => {
+    return (
       <div
         className={clsx(
           "w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]",
           isSearchMode && debouncedSearch.trim() && "hidden"
         )}
       >
+        {/* Nút + Dropdown */}
         <div className="flex items-center justify-center w-full mt-[8px] mb-[8px]">
           <Button
             variant="primary"
             className="w-[calc(100%-32px)]"
             onClick={handleAddNewItem}
             ref={buttonRef}
-        >
-          Add New
+            disabled={isAdding || isUploadingFolder}
+          >
+            {isAdding || isUploadingFolder ? (
+              <>
+                <i className="fa-solid fa-spinner fa-spin mr-2"></i>
+                {isUploadingFolder ? "Uploading folder..." : "Creating..."}
+              </>
+            ) : (
+              "Add New"
+            )}
           </Button>
         </div>
         <Dropdown
@@ -746,6 +759,7 @@ const FilemanagerPage = ({
           setIsOpen={setIsDropdownOpen}
           triggerRef={buttonRef}
         />
+        <div className="relative flex-1">
           <Tree
             treeData={treeData}
             expandedKeys={expandedKeys}
@@ -758,9 +772,23 @@ const FilemanagerPage = ({
               }
             }}
             defaultExpandedKeys={["root"]}
-      />
+            height={treeHeight}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "visible",
+            }}
+          />
+          <div className="absolute bottom-0 left-0 right-0">
+            <StatusBar
+              message={statusBar?.message ?? null}
+              type={statusBar?.type ?? "success"}
+              onClear={() => setStatusBar(null)}
+            />
+          </div>
+        </div>
       </div>
     );
+  };
 
   // Compute search path for breadcrumb during search mode
   const searchPath = useMemo(() => {
