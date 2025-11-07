@@ -56,6 +56,9 @@ import {
   mapExtension,
 } from "@/helpers";
 
+// services
+import { saveAllFileFileManager } from "@/services";
+
 const FilemanagerPage = ({
   onClose,
   onMaximize,
@@ -537,6 +540,8 @@ const FilemanagerPage = ({
         }
       }
 
+      const listFile: FileItem[] = [];
+
       // Now add files to their respective folders and subfolders
       for (const file of Array.from(fileList)) {
         const parts = file.webkitRelativePath.split("/");
@@ -565,15 +570,12 @@ const FilemanagerPage = ({
           imageUrl,
         };
 
-        setFiles((prev) => [...prev, fileItem]);
+        listFile.push(fileItem);
+      }
+      setFiles((prev) => [...prev, ...listFile]);
 
-        try {
-          await addItemAsync(fileItem);
-        } catch {
-          setFiles((prev) => prev.filter((i) => i.id !== clientId));
-          setStatusBar({ message: "Failed to upload file", type: "error" });
-          return;
-        }
+      if (listFile.length > 0) {
+        await saveAllFileFileManager({ listFile, addItem, setFiles });
       }
 
       setStatusBar({
