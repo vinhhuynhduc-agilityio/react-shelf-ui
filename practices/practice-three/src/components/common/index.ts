@@ -9,3 +9,4 @@ export { default as MultiSelect } from "./MultiSelect";
 export { default as SingleSelect } from "./SingleSelect";
 export { default as Dropdown } from "./Dropdown";
 export { default as Breadcrumb } from "./Breadcrumb";
+export { default as StatusBar } from "./StatusBar";
