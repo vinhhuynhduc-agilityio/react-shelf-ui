@@ -8,10 +8,12 @@ import IconButton from "@/components/IconButton";
 interface ModalProps {
   isOpen: boolean;
   title: string;
+  titleAlign?: "left" | "center" | "right";
   onClose: () => void;
   children: ReactNode;
   className?: string;
   headerHeight?: number;
+  hideCloseButton?: boolean;
 }
 
 const ModalContent = ({
@@ -19,8 +21,10 @@ const ModalContent = ({
   title,
   onClose,
   children,
-  className = "",
+  className = "w-[364px]",
   headerHeight = 38,
+  titleAlign = "left",
+  hideCloseButton = false,
 }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -34,24 +38,34 @@ const ModalContent = ({
       <div
         ref={modalRef}
         className={clsx(
-          "relative overflow-hidden max-w-md w-full bg-[#FFFFFF] shadow-lg",
+          "relative overflow-hidden bg-[#FFFFFF] shadow-lg",
           className
         )}
       >
         {/* Header */}
         <div
           className={clsx(
-            "flex justify-between items-center ml-[17px] mt-[8px] mr-[20px]",
-            `h-[${headerHeight}px]`
+            "flex items-center px-[17px]",
+            hideCloseButton && "shadow-[inset_0_4px_0_0_#1CA1C1]"
           )}
+          style={{ height: headerHeight }}
         >
-          <h2 className="text-[#475466] font-medium text-[16px] truncate">
+          <h2
+            className={clsx(
+              "flex-1 text-[#475466] font-medium text-[16px] truncate",
+              titleAlign === "center" && "text-center",
+              titleAlign === "right" && "text-right"
+            )}
+          >
             {title}
           </h2>
-          <IconButton
-            onClick={onClose}
-            iconStyles="fa-solid fa-x fa-xs text-[#94A1B3] hover:text-[#1CA1C1] text-lg leading-none px-3 py-4 rounded-full"
-          />
+
+          {!hideCloseButton && (
+            <IconButton
+              onClick={onClose}
+              iconStyles="fa-solid fa-x fa-xs text-[#94A1B3] hover:text-[#1CA1C1] text-lg leading-none px-3 py-4 rounded-full"
+            />
+          )}
         </div>
 
         {/* Body */}

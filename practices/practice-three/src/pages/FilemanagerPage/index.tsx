@@ -40,10 +40,11 @@ import {
   Modal,
   Breadcrumb,
   StatusBar,
+  ContextMenu,
 } from "@/components";
 
 // types
-import { FileItem, DropdownOption, FormData } from "@/types";
+import { FileItem, DropdownOption, FormData, ContextMenuOption } from "@/types";
 
 // helpers
 import {
@@ -79,7 +80,6 @@ const FilemanagerPage = ({
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<FileItem | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [addType, setAddType] = useState<"addFolder" | "addFile" | null>(null);
   const [files, setFiles] = useState<FileItem[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<Key[]>(["root"]);
@@ -89,6 +89,21 @@ const FilemanagerPage = ({
     message: string;
     type: "success" | "error";
   } | null>(null);
+  const [contextMenu, setContextMenu] = useState<{
+    visible: boolean;
+    x: number;
+    y: number;
+    item: FileItem | null;
+  } | null>(null);
+
+  // modal state
+  const [showNameInputDialog, setShowNameInputDialog] = useState(false);
+  const [nameInputMode, setNameInputMode] = useState<"add" | "rename">("add");
+  const [nameInputType, setNameInputType] = useState<"addFolder" | "addFile">();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [pendingDeleteItem, setPendingDeleteItem] = useState<FileItem | null>(
+    null
+  );
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
@@ -321,37 +336,47 @@ const FilemanagerPage = ({
     setPreviewMode(!previewMode);
   };
 
+  const openNameInputDialog = (
+    mode: "add" | "rename",
+    defaultName = "",
+    type?: "addFolder" | "addFile"
+  ) => {
+    if (type) setAddType(type);
+
+    setNameInputMode(mode);
+    setNameInputType(type);
+    reset({ name: defaultName });
+    setShowNameInputDialog(true);
+  };
+
   const handleSelect = (option: DropdownOption) => {
     const handleAddConfig = () => {
       const config = addConfigs[option.key];
       if (config) {
-        setAddType(config.type);
-        reset({ name: config.name });
-        setIsAddModalOpen(true);
+        openNameInputDialog("add", config.name, config.type ?? undefined);
       }
     };
 
     const actions: Record<string, () => void> = {
-      "upload-file": () => {
-        fileInputRef.current?.click();
-      },
-      "upload-folder": () => {
-        folderInputRef.current?.click();
-      },
+      "upload-file": () => fileInputRef.current?.click(),
+      "upload-folder": () => folderInputRef.current?.click(),
       "create-file": handleAddConfig,
       "create-folder": handleAddConfig,
-      default: () => {
-        console.log(`Selected: ${option.label}`);
-      },
     };
 
-    const action = actions[option.key] || actions.default;
+    const action = actions[option.key] || (() => {});
     action();
     setIsDropdownOpen(false);
   };
 
   const handleAddNewItem = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleOpenDelete = (item: FileItem) => {
+    setPendingDeleteItem(item);
+    setIsDeleteModalOpen(true);
+    setContextMenu(null);
   };
 
   const handleAdd = (data: FormData) => {
@@ -393,7 +418,47 @@ const FilemanagerPage = ({
       },
     });
 
-    setIsAddModalOpen(false);
+    setShowNameInputDialog(false);
+    setNameInputType(undefined);
+    reset({ name: "" });
+    setHasChanged(true);
+  };
+
+  const handleRename = (data: FormData) => {
+    if (!selectedItem) return;
+
+    const item = selectedItem;
+    const newName = data.name.trim();
+
+    if (newName === selectedItem.name) {
+      setShowNameInputDialog(false);
+      return;
+    }
+
+    const duplicate = files.find(
+      (f) =>
+        f.id !== item.id && f.parentId === item.parentId && f.name === newName
+    );
+
+    if (duplicate) {
+      setError("name", {
+        type: "manual",
+        message: `${
+          item.type === "folder" ? "Folder" : "File"
+        } name already exists`,
+      });
+      return;
+    }
+
+    // Optimistic update
+    setFiles((prev) =>
+      prev.map((f) => (f.id === item.id ? { ...f, name: newName } : f))
+    );
+
+    // TODO: Call API rename
+    console.log("RENAME API CALL:", { id: item.id, newName });
+
+    setShowNameInputDialog(false);
     reset({ name: "" });
     setHasChanged(true);
   };
@@ -605,6 +670,23 @@ const FilemanagerPage = ({
     },
     [files]
   );
+
+  const handleConfirmDelete = () => {
+    if (!pendingDeleteItem) return;
+
+    // Optimistic delete
+    setFiles((prev) => prev.filter((f) => f.id !== pendingDeleteItem.id));
+
+    // TODO: Call API delete
+    console.log("DELETE API CALL:", { id: pendingDeleteItem.id });
+
+    setStatusBar({ message: "Item deleted", type: "success" });
+    setHasChanged(true);
+
+    setIsDeleteModalOpen(false);
+    setPendingDeleteItem(null);
+    setSelectedItem(null);
+  };
 
   // Preview component
   const renderPreview = () => {
@@ -851,6 +933,16 @@ const FilemanagerPage = ({
                   setSearchQuery("");
                 }
               },
+              onContextMenu: (e: React.MouseEvent) => {
+                e.preventDefault();
+                setContextMenu({
+                  visible: true,
+                  x: e.pageX,
+                  y: e.pageY,
+                  item: record,
+                });
+                setSelectedItem(record); // highlight row
+              },
               className:
                 selectedItem?.id === record.id ? "ant-table-row-selected" : "",
             })}
@@ -860,49 +952,156 @@ const FilemanagerPage = ({
     );
   };
 
-  const renderModal = () => (
-    <Modal
-      isOpen={isAddModalOpen}
-      title="Enter a new name"
-      onClose={() => {
-        setIsAddModalOpen(false);
-        reset({ name: "" });
-      }}
-    >
-      <form
-        onSubmit={handleSubmit(handleAdd)}
-        className="flex flex-col mt-[6px]"
+  const renderNameInputDialog = () => {
+    if (!showNameInputDialog) return null;
+
+    const isAdd = nameInputMode === "add";
+    const placeholder = isAdd
+      ? nameInputType === "addFolder"
+        ? "Enter folder name"
+        : "Enter file name"
+      : "Enter new name";
+
+    return (
+      <Modal
+        isOpen={showNameInputDialog}
+        title={"Enter a new name"}
+        onClose={() => {
+          setShowNameInputDialog(false);
+          setNameInputMode("add");
+          setAddType(null);
+          reset();
+        }}
       >
-        <div className="flex items-center">
-          <Controller
-            name="name"
-            control={control}
-            rules={{ required: "Folder name is required" }}
-            render={({ field }) => (
-              <input
-                {...field}
-                type="text"
-                className="flex-1 border-b border-[#1CA1C1] px-4 py-1 text-[14px] text-[#475466] focus:outline-none mr-4"
-                placeholder="Enter folder name"
-                value={field.value || ""}
-              />
-            )}
-          />
+        <form
+          onSubmit={handleSubmit(isAdd ? handleAdd : handleRename)}
+          className="flex flex-col mt-[6px]"
+        >
+          <div className="flex items-center">
+            <Controller
+              name="name"
+              control={control}
+              rules={{ required: "Name is required" }}
+              render={({ field }) => (
+                <input
+                  {...field}
+                  type="text"
+                  className="flex-1 border-b border-[#1CA1C1] px-4 py-1 text-[14px] text-[#475466] focus:outline-none mr-4"
+                  placeholder={placeholder}
+                  autoFocus
+                />
+              )}
+            />
+            <Button
+              variant="primary"
+              type="submit"
+              className="w-[96px] h-[32px]"
+              disabled={!!errors.name}
+            >
+              {isAdd ? "Add" : "Rename"}
+            </Button>
+          </div>
+          {errors.name && (
+            <p className="text-red-500 text-sm mt-2">{errors.name.message}</p>
+          )}
+        </form>
+      </Modal>
+    );
+  };
+
+  const renderDeleteModal = () => (
+    <Modal
+      isOpen={isDeleteModalOpen}
+      title="Delete files"
+      titleAlign="center"
+      hideCloseButton
+      onClose={() => {
+        setIsDeleteModalOpen(false);
+        setPendingDeleteItem(null);
+      }}
+      className="w-[252px]"
+    >
+      <div className="flex flex-col space-y-2">
+        <p className="text-sm text-[#475466]">
+          Are you sure you want to delete this item:
+        </p>
+        <div className="flex items-center space-x-2">
+          <span className="font-medium text-[#475466]">
+            ●&nbsp; {pendingDeleteItem?.name}
+          </span>
+        </div>
+        <div className="flex justify-between space-x-2">
+          <Button
+            variant="success"
+            onClick={() => {
+              setIsDeleteModalOpen(false);
+              setPendingDeleteItem(null);
+            }}
+            className="w-[100px] h-[30px] px-4"
+          >
+            Cancel
+          </Button>
           <Button
             variant="primary"
-            type="submit"
-            className="w-[96px] h-[32px]"
-            disabled={!!errors.name}
+            onClick={handleConfirmDelete}
+            className="w-[100px] h-[30px] px-4"
           >
-            Add
+            OK
           </Button>
         </div>
-        {errors.name && (
-          <p className="text-red-500 text-sm mt-2">{errors.name.message}</p>
-        )}
-      </form>
+      </div>
     </Modal>
   );
+
+  const renderUploadInputs = () => (
+    <>
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        className="hidden"
+      />
+      <input
+        type="file"
+        ref={folderInputRef}
+        onChange={handleFolderUpload}
+        webkitdirectory=""
+        directory=""
+        multiple
+        className="hidden"
+      />
+    </>
+  );
+
+  const renderContextMenu = () => {
+    if (!contextMenu?.visible || !contextMenu.item) return null;
+
+    const item = contextMenu.item;
+
+    const options: ContextMenuOption[] = [
+      {
+        label: "Rename",
+        icon: "fa-solid fa-pencil",
+        onClick: () => openNameInputDialog("rename", item.name),
+      },
+      {
+        label: "Delete",
+        icon: "fa-solid fa-trash",
+        danger: true,
+        onClick: () => handleOpenDelete(item),
+      },
+    ];
+
+    return (
+      <ContextMenu
+        visible={true}
+        x={contextMenu!.x}
+        y={contextMenu!.y}
+        options={options}
+        onClose={() => setContextMenu(null)}
+      />
+    );
+  };
 
   return (
     <DraggableWindow
@@ -930,22 +1129,12 @@ const FilemanagerPage = ({
           {previewMode && renderPreview()}
         </div>
       </div>
-      {renderModal()}
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileUpload}
-        className="hidden"
-      />
-      <input
-        type="file"
-        ref={folderInputRef}
-        onChange={handleFolderUpload}
-        webkitdirectory=""
-        directory=""
-        multiple
-        className="hidden"
-      />
+
+      {/* render modals */}
+      {renderNameInputDialog()}
+      {renderDeleteModal()}
+      {renderContextMenu()}
+      {renderUploadInputs()}
     </DraggableWindow>
   );
 };
