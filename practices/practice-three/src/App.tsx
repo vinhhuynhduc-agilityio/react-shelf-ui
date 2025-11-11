@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import GridLayout, { Layout } from "react-grid-layout";
 import { useShallow } from "zustand/react/shallow";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -62,6 +62,19 @@ const App = () => {
       setZIndexOrder: state.setZIndexOrder,
     }))
   );
+
+  useEffect(() => {
+    if (!isSearchOpen) return;
+
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsSearchOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [isSearchOpen]);
 
   useLayoutEffect(() => {
     const handleResize = () => {
