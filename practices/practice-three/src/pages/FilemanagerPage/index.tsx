@@ -893,7 +893,7 @@ const FilemanagerPage = ({
             className="w-[calc(100%-32px)]"
             onClick={handleAddNewItem}
             ref={buttonRef}
-            disabled={isDisabled}
+            disabled={isDisabled || isFetching}
           >
             {isDisabled ? (
               <>
