@@ -5,7 +5,12 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { ERROR_MESSAGE, QUERY_KEY_FILE_MANAGER } from "@/constant";
 
 // services
-import { addFileItem, getFilemanagerData, renameFileItem } from "@/services";
+import {
+  addFileItem,
+  deleteFileItem,
+  getFilemanagerData,
+  renameFileItem,
+} from "@/services";
 
 // Types
 import { FileItem } from "@/types";
@@ -42,5 +47,11 @@ export const useRenameFileItem = () => {
   return useMutation({
     mutationFn: ({ id, updatedItem }: { id: string; updatedItem: FileItem }) =>
       renameFileItem(id, updatedItem),
+  });
+};
+
+export const useDeleteFileItem = () => {
+  return useMutation({
+    mutationFn: (id: string) => deleteFileItem(id),
   });
 };

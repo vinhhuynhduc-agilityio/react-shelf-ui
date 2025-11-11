@@ -31,6 +31,7 @@ import { useWindowStore } from "@/stores";
 import {
   useAddFileItem,
   useDebounce,
+  useDeleteFileItem,
   useFilemanagerQuery,
   useRenameFileItem,
 } from "@/hook";
@@ -55,6 +56,7 @@ import { FileItem, DropdownOption, FormData, ContextMenuOption } from "@/types";
 import {
   createNewItem,
   generateBase64Image,
+  getAllDescendantIdsInDeleteOrder,
   getBasicInfo,
   getBreadcrumbPath,
   getPathIds,
@@ -90,6 +92,8 @@ const FilemanagerPage = ({
   const [expandedKeys, setExpandedKeys] = useState<Key[]>(["root"]);
   const [hasChanged, setHasChanged] = useState(false);
   const [isUploadingFolder, setIsUploadingFolder] = useState(false);
+  const [isDeletingFolder, setIsDeletingFolder] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
   const [statusBar, setStatusBar] = useState<{
     message: string;
     type: "success" | "error";
@@ -143,20 +147,19 @@ const FilemanagerPage = ({
     }))
   );
 
-  // Fetch initial data
+  // === QUERIES & MUTATIONS ===
   const {
     data: initialFiles = [],
     isFetching,
     isSuccess,
   } = useFilemanagerQuery();
-
   const {
     mutate: addItem,
     mutateAsync: addItemAsync,
     isPending: isAdding,
   } = useAddFileItem();
-
   const { mutate: renameItem } = useRenameFileItem();
+  const { mutateAsync: deleteItem } = useDeleteFileItem();
 
   useEffect(() => {
     if (isSuccess && Array.isArray(initialFiles)) {
@@ -462,6 +465,8 @@ const FilemanagerPage = ({
     // Optimistic update
     setFiles((prev) => prev.map((f) => (f.id === item.id ? updatedItem : f)));
 
+    setIsRenaming(true);
+
     renameItem(
       { id: selectedItem.id, updatedItem },
       {
@@ -479,6 +484,9 @@ const FilemanagerPage = ({
             message: "Failed to rename item",
             type: "error",
           });
+        },
+        onSettled: () => {
+          setIsRenaming(false);
         },
       }
     );
@@ -696,21 +704,54 @@ const FilemanagerPage = ({
     [files]
   );
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (!pendingDeleteItem) return;
 
-    // Optimistic delete
-    setFiles((prev) => prev.filter((f) => f.id !== pendingDeleteItem.id));
+    setIsDeletingFolder(true);
+    const itemToDelete = pendingDeleteItem;
 
-    // TODO: Call API delete
-    console.log("DELETE API CALL:", { id: pendingDeleteItem.id });
+    // Get all descendant IDs if folder
+    const descendantIds =
+      itemToDelete.type === "folder"
+        ? getAllDescendantIdsInDeleteOrder(files, itemToDelete.id)
+        : [];
 
-    setStatusBar({ message: "Item deleted", type: "success" });
-    setHasChanged(true);
+    const idsToDelete = [...descendantIds, itemToDelete.id];
+
+    setFiles((prev) => prev.filter((f) => !idsToDelete.includes(f.id)));
 
     setIsDeleteModalOpen(false);
     setPendingDeleteItem(null);
     setSelectedItem(null);
+
+    try {
+      for (const id of idsToDelete) {
+        try {
+          await deleteItem(id);
+        } catch {
+          const failedItem = files.find((f) => f.id === id);
+          if (failedItem) {
+            setFiles((prev) => [...prev, failedItem]);
+          }
+          setStatusBar({
+            message: `Failed to delete: ${failedItem?.name || id}`,
+            type: "error",
+          });
+          return;
+        }
+      }
+
+      setStatusBar({
+        message: `${
+          itemToDelete.type === "folder" ? "Folder" : "File"
+        } deleted successfully`,
+        type: "success",
+      });
+
+      setHasChanged(true);
+    } finally {
+      setIsDeletingFolder(false);
+    }
   };
 
   // Preview component
@@ -835,6 +876,9 @@ const FilemanagerPage = ({
   );
 
   const renderTableNavigation = () => {
+    const isDisabled =
+      isAdding || isUploadingFolder || isDeletingFolder || isRenaming;
+
     return (
       <div
         className={clsx(
@@ -849,12 +893,18 @@ const FilemanagerPage = ({
             className="w-[calc(100%-32px)]"
             onClick={handleAddNewItem}
             ref={buttonRef}
-            disabled={isAdding || isUploadingFolder}
+            disabled={isDisabled}
           >
-            {isAdding || isUploadingFolder ? (
+            {isDisabled ? (
               <>
                 <i className="fa-solid fa-spinner fa-spin mr-2"></i>
-                {isUploadingFolder ? "Uploading folder..." : "Creating..."}
+                {isUploadingFolder
+                  ? "Uploading folder..."
+                  : isDeletingFolder
+                  ? "Deleting folder..."
+                  : isRenaming
+                  ? "Renaming..."
+                  : "Creating..."}
               </>
             ) : (
               "Add New"
@@ -946,7 +996,14 @@ const FilemanagerPage = ({
             columns={columns}
             dataSource={sortedItems}
             tableHeight={tableHeight}
-            loading={isFetching}
+            isFetching={isFetching}
+            isLoading={
+              isFetching ||
+              isRenaming ||
+              isAdding ||
+              isUploadingFolder ||
+              isDeletingFolder
+            }
             onRow={(record) => ({
               onClick: () => {
                 setSelectedItem(record);

@@ -51,3 +51,6 @@ export const renameFileItem = async (
     `${API_BASE_URL}${API_ENDPOINTS.FILE_MANAGER}/${id}`,
     updatedItem
   );
+
+export const deleteFileItem = async (id: string): Promise<void> =>
+  apiRequest("DELETE", `${API_BASE_URL}${API_ENDPOINTS.FILE_MANAGER}/${id}`);

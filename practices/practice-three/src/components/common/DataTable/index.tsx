@@ -7,6 +7,7 @@ interface CustomTableProps<T>
   dataSource: T[];
   tableHeight: number;
   isLoading?: boolean;
+  isFetching?: boolean;
 }
 
 const DataTable = <T,>({
@@ -14,10 +15,12 @@ const DataTable = <T,>({
   dataSource,
   tableHeight,
   isLoading = false,
+  isFetching = false,
   ...rest
 }: CustomTableProps<T>) => {
-  const displayData = isLoading ? [] : dataSource;
-  const scrollY = isLoading ? 0 : tableHeight > 0 ? tableHeight : undefined;
+  const displayData = isFetching ? [] : dataSource;
+  const shouldShowScroll =
+    !isLoading && dataSource.length > 0 && tableHeight > 0;
 
   return (
     <Table<T>
@@ -28,7 +31,7 @@ const DataTable = <T,>({
       bordered
       scroll={{
         x: "max-content",
-        y: scrollY,
+        y: shouldShowScroll ? tableHeight : undefined,
       }}
       loading={isLoading}
       {...rest}
