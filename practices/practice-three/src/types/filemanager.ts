@@ -21,3 +21,10 @@ export interface BreadcrumbItem {
   id: string;
   name: string;
 }
+
+export interface ContextMenuOption {
+  label: string;
+  icon: string;
+  onClick: () => void;
+  danger?: boolean;
+}

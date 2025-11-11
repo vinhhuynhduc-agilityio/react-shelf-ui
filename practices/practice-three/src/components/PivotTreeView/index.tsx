@@ -65,7 +65,8 @@ const PivotTreeView = ({
       columns={treeColumns}
       dataSource={treeData}
       tableHeight={tableHeight}
-      loading={isLoading}
+      isLoading={isLoading}
+      isFetching={isLoading}
       expandedRowKeys={expandedKeys}
       onExpand={(expanded, record) => {
         if (expanded) {

@@ -31,6 +31,7 @@ const PivotTableView = ({
       dataSource={tableData}
       tableHeight={tableHeight}
       isLoading={isLoading}
+      isFetching={isLoading}
     />
   );
 };

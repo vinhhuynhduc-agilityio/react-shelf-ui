@@ -226,3 +226,29 @@ export const getPathIds = (files: FileItem[], folderId: string): string[] => {
 
   return ids.reverse();
 };
+
+export const getAllDescendantIdsInDeleteOrder = (
+  files: FileItem[],
+  parentId: string
+): string[] => {
+  const getAll = (id: string): string[] =>
+    files
+      .filter((f) => f.parentId === id)
+      .flatMap((child) => [child.id, ...getAll(child.id)]);
+
+  const allIds = getAll(parentId);
+
+  const depth = (id: string): number => {
+    let d = 0,
+      cur = id;
+    while (cur) {
+      const f = files.find((x) => x.id === cur);
+      if (!f) break;
+      cur = f.parentId || "";
+      d++;
+    }
+    return d;
+  };
+
+  return allIds.sort((a, b) => depth(b) - depth(a));
+};
