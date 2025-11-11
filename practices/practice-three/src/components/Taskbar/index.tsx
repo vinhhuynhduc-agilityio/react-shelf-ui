@@ -11,7 +11,13 @@ import { DESKTOP_ICONS } from "@/constant";
 // Types
 import type { WindowKey } from "@/types";
 
-const Taskbar = () => {
+import IconButton from "@/components/IconButton";
+
+interface TaskbarProps {
+  onToggleSearch: () => void;
+}
+
+const Taskbar = ({ onToggleSearch }: TaskbarProps) => {
   const {
     windows,
     zIndexOrder,
@@ -60,8 +66,14 @@ const Taskbar = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-[44px] bg-[#33353c] border-t border-white/10 px-2 flex z-[9999]">
+    <div className="fixed bottom-0 left-0 right-0 h-[44px] bg-[#33353c] border-t border-white/10 flex z-[9999]">
       <div className="flex items-center gap-2">
+        <div className="h-full w-[42px] flex justify-center items-center hover:bg-white/10">
+          <IconButton
+            iconStyles="fa-solid fa-bars fa-lg text-[#FFFFFF] text-sm"
+            onClick={onToggleSearch}
+          />
+        </div>
         {openKeys.map((key) => {
           const icon = metaOf(key);
           const isActive = topMost === key;
