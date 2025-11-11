@@ -16,7 +16,7 @@ import { DESKTOP_ICONS, WINDOW_KEYS } from "./constant";
 import type { WindowKey } from "@/types";
 
 // Components
-import { DesktopIcon, Taskbar } from "./components";
+import { DesktopIcon, SearchOverlay, Taskbar } from "./components";
 
 // Helpers
 import { queryClient, rearrangeLayoutOnResize } from "@/helpers";
@@ -43,6 +43,8 @@ const App = () => {
   const gridWidth = cols * fixedItemWidth;
 
   // State
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState<WindowKey | null>(null);
   const [layout, setLayout] = useState<Layout[]>(
     DESKTOP_ICONS.map((icon, idx) => ({
@@ -101,6 +103,13 @@ const App = () => {
       state: useWindowState(FILE_MANAGER),
       actions: useWindowActions(FILE_MANAGER),
     },
+  };
+
+  const handleToggleSearch = () => {
+    setIsSearchOpen((prev) => !prev);
+    if (!isSearchOpen) {
+      setSearchQuery("");
+    }
   };
 
   const handleIconClick = (key: WindowKey) => {
@@ -239,8 +248,20 @@ const App = () => {
             {renderDesktopIcons()}
           </GridLayout>
           {renderPages()}
+          {/* Search Overlay */}
+          {isSearchOpen && (
+            <SearchOverlay
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              onAppSelect={(key) => {
+                handleIconClick(key);
+                setIsSearchOpen(false);
+              }}
+              onClose={() => setIsSearchOpen(false)}
+            />
+          )}
         </div>
-        <Taskbar />
+        <Taskbar onToggleSearch={handleToggleSearch} />
       </div>
     </QueryClientProvider>
   );

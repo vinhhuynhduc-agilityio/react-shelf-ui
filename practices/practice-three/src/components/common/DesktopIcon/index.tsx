@@ -9,6 +9,7 @@ interface DesktopIconProps {
   keyIcon: WindowKey;
   isSelected?: boolean;
   onIconClick: (keyIcon: WindowKey) => void;
+  cursorPointer?: boolean;
 }
 
 export const DesktopIcon = ({
@@ -17,6 +18,7 @@ export const DesktopIcon = ({
   keyIcon,
   onIconClick,
   isSelected = false,
+  cursorPointer = false,
 }: DesktopIconProps) => {
   const handleMouseDown = () => {
     onIconClick(keyIcon);
@@ -30,7 +32,8 @@ export const DesktopIcon = ({
         "w-[100px] h-[110px]",
         "hover:bg-[rgba(255,255,255,0.2)] hover:[border:2px_solid_rgba(255,255,255,0.2)]",
         isSelected &&
-          "bg-[rgba(255,255,255,0.2)] [border:2px_solid_rgba(255,255,255,0.2)]"
+          "bg-[rgba(255,255,255,0.2)] [border:2px_solid_rgba(255,255,255,0.2)]",
+        cursorPointer && "cursor-pointer"
       )}
       onMouseDown={handleMouseDown}
     >
