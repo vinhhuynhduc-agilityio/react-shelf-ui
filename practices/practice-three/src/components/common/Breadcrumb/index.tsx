@@ -17,7 +17,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
 }) => {
   return (
     <nav
-      className={`flex items-center space-x-1 ${breadcrumbStyles}`}
+      className={`flex items-center space-x-1 whitespace-nowrap ${breadcrumbStyles}`}
       aria-label="Breadcrumb"
     >
       {path.map((item, index) => {
