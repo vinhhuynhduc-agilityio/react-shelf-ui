@@ -41,3 +41,13 @@ export const saveAllFileFileManager = async ({
     }
   });
 };
+
+export const renameFileItem = async (
+  id: string,
+  updatedItem: FileItem
+): Promise<FileItem> =>
+  apiRequest(
+    "PUT",
+    `${API_BASE_URL}${API_ENDPOINTS.FILE_MANAGER}/${id}`,
+    updatedItem
+  );

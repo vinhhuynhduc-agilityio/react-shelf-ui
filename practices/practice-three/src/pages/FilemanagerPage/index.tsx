@@ -28,7 +28,12 @@ import {
 import { useWindowStore } from "@/stores";
 
 // hook
-import { useAddFileItem, useDebounce, useFilemanagerQuery } from "@/hook";
+import {
+  useAddFileItem,
+  useDebounce,
+  useFilemanagerQuery,
+  useRenameFileItem,
+} from "@/hook";
 
 // components
 import {
@@ -141,15 +146,37 @@ const FilemanagerPage = ({
   // Fetch initial data
   const {
     data: initialFiles = [],
-    isLoading,
+    isFetching,
     isSuccess,
   } = useFilemanagerQuery();
+
+  const {
+    mutate: addItem,
+    mutateAsync: addItemAsync,
+    isPending: isAdding,
+  } = useAddFileItem();
+
+  const { mutate: renameItem } = useRenameFileItem();
 
   useEffect(() => {
     if (isSuccess && Array.isArray(initialFiles)) {
       setFiles(initialFiles);
     }
   }, [isSuccess, initialFiles, setFiles]);
+
+  // Update refs when state changes
+  useEffect(() => {
+    hasChangedRef.current = hasChanged;
+  }, [hasChanged]);
+
+  // Invalidate queries on unmount if changes occurred
+  useEffect(() => {
+    return () => {
+      if (hasChangedRef.current) {
+        queryClient.invalidateQueries({ queryKey: QUERY_KEY_FILE_MANAGER });
+      }
+    };
+  }, [queryClient]);
 
   useLayoutEffect(() => {
     const containerElement = containerRef.current;
@@ -185,31 +212,11 @@ const FilemanagerPage = ({
     };
   }, []);
 
-  // Update refs when state changes
-  useEffect(() => {
-    hasChangedRef.current = hasChanged;
-  }, [hasChanged]);
-
-  // Invalidate queries on unmount if changes occurred
-  useEffect(() => {
-    return () => {
-      if (hasChangedRef.current) {
-        queryClient.invalidateQueries({ queryKey: QUERY_KEY_FILE_MANAGER });
-      }
-    };
-  }, [queryClient]);
-
   const handleMouseDown = () => {
     if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.FILE_MANAGER) {
       setZIndexOrder(WINDOW_KEYS.FILE_MANAGER);
     }
   };
-
-  const {
-    mutate: addItem,
-    mutateAsync: addItemAsync,
-    isPending: isAdding,
-  } = useAddFileItem();
 
   const buildTree = useCallback(
     (items: FileItem[], parentId: string | number): DataNode[] => {
@@ -450,13 +457,31 @@ const FilemanagerPage = ({
       return;
     }
 
-    // Optimistic update
-    setFiles((prev) =>
-      prev.map((f) => (f.id === item.id ? { ...f, name: newName } : f))
-    );
+    const updatedItem: FileItem = { ...item, name: newName };
 
-    // TODO: Call API rename
-    console.log("RENAME API CALL:", { id: item.id, newName });
+    // Optimistic update
+    setFiles((prev) => prev.map((f) => (f.id === item.id ? updatedItem : f)));
+
+    renameItem(
+      { id: selectedItem.id, updatedItem },
+      {
+        onSuccess: () => {
+          setStatusBar({
+            message: "File renamed successfully",
+            type: "success",
+          });
+        },
+        onError: () => {
+          setFiles((prev) =>
+            prev.map((f) => (f.id === item.id ? { ...f, name: item.name } : f))
+          );
+          setStatusBar({
+            message: "Failed to rename item",
+            type: "error",
+          });
+        },
+      }
+    );
 
     setShowNameInputDialog(false);
     reset({ name: "" });
@@ -914,14 +939,14 @@ const FilemanagerPage = ({
         <div
           className={clsx(
             "flex-1 bg-[#FFFFFF]",
-            !sortedItems.length && "hidden"
+            isSearchMode && !sortedItems.length && "hidden"
           )}
         >
           <DataTable
             columns={columns}
             dataSource={sortedItems}
             tableHeight={tableHeight}
-            loading={isLoading}
+            loading={isFetching}
             onRow={(record) => ({
               onClick: () => {
                 setSelectedItem(record);
