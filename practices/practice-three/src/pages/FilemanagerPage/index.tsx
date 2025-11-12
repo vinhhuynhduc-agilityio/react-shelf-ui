@@ -764,7 +764,7 @@ const FilemanagerPage = ({
     return (
       <div
         className="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
-        style={{ height: tableHeight + 43 }}
+        style={{ height: tableHeight + 83 }}
       >
         {/* Top Card: File Preview */}
         <div

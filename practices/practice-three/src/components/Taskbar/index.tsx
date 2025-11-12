@@ -11,7 +11,8 @@ import { DESKTOP_ICONS } from "@/constant";
 // Types
 import type { WindowKey } from "@/types";
 
-import IconButton from "@/components/IconButton";
+// Components
+import IconButton from "@/components/common/IconButton";
 
 interface TaskbarProps {
   onToggleSearch: () => void;

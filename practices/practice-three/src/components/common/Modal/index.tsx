@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import clsx from "clsx";
 
 // components
-import IconButton from "@/components/IconButton";
+import IconButton from "@/components/common/IconButton";
 
 interface ModalProps {
   isOpen: boolean;

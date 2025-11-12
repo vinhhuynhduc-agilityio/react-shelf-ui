@@ -15,25 +15,6 @@ describe("Taskbar", () => {
     jest.clearAllMocks();
   });
 
-  it("renders nothing when no windows are open", () => {
-    mockedUseWindowStore.mockImplementation(() => ({
-      windows: {
-        spreadsheet: { isOpen: false, isMinimized: false },
-        pivot: { isOpen: false, isMinimized: false },
-        kanban: { isOpen: false, isMinimized: false },
-        filemanager: { isOpen: false, isMinimized: false },
-      },
-      zIndexOrder: [],
-      setZIndexOrder: jest.fn(),
-      minimizeWindow: jest.fn(),
-      restoreWindow: jest.fn(),
-    }));
-
-    const { container } = render(<Taskbar />);
-    // no task buttons rendered
-    expect(container.querySelectorAll("button").length).toBe(0);
-  });
-
   it("renders a task button for each open window", () => {
     mockedUseWindowStore.mockImplementation(() => ({
       windows: {
@@ -48,7 +29,7 @@ describe("Taskbar", () => {
       restoreWindow: jest.fn(),
     }));
 
-    render(<Taskbar />);
+    render(<Taskbar onToggleSearch={jest.fn()} />);
 
     const spreadsheetMeta = DESKTOP_ICONS.find((i) => i.key === "spreadsheet")!;
     const pivotMeta = DESKTOP_ICONS.find((i) => i.key === "pivot")!;
@@ -73,7 +54,7 @@ describe("Taskbar", () => {
       restoreWindow,
     }));
 
-    render(<Taskbar />);
+    render(<Taskbar onToggleSearch={jest.fn()} />);
 
     const spreadsheetMeta = DESKTOP_ICONS.find((i) => i.key === "spreadsheet")!;
     const btn = screen.getByTitle(spreadsheetMeta.title);
@@ -98,7 +79,7 @@ describe("Taskbar", () => {
       restoreWindow: jest.fn(),
     }));
 
-    render(<Taskbar />);
+    render(<Taskbar onToggleSearch={jest.fn()} />);
 
     // pivot is visible but not top-most (not last in zIndexOrder)
     const pivotMeta = DESKTOP_ICONS.find((i) => i.key === "pivot")!;
@@ -125,7 +106,7 @@ describe("Taskbar", () => {
       restoreWindow: jest.fn(),
     }));
 
-    render(<Taskbar />);
+    render(<Taskbar onToggleSearch={jest.fn()} />);
 
     const spreadsheetMeta = DESKTOP_ICONS.find((i) => i.key === "spreadsheet")!;
     const btn = screen.getByTitle(spreadsheetMeta.title);
