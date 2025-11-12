@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import IconButton from "@/components/IconButton";
+import IconButton from "@/components/common/IconButton";
 
 describe("IconButton", () => {
   it("renders button with given ariaLabel and icon element", () => {

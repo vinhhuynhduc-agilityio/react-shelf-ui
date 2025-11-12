@@ -77,6 +77,9 @@ export const generatePivotTableColumns = (
           dataIndex: `${year}_oil_min`,
           key: `${year}_oil_min`,
           width: 140,
+          sorter: (a, b) =>
+            (Number(a[`${year}_oil_min`]) || 0) -
+            (Number(b[`${year}_oil_min`]) || 0),
           render: (value: number) => value.toFixed(3),
         },
         {
@@ -84,6 +87,9 @@ export const generatePivotTableColumns = (
           dataIndex: `${year}_oil_sum`,
           key: `${year}_oil_sum`,
           width: 140,
+          sorter: (a, b) =>
+            (Number(a[`${year}_oil_sum`]) || 0) -
+            (Number(b[`${year}_oil_sum`]) || 0),
           render: (value: number) => value.toFixed(3),
         },
       ],
@@ -150,6 +156,9 @@ export const generatePivotTreeColumns = (
           dataIndex: `${year}_oil_min`,
           key: `${year}_oil_min`,
           width: 140,
+          sorter: (a: TreeData, b: TreeData) =>
+            (Number(a[`${year}_oil_min`]) || 0) -
+            (Number(b[`${year}_oil_min`]) || 0),
           render: (value: number) => value.toFixed(3),
         },
         {
@@ -157,6 +166,9 @@ export const generatePivotTreeColumns = (
           dataIndex: `${year}_oil_sum`,
           key: `${year}_oil_sum`,
           width: 140,
+          sorter: (a: TreeData, b: TreeData) =>
+            (Number(a[`${year}_oil_sum`]) || 0) -
+            (Number(b[`${year}_oil_sum`]) || 0),
           render: (value: number) => value.toFixed(3),
         },
       ],

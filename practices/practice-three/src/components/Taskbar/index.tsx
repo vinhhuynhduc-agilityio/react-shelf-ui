@@ -11,7 +11,8 @@ import { DESKTOP_ICONS } from "@/constant";
 // Types
 import type { WindowKey } from "@/types";
 
-import IconButton from "@/components/IconButton";
+// Components
+import IconButton from "@/components/common/IconButton";
 
 interface TaskbarProps {
   onToggleSearch: () => void;
@@ -71,6 +72,7 @@ const Taskbar = ({ onToggleSearch }: TaskbarProps) => {
         <div className="h-full w-[42px] flex justify-center items-center hover:bg-white/10">
           <IconButton
             iconStyles="fa-solid fa-bars fa-lg text-[#FFFFFF] text-sm"
+            buttonStyles="flex justify-center items-center w-full h-full focus:outline-none"
             onClick={onToggleSearch}
           />
         </div>
@@ -88,7 +90,7 @@ const Taskbar = ({ onToggleSearch }: TaskbarProps) => {
               <button
                 title={icon.title}
                 onClick={() => handleTaskClick(key)}
-                className="h-[36px] px-2 flex items-center select-none"
+                className="h-[36px] px-2 flex items-center select-none cursor-pointer"
               >
                 <img src={icon.image} alt="" className="h-[26px] w-[26px]" />
               </button>

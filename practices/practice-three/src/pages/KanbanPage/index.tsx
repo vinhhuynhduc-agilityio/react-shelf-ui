@@ -3,6 +3,7 @@ import GridLayout, { Layout } from "react-grid-layout";
 import { useShallow } from "zustand/react/shallow";
 import { v4 as uuidv4 } from "uuid";
 import { useQueryClient } from "@tanstack/react-query";
+import { Spin } from "antd";
 
 // Components
 import {
@@ -356,13 +357,12 @@ const KanbanPage = ({
 
   // Render column headers
   const renderHeaders = () => (
-    <div className="flex mt-[10px] ml-[10px] mr-[10px] h-[42px]">
+    <div className="flex mt-[10px] ml-[10px] mr-[10px] h-[42px] gap-[10px]">
       {STATUSES.map((status, idx) => (
         <div
           key={status}
           className={`
-          flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] border border-[#DADEE0] bg-[#ffffff]
-          ${idx < STATUSES.length - 1 ? "mr-[10px]" : ""}
+          flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] border border-[#DADEE0] bg-[#ffffff] truncate
         `}
         >
           {idx === 0 && (
@@ -391,7 +391,7 @@ const KanbanPage = ({
           <i className="fa-solid fa-user fa-lg text-[#94a1b3]" />
         </div>
       </div>
-      <div className="flex justify-between pl-[8px] pr-[8px] mb-[6px] items-center">
+      <div className="flex justify-between pl-[8px] pr-[8px] mb-[6px] items-center truncate">
         <div className="flex items-center gap-1">
           {task.tags.map((tag) => (
             <span
@@ -476,9 +476,9 @@ const KanbanPage = ({
         >
           {renderHeaders()}
           {isFetching ? (
-            <p>Loading...</p>
+            <Spin spinning={isFetching} />
           ) : (
-            <div className="flex-1 overflow-auto relative top-0">
+            <div className="flex-1 overflow-x-hidden relative top-0">
               <GridLayout
                 className="layout select-none"
                 layout={layout}

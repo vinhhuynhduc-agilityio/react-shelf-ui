@@ -15,7 +15,6 @@ import { FileItem } from "@/types";
 interface SaveAllFileFileManagerParams {
   listFile: FileItem[];
   addItem: UseMutateFunction<FileItem, Error, FileItem, unknown>;
-  setFiles: (updater: (prev: FileItem[]) => FileItem[]) => void;
 }
 
 export const getFilemanagerData = async (): Promise<FileItem[]> =>
@@ -27,19 +26,8 @@ export const addFileItem = async (newItem: FileItem): Promise<FileItem> =>
 export const saveAllFileFileManager = async ({
   listFile,
   addItem,
-  setFiles,
 }: SaveAllFileFileManagerParams) => {
-  const results = await Promise.allSettled(
-    listFile.map((file) => addItem(file))
-  );
-
-  results.forEach((result, index) => {
-    if (result.status === "rejected") {
-      const failedId = listFile[index].id;
-      setFiles((prev) => prev.filter((f) => f.id !== failedId));
-      console.error(`Upload failed: ${listFile[index].name}`, result.reason);
-    }
-  });
+  await Promise.all(listFile.map((file) => addItem(file)));
 };
 
 export const renameFileItem = async (

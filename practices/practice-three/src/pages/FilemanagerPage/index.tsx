@@ -113,6 +113,7 @@ const FilemanagerPage = ({
   const [pendingDeleteItem, setPendingDeleteItem] = useState<FileItem | null>(
     null
   );
+  const [showNavigation, setShowNavigation] = useState(true);
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
@@ -184,36 +185,37 @@ const FilemanagerPage = ({
   useLayoutEffect(() => {
     const containerElement = containerRef.current;
 
-    const updateHeight = () => {
-      if (containerElement) {
-        const buttonBarHeight = 70;
-        const tableHeaderHeight = 37;
-        const breadcrumbHeight = 42;
-        const buttonAddNewHeight = 48;
-        const totalFixedHeight =
-          buttonBarHeight + tableHeaderHeight + breadcrumbHeight;
-        const tableHight = containerElement.clientHeight - totalFixedHeight;
-        const treeHight =
-          containerElement.clientHeight - buttonAddNewHeight - buttonBarHeight;
+    const updateDimensions = () => {
+      if (!containerElement) return;
 
-        setTableHeight(Math.max(tableHight, 100));
-        setTreeHeight(Math.max(treeHight, 100));
-      }
+      const buttonBarHeight = 70;
+      const tableHeaderHeight = 37;
+      const breadcrumbHeight = 42;
+      const buttonAddNewHeight = 48;
+      const totalFixedHeight =
+        buttonBarHeight + tableHeaderHeight + breadcrumbHeight;
+      const tableHight = containerElement.clientHeight - totalFixedHeight;
+      const treeHight =
+        containerElement.clientHeight - buttonAddNewHeight - buttonBarHeight;
+
+      setTableHeight(Math.max(tableHight, 100));
+      setTreeHeight(Math.max(treeHight, 100));
+
+      setShowNavigation(containerElement.clientWidth >= 650);
     };
 
-    const observer = new ResizeObserver(updateHeight);
-    if (containerElement) {
-      observer.observe(containerElement);
-    }
+    updateDimensions();
 
-    updateHeight();
+    const observer = new ResizeObserver(updateDimensions);
+    if (containerElement) observer.observe(containerElement);
 
     return () => {
-      if (containerElement) {
-        observer.unobserve(containerElement);
-      }
+      if (containerElement) observer.unobserve(containerElement);
     };
   }, []);
+
+  const isShowNavigation =
+    showNavigation && !(isSearchMode && debouncedSearch.trim());
 
   const handleMouseDown = () => {
     if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.FILE_MANAGER) {
@@ -596,8 +598,14 @@ const FilemanagerPage = ({
       for (const file of Array.from(fileList)) {
         const parts = file.webkitRelativePath.split("/").slice(0, -1);
         let currentPath = "";
+        let isFirstDir = true;
+
         for (const dir of parts) {
-          if (dir === rootName && currentPath === "") continue;
+          if (isFirstDir) {
+            isFirstDir = false;
+            continue;
+          }
+
           currentPath = currentPath ? `${currentPath}/${dir}` : dir;
           paths.add(currentPath);
         }
@@ -673,7 +681,7 @@ const FilemanagerPage = ({
       setFiles((prev) => [...prev, ...listFile]);
 
       if (listFile.length > 0) {
-        await saveAllFileFileManager({ listFile, addItem, setFiles });
+        await saveAllFileFileManager({ listFile, addItem });
       }
 
       setStatusBar({
@@ -764,7 +772,7 @@ const FilemanagerPage = ({
     return (
       <div
         className="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
-        style={{ height: tableHeight + 43 }}
+        style={{ height: tableHeight + 83 }}
       >
         {/* Top Card: File Preview */}
         <div
@@ -882,8 +890,7 @@ const FilemanagerPage = ({
     return (
       <div
         className={clsx(
-          "w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]",
-          isSearchMode && debouncedSearch.trim() && "hidden"
+          "w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]"
         )}
       >
         {/* Nút + Dropdown */}
@@ -893,7 +900,7 @@ const FilemanagerPage = ({
             className="w-[calc(100%-32px)]"
             onClick={handleAddNewItem}
             ref={buttonRef}
-            disabled={isDisabled}
+            disabled={isDisabled || isFetching}
           >
             {isDisabled ? (
               <>
@@ -1206,7 +1213,7 @@ const FilemanagerPage = ({
 
         {/* Body */}
         <div className="flex flex-1 bg-[#EBEDF0]">
-          {renderTableNavigation()}
+          {isShowNavigation && renderTableNavigation()}
           {renderTableDetail()}
           {previewMode && renderPreview()}
         </div>
