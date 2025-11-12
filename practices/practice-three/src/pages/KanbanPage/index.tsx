@@ -478,7 +478,7 @@ const KanbanPage = ({
           {isFetching ? (
             <Spin tip="Loading..." />
           ) : (
-            <div className="flex-1 overflow-auto relative top-0">
+            <div className="flex-1 overflow-x-hidden relative top-0">
               <GridLayout
                 className="layout select-none"
                 layout={layout}
