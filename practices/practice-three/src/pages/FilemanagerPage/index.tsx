@@ -598,8 +598,14 @@ const FilemanagerPage = ({
       for (const file of Array.from(fileList)) {
         const parts = file.webkitRelativePath.split("/").slice(0, -1);
         let currentPath = "";
+        let isFirstDir = true;
+
         for (const dir of parts) {
-          if (dir === rootName && currentPath === "") continue;
+          if (isFirstDir) {
+            isFirstDir = false;
+            continue;
+          }
+
           currentPath = currentPath ? `${currentPath}/${dir}` : dir;
           paths.add(currentPath);
         }
