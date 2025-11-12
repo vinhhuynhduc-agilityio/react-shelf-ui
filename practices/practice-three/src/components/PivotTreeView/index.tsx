@@ -7,16 +7,20 @@ import { generateTreeData, generatePivotTreeColumns } from "@/helpers";
 import { CustomExpandIconProps, Pivot, TreeData } from "@/types";
 
 // Components
-import { DataTable } from "@/components";
+import { DataTable, ErrorAlert } from "@/components";
 
 const PivotTreeView = ({
   pivot,
   tableHeight,
   isLoading,
+  isErrorPivot,
+  pivotError,
 }: {
   pivot: Pivot[];
   tableHeight: number;
   isLoading: boolean;
+  isErrorPivot: boolean;
+  pivotError?: Error | null;
 }) => {
   // state
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
@@ -60,7 +64,15 @@ const PivotTreeView = ({
     );
   };
 
-  return (
+  const renderApiError = () => (
+    <ErrorAlert
+      title="Failed to load pivot data"
+      centerScreen
+      errors={[...(isErrorPivot && pivotError ? [pivotError.message] : [])]}
+    />
+  );
+
+  const renderContent = () => (
     <DataTable
       columns={treeColumns}
       dataSource={treeData}
@@ -80,6 +92,8 @@ const PivotTreeView = ({
       }}
     />
   );
+
+  return <>{isErrorPivot ? renderApiError() : renderContent()}</>;
 };
 
 export default PivotTreeView;

@@ -7,6 +7,7 @@ interface IconButtonProps {
   buttonStyles?: string;
   iconStyles?: string;
   ariaLabel?: string;
+  disabled?: boolean;
 }
 
 const IconButton = ({
@@ -15,10 +16,12 @@ const IconButton = ({
   buttonStyles = "p-1 w-[26px] h-[26px] flex justify-center items-center rounded-full",
   iconStyles = "",
   ariaLabel = "",
+  disabled = false,
 }: IconButtonProps) => {
   return (
     <button
       className={`text-lg cursor-pointer ${buttonStyles}`}
+      disabled={disabled}
       onClick={(e) => {
         e.stopPropagation();
         if (onClick) {

@@ -12,3 +12,4 @@ export { default as Breadcrumb } from "./Breadcrumb";
 export { default as StatusBar } from "./StatusBar";
 export { default as ContextMenu } from "./ContextMenu";
 export { default as IconButton } from "./IconButton";
+export { default as ErrorAlert } from "./ErrorAlert";
