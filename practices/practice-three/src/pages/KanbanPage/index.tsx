@@ -3,6 +3,7 @@ import GridLayout, { Layout } from "react-grid-layout";
 import { useShallow } from "zustand/react/shallow";
 import { v4 as uuidv4 } from "uuid";
 import { useQueryClient } from "@tanstack/react-query";
+import { Spin } from "antd";
 
 // Components
 import {
@@ -475,7 +476,7 @@ const KanbanPage = ({
         >
           {renderHeaders()}
           {isFetching ? (
-            <p>Loading...</p>
+            <Spin tip="Loading..." />
           ) : (
             <div className="flex-1 overflow-auto relative top-0">
               <GridLayout
