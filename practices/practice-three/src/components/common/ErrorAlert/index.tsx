@@ -18,7 +18,7 @@ const ErrorAlert: React.FC<ErrorAlertProps> = ({
 
   return (
     <div
-      className={`w-full ${
+      className={`w-full mt-3 ${
         centerScreen ? "flex items-center justify-center" : ""
       }`}
     >

@@ -47,6 +47,7 @@ import {
   Breadcrumb,
   StatusBar,
   ContextMenu,
+  ErrorAlert,
 } from "@/components";
 
 // types
@@ -153,6 +154,8 @@ const FilemanagerPage = ({
     data: initialFiles = [],
     isFetching,
     isSuccess,
+    isError: isErrorFilemanager,
+    error: filemanagerError,
   } = useFilemanagerQuery();
   const {
     mutate: addItem,
@@ -161,6 +164,9 @@ const FilemanagerPage = ({
   } = useAddFileItem();
   const { mutate: renameItem } = useRenameFileItem();
   const { mutateAsync: deleteItem } = useDeleteFileItem();
+
+  const isDisabled =
+    isAdding || isUploadingFolder || isDeletingFolder || isRenaming;
 
   useEffect(() => {
     if (isSuccess && Array.isArray(initialFiles)) {
@@ -865,6 +871,7 @@ const FilemanagerPage = ({
             className="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#475466] text-sm px-2 focus:outline-none w-full h-full"
             value={searchQuery}
             onChange={handleSearchChange}
+            disabled={isDisabled || isFetching}
           />
           <IconButton
             iconStyles="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
@@ -878,15 +885,13 @@ const FilemanagerPage = ({
           buttonStyles="p-1 flex justify-center items-center w-[60px] h-[38px] bg-[#F4F5F9] hover:bg-[#E4E6F0]"
           iconStyles="fa-solid fa-eye text-[#1CA1C1] text-sm"
           onClick={togglePreview}
+          disabled={isDisabled || isFetching}
         />
       </div>
     </div>
   );
 
   const renderTableNavigation = () => {
-    const isDisabled =
-      isAdding || isUploadingFolder || isDeletingFolder || isRenaming;
-
     return (
       <div
         className={clsx(
@@ -1192,6 +1197,35 @@ const FilemanagerPage = ({
     );
   };
 
+  const renderApiError = () => (
+    <ErrorAlert
+      title="Failed to load filemanager data"
+      centerScreen
+      errors={[
+        ...(isErrorFilemanager && filemanagerError
+          ? [filemanagerError.message]
+          : []),
+      ]}
+    />
+  );
+
+  const renderContent = () => (
+    <div
+      className="flex flex-col h-full w-full overflow-hidden bg-[#EBEDF0]"
+      ref={containerRef}
+    >
+      {/* Header */}
+      {renderHeader()}
+
+      {/* Body */}
+      <div className="flex flex-1 bg-[#EBEDF0]">
+        {isShowNavigation && renderTableNavigation()}
+        {renderTableDetail()}
+        {previewMode && renderPreview()}
+      </div>
+    </div>
+  );
+
   return (
     <DraggableWindow
       windowKey={WINDOW_KEYS.FILE_MANAGER}
@@ -1204,20 +1238,7 @@ const FilemanagerPage = ({
       onMinimize={onMinimize}
       onMouseDown={handleMouseDown}
     >
-      <div
-        className="flex flex-col h-full w-full overflow-hidden bg-[#EBEDF0]"
-        ref={containerRef}
-      >
-        {/* Header */}
-        {renderHeader()}
-
-        {/* Body */}
-        <div className="flex flex-1 bg-[#EBEDF0]">
-          {isShowNavigation && renderTableNavigation()}
-          {renderTableDetail()}
-          {previewMode && renderPreview()}
-        </div>
-      </div>
+      {isErrorFilemanager ? renderApiError() : renderContent()}
 
       {/* render modals */}
       {renderNameInputDialog()}

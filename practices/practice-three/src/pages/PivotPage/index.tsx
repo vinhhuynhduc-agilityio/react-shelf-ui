@@ -46,7 +46,12 @@ const PivotPage = ({
   );
 
   // hook
-  const { data: pivot = [], isLoading } = usePivotQuery();
+  const {
+    data: pivot = [],
+    isLoading,
+    isError: isErrorPivot,
+    error: pivotError,
+  } = usePivotQuery();
 
   const handleMouseDown = () => {
     if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.PIVOT) {
@@ -125,6 +130,8 @@ const PivotPage = ({
             pivot={pivot}
             tableHeight={tableHeight}
             isLoading={isLoading}
+            isErrorPivot={isErrorPivot}
+            pivotError={pivotError}
           />
         )}
         {currentView === "tree" && (
@@ -132,10 +139,18 @@ const PivotPage = ({
             pivot={pivot}
             tableHeight={tableHeight}
             isLoading={isLoading}
+            isErrorPivot={isErrorPivot}
+            pivotError={pivotError}
           />
         )}
         {currentView === "chart" && (
-          <ChartView pivot={pivot} height={tableHeight + 74} />
+          <ChartView
+            pivot={pivot}
+            height={tableHeight + 74}
+            isErrorPivot={isErrorPivot}
+            pivotError={pivotError}
+            isLoading={isLoading}
+          />
         )}
       </div>
     </DraggableWindow>

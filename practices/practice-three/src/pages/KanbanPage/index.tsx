@@ -9,6 +9,7 @@ import { Spin } from "antd";
 import {
   Button,
   DraggableWindow,
+  ErrorAlert,
   IconButton,
   Modal,
   MultiSelect,
@@ -97,12 +98,26 @@ const KanbanPage = ({
   );
 
   // API hooks for data fetching and mutations
-  const { data: boardData = [], isFetching: isFetchingBoard } = useBoardQuery();
-  const { data: tasksData = [], isFetching: isFetchingTasks } = useTasksQuery();
+  const {
+    data: boardData = [],
+    isFetching: isFetchingBoard,
+    isError: isErrorBoard,
+    error: boardError,
+  } = useBoardQuery();
+  const {
+    data: tasksData = [],
+    isFetching: isFetchingTasks,
+    isError: isErrorTasks,
+    error: tasksError,
+  } = useTasksQuery();
   const { mutate: addTask } = useAddTask();
   const { mutate: updateTask } = useUpdateTask();
   const { mutate: deleteTask } = useDeleteTask();
   const { mutate: updateBoardColumn } = useUpdateBoardColumn();
+
+  const isFetching = isFetchingBoard || isFetchingTasks;
+  const hasError = isErrorBoard || isErrorTasks;
+  const isReady = !isFetching && !hasError;
 
   // Update refs when state changes
   useEffect(() => {
@@ -455,7 +470,44 @@ const KanbanPage = ({
     </div>
   );
 
-  const isFetching = isFetchingBoard || isFetchingTasks;
+  const renderLoading = () => (
+    <div className="w-full h-full flex justify-center items-center">
+      <Spin spinning={isFetching} />
+    </div>
+  );
+
+  const renderApiError = () => (
+    <ErrorAlert
+      title="Failed to load kanban data"
+      centerScreen
+      errors={[
+        ...(isErrorBoard && boardError ? [boardError.message] : []),
+        ...(isErrorTasks && tasksError ? [tasksError.message] : []),
+      ]}
+    />
+  );
+
+  const renderContent = () => (
+    <div className="flex-1 overflow-x-hidden relative top-0">
+      <GridLayout
+        className="layout select-none"
+        layout={layout}
+        cols={STATUSES.length}
+        rowHeight={80}
+        width={gridWidth}
+        margin={[10, 10]}
+        isDraggable
+        isResizable={false}
+        compactType="vertical"
+        preventCollision={false}
+        onLayoutChange={handleLayoutChange}
+        onDragStop={handleDragStop}
+        draggableHandle=".item-drag-handle"
+      >
+        {Object.values(tasks).map((task) => renderItem(task))}
+      </GridLayout>
+    </div>
+  );
 
   return (
     <>
@@ -475,29 +527,9 @@ const KanbanPage = ({
           className="w-full h-full flex flex-col bg-[#EBEDF0] overflow-hidden"
         >
           {renderHeaders()}
-          {isFetching ? (
-            <Spin spinning={isFetching} />
-          ) : (
-            <div className="flex-1 overflow-x-hidden relative top-0">
-              <GridLayout
-                className="layout select-none"
-                layout={layout}
-                cols={STATUSES.length}
-                rowHeight={80}
-                width={gridWidth}
-                margin={[10, 10]}
-                isDraggable
-                isResizable={false}
-                compactType="vertical"
-                preventCollision={false}
-                onLayoutChange={handleLayoutChange}
-                onDragStop={handleDragStop}
-                draggableHandle=".item-drag-handle"
-              >
-                {Object.values(tasks).map((task) => renderItem(task))}
-              </GridLayout>
-            </div>
-          )}
+          {isFetching && renderLoading()}
+          {hasError && renderApiError()}
+          {isReady && renderContent()}
         </div>
       </DraggableWindow>
       <Modal

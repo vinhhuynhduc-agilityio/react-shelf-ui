@@ -8,16 +8,20 @@ import { generateDataSource, generatePivotTableColumns } from "@/helpers";
 import { DataSourceItem, Pivot } from "@/types";
 
 // Components
-import { DataTable } from "@/components";
+import { DataTable, ErrorAlert } from "@/components";
 
 const PivotTableView = ({
   pivot,
   tableHeight,
   isLoading,
+  isErrorPivot,
+  pivotError,
 }: {
   pivot: Pivot[];
   tableHeight: number;
   isLoading: boolean;
+  isErrorPivot: boolean;
+  pivotError?: Error | null;
 }) => {
   const tableData: DataSourceItem[] = useMemo(
     () => generateDataSource(pivot),
@@ -25,7 +29,15 @@ const PivotTableView = ({
   );
   const tableColumns = useMemo(() => generatePivotTableColumns(pivot), [pivot]);
 
-  return (
+  const renderApiError = () => (
+    <ErrorAlert
+      title="Failed to load pivot data"
+      centerScreen
+      errors={[...(isErrorPivot && pivotError ? [pivotError.message] : [])]}
+    />
+  );
+
+  const renderContent = () => (
     <DataTable
       columns={tableColumns}
       dataSource={tableData}
@@ -34,6 +46,8 @@ const PivotTableView = ({
       isFetching={isLoading}
     />
   );
+
+  return <>{isErrorPivot ? renderApiError() : renderContent()}</>;
 };
 
 export default PivotTableView;
