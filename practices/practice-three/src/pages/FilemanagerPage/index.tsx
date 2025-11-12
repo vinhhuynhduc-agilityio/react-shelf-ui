@@ -681,7 +681,7 @@ const FilemanagerPage = ({
       setFiles((prev) => [...prev, ...listFile]);
 
       if (listFile.length > 0) {
-        await saveAllFileFileManager({ listFile, addItem, setFiles });
+        await saveAllFileFileManager({ listFile, addItem });
       }
 
       setStatusBar({

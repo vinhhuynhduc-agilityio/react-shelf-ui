@@ -476,7 +476,7 @@ const KanbanPage = ({
         >
           {renderHeaders()}
           {isFetching ? (
-            <Spin tip="Loading..." />
+            <Spin spinning={isFetching} />
           ) : (
             <div className="flex-1 overflow-x-hidden relative top-0">
               <GridLayout
