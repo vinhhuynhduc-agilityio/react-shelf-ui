@@ -8,7 +8,7 @@ import "@fortune-sheet/react/dist/index.css";
 import { DraggableWindow } from "@/components";
 
 // Constant
-import { WINDOW_KEYS } from "@/constant";
+import { toolbarItems, WINDOW_KEYS } from "@/constant";
 
 // Store
 import { useWindowStore } from "@/stores";
@@ -61,7 +61,7 @@ const SpreadsheetPage = ({
       onMouseDown={handleMouseDown}
     >
       <div className="flex-1">
-        <Workbook data={data} />
+        <Workbook data={data} toolbarItems={toolbarItems} />
       </div>
     </DraggableWindow>
   );
