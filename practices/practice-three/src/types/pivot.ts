@@ -1,3 +1,6 @@
+// constant
+import { VIEW } from "@/constant";
+
 export interface Pivot {
   name: string;
   year: number;
@@ -37,3 +40,5 @@ export interface CustomExpandIconProps {
   ) => void;
   record: TreeData;
 }
+
+export type ViewType = (typeof VIEW)[keyof typeof VIEW];

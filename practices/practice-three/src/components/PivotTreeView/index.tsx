@@ -4,10 +4,18 @@ import { useEffect, useMemo, useState } from "react";
 import { generateTreeData, generatePivotTreeColumns } from "@/helpers";
 
 // Types
-import { CustomExpandIconProps, Pivot, TreeData } from "@/types";
+import { CustomExpandIconProps, Pivot } from "@/types";
 
 // Components
 import { DataTable, ErrorAlert } from "@/components";
+
+interface PivotTreeViewProps {
+  pivot: Pivot[];
+  tableHeight: number;
+  isLoading: boolean;
+  isErrorPivot: boolean;
+  pivotError?: Error | null;
+}
 
 const PivotTreeView = ({
   pivot,
@@ -15,64 +23,54 @@ const PivotTreeView = ({
   isLoading,
   isErrorPivot,
   pivotError,
-}: {
-  pivot: Pivot[];
-  tableHeight: number;
-  isLoading: boolean;
-  isErrorPivot: boolean;
-  pivotError?: Error | null;
-}) => {
+}: PivotTreeViewProps) => {
   // state
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
-  const treeData: TreeData[] = useMemo(() => generateTreeData(pivot), [pivot]);
+  const treeData = useMemo(() => generateTreeData(pivot), [pivot]);
   const treeColumns = useMemo(() => generatePivotTreeColumns(pivot), [pivot]);
 
+  // Auto-expand all nodes when data is loaded
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && treeData.length > 0) {
       const allKeys = treeData.map((item) => item.key);
       setExpandedKeys(allKeys);
     }
   }, [isLoading, treeData]);
 
+  // Custom expand/collapse icon for tree rows
   const customExpandIcon = ({
     expanded,
     onExpand,
     record,
   }: CustomExpandIconProps) => {
-    const isParent = record.children && record.children.length > 0;
+    const hasChildren = record.children && record.children.length > 0;
+    if (!hasChildren) return null;
 
-    if (!isParent) {
-      return null;
-    }
-
-    // Render the icon for parent rows
     return (
       <span
         className="ml-[10px] cursor-pointer"
         onClick={(e) => onExpand(record, e)}
       >
         {expanded ? (
-          <i className="fa-solid fa-sort-down" style={{ color: "#94A1B3" }}></i>
+          <i className="fa-solid fa-sort-down text-[#94A1B3]" />
         ) : (
-          <i
-            className="fa-solid fa-caret-right"
-            style={{ color: "#94A1B3" }}
-          ></i>
+          <i className="fa-solid fa-caret-right text-[#94A1B3]" />
         )}
       </span>
     );
   };
 
-  const renderApiError = () => (
-    <ErrorAlert
-      title="Failed to load pivot data"
-      centerScreen
-      errors={[...(isErrorPivot && pivotError ? [pivotError.message] : [])]}
-    />
-  );
+  const renderError = () =>
+    isErrorPivot && pivotError ? (
+      <ErrorAlert
+        title="Failed to load pivot data"
+        centerScreen
+        errors={[pivotError.message]}
+      />
+    ) : null;
 
-  const renderContent = () => (
+  const renderTreeTable = () => (
     <DataTable
       columns={treeColumns}
       dataSource={treeData}
@@ -81,11 +79,11 @@ const PivotTreeView = ({
       isFetching={isLoading}
       expandedRowKeys={expandedKeys}
       onExpand={(expanded, record) => {
-        if (expanded) {
-          setExpandedKeys((prev) => [...prev, record.key]);
-        } else {
-          setExpandedKeys((prev) => prev.filter((key) => key !== record.key));
-        }
+        setExpandedKeys((prev) =>
+          expanded
+            ? [...prev, record.key]
+            : prev.filter((key) => key !== record.key)
+        );
       }}
       expandable={{
         expandIcon: customExpandIcon,
@@ -93,7 +91,8 @@ const PivotTreeView = ({
     />
   );
 
-  return <>{isErrorPivot ? renderApiError() : renderContent()}</>;
+  // Main return – clean and readable
+  return <>{renderError() ?? renderTreeTable()}</>;
 };
 
 export default PivotTreeView;

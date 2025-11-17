@@ -1,14 +1,21 @@
-// PivotTable.tsViewx
 import { useMemo } from "react";
 
 // Helpers
 import { generateDataSource, generatePivotTableColumns } from "@/helpers";
 
 // Types
-import { DataSourceItem, Pivot } from "@/types";
+import { Pivot } from "@/types";
 
 // Components
 import { DataTable, ErrorAlert } from "@/components";
+
+interface PivotTableViewProps {
+  pivot: Pivot[];
+  tableHeight: number;
+  isLoading: boolean;
+  isErrorPivot: boolean;
+  pivotError?: Error | null;
+}
 
 const PivotTableView = ({
   pivot,
@@ -16,28 +23,20 @@ const PivotTableView = ({
   isLoading,
   isErrorPivot,
   pivotError,
-}: {
-  pivot: Pivot[];
-  tableHeight: number;
-  isLoading: boolean;
-  isErrorPivot: boolean;
-  pivotError?: Error | null;
-}) => {
-  const tableData: DataSourceItem[] = useMemo(
-    () => generateDataSource(pivot),
-    [pivot]
-  );
+}: PivotTableViewProps) => {
+  const tableData = useMemo(() => generateDataSource(pivot), [pivot]);
   const tableColumns = useMemo(() => generatePivotTableColumns(pivot), [pivot]);
 
-  const renderApiError = () => (
-    <ErrorAlert
-      title="Failed to load pivot data"
-      centerScreen
-      errors={[...(isErrorPivot && pivotError ? [pivotError.message] : [])]}
-    />
-  );
+  const renderError = () =>
+    isErrorPivot && pivotError ? (
+      <ErrorAlert
+        title="Failed to load pivot data"
+        centerScreen
+        errors={[pivotError.message]}
+      />
+    ) : null;
 
-  const renderContent = () => (
+  const renderTable = () => (
     <DataTable
       columns={tableColumns}
       dataSource={tableData}
@@ -47,7 +46,7 @@ const PivotTableView = ({
     />
   );
 
-  return <>{isErrorPivot ? renderApiError() : renderContent()}</>;
+  return <>{renderError() ?? renderTable()}</>;
 };
 
 export default PivotTableView;
