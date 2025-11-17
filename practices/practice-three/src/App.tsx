@@ -1,33 +1,21 @@
 import { useState, useLayoutEffect, useEffect } from "react";
 import GridLayout, { Layout } from "react-grid-layout";
-import { useShallow } from "zustand/react/shallow";
 import { QueryClientProvider } from "@tanstack/react-query";
 
-// Store
-import { useWindowStore } from "@/stores";
+// hook
+import { useWindow } from "@/hook";
 
-// Hook
-import { useWindowActions, useWindowState } from "@/hook";
+// constant
+import { DESKTOP_ICONS, WINDOW_CONFIGS, WINDOW_KEYS } from "./constant";
 
-// Constant
-import { DESKTOP_ICONS, WINDOW_KEYS } from "./constant";
+// components
+import { BaseWindow, DesktopIcon, SearchOverlay, Taskbar } from "./components";
 
-// Types
-import type { WindowKey } from "@/types";
-
-// Components
-import { DesktopIcon, SearchOverlay, Taskbar } from "./components";
-
-// Helpers
+// helpers
 import { queryClient, rearrangeLayoutOnResize } from "@/helpers";
 
-// Pages
-import {
-  FilemanagerPage,
-  KanbanPage,
-  PivotPage,
-  SpreadsheetPage,
-} from "./pages";
+// types
+import { WindowKey } from "@/types";
 
 const App = () => {
   const { SPREADSHEET, FILE_MANAGER, PIVOT, KANBAN } = WINDOW_KEYS;
@@ -56,23 +44,20 @@ const App = () => {
     }))
   );
 
-  const { zIndexOrder, setZIndexOrder } = useWindowStore(
-    useShallow((state) => ({
-      zIndexOrder: state.zIndexOrder,
-      setZIndexOrder: state.setZIndexOrder,
-    }))
-  );
+  const windows = {
+    [SPREADSHEET]: useWindow(SPREADSHEET),
+    [FILE_MANAGER]: useWindow(FILE_MANAGER),
+    [PIVOT]: useWindow(PIVOT),
+    [KANBAN]: useWindow(KANBAN),
+  } as const;
 
   useEffect(() => {
     if (!isSearchOpen) return;
 
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setIsSearchOpen(false);
-      }
-    };
-
+    const handleEsc = (e: KeyboardEvent) =>
+      e.key === "Escape" && setIsSearchOpen(false);
     document.addEventListener("keydown", handleEsc);
+
     return () => document.removeEventListener("keydown", handleEsc);
   }, [isSearchOpen]);
 
@@ -81,10 +66,8 @@ const App = () => {
       const newCols = Math.floor(window.innerWidth / fixedItemWidth);
       const newMaxRows = Math.floor((window.innerHeight - 44) / rowHeight);
 
-      let updatedLayout = layout;
       if (newCols < cols || newMaxRows < maxRows) {
-        updatedLayout = rearrangeLayoutOnResize(layout, newCols, newMaxRows);
-        setLayout(updatedLayout);
+        setLayout(rearrangeLayoutOnResize(layout, newCols, newMaxRows));
       }
 
       setCols(newCols);
@@ -93,30 +76,8 @@ const App = () => {
 
     window.addEventListener("resize", handleResize);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, [layout, cols, maxRows]);
-
-  // Windows state & actions
-  const windows = {
-    [SPREADSHEET]: {
-      state: useWindowState(SPREADSHEET),
-      actions: useWindowActions(SPREADSHEET),
-    },
-    [PIVOT]: {
-      state: useWindowState(PIVOT),
-      actions: useWindowActions(PIVOT),
-    },
-    [KANBAN]: {
-      state: useWindowState(KANBAN),
-      actions: useWindowActions(KANBAN),
-    },
-    [FILE_MANAGER]: {
-      state: useWindowState(FILE_MANAGER),
-      actions: useWindowActions(FILE_MANAGER),
-    },
-  };
 
   const handleToggleSearch = () => {
     setIsSearchOpen((prev) => !prev);
@@ -130,33 +91,31 @@ const App = () => {
       setSelectedIcon(key);
     }
 
-    const currentWindow = windows[key];
+    const win = windows[key];
 
-    const topMost = zIndexOrder[zIndexOrder.length - 1];
+    const topMost = win.zIndexOrder[win.zIndexOrder.length - 1];
     const isTop = topMost === key;
 
-    if (!currentWindow.state.isOpen) {
-      currentWindow.actions.toggle();
-      setZIndexOrder(key);
+    if (!win.isOpen) {
+      win.toggle();
+      win.bringToFront();
+
       return;
     }
 
-    if (currentWindow.state.isMinimized) {
-      // open & minimized -> restore
-      currentWindow.actions.restore();
-      setZIndexOrder(key);
+    if (win.isMinimized) {
+      win.restore();
+      win.bringToFront();
+
       return;
     }
 
     if (!isTop) {
-      // open & not minimized & not top-most -> bring to front
-      setZIndexOrder(key);
+      win.bringToFront();
+
       return;
     }
   };
-
-  const zIndexFor = (key: WindowKey) =>
-    (zIndexOrder.indexOf(key) >= 0 ? zIndexOrder.indexOf(key) : -1) + 1;
 
   const handleBackgroundMouseDown: React.MouseEventHandler<HTMLDivElement> = (
     e
@@ -179,59 +138,22 @@ const App = () => {
       </div>
     ));
 
-  const renderPages = () => {
-    const pages = [];
+  const renderWindows = () =>
+    Object.entries(WINDOW_CONFIGS).map(([key, { title, src, Page }]) => {
+      const win = windows[key as WindowKey];
+      if (!win?.isOpen) return null;
 
-    if (windows[SPREADSHEET]?.state.isOpen) {
-      pages.push(
-        <SpreadsheetPage
-          key={SPREADSHEET}
-          onClose={windows[SPREADSHEET]?.actions.close}
-          onMaximize={windows[SPREADSHEET]?.actions.maximize}
-          onMinimize={windows[SPREADSHEET]?.actions.minimize}
-          zIndex={zIndexFor(SPREADSHEET)}
-        />
+      return (
+        <BaseWindow
+          key={key}
+          windowKey={key as WindowKey}
+          title={title}
+          src={src}
+        >
+          <Page />
+        </BaseWindow>
       );
-    }
-
-    if (windows[PIVOT]?.state.isOpen) {
-      pages.push(
-        <PivotPage
-          key={PIVOT}
-          onClose={windows[PIVOT]?.actions.close}
-          onMaximize={windows[PIVOT]?.actions.maximize}
-          onMinimize={windows[PIVOT]?.actions.minimize}
-          zIndex={zIndexFor(PIVOT)}
-        />
-      );
-    }
-
-    if (windows[KANBAN]?.state.isOpen) {
-      pages.push(
-        <KanbanPage
-          key={KANBAN}
-          onClose={windows[KANBAN]?.actions.close}
-          onMaximize={windows[KANBAN]?.actions.maximize}
-          onMinimize={windows[KANBAN]?.actions.minimize}
-          zIndex={zIndexFor(KANBAN)}
-        />
-      );
-    }
-
-    if (windows[FILE_MANAGER]?.state.isOpen) {
-      pages.push(
-        <FilemanagerPage
-          key={FILE_MANAGER}
-          onClose={windows[FILE_MANAGER]?.actions.close}
-          onMaximize={windows[FILE_MANAGER]?.actions.maximize}
-          onMinimize={windows[FILE_MANAGER]?.actions.minimize}
-          zIndex={zIndexFor(FILE_MANAGER)}
-        />
-      );
-    }
-
-    return pages;
-  };
+    });
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -260,7 +182,7 @@ const App = () => {
           >
             {renderDesktopIcons()}
           </GridLayout>
-          {renderPages()}
+          {renderWindows()}
           {/* Search Overlay */}
           {isSearchOpen && (
             <SearchOverlay
