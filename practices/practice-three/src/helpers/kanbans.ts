@@ -68,3 +68,64 @@ export const updateKanbanItems = (
 
   return newBoard;
 };
+
+export const syncLayoutToBoard = (
+  newLayout: Layout[],
+  currentBoard: BoardColumn[]
+): BoardColumn[] => {
+  const newBoard = [...currentBoard];
+  const groups: Record<number, { id: string; y: number }[]> = {};
+
+  newLayout.forEach((item) => {
+    if (!groups[item.x]) groups[item.x] = [];
+    groups[item.x].push({ id: item.i, y: item.y });
+  });
+
+  Object.entries(groups).forEach(([colStr, items]) => {
+    const col = parseInt(colStr);
+    const sortedItems = items.sort((a, b) => a.y - b.y);
+    const sortedIds = sortedItems.map((i) => i.id);
+    const colIndex = newBoard.findIndex(
+      (c) => STATUS_TO_COLUMN[c.progressStatus] === col
+    );
+    if (colIndex >= 0) {
+      newBoard[colIndex].taskIds = sortedIds;
+      newBoard[colIndex].taskOrders = {};
+      sortedIds.forEach((id, index) => {
+        newBoard[colIndex].taskOrders[id] = index;
+      });
+    }
+  });
+
+  // Clear empty columns
+  newBoard.forEach((col, colIndex) => {
+    const colNum = STATUS_TO_COLUMN[col.progressStatus];
+    if (!(colNum in groups)) {
+      newBoard[colIndex].taskIds = [];
+      newBoard[colIndex].taskOrders = {};
+    }
+  });
+
+  return newBoard;
+};
+
+export const removeTaskFromBoard = (
+  board: BoardColumn[],
+  taskId: string
+): BoardColumn[] => {
+  const newBoard = [...board];
+  const colIndex = newBoard.findIndex((col) => col.taskIds.includes(taskId));
+  if (colIndex >= 0) {
+    newBoard[colIndex].taskIds = newBoard[colIndex].taskIds.filter(
+      (id) => id !== taskId
+    );
+    delete newBoard[colIndex].taskOrders[taskId];
+
+    // Shift orders in column
+    newBoard[colIndex].taskIds.forEach((id, idx) => {
+      newBoard[colIndex].taskOrders[id] = idx;
+    });
+  }
+
+  return newBoard;
+};

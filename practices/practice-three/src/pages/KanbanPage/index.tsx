@@ -14,15 +14,10 @@ import {
   SingleSelect,
 } from "@/components";
 
-// Constant
-import {
-  QUERY_KEY_BOARD,
-  QUERY_KEY_TASKS,
-  STATUSES,
-  STATUS_TO_COLUMN,
-} from "@/constant";
+// Constants
+import { QUERY_KEY_BOARD, QUERY_KEY_TASKS, STATUSES } from "@/constant";
 
-// Hook
+// Hooks
 import {
   useAddTask,
   useDeleteTask,
@@ -36,7 +31,13 @@ import {
 import type { BoardColumn, Task } from "@/types";
 
 // Helpers
-import { generateLayout, updateKanbanItems } from "@/helpers";
+import {
+  generateLayout,
+  removeTaskFromBoard,
+  syncLayoutToBoard,
+  updateKanbanItems,
+  updateLayoutSafely,
+} from "@/helpers";
 
 // Services
 import { saveKanbanBoard } from "@/services";
@@ -60,13 +61,9 @@ const KanbanPage = () => {
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState<{
-    title: string;
-    tags: string[];
-    progressStatus: string;
-  }>({
+  const [formData, setFormData] = useState({
     title: "",
-    tags: [],
+    tags: [] as string[],
     progressStatus: "",
   });
 
@@ -77,12 +74,14 @@ const KanbanPage = () => {
     isError: isErrorBoard,
     error: boardError,
   } = useBoardQuery();
+
   const {
     data: tasksData = [],
     isFetching: isFetchingTasks,
     isError: isErrorTasks,
     error: tasksError,
   } = useTasksQuery();
+
   const { mutate: addTask } = useAddTask();
   const { mutate: updateTask } = useUpdateTask();
   const { mutate: deleteTask } = useDeleteTask();
@@ -92,23 +91,23 @@ const KanbanPage = () => {
   const hasError = isErrorBoard || isErrorTasks;
   const isReady = !isFetching && !hasError;
 
-  // Sync ref
+  // Sync ref with state
   useEffect(() => {
     hasChangedRef.current = hasChanged;
   }, [hasChanged]);
 
-  // Init data
+  // Initialize data from API
   useEffect(() => {
     const newTasks = tasksData.reduce(
       (acc, task) => ({ ...acc, [task.id]: task }),
-      {}
+      {} as Record<string, Task>
     );
     setBoard(boardData);
     setTasks(newTasks);
     setLayout(generateLayout(boardData, newTasks));
   }, [boardData, tasksData]);
 
-  // Invalidate on unmount
+  // Invalidate queries on unmount if changed
   useEffect(() => {
     return () => {
       if (hasChangedRef.current) {
@@ -118,7 +117,7 @@ const KanbanPage = () => {
     };
   }, [queryClient]);
 
-  // Resize
+  // Handle container resize
   useLayoutEffect(() => {
     const handleResize = () => {
       if (containerRef.current) {
@@ -132,63 +131,28 @@ const KanbanPage = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Layout change (drag & drop)
+  // Layout change (drag & drop reordering)
   const handleLayoutChange = (newLayout: Layout[]) => {
     if (skipSyncOnLayoutChange.current) {
       skipSyncOnLayoutChange.current = false;
-
       return;
     }
 
-    // Update only for reordering (drag & drop)
-    if (canUpdateLayout.current) {
-      setLayout(newLayout);
+    if (!canUpdateLayout.current) return;
 
-      // Sync board with new layout
-      const newBoard = [...board];
-      const groups: Record<number, { id: string; y: number }[]> = {};
+    setLayout(newLayout);
 
-      newLayout.forEach((item) => {
-        if (!groups[item.x]) groups[item.x] = [];
-        groups[item.x].push({ id: item.i, y: item.y });
-      });
-
-      Object.entries(groups).forEach(([colStr, items]) => {
-        const col = parseInt(colStr);
-        const sortedItems = items.sort((a, b) => a.y - b.y);
-        const sortedIds = sortedItems.map((i) => i.id);
-        const colIndex = newBoard.findIndex(
-          (c) => STATUS_TO_COLUMN[c.progressStatus] === col
-        );
-        if (colIndex >= 0) {
-          newBoard[colIndex].taskIds = sortedIds;
-          newBoard[colIndex].taskOrders = {};
-          sortedIds.forEach((id, index) => {
-            newBoard[colIndex].taskOrders[id] = index;
-          });
-        }
-      });
-
-      // Clear empty columns
-      newBoard.forEach((col, colIndex) => {
-        const colNum = STATUS_TO_COLUMN[col.progressStatus];
-        if (!(colNum in groups)) {
-          newBoard[colIndex].taskIds = [];
-          newBoard[colIndex].taskOrders = {};
-        }
-      });
-
-      setBoard(newBoard);
-      setHasChanged(true);
-      saveKanbanBoard({ board: newBoard, updateBoardColumn });
-    }
+    const newBoard = syncLayoutToBoard(newLayout, board);
+    setBoard(newBoard);
+    setHasChanged(true);
+    saveKanbanBoard({ board: newBoard, updateBoardColumn });
   };
 
   const handleDragStop = () => {
     if (!canUpdateLayout.current) canUpdateLayout.current = true;
   };
 
-  // Add task
+  // Add new task
   const handleAddItem = () => {
     const newId = uuidv4();
     const newTask: Task = {
@@ -202,6 +166,7 @@ const KanbanPage = () => {
     const prevLayout = [...layout];
 
     setTasks((prev) => ({ ...prev, [newId]: newTask }));
+
     setBoard((prev) => {
       const newBoard = [...prev];
       newBoard[0].taskIds.push(newId);
@@ -223,99 +188,87 @@ const KanbanPage = () => {
     });
   };
 
-  // Edit
+  // Edit task
   const handleEditItem = (id: string) => {
     const task = tasks[id];
     const status =
       board.find((col) => col.taskIds.includes(id))?.progressStatus || "";
     setEditingId(id);
-    setFormData({
-      title: task.title,
-      tags: task.tags,
-      progressStatus: status,
-    });
+    setFormData({ title: task.title, tags: task.tags, progressStatus: status });
     setIsModalOpen(true);
   };
 
-  const handleFormChange = (field: string, value: string | string[]) => {
+  const handleFormChange = (
+    field: keyof typeof formData,
+    value: string | string[]
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSave = () => {
-    if (editingId) {
-      const updatedTask: Task = {
-        ...tasks[editingId],
-        title: formData.title,
-        tags: formData.tags as string[],
-      };
+    if (!editingId) return;
 
-      const prevTasks = { ...tasks };
-      const prevBoard = [...board];
-      const prevLayout = [...layout];
+    const updatedTask: Task = {
+      ...tasks[editingId],
+      title: formData.title,
+      tags: formData.tags as string[],
+    };
 
-      setTasks((prev) => ({ ...prev, [editingId]: updatedTask }));
-      setBoard((prev) => {
-        const newBoard = updateKanbanItems(prev, editingId, formData);
-        const updatedTasks = { ...tasks, [editingId]: updatedTask };
-        skipSyncOnLayoutChange.current = true;
-        setLayout(generateLayout(newBoard, updatedTasks));
-        setHasChanged(true);
+    const prevTasks = { ...tasks };
+    const prevBoard = [...board];
+    const prevLayout = [...layout];
 
-        return newBoard;
-      });
+    setTasks((prev) => ({ ...prev, [editingId]: updatedTask }));
+    setBoard((prev) => {
+      const newBoard = updateKanbanItems(prev, editingId, formData);
+      const updatedTasks = { ...tasks, [editingId]: updatedTask };
+      skipSyncOnLayoutChange.current = true;
+      setLayout(generateLayout(newBoard, updatedTasks));
+      setHasChanged(true);
 
-      updateTask(updatedTask, {
-        onError: () => {
-          setTasks(prevTasks);
-          setBoard(prevBoard);
-          setLayout(prevLayout);
-        },
-      });
-    }
+      return newBoard;
+    });
+
+    updateTask(updatedTask, {
+      onError: () => {
+        setTasks(prevTasks);
+        setBoard(prevBoard);
+        setLayout(prevLayout);
+      },
+    });
+
     setIsModalOpen(false);
   };
 
   const handleRemove = () => {
-    if (editingId) {
-      const prevTasks = { ...tasks };
-      const prevBoard = [...board];
-      const prevLayout = [...layout];
+    if (!editingId) return;
 
-      const newBoard = [...board];
-      const colIndex = newBoard.findIndex((col) =>
-        col.taskIds.includes(editingId)
-      );
-      if (colIndex >= 0) {
-        newBoard[colIndex].taskIds = newBoard[colIndex].taskIds.filter(
-          (id) => id !== editingId
-        );
-        delete newBoard[colIndex].taskOrders[editingId];
+    const prevTasks = { ...tasks };
+    const prevBoard = [...board];
+    const prevLayout = [...layout];
 
-        // Shift orders in column
-        newBoard[colIndex].taskIds.forEach((id, index) => {
-          newBoard[colIndex].taskOrders[id] = index;
-        });
-      }
+    const newBoard = removeTaskFromBoard(board, editingId);
 
-      setBoard(newBoard);
-      setHasChanged(true);
-      setTasks((prev) => {
-        const newTasks = { ...prev };
-        delete newTasks[editingId];
-        skipSyncOnLayoutChange.current = true;
-        setLayout(generateLayout(newBoard, newTasks));
+    setBoard(newBoard);
+    setHasChanged(true);
 
-        return newTasks;
-      });
+    setTasks((prev) => {
+      const newTasks = { ...prev };
+      delete newTasks[editingId];
+      skipSyncOnLayoutChange.current = true;
+      setLayout(generateLayout(newBoard, newTasks));
 
-      deleteTask(editingId, {
-        onError: () => {
-          setTasks(prevTasks);
-          setBoard(prevBoard);
-          setLayout(prevLayout);
-        },
-      });
-    }
+      return newTasks;
+    });
+
+    deleteTask(editingId, {
+      onError: () => {
+        setTasks(prevTasks);
+        setBoard(prevBoard);
+        setLayout(prevLayout);
+      },
+    });
+
     setIsModalOpen(false);
   };
 
@@ -370,7 +323,7 @@ const KanbanPage = () => {
     </div>
   );
 
-  const modalBody = (
+  const renderModalBody = () => (
     <div className="mt-4 space-y-4">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -420,7 +373,7 @@ const KanbanPage = () => {
     </div>
   );
 
-  const renderApiError = () => (
+  const renderError = () => (
     <ErrorAlert
       title="Failed to load kanban data"
       centerScreen
@@ -448,7 +401,7 @@ const KanbanPage = () => {
         onDragStop={handleDragStop}
         draggableHandle=".item-drag-handle"
       >
-        {Object.values(tasks).map((task) => renderItem(task))}
+        {Object.values(tasks).map(renderItem)}
       </GridLayout>
     </div>
   );
@@ -460,7 +413,7 @@ const KanbanPage = () => {
     >
       {renderHeaders()}
       {isFetching && renderLoading()}
-      {hasError && renderApiError()}
+      {hasError && renderError()}
       {isReady && renderContent()}
 
       <Modal
@@ -468,7 +421,7 @@ const KanbanPage = () => {
         title="Edit card"
         onClose={() => setIsModalOpen(false)}
       >
-        {modalBody}
+        {renderModalBody()}
       </Modal>
     </div>
   );
