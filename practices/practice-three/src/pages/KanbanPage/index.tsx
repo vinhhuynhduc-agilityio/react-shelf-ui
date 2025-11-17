@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import GridLayout, { Layout } from "react-grid-layout";
-import { useShallow } from "zustand/react/shallow";
 import { v4 as uuidv4 } from "uuid";
 import { useQueryClient } from "@tanstack/react-query";
 import { Spin } from "antd";
@@ -8,7 +7,6 @@ import { Spin } from "antd";
 // Components
 import {
   Button,
-  DraggableWindow,
   ErrorAlert,
   IconButton,
   Modal,
@@ -22,11 +20,7 @@ import {
   QUERY_KEY_TASKS,
   STATUSES,
   STATUS_TO_COLUMN,
-  WINDOW_KEYS,
 } from "@/constant";
-
-// Store
-import { useWindowStore } from "@/stores";
 
 // Hook
 import {
@@ -47,32 +41,23 @@ import { generateLayout, updateKanbanItems } from "@/helpers";
 // Services
 import { saveKanbanBoard } from "@/services";
 
-const KanbanPage = ({
-  onClose,
-  onMaximize,
-  onMinimize,
-  zIndex,
-}: {
-  onClose: () => void;
-  onMaximize: () => void;
-  onMinimize: () => void;
-  zIndex: number;
-}) => {
+const KanbanPage = () => {
   const queryClient = useQueryClient();
 
-  // Refs for layout and drag handling
+  // Refs
   const containerRef = useRef<HTMLDivElement>(null);
   const canUpdateLayout = useRef(false);
   const skipSyncOnLayoutChange = useRef(false);
+  const hasChangedRef = useRef(false);
 
-  // State management for grid and data
+  // State
   const [gridWidth, setGridWidth] = useState(0);
   const [layout, setLayout] = useState<Layout[]>([]);
   const [board, setBoard] = useState<BoardColumn[]>([]);
   const [tasks, setTasks] = useState<Record<string, Task>>({});
   const [hasChanged, setHasChanged] = useState(false);
 
-  // Modal state for editing tasks
+  // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<{
@@ -85,19 +70,7 @@ const KanbanPage = ({
     progressStatus: "",
   });
 
-  // Refs for unmount cleanup and flags
-  const hasChangedRef = useRef(hasChanged);
-
-  // Store for window management
-  const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
-    useShallow((state) => ({
-      zIndexOrder: state.zIndexOrder,
-      setZIndexOrder: state.setZIndexOrder,
-      isMinimized: state.windows[WINDOW_KEYS.KANBAN].isMinimized,
-    }))
-  );
-
-  // API hooks for data fetching and mutations
+  // API
   const {
     data: boardData = [],
     isFetching: isFetchingBoard,
@@ -119,12 +92,12 @@ const KanbanPage = ({
   const hasError = isErrorBoard || isErrorTasks;
   const isReady = !isFetching && !hasError;
 
-  // Update refs when state changes
+  // Sync ref
   useEffect(() => {
     hasChangedRef.current = hasChanged;
   }, [hasChanged]);
 
-  // Initialize state from fetched data
+  // Init data
   useEffect(() => {
     const newTasks = tasksData.reduce(
       (acc, task) => ({ ...acc, [task.id]: task }),
@@ -135,7 +108,7 @@ const KanbanPage = ({
     setLayout(generateLayout(boardData, newTasks));
   }, [boardData, tasksData]);
 
-  // Invalidate queries on unmount if changes occurred
+  // Invalidate on unmount
   useEffect(() => {
     return () => {
       if (hasChangedRef.current) {
@@ -145,7 +118,7 @@ const KanbanPage = ({
     };
   }, [queryClient]);
 
-  // Handle window resize for responsive grid width
+  // Resize
   useLayoutEffect(() => {
     const handleResize = () => {
       if (containerRef.current) {
@@ -159,16 +132,8 @@ const KanbanPage = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Bring window to front on mouse down
-  const handleMouseDown = () => {
-    if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.KANBAN) {
-      setZIndexOrder(WINDOW_KEYS.KANBAN);
-    }
-  };
-
-  // Handle layout changes from drag and drop
+  // Layout change (drag & drop)
   const handleLayoutChange = (newLayout: Layout[]) => {
-    // Skip if change is from add/edit/remove actions
     if (skipSyncOnLayoutChange.current) {
       skipSyncOnLayoutChange.current = false;
 
@@ -215,21 +180,15 @@ const KanbanPage = ({
 
       setBoard(newBoard);
       setHasChanged(true);
-
-      // only update api when drag & drop
-      saveKanbanBoard({
-        board: newBoard,
-        updateBoardColumn,
-      });
+      saveKanbanBoard({ board: newBoard, updateBoardColumn });
     }
   };
 
-  // Enable layout update after drag stop
   const handleDragStop = () => {
     if (!canUpdateLayout.current) canUpdateLayout.current = true;
   };
 
-  // Add new task to board
+  // Add task
   const handleAddItem = () => {
     const newId = uuidv4();
     const newTask: Task = {
@@ -249,7 +208,6 @@ const KanbanPage = ({
       newBoard[0].taskOrders[newId] = newBoard[0].taskIds.length - 1;
       const updatedTasks = { ...tasks, [newId]: newTask };
       skipSyncOnLayoutChange.current = true;
-
       setLayout(generateLayout(newBoard, updatedTasks));
       setHasChanged(true);
 
@@ -258,7 +216,6 @@ const KanbanPage = ({
 
     addTask(newTask, {
       onError: () => {
-        // Revert on error
         setTasks(prevTasks);
         setBoard(prevBoard);
         setLayout(prevLayout);
@@ -266,7 +223,7 @@ const KanbanPage = ({
     });
   };
 
-  // Open modal for task editing
+  // Edit
   const handleEditItem = (id: string) => {
     const task = tasks[id];
     const status =
@@ -280,12 +237,10 @@ const KanbanPage = ({
     setIsModalOpen(true);
   };
 
-  // Handle form input changes in modal
   const handleFormChange = (field: string, value: string | string[]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Save edited task
   const handleSave = () => {
     if (editingId) {
       const updatedTask: Task = {
@@ -303,7 +258,6 @@ const KanbanPage = ({
         const newBoard = updateKanbanItems(prev, editingId, formData);
         const updatedTasks = { ...tasks, [editingId]: updatedTask };
         skipSyncOnLayoutChange.current = true;
-
         setLayout(generateLayout(newBoard, updatedTasks));
         setHasChanged(true);
 
@@ -312,7 +266,6 @@ const KanbanPage = ({
 
       updateTask(updatedTask, {
         onError: () => {
-          // Revert on error
           setTasks(prevTasks);
           setBoard(prevBoard);
           setLayout(prevLayout);
@@ -322,7 +275,6 @@ const KanbanPage = ({
     setIsModalOpen(false);
   };
 
-  // Remove task
   const handleRemove = () => {
     if (editingId) {
       const prevTasks = { ...tasks };
@@ -347,12 +299,10 @@ const KanbanPage = ({
 
       setBoard(newBoard);
       setHasChanged(true);
-
       setTasks((prev) => {
         const newTasks = { ...prev };
         delete newTasks[editingId];
         skipSyncOnLayoutChange.current = true;
-
         setLayout(generateLayout(newBoard, newTasks));
 
         return newTasks;
@@ -360,7 +310,6 @@ const KanbanPage = ({
 
       deleteTask(editingId, {
         onError: () => {
-          // Revert on error
           setTasks(prevTasks);
           setBoard(prevBoard);
           setLayout(prevLayout);
@@ -370,15 +319,12 @@ const KanbanPage = ({
     setIsModalOpen(false);
   };
 
-  // Render column headers
   const renderHeaders = () => (
     <div className="flex mt-[10px] ml-[10px] mr-[10px] h-[42px] gap-[10px]">
       {STATUSES.map((status, idx) => (
         <div
           key={status}
-          className={`
-          flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] border border-[#DADEE0] bg-[#ffffff] truncate
-        `}
+          className="flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] border border-[#DADEE0] bg-[#ffffff] truncate"
         >
           {idx === 0 && (
             <IconButton
@@ -392,7 +338,6 @@ const KanbanPage = ({
     </div>
   );
 
-  // Render individual task item
   const renderItem = (task: Task) => (
     <div
       key={task.id}
@@ -425,7 +370,6 @@ const KanbanPage = ({
     </div>
   );
 
-  // Modal content
   const modalBody = (
     <div className="mt-4 space-y-4">
       <div>
@@ -510,28 +454,15 @@ const KanbanPage = ({
   );
 
   return (
-    <>
-      <DraggableWindow
-        windowKey={WINDOW_KEYS.KANBAN}
-        src="/images/kanban.png"
-        title="Kanban"
-        hidden={isMinimized}
-        zIndex={zIndex}
-        onClose={onClose}
-        onMaximize={onMaximize}
-        onMinimize={onMinimize}
-        onMouseDown={handleMouseDown}
-      >
-        <div
-          ref={containerRef}
-          className="w-full h-full flex flex-col bg-[#EBEDF0] overflow-hidden"
-        >
-          {renderHeaders()}
-          {isFetching && renderLoading()}
-          {hasError && renderApiError()}
-          {isReady && renderContent()}
-        </div>
-      </DraggableWindow>
+    <div
+      ref={containerRef}
+      className="w-full h-full flex flex-col bg-[#EBEDF0] overflow-hidden"
+    >
+      {renderHeaders()}
+      {isFetching && renderLoading()}
+      {hasError && renderApiError()}
+      {isReady && renderContent()}
+
       <Modal
         isOpen={isModalOpen}
         title="Edit card"
@@ -539,7 +470,7 @@ const KanbanPage = ({
       >
         {modalBody}
       </Modal>
-    </>
+    </div>
   );
 };
 

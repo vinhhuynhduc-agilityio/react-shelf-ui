@@ -11,7 +11,6 @@ import clsx from "clsx";
 import { Tree } from "antd";
 import type { DataNode } from "antd/es/tree";
 import type { ColumnsType } from "antd/es/table";
-import { useShallow } from "zustand/react/shallow";
 import { useForm, Controller } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { useQueryClient } from "@tanstack/react-query";
@@ -21,11 +20,7 @@ import {
   addConfigs,
   dropdownOptions,
   QUERY_KEY_FILE_MANAGER,
-  WINDOW_KEYS,
 } from "@/constant";
-
-// store
-import { useWindowStore } from "@/stores";
 
 // hook
 import {
@@ -40,7 +35,6 @@ import {
 import {
   Button,
   DataTable,
-  DraggableWindow,
   IconButton,
   Dropdown,
   Modal,
@@ -68,17 +62,7 @@ import {
 // services
 import { saveAllFileFileManager } from "@/services";
 
-const FilemanagerPage = ({
-  onClose,
-  onMaximize,
-  onMinimize,
-  zIndex,
-}: {
-  onClose: () => void;
-  onMaximize: () => void;
-  onMinimize: () => void;
-  zIndex: number;
-}) => {
+const FilemanagerPage = () => {
   const queryClient = useQueryClient();
 
   // === STATE ===
@@ -139,15 +123,6 @@ const FilemanagerPage = ({
     defaultValues: { name: "" },
     mode: "onChange",
   });
-
-  // store
-  const { zIndexOrder, setZIndexOrder, isMinimized } = useWindowStore(
-    useShallow((state) => ({
-      zIndexOrder: state.zIndexOrder,
-      setZIndexOrder: state.setZIndexOrder,
-      isMinimized: state.windows[WINDOW_KEYS.FILE_MANAGER].isMinimized,
-    }))
-  );
 
   // === QUERIES & MUTATIONS ===
   const {
@@ -222,12 +197,6 @@ const FilemanagerPage = ({
 
   const isShowNavigation =
     showNavigation && !(isSearchMode && debouncedSearch.trim());
-
-  const handleMouseDown = () => {
-    if (zIndexOrder[zIndexOrder.length - 1] !== WINDOW_KEYS.FILE_MANAGER) {
-      setZIndexOrder(WINDOW_KEYS.FILE_MANAGER);
-    }
-  };
 
   const buildTree = useCallback(
     (items: FileItem[], parentId: string | number): DataNode[] => {
@@ -898,7 +867,6 @@ const FilemanagerPage = ({
           "w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]"
         )}
       >
-        {/* Nút + Dropdown */}
         <div className="flex items-center justify-center w-full mt-[8px] mb-[8px]">
           <Button
             variant="primary"
@@ -1227,17 +1195,7 @@ const FilemanagerPage = ({
   );
 
   return (
-    <DraggableWindow
-      windowKey={WINDOW_KEYS.FILE_MANAGER}
-      src="/images/file-manager.png"
-      title="File Manager"
-      hidden={isMinimized}
-      zIndex={zIndex}
-      onClose={onClose}
-      onMaximize={onMaximize}
-      onMinimize={onMinimize}
-      onMouseDown={handleMouseDown}
-    >
+    <>
       {isErrorFilemanager ? renderApiError() : renderContent()}
 
       {/* render modals */}
@@ -1245,7 +1203,7 @@ const FilemanagerPage = ({
       {renderDeleteModal()}
       {renderContextMenu()}
       {renderUploadInputs()}
-    </DraggableWindow>
+    </>
   );
 };
 
