@@ -6,11 +6,17 @@ import { Button, ChartView, PivotTableView, PivotTreeView } from "@/components";
 // Hook
 import { usePivotQuery } from "@/hook";
 
+// Types
+import { ViewType } from "@/types";
+
+// Constant
+import { VIEW } from "@/constant";
+
 const PivotPage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // state
-  const [currentView, setCurrentView] = useState<string>("tree");
+  const [currentView, setCurrentView] = useState<ViewType>(VIEW.TREE);
   const [tableHeight, setTableHeight] = useState<number>(0);
 
   // hook
@@ -22,83 +28,63 @@ const PivotPage = () => {
   } = usePivotQuery();
 
   useLayoutEffect(() => {
-    const containerElement = containerRef.current;
+    const container = containerRef.current;
+    if (!container) return;
 
     const updateHeight = () => {
-      if (containerElement) {
-        const buttonBarHeight = 44;
-        const tableHeaderHeight = 74;
-        const availableHeight =
-          containerElement.clientHeight - buttonBarHeight - tableHeaderHeight;
-        setTableHeight(Math.max(availableHeight, 100));
-      }
+      const buttonBarHeight = 44;
+      const headerHeight = 74;
+      const available = container.clientHeight - buttonBarHeight - headerHeight;
+      setTableHeight(Math.max(available, 100));
     };
 
     const observer = new ResizeObserver(updateHeight);
-    if (containerElement) observer.observe(containerElement);
+    observer.observe(container);
     updateHeight();
 
-    return () => {
-      if (containerElement) observer.unobserve(containerElement);
-    };
+    return () => observer.disconnect();
   }, []);
+
+  const renderViewButtons = () => (
+    <div className="flex justify-end items-center space-x-2 mr-[10px] h-[44px]">
+      {Object.values(VIEW).map((view) => (
+        <Button
+          key={view}
+          variant="segment"
+          active={currentView === view}
+          onClick={() => setCurrentView(view)}
+          className="w-[80px]"
+        >
+          {view.charAt(0).toUpperCase() + view.slice(1)}
+        </Button>
+      ))}
+    </div>
+  );
+
+  const renderCurrentView = () => {
+    const commonProps = {
+      pivot,
+      isLoading,
+      isErrorPivot,
+      pivotError,
+    };
+
+    switch (currentView) {
+      case VIEW.TABLE:
+        return <PivotTableView {...commonProps} tableHeight={tableHeight} />;
+      case VIEW.TREE:
+        return <PivotTreeView {...commonProps} tableHeight={tableHeight} />;
+      case VIEW.CHART:
+        return <ChartView {...commonProps} height={tableHeight + 74} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="flex-1 h-full w-full overflow-hidden" ref={containerRef}>
-      <div className="flex justify-end items-center space-x-2 mr-[10px] h-[44px]">
-        <Button
-          variant="segment"
-          active={currentView === "table"}
-          onClick={() => setCurrentView("table")}
-          className="w-[80px]"
-        >
-          Table
-        </Button>
-        <Button
-          variant="segment"
-          active={currentView === "tree"}
-          onClick={() => setCurrentView("tree")}
-          className="w-[80px]"
-        >
-          Tree
-        </Button>
-        <Button
-          variant="segment"
-          active={currentView === "chart"}
-          onClick={() => setCurrentView("chart")}
-          className="w-[80px]"
-        >
-          Chart
-        </Button>
-      </div>
-
-      {currentView === "table" && (
-        <PivotTableView
-          pivot={pivot}
-          tableHeight={tableHeight}
-          isLoading={isLoading}
-          isErrorPivot={isErrorPivot}
-          pivotError={pivotError}
-        />
-      )}
-      {currentView === "tree" && (
-        <PivotTreeView
-          pivot={pivot}
-          tableHeight={tableHeight}
-          isLoading={isLoading}
-          isErrorPivot={isErrorPivot}
-          pivotError={pivotError}
-        />
-      )}
-      {currentView === "chart" && (
-        <ChartView
-          pivot={pivot}
-          height={tableHeight + 74}
-          isErrorPivot={isErrorPivot}
-          pivotError={pivotError}
-          isLoading={isLoading}
-        />
-      )}
+      {renderViewButtons()}
+      {renderCurrentView()}
     </div>
   );
 };

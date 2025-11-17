@@ -11,12 +11,6 @@ import { Pivot } from "@/types";
 // Components
 import { ErrorAlert } from "@/components/common";
 
-interface ChartData {
-  year: number | string;
-  type: string;
-  value: number;
-}
-
 interface ItemMarkerFill {
   label: string;
   color: string;
@@ -59,7 +53,7 @@ const ChartView = ({
       },
     },
     style: {
-      fill: (datum: ChartData) => colorMap[datum.type],
+      fill: (d: { type: keyof typeof colorMap }) => colorMap[d.type],
     },
     height,
   };

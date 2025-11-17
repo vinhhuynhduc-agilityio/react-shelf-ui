@@ -6,3 +6,4 @@ export * from "./messages";
 export * from "./kanban";
 export * from "./filemanager";
 export * from "./spreadsheet";
+export * from "./pivot";
