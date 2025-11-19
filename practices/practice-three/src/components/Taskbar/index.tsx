@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 // Store
@@ -18,7 +18,7 @@ interface TaskbarProps {
   onToggleSearch: () => void;
 }
 
-const Taskbar = ({ onToggleSearch }: TaskbarProps) => {
+const Taskbar = memo(({ onToggleSearch }: TaskbarProps) => {
   const {
     windows,
     zIndexOrder,
@@ -101,6 +101,6 @@ const Taskbar = ({ onToggleSearch }: TaskbarProps) => {
       </div>
     </div>
   );
-};
+});
 
 export default Taskbar;

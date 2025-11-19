@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 interface IconButtonProps {
   // Use onMouseDown instead of onClick in contexts where react-grid-layout is used,
   // due to known issues with event capturing in react-grid-layout that may prevent onClick from firing.
@@ -10,35 +12,37 @@ interface IconButtonProps {
   disabled?: boolean;
 }
 
-const IconButton = ({
-  onClick,
-  onMouseDown,
-  buttonStyles = "p-1 w-[26px] h-[26px] flex justify-center items-center rounded-full",
-  iconStyles = "",
-  ariaLabel = "",
-  disabled = false,
-}: IconButtonProps) => {
-  return (
-    <button
-      className={`text-lg cursor-pointer ${buttonStyles}`}
-      disabled={disabled}
-      onClick={(e) => {
-        e.stopPropagation();
-        if (onClick) {
-          onClick(e);
-        }
-      }}
-      onMouseDown={(e) => {
-        e.stopPropagation();
-        if (onMouseDown) {
-          onMouseDown(e);
-        }
-      }}
-      aria-label={ariaLabel}
-    >
-      <i className={`${iconStyles}`}></i>
-    </button>
-  );
-};
+const IconButton = memo(
+  ({
+    onClick,
+    onMouseDown,
+    buttonStyles = "p-1 w-[26px] h-[26px] flex justify-center items-center rounded-full",
+    iconStyles = "",
+    ariaLabel = "",
+    disabled = false,
+  }: IconButtonProps) => {
+    return (
+      <button
+        className={`text-lg cursor-pointer ${buttonStyles}`}
+        disabled={disabled}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (onClick) {
+            onClick(e);
+          }
+        }}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          if (onMouseDown) {
+            onMouseDown(e);
+          }
+        }}
+        aria-label={ariaLabel}
+      >
+        <i className={`${iconStyles}`}></i>
+      </button>
+    );
+  }
+);
 
 export default IconButton;

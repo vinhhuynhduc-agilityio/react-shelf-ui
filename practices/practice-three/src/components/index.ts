@@ -11,3 +11,4 @@ export { PreviewPanel } from "./PreviewPanel";
 export { Sidebar } from "./Sidebar";
 export { HeaderBar } from "./HeaderBar";
 export { FileTableView } from "./FileTableView";
+export { KanbanCard } from "./KanbanCard";

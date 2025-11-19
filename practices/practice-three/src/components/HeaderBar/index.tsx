@@ -1,4 +1,7 @@
 import clsx from "clsx";
+import { useCallback } from "react";
+
+// Components
 import { IconButton } from "@/components";
 
 interface HeaderBarProps {
@@ -18,6 +21,10 @@ export const HeaderBar = ({
   onSearchChange,
   onTogglePreview,
 }: HeaderBarProps) => {
+  const handleSearchClick = useCallback(() => {
+    // todo: handle search icon click
+  }, []);
+
   return (
     <div className="flex items-center h-[56px] flex-shrink-0 w-full rounded-[2px] border border-[#DADEE0] text-[#475466] bg-[#FFFFFF]">
       <div className="flex flex-1 items-center ml-[12px]">
@@ -35,7 +42,7 @@ export const HeaderBar = ({
           <IconButton
             iconStyles="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
             buttonStyles="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
-            onClick={() => {}}
+            onClick={handleSearchClick}
           />
         </div>
       </div>

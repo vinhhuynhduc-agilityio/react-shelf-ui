@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect, useEffect } from "react";
+import { useState, useLayoutEffect, useEffect, useCallback } from "react";
 import GridLayout, { Layout } from "react-grid-layout";
 import { QueryClientProvider } from "@tanstack/react-query";
 
@@ -82,10 +82,10 @@ const App = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, [layout, cols, maxRows]);
 
-  const handleToggleSearch = () => {
+  const handleToggleSearch = useCallback(() => {
     setIsSearchOpen((prev) => !prev);
     if (!isSearchOpen) setSearchQuery("");
-  };
+  }, [isSearchOpen]);
 
   const handleIconClick = (key: WindowKey) => {
     if (selectedIcon !== key) {
