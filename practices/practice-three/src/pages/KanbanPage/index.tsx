@@ -36,7 +36,6 @@ import {
   removeTaskFromBoard,
   syncLayoutToBoard,
   updateKanbanItems,
-  updateLayoutSafely,
 } from "@/helpers";
 
 // Services

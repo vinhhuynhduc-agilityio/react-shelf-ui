@@ -3,11 +3,11 @@ import { ReactNode, useCallback } from "react";
 // Components
 import { DraggableWindow } from "@/components";
 
-// Hook
-import { useWindow } from "@/hook";
-
 // Types
 import type { WindowKey } from "@/types";
+
+// Hook
+import { useWindowActions, useWindowState, useZIndex } from "@/hook";
 
 interface BaseWindowProps {
   windowKey: WindowKey;
@@ -22,10 +22,9 @@ export const BaseWindow = ({
   src,
   children,
 }: BaseWindowProps) => {
-  const { isMinimized, zIndexOrder, close, maximize, minimize, bringToFront } =
-    useWindow(windowKey);
-
-  const zIndex = zIndexOrder.indexOf(windowKey) + 1 || 1;
+  const { isMinimized } = useWindowState(windowKey);
+  const { close, maximize, minimize } = useWindowActions(windowKey);
+  const { zIndex, bringToFront } = useZIndex(windowKey);
 
   const handleMouseDown = useCallback(() => {
     bringToFront();
