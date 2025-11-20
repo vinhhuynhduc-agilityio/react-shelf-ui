@@ -1,7 +1,7 @@
-import { memo, ReactNode, useCallback } from "react";
+import { memo, ReactNode, useCallback, useLayoutEffect } from "react";
 
 // component
-import { DraggableWindow } from "@/components";
+import { DraggableWindow, WindowHeader } from "@/components";
 
 // types
 import type { WindowKey } from "@/types";
@@ -12,6 +12,9 @@ import { useWindowState, useWindowActions, useZIndex } from "@/hook";
 // store
 import { useWindowStore } from "@/stores";
 
+// helpers
+import { clampToViewport } from "@/helpers";
+
 interface BaseWindowProps {
   windowKey: WindowKey;
   title: string;
@@ -21,34 +24,57 @@ interface BaseWindowProps {
 
 export const BaseWindow = memo(
   ({ windowKey, title, src, children }: BaseWindowProps) => {
-    const { isMinimized } = useWindowState(windowKey);
-    const { close, maximize, minimize } = useWindowActions(windowKey);
+    const { frame, isMinimized, isMaximized } = useWindowState(windowKey);
+    const { close, maximize, minimize, updateFrame } =
+      useWindowActions(windowKey);
     const { zIndex, bringToFront } = useZIndex(windowKey);
 
     const handleMouseDown = useCallback(() => {
       const currentTopMost = useWindowStore.getState().zIndexOrder.at(-1);
 
-      if (currentTopMost === windowKey) {
-        return;
-      }
+      if (currentTopMost === windowKey) return;
 
       bringToFront();
     }, [bringToFront, windowKey]);
 
-    console.log("Render BaseWindow:");
+    useLayoutEffect(() => {
+      if (isMaximized) return;
+
+      const onResize = () => {
+        const next = clampToViewport(frame);
+        if (
+          next.x !== frame.x ||
+          next.y !== frame.y ||
+          next.width !== frame.width ||
+          next.height !== frame.height
+        ) {
+          requestAnimationFrame(() => updateFrame(windowKey, next));
+        }
+      };
+
+      window.addEventListener("resize", onResize);
+
+      return () => window.removeEventListener("resize", onResize);
+    }, [isMaximized, frame, windowKey, updateFrame]);
+
     return (
       <DraggableWindow
         windowKey={windowKey}
-        src={src}
-        title={title}
         hidden={isMinimized}
         zIndex={zIndex}
-        onClose={close}
-        onMaximize={maximize}
-        onMinimize={minimize}
         onMouseDown={handleMouseDown}
       >
-        {children}
+        <div className="bg-white shadow-lg text-[#475466] w-full h-full flex flex-col overflow-hidden">
+          <WindowHeader
+            windowKey={windowKey}
+            src={src}
+            title={title}
+            onClose={close}
+            onMaximize={maximize}
+            onMinimize={minimize}
+          />
+          {children}
+        </div>
       </DraggableWindow>
     );
   },
