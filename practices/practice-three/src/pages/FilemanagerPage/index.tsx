@@ -199,9 +199,9 @@ const FilemanagerPage = () => {
     );
   }, [files, selectedFolder, debouncedSearch]);
 
-  const togglePreview = () => {
+  const togglePreview = useCallback(() => {
     setPreviewMode(!previewMode);
-  };
+  }, [previewMode]);
 
   const openNameInputDialog = (
     mode: "add" | "rename",

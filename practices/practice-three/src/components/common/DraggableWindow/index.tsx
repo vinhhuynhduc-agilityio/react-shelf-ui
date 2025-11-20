@@ -1,75 +1,34 @@
-import { memo, useLayoutEffect } from "react";
+import { memo } from "react";
 import { Rnd } from "react-rnd";
-import { useShallow } from "zustand/react/shallow";
-
-// Store
-import { useWindowStore } from "@/stores";
+import { useShallow } from "zustand/shallow";
 
 // Types
 import type { WindowKey } from "@/types";
 
 // Helpers
-import { clampToViewport, updateFrame } from "@/helpers";
+import { updateFrame } from "@/helpers";
 
-// Components
-import WindowHeader from "../WindowHeader";
+// Store
+import { useWindowStore } from "@/stores";
 
 interface DraggableWindowProps {
   windowKey: WindowKey;
-  src: string;
-  title: string;
   children: React.ReactNode;
   zIndex: number;
   hidden?: boolean;
-  onClose: () => void;
-  onMaximize: () => void;
-  onMinimize: () => void;
   onMouseDown: () => void;
 }
 
 const DraggableWindow = memo((props: DraggableWindowProps) => {
-  const {
-    windowKey,
-    src,
-    title,
-    children,
-    zIndex,
-    hidden = false,
-    onClose,
-    onMaximize,
-    onMinimize,
-    onMouseDown,
-  } = props;
+  const { windowKey, children, zIndex, hidden = false, onMouseDown } = props;
 
-  const { win, frame, setFrame } = useWindowStore(
+  const { setFrame, frame, isMaximized } = useWindowStore(
     useShallow((state) => ({
-      win: state.windows[windowKey],
       frame: state.frames[windowKey],
+      isMaximized: state.windows[windowKey].isMaximized,
       setFrame: state.setFrame,
     }))
   );
-
-  const isMaximized = !!win?.isMaximized;
-
-  useLayoutEffect(() => {
-    const onResize = () => {
-      if (isMaximized) return;
-
-      const next = clampToViewport(frame);
-      if (
-        next.x !== frame.x ||
-        next.y !== frame.y ||
-        next.width !== frame.width ||
-        next.height !== frame.height
-      ) {
-        requestAnimationFrame(() => setFrame(windowKey, next));
-      }
-    };
-
-    window.addEventListener("resize", onResize);
-
-    return () => window.removeEventListener("resize", onResize);
-  }, [isMaximized, frame, windowKey, setFrame]);
 
   return (
     <Rnd
@@ -94,31 +53,18 @@ const DraggableWindow = memo((props: DraggableWindowProps) => {
       onMouseDown={onMouseDown}
       onDragStop={(_, d) => {
         if (isMaximized) return;
-
         setFrame(windowKey, { ...frame, x: d.x, y: d.y });
       }}
       onResize={(_, __, ref, ___, pos) => {
         if (isMaximized) return;
-
         updateFrame(setFrame, windowKey, ref as HTMLElement, pos);
       }}
       onResizeStop={(_, __, ref, ___, pos) => {
         if (isMaximized) return;
-
         updateFrame(setFrame, windowKey, ref as HTMLElement, pos);
       }}
     >
-      <div className="bg-white shadow-lg text-[#475466] w-full h-full flex flex-col overflow-hidden">
-        <WindowHeader
-          windowKey={windowKey}
-          src={src}
-          title={title}
-          onClose={onClose}
-          onMaximize={onMaximize}
-          onMinimize={onMinimize}
-        />
-        {children}
-      </div>
+      {children}
     </Rnd>
   );
 });

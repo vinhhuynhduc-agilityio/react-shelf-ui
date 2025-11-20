@@ -90,8 +90,17 @@ export const useWindowStore = create<WindowStore>()(
     maximizeWindow: (windowKey) =>
       set((state) => {
         const w = state.windows[windowKey];
+        const isCurrentlyTop =
+          state.zIndexOrder[state.zIndexOrder.length - 1] === windowKey;
 
         if (!w.isMaximized) {
+          if (!isCurrentlyTop) {
+            state.zIndexOrder = [
+              ...state.zIndexOrder.filter((k) => k !== windowKey),
+              windowKey,
+            ];
+          }
+
           w.isMaximized = true;
         } else {
           w.isMaximized = false;

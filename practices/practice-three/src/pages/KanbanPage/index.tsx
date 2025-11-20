@@ -1,4 +1,10 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import GridLayout, { Layout } from "react-grid-layout";
 import { v4 as uuidv4 } from "uuid";
 import { useQueryClient } from "@tanstack/react-query";
@@ -9,6 +15,7 @@ import {
   Button,
   ErrorAlert,
   IconButton,
+  KanbanCard,
   Modal,
   MultiSelect,
   SingleSelect,
@@ -32,11 +39,11 @@ import type { BoardColumn, Task } from "@/types";
 
 // Helpers
 import {
+  createKanbanSnapshot,
   generateLayout,
   removeTaskFromBoard,
   syncLayoutToBoard,
   updateKanbanItems,
-  updateLayoutSafely,
 } from "@/helpers";
 
 // Services
@@ -153,7 +160,7 @@ const KanbanPage = () => {
   };
 
   // Add new task
-  const handleAddItem = () => {
+  const handleAddItem = useCallback(() => {
     const newId = uuidv4();
     const newTask: Task = {
       id: newId,
@@ -161,9 +168,11 @@ const KanbanPage = () => {
       tags: [],
     };
 
-    const prevTasks = { ...tasks };
-    const prevBoard = [...board];
-    const prevLayout = [...layout];
+    const { prevTasks, prevBoard, prevLayout } = createKanbanSnapshot(
+      tasks,
+      board,
+      layout
+    );
 
     setTasks((prev) => ({ ...prev, [newId]: newTask }));
 
@@ -186,17 +195,24 @@ const KanbanPage = () => {
         setLayout(prevLayout);
       },
     });
-  };
+  }, [board, tasks, layout, addTask]);
 
   // Edit task
-  const handleEditItem = (id: string) => {
-    const task = tasks[id];
-    const status =
-      board.find((col) => col.taskIds.includes(id))?.progressStatus || "";
-    setEditingId(id);
-    setFormData({ title: task.title, tags: task.tags, progressStatus: status });
-    setIsModalOpen(true);
-  };
+  const handleEditItem = useCallback(
+    (id: string) => {
+      const task = tasks[id];
+      const status =
+        board.find((col) => col.taskIds.includes(id))?.progressStatus || "";
+      setEditingId(id);
+      setFormData({
+        title: task.title,
+        tags: task.tags,
+        progressStatus: status,
+      });
+      setIsModalOpen(true);
+    },
+    [tasks, board]
+  );
 
   const handleFormChange = (
     field: keyof typeof formData,
@@ -214,11 +230,14 @@ const KanbanPage = () => {
       tags: formData.tags as string[],
     };
 
-    const prevTasks = { ...tasks };
-    const prevBoard = [...board];
-    const prevLayout = [...layout];
+    const { prevTasks, prevBoard, prevLayout } = createKanbanSnapshot(
+      tasks,
+      board,
+      layout
+    );
 
     setTasks((prev) => ({ ...prev, [editingId]: updatedTask }));
+
     setBoard((prev) => {
       const newBoard = updateKanbanItems(prev, editingId, formData);
       const updatedTasks = { ...tasks, [editingId]: updatedTask };
@@ -229,6 +248,11 @@ const KanbanPage = () => {
       return newBoard;
     });
 
+    // Update kanban board
+    const finalBoard = updateKanbanItems(board, editingId, formData);
+    saveKanbanBoard({ board: finalBoard, updateBoardColumn });
+
+    // Update task
     updateTask(updatedTask, {
       onError: () => {
         setTasks(prevTasks);
@@ -243,9 +267,11 @@ const KanbanPage = () => {
   const handleRemove = () => {
     if (!editingId) return;
 
-    const prevTasks = { ...tasks };
-    const prevBoard = [...board];
-    const prevLayout = [...layout];
+    const { prevTasks, prevBoard, prevLayout } = createKanbanSnapshot(
+      tasks,
+      board,
+      layout
+    );
 
     const newBoard = removeTaskFromBoard(board, editingId);
 
@@ -296,30 +322,7 @@ const KanbanPage = () => {
       key={task.id}
       className="bg-white border-l-3 border-l-[#1CA1C1] flex flex-col cursor-pointer item-drag-handle"
     >
-      <div className="flex justify-between items-center min-h-[24px] overflow-hidden pt-[14px] pr-[8px] pb-[8px] pl-[12px] w-full">
-        <p className="flex-1 min-w-0 text-[14px] font-medium leading-[20px] truncate pr-[48px]">
-          {task.title}
-        </p>
-        <div className="flex justify-center items-center w-[32px] h-[32px] absolute right-[8px] hover:shadow-[0_0_2px_1px_#1CA1C1] bg-[rgba(228,230,240,0.8)] rounded-full">
-          <i className="fa-solid fa-user fa-lg text-[#94a1b3]" />
-        </div>
-      </div>
-      <div className="flex justify-between pl-[8px] pr-[8px] mb-[6px] items-center truncate">
-        <div className="flex items-center gap-1">
-          {task.tags.map((tag) => (
-            <span
-              key={tag}
-              className="bg-[rgba(228,230,240,0.8)] text-[#475466] text-sm font-normal h-[26px] leading-[24px] px-2 py-0 rounded-[12px] mt-0 mr-1 mb-0.5 ml-0"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-        <IconButton
-          onMouseDown={() => handleEditItem(task.id)}
-          iconStyles="fa-solid fa-pencil fa-xs text-[#94a1b3] hover:text-[#1CA1C1]"
-        />
-      </div>
+      <KanbanCard task={task} onEdit={handleEditItem} />
     </div>
   );
 
@@ -387,7 +390,7 @@ const KanbanPage = () => {
   const renderContent = () => (
     <div className="flex-1 overflow-x-hidden relative top-0">
       <GridLayout
-        className="layout select-none"
+        className="layout"
         layout={layout}
         cols={STATUSES.length}
         rowHeight={80}

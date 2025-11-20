@@ -1,9 +1,12 @@
-import { useState, useLayoutEffect, useEffect } from "react";
+import { useState, useLayoutEffect, useEffect, useCallback } from "react";
 import GridLayout, { Layout } from "react-grid-layout";
 import { QueryClientProvider } from "@tanstack/react-query";
 
-// hook
-import { useWindow } from "@/hook";
+// Hook
+import { useWindowState, useWindowActions } from "@/hook";
+
+// Store
+import { useWindowStore } from "@/stores";
 
 // constant
 import { DESKTOP_ICONS, WINDOW_CONFIGS, WINDOW_KEYS } from "./constant";
@@ -15,7 +18,7 @@ import { BaseWindow, DesktopIcon, SearchOverlay, Taskbar } from "./components";
 import { queryClient, rearrangeLayoutOnResize } from "@/helpers";
 
 // types
-import { WindowKey } from "@/types";
+import type { WindowKey } from "@/types";
 
 const App = () => {
   const { SPREADSHEET, FILE_MANAGER, PIVOT, KANBAN } = WINDOW_KEYS;
@@ -44,20 +47,21 @@ const App = () => {
     }))
   );
 
-  const windows = {
-    [SPREADSHEET]: useWindow(SPREADSHEET),
-    [FILE_MANAGER]: useWindow(FILE_MANAGER),
-    [PIVOT]: useWindow(PIVOT),
-    [KANBAN]: useWindow(KANBAN),
-  } as const;
+  const spreadsheet = useWindowState(SPREADSHEET);
+  const fileManager = useWindowState(FILE_MANAGER);
+  const pivot = useWindowState(PIVOT);
+  const kanban = useWindowState(KANBAN);
+
+  const spreadsheetActions = useWindowActions(SPREADSHEET);
+  const fileManagerActions = useWindowActions(FILE_MANAGER);
+  const pivotActions = useWindowActions(PIVOT);
+  const kanbanActions = useWindowActions(KANBAN);
 
   useEffect(() => {
     if (!isSearchOpen) return;
-
     const handleEsc = (e: KeyboardEvent) =>
       e.key === "Escape" && setIsSearchOpen(false);
     document.addEventListener("keydown", handleEsc);
-
     return () => document.removeEventListener("keydown", handleEsc);
   }, [isSearchOpen]);
 
@@ -75,46 +79,43 @@ const App = () => {
     };
 
     window.addEventListener("resize", handleResize);
-
     return () => window.removeEventListener("resize", handleResize);
   }, [layout, cols, maxRows]);
 
-  const handleToggleSearch = () => {
+  const handleToggleSearch = useCallback(() => {
     setIsSearchOpen((prev) => !prev);
-    if (!isSearchOpen) {
-      setSearchQuery("");
-    }
-  };
+    if (!isSearchOpen) setSearchQuery("");
+  }, [isSearchOpen]);
 
   const handleIconClick = (key: WindowKey) => {
     if (selectedIcon !== key) {
       setSelectedIcon(key);
     }
 
-    const win = windows[key];
+    const state =
+      key === SPREADSHEET
+        ? spreadsheet
+        : key === FILE_MANAGER
+        ? fileManager
+        : key === PIVOT
+        ? pivot
+        : kanban;
+    const actions =
+      key === SPREADSHEET
+        ? spreadsheetActions
+        : key === FILE_MANAGER
+        ? fileManagerActions
+        : key === PIVOT
+        ? pivotActions
+        : kanbanActions;
 
-    const topMost = win.zIndexOrder[win.zIndexOrder.length - 1];
-    const isTop = topMost === key;
-
-    if (!win.isOpen) {
-      win.toggle();
-      win.bringToFront();
-
-      return;
+    if (!state.isOpen) {
+      actions.toggle();
+    } else if (state.isMinimized) {
+      actions.restore();
     }
 
-    if (win.isMinimized) {
-      win.restore();
-      win.bringToFront();
-
-      return;
-    }
-
-    if (!isTop) {
-      win.bringToFront();
-
-      return;
-    }
+    useWindowStore.getState().setZIndexOrder(key);
   };
 
   const handleBackgroundMouseDown: React.MouseEventHandler<HTMLDivElement> = (
@@ -140,8 +141,16 @@ const App = () => {
 
   const renderWindows = () =>
     Object.entries(WINDOW_CONFIGS).map(([key, { title, src, Page }]) => {
-      const win = windows[key as WindowKey];
-      if (!win?.isOpen) return null;
+      const state =
+        key === SPREADSHEET
+          ? spreadsheet
+          : key === FILE_MANAGER
+          ? fileManager
+          : key === PIVOT
+          ? pivot
+          : kanban;
+
+      if (!state.isOpen) return null;
 
       return (
         <BaseWindow
@@ -158,13 +167,13 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <div
-        className="w-screen min-h-screen relative bg-cover bg-center overflow-hidden h-screen"
+        className="w-screen min-h-screen relative bg-cover bg-center overflow-hidden h-screen select-none"
         style={{ backgroundImage: `url('/images/background-desktop.jpg')` }}
         onMouseDown={handleBackgroundMouseDown}
       >
         <div className="absolute inset-x-0 top-0 bottom-[44px]">
           <GridLayout
-            className="layout select-none"
+            className="layout"
             layout={layout}
             rowHeight={rowHeight}
             width={gridWidth}
@@ -182,8 +191,9 @@ const App = () => {
           >
             {renderDesktopIcons()}
           </GridLayout>
+
           {renderWindows()}
-          {/* Search Overlay */}
+
           {isSearchOpen && (
             <SearchOverlay
               searchQuery={searchQuery}
@@ -196,6 +206,7 @@ const App = () => {
             />
           )}
         </div>
+
         <Taskbar onToggleSearch={handleToggleSearch} />
       </div>
     </QueryClientProvider>

@@ -1,5 +1,5 @@
-import { useCallback } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { useCallback } from "react";
 
 // Store
 import { useWindowStore } from "@/stores";
@@ -7,64 +7,87 @@ import { useWindowStore } from "@/stores";
 // Types
 import type { WindowKey } from "@/types";
 
-export const useWindow = (windowKey: WindowKey) => {
+export const useWindowState = (windowKey: WindowKey) =>
+  useWindowStore(
+    useShallow((state) => ({
+      isOpen: state.windows[windowKey].isOpen,
+      isMinimized: state.windows[windowKey].isMinimized,
+      isMaximized: state.windows[windowKey].isMaximized,
+      frame: state.frames[windowKey],
+    }))
+  );
+
+export const useWindowActions = (windowKey: WindowKey) => {
   const {
-    isOpen,
-    isMinimized,
-    isMaximized,
-    zIndexOrder,
     toggleWindow,
     closeWindow,
     minimizeWindow,
     maximizeWindow,
     restoreWindow,
-    setZIndexOrder,
+    setFrame,
   } = useWindowStore(
     useShallow((s) => ({
-      isOpen: s.windows[windowKey].isOpen,
-      isMinimized: s.windows[windowKey].isMinimized,
-      isMaximized: s.windows[windowKey].isMaximized,
-      zIndexOrder: s.zIndexOrder,
       toggleWindow: s.toggleWindow,
       closeWindow: s.closeWindow,
       minimizeWindow: s.minimizeWindow,
       maximizeWindow: s.maximizeWindow,
       restoreWindow: s.restoreWindow,
+      setFrame: s.setFrame,
+    }))
+  );
+
+  const close = useCallback(
+    () => closeWindow(windowKey),
+    [windowKey, closeWindow]
+  );
+  const minimize = useCallback(
+    () => minimizeWindow(windowKey),
+    [windowKey, minimizeWindow]
+  );
+  const maximize = useCallback(
+    () => maximizeWindow(windowKey),
+    [windowKey, maximizeWindow]
+  );
+  const restore = useCallback(
+    () => restoreWindow(windowKey),
+    [windowKey, restoreWindow]
+  );
+  const toggle = useCallback(
+    () => toggleWindow(windowKey),
+    [windowKey, toggleWindow]
+  );
+  const updateFrame = useCallback(
+    (
+      windowKey: WindowKey,
+      rect: { x: number; y: number; width: number; height: number }
+    ) => setFrame(windowKey, rect),
+    [setFrame]
+  );
+
+  return {
+    toggle,
+    close,
+    minimize,
+    maximize,
+    restore,
+    updateFrame,
+  };
+};
+
+export const useZIndex = (windowKey: WindowKey) => {
+  const { zIndexOrder, setZIndexOrder } = useWindowStore(
+    useShallow((s) => ({
+      zIndexOrder: s.zIndexOrder,
       setZIndexOrder: s.setZIndexOrder,
     }))
   );
 
-  return {
-    isOpen,
-    isMinimized,
-    isMaximized,
-    zIndexOrder,
+  const zIndex = zIndexOrder.indexOf(windowKey) + 1;
+  const bringToFront = useCallback(() => {
+    if (zIndexOrder[zIndexOrder.length - 1] !== windowKey) {
+      setZIndexOrder(windowKey);
+    }
+  }, [windowKey, zIndexOrder, setZIndexOrder]);
 
-    toggle: useCallback(
-      () => toggleWindow(windowKey),
-      [toggleWindow, windowKey]
-    ),
-    open: useCallback(
-      () => !isOpen && toggleWindow(windowKey),
-      [isOpen, toggleWindow, windowKey]
-    ),
-    close: useCallback(() => closeWindow(windowKey), [closeWindow, windowKey]),
-    minimize: useCallback(
-      () => minimizeWindow(windowKey),
-      [minimizeWindow, windowKey]
-    ),
-    maximize: useCallback(
-      () => maximizeWindow(windowKey),
-      [maximizeWindow, windowKey]
-    ),
-    restore: useCallback(
-      () => restoreWindow(windowKey),
-      [restoreWindow, windowKey]
-    ),
-    bringToFront: useCallback(() => {
-      if (zIndexOrder[zIndexOrder.length - 1] !== windowKey) {
-        setZIndexOrder(windowKey);
-      }
-    }, [zIndexOrder, windowKey, setZIndexOrder]),
-  };
+  return { zIndex, bringToFront };
 };

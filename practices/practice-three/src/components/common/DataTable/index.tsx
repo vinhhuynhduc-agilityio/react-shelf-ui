@@ -25,7 +25,6 @@ const DataTable = <T,>({
   return (
     <Table<T>
       columns={columns}
-      rowClassName="select-none"
       dataSource={displayData}
       pagination={false}
       bordered
