@@ -390,7 +390,7 @@ const KanbanPage = () => {
   const renderContent = () => (
     <div className="flex-1 overflow-x-hidden relative top-0">
       <GridLayout
-        className="layout select-none"
+        className="layout"
         layout={layout}
         cols={STATUSES.length}
         rowHeight={80}

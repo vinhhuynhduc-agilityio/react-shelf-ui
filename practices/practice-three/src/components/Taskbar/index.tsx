@@ -90,7 +90,7 @@ const Taskbar = memo(({ onToggleSearch }: TaskbarProps) => {
               <button
                 title={icon.title}
                 onClick={() => handleTaskClick(key)}
-                className="h-[36px] px-2 flex items-center select-none cursor-pointer"
+                className="h-[36px] px-2 flex items-center cursor-pointer"
               >
                 <img src={icon.image} alt="" className="h-[26px] w-[26px]" />
               </button>
