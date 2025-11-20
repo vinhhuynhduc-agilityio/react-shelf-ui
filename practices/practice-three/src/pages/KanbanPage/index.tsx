@@ -39,6 +39,7 @@ import type { BoardColumn, Task } from "@/types";
 
 // Helpers
 import {
+  createKanbanSnapshot,
   generateLayout,
   removeTaskFromBoard,
   syncLayoutToBoard,
@@ -167,9 +168,11 @@ const KanbanPage = () => {
       tags: [],
     };
 
-    const prevTasks = { ...tasks };
-    const prevBoard = [...board];
-    const prevLayout = [...layout];
+    const { prevTasks, prevBoard, prevLayout } = createKanbanSnapshot(
+      tasks,
+      board,
+      layout
+    );
 
     setTasks((prev) => ({ ...prev, [newId]: newTask }));
 
@@ -227,11 +230,14 @@ const KanbanPage = () => {
       tags: formData.tags as string[],
     };
 
-    const prevTasks = { ...tasks };
-    const prevBoard = [...board];
-    const prevLayout = [...layout];
+    const { prevTasks, prevBoard, prevLayout } = createKanbanSnapshot(
+      tasks,
+      board,
+      layout
+    );
 
     setTasks((prev) => ({ ...prev, [editingId]: updatedTask }));
+
     setBoard((prev) => {
       const newBoard = updateKanbanItems(prev, editingId, formData);
       const updatedTasks = { ...tasks, [editingId]: updatedTask };
@@ -242,6 +248,11 @@ const KanbanPage = () => {
       return newBoard;
     });
 
+    // Update kanban board
+    const finalBoard = updateKanbanItems(board, editingId, formData);
+    saveKanbanBoard({ board: finalBoard, updateBoardColumn });
+
+    // Update task
     updateTask(updatedTask, {
       onError: () => {
         setTasks(prevTasks);
@@ -256,9 +267,11 @@ const KanbanPage = () => {
   const handleRemove = () => {
     if (!editingId) return;
 
-    const prevTasks = { ...tasks };
-    const prevBoard = [...board];
-    const prevLayout = [...layout];
+    const { prevTasks, prevBoard, prevLayout } = createKanbanSnapshot(
+      tasks,
+      board,
+      layout
+    );
 
     const newBoard = removeTaskFromBoard(board, editingId);
 

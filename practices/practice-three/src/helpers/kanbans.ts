@@ -129,3 +129,13 @@ export const removeTaskFromBoard = (
 
   return newBoard;
 };
+
+export const createKanbanSnapshot = (
+  tasks: Record<string, Task>,
+  board: BoardColumn[],
+  layout: Layout[]
+) => ({
+  prevTasks: { ...tasks },
+  prevBoard: [...board],
+  prevLayout: [...layout],
+});
