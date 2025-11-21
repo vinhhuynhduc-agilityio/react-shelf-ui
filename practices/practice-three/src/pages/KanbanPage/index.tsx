@@ -414,7 +414,7 @@ const KanbanPage = () => {
       </GridLayout>
     </div>
   );
-  console.log("kanban page ");
+
   return (
     <div
       ref={containerRef}
