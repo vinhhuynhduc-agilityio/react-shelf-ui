@@ -168,11 +168,7 @@ const KanbanPage = () => {
       tags: [],
     };
 
-    const { prevTasks, prevBoard, prevLayout } = createKanbanSnapshot(
-      tasks,
-      board,
-      layout
-    );
+    const snapshot = createKanbanSnapshot(tasks, board, layout);
 
     setTasks((prev) => ({ ...prev, [newId]: newTask }));
 
@@ -190,9 +186,9 @@ const KanbanPage = () => {
 
     addTask(newTask, {
       onError: () => {
-        setTasks(prevTasks);
-        setBoard(prevBoard);
-        setLayout(prevLayout);
+        setTasks(snapshot.prevTasks);
+        setBoard(snapshot.prevBoard);
+        setLayout(snapshot.prevLayout);
       },
     });
   }, [board, tasks, layout, addTask]);
@@ -224,42 +220,56 @@ const KanbanPage = () => {
   const handleSave = () => {
     if (!editingId) return;
 
-    const updatedTask: Task = {
-      ...tasks[editingId],
-      title: formData.title,
-      tags: formData.tags as string[],
-    };
+    const currentTask = tasks[editingId];
 
-    const { prevTasks, prevBoard, prevLayout } = createKanbanSnapshot(
-      tasks,
-      board,
-      layout
-    );
+    const titleChanged = formData.title !== currentTask.title;
+    const tagsChanged =
+      JSON.stringify(formData.tags) !== JSON.stringify(currentTask.tags);
+    const statusChanged =
+      formData.progressStatus !==
+      board.find((col) => col.taskIds.includes(editingId))?.progressStatus;
 
-    setTasks((prev) => ({ ...prev, [editingId]: updatedTask }));
+    if (!titleChanged && !tagsChanged && !statusChanged) {
+      setIsModalOpen(false);
+      return;
+    }
 
-    setBoard((prev) => {
-      const newBoard = updateKanbanItems(prev, editingId, formData);
-      const updatedTasks = { ...tasks, [editingId]: updatedTask };
+    const snapshot = createKanbanSnapshot(tasks, board, layout);
+
+    if (titleChanged || tagsChanged) {
+      const updatedTask = {
+        ...currentTask,
+        title: formData.title,
+        tags: formData.tags as string[],
+      };
+      setTasks((prev) => ({ ...prev, [editingId]: updatedTask }));
+      updateTask(updatedTask, {
+        onError: () => {
+          setTasks(snapshot.prevTasks);
+        },
+      });
+    }
+
+    if (statusChanged) {
+      const newBoard = updateKanbanItems(board, editingId, formData);
+      const updatedTasks =
+        titleChanged || tagsChanged
+          ? {
+              ...tasks,
+              [editingId]: {
+                ...currentTask,
+                title: formData.title,
+                tags: formData.tags as string[],
+              },
+            }
+          : tasks;
+
       skipSyncOnLayoutChange.current = true;
       setLayout(generateLayout(newBoard, updatedTasks));
+      setBoard(newBoard);
       setHasChanged(true);
-
-      return newBoard;
-    });
-
-    // Update kanban board
-    const finalBoard = updateKanbanItems(board, editingId, formData);
-    saveKanbanBoard({ board: finalBoard, updateBoardColumn });
-
-    // Update task
-    updateTask(updatedTask, {
-      onError: () => {
-        setTasks(prevTasks);
-        setBoard(prevBoard);
-        setLayout(prevLayout);
-      },
-    });
+      saveKanbanBoard({ board: newBoard, updateBoardColumn });
+    }
 
     setIsModalOpen(false);
   };
@@ -267,11 +277,7 @@ const KanbanPage = () => {
   const handleRemove = () => {
     if (!editingId) return;
 
-    const { prevTasks, prevBoard, prevLayout } = createKanbanSnapshot(
-      tasks,
-      board,
-      layout
-    );
+    const snapshot = createKanbanSnapshot(tasks, board, layout);
 
     const newBoard = removeTaskFromBoard(board, editingId);
 
@@ -289,9 +295,9 @@ const KanbanPage = () => {
 
     deleteTask(editingId, {
       onError: () => {
-        setTasks(prevTasks);
-        setBoard(prevBoard);
-        setLayout(prevLayout);
+        setTasks(snapshot.prevTasks);
+        setBoard(snapshot.prevBoard);
+        setLayout(snapshot.prevLayout);
       },
     });
 
@@ -408,7 +414,7 @@ const KanbanPage = () => {
       </GridLayout>
     </div>
   );
-
+  console.log("kanban page ");
   return (
     <div
       ref={containerRef}
