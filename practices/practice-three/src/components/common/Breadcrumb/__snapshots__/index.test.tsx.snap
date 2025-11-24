@@ -1,0 +1,229 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Breadcrumb Accessibility Snapshots should match snapshot with custom styles 1`] = `
+<div>
+  <nav
+    aria-label="Breadcrumb"
+    class="flex items-center space-x-1 whitespace-nowrap bg-gray-100 p-4"
+  >
+    <button
+      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+    >
+      Home
+    </button>
+    <span
+      aria-hidden="true"
+      class="text-[#94A1B3] mx-1"
+    >
+      &gt;
+    </span>
+    <button
+      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+    >
+      Documents
+    </button>
+    <span
+      aria-hidden="true"
+      class="text-[#94A1B3] mx-1"
+    >
+      &gt;
+    </span>
+    <button
+      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+    >
+      Projects
+    </button>
+    <span
+      aria-hidden="true"
+      class="text-[#94A1B3] mx-1"
+    >
+      &gt;
+    </span>
+    <span
+      aria-current="page"
+      class="text-[#475466] text-[16px] font-normal"
+    >
+      React
+    </span>
+  </nav>
+</div>
+`;
+
+exports[`Breadcrumb Accessibility Snapshots should match snapshot with default props 1`] = `
+<div>
+  <nav
+    aria-label="Breadcrumb"
+    class="flex items-center space-x-1 whitespace-nowrap "
+  >
+    <button
+      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+    >
+      Home
+    </button>
+    <span
+      aria-hidden="true"
+      class="text-[#94A1B3] mx-1"
+    >
+      &gt;
+    </span>
+    <button
+      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+    >
+      Documents
+    </button>
+    <span
+      aria-hidden="true"
+      class="text-[#94A1B3] mx-1"
+    >
+      &gt;
+    </span>
+    <button
+      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+    >
+      Projects
+    </button>
+    <span
+      aria-hidden="true"
+      class="text-[#94A1B3] mx-1"
+    >
+      &gt;
+    </span>
+    <span
+      aria-current="page"
+      class="text-[#475466] text-[16px] font-normal"
+    >
+      React
+    </span>
+  </nav>
+</div>
+`;
+
+exports[`Breadcrumb Accessibility Snapshots should match snapshot with single item 1`] = `
+<div>
+  <nav
+    aria-label="Breadcrumb"
+    class="flex items-center space-x-1 whitespace-nowrap "
+  >
+    <span
+      aria-current="page"
+      class="text-[#475466] text-[16px] font-normal"
+    >
+      Home
+    </span>
+  </nav>
+</div>
+`;
+
+exports[`Breadcrumb Snapshots should match snapshot with custom styles 1`] = `
+<div>
+  <nav
+    aria-label="Breadcrumb"
+    class="flex items-center space-x-1 whitespace-nowrap bg-gray-100 p-4"
+  >
+    <button
+      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+    >
+      Home
+    </button>
+    <span
+      aria-hidden="true"
+      class="text-[#94A1B3] mx-1"
+    >
+      &gt;
+    </span>
+    <button
+      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+    >
+      Documents
+    </button>
+    <span
+      aria-hidden="true"
+      class="text-[#94A1B3] mx-1"
+    >
+      &gt;
+    </span>
+    <button
+      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+    >
+      Projects
+    </button>
+    <span
+      aria-hidden="true"
+      class="text-[#94A1B3] mx-1"
+    >
+      &gt;
+    </span>
+    <span
+      aria-current="page"
+      class="text-[#475466] text-[16px] font-normal"
+    >
+      React
+    </span>
+  </nav>
+</div>
+`;
+
+exports[`Breadcrumb Snapshots should match snapshot with default props 1`] = `
+<div>
+  <nav
+    aria-label="Breadcrumb"
+    class="flex items-center space-x-1 whitespace-nowrap "
+  >
+    <button
+      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+    >
+      Home
+    </button>
+    <span
+      aria-hidden="true"
+      class="text-[#94A1B3] mx-1"
+    >
+      &gt;
+    </span>
+    <button
+      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+    >
+      Documents
+    </button>
+    <span
+      aria-hidden="true"
+      class="text-[#94A1B3] mx-1"
+    >
+      &gt;
+    </span>
+    <button
+      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+    >
+      Projects
+    </button>
+    <span
+      aria-hidden="true"
+      class="text-[#94A1B3] mx-1"
+    >
+      &gt;
+    </span>
+    <span
+      aria-current="page"
+      class="text-[#475466] text-[16px] font-normal"
+    >
+      React
+    </span>
+  </nav>
+</div>
+`;
+
+exports[`Breadcrumb Snapshots should match snapshot with single item 1`] = `
+<div>
+  <nav
+    aria-label="Breadcrumb"
+    class="flex items-center space-x-1 whitespace-nowrap "
+  >
+    <span
+      aria-current="page"
+      class="text-[#475466] text-[16px] font-normal"
+    >
+      Home
+    </span>
+  </nav>
+</div>
+`;
