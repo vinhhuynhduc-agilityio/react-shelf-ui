@@ -48,6 +48,7 @@ const meta: Meta<typeof ContextMenu> = {
       table: {
         type: { summary: "ContextMenuOption[]" },
       },
+      control: false,
     },
     onClose: {
       action: "closed",
@@ -56,6 +57,7 @@ const meta: Meta<typeof ContextMenu> = {
       table: {
         type: { summary: "() => void" },
       },
+      control: false,
     },
   },
 };

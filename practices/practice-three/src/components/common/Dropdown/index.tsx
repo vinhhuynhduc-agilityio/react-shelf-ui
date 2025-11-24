@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 // types
@@ -16,46 +16,65 @@ const Dropdown: React.FC<DropdownProps> = ({
   const dropdownRef = useRef<HTMLUListElement>(null);
   const [position, setPosition] = useState<DropdownPosition | null>(null);
 
+  // Calculate position based on trigger element
+  const calculatePosition = useCallback(() => {
+    if (!triggerRef.current) return;
+
+    const rect = triggerRef.current.getBoundingClientRect();
+    setPosition({
+      top: rect.bottom + window.scrollY,
+      left: rect.left + window.scrollX,
+      width: rect.width,
+    });
+  }, [triggerRef]);
+
   useEffect(() => {
-    // Handle click outside to close dropdown
+    if (!isOpen) {
+      setPosition(null);
+      return;
+    }
+
+    // Calculate position immediately when opened
+    calculatePosition();
+
+    // Handle scroll - recalculate position on scroll
+    const handleScroll = () => {
+      calculatePosition();
+    };
+
+    // Handle window resize - recalculate position on resize
+    const handleResize = () => {
+      calculatePosition();
+    };
+
+    // Add event listeners
+    window.addEventListener("scroll", handleScroll, true);
+    window.addEventListener("resize", handleResize);
+
+    // Handle click outside
     const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
+      // Check if click is outside both trigger and dropdown
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
         triggerRef.current &&
-        !triggerRef.current.contains(event.target as Node)
+        !triggerRef.current.contains(target) &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(target)
       ) {
         setIsOpen(false);
       }
     };
 
-    // Update position based on trigger button (fixed to viewport, not affected by scroll)
-    const updatePosition = () => {
-      if (triggerRef.current) {
-        const rect = triggerRef.current.getBoundingClientRect();
-
-        setPosition({
-          top: rect.bottom,
-          left: rect.left,
-          width: rect.width,
-        });
-      }
-    };
-
-    if (isOpen) {
-      updatePosition();
-    }
-
     document.addEventListener("mousedown", handleClickOutside);
-    window.addEventListener("resize", updatePosition);
-    window.addEventListener("scroll", updatePosition, true);
 
+    // Cleanup
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      window.removeEventListener("resize", updatePosition);
-      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("scroll", handleScroll, true);
+      window.removeEventListener("resize", handleResize);
     };
-  }, [isOpen, setIsOpen, triggerRef]);
+  }, [isOpen, setIsOpen, triggerRef, calculatePosition]);
 
   if (!isOpen || !position) return null;
 
@@ -64,15 +83,15 @@ const Dropdown: React.FC<DropdownProps> = ({
     setIsOpen(false);
   };
 
-  return createPortal(
+  const dropdownContent = (
     <ul
       ref={dropdownRef}
       className="absolute bg-white shadow-md border border-[#DADEE0] rounded-md z-50 overflow-hidden"
       style={{
-        position: "absolute",
         top: `${position.top}px`,
         left: `${position.left}px`,
         width: `${position.width}px`,
+        minWidth: "150px",
       }}
       role="listbox"
       data-testid="dropdown-listbox"
@@ -89,9 +108,10 @@ const Dropdown: React.FC<DropdownProps> = ({
           {option.label}
         </li>
       ))}
-    </ul>,
-    document.body
+    </ul>
   );
+
+  return createPortal(dropdownContent, document.body);
 };
 
 export default Dropdown;
