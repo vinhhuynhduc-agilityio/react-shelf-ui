@@ -20,7 +20,7 @@ const StatusBar: React.FC<StatusBarProps> = ({ message, type, onClear }) => {
   return (
     <div
       className={clsx(
-        "h-8 px-4 flex items-center text-sm font-medium border-t border-[#DADEE0]",
+        "h-8 px-4 flex items-center text-sm font-medium border-t border-[#DADEE0] w-full",
         type === "success"
           ? "bg-green-50 text-green-700"
           : "bg-red-50 text-red-700"
