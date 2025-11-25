@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SingleSelect should match snapshot 1`] = `
+<div>
+  <div
+    class="relative"
+  >
+    <div
+      class="w-full border border-[#DADEE0] rounded-[2px] px-2 py-1 text-sm text-[#475466] flex items-center justify-between h-[32px] cursor-pointer"
+    >
+      Banana
+      <i
+        class="fa-solid fa-chevron-down ml-2 text-[#94A1B3]"
+      />
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`PivotTreeView matches snapshot 1`] = `
+<div>
+  <div
+    data-testid="data-table"
+  >
+    <span
+      data-testid="columns-count"
+    >
+      Columns: 
+      2
+    </span>
+    <span
+      data-testid="data-count"
+    >
+      Data: 
+      2
+    </span>
+    <span
+      data-testid="height"
+    >
+      Height: 
+      600
+    </span>
+    <span
+      data-testid="loading"
+    >
+      Loading: 
+      false
+    </span>
+    <span
+      data-testid="fetching"
+    >
+      Fetching: 
+      false
+    </span>
+    <span
+      data-testid="expanded-keys"
+    >
+      Expanded: 
+      asia,europe
+    </span>
+    <button
+      data-testid="expand-icon-asia"
+    >
+      Expanded
+       - 
+      asia
+    </button>
+    <div
+      data-testid="custom-expand-icon"
+    >
+      <span
+        class="ml-[10px] cursor-pointer"
+      >
+        <i
+          class="fa-solid fa-sort-down text-[#94A1B3]"
+        />
+      </span>
+    </div>
+  </div>
+</div>
+`;
