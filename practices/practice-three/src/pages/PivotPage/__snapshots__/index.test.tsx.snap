@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`PivotPage should match snapshot after view switch 1`] = `
+<div>
+  <div
+    class="flex-1 h-full w-full overflow-hidden"
+  >
+    <div
+      class="flex justify-end items-center space-x-2 mr-[10px] h-[44px]"
+    >
+      <button
+        data-active="false"
+        data-testid="view-button-Tree"
+      >
+        Tree
+      </button>
+      <button
+        data-active="true"
+        data-testid="view-button-Table"
+      >
+        Table
+      </button>
+      <button
+        data-active="false"
+        data-testid="view-button-Chart"
+      >
+        Chart
+      </button>
+    </div>
+    <div
+      data-height="782"
+      data-testid="pivot-table-view"
+    >
+      Table View
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PivotPage should match snapshot on initial load 1`] = `
+<div>
+  <div
+    class="flex-1 h-full w-full overflow-hidden"
+  >
+    <div
+      class="flex justify-end items-center space-x-2 mr-[10px] h-[44px]"
+    >
+      <button
+        data-active="true"
+        data-testid="view-button-Tree"
+      >
+        Tree
+      </button>
+      <button
+        data-active="false"
+        data-testid="view-button-Table"
+      >
+        Table
+      </button>
+      <button
+        data-active="false"
+        data-testid="view-button-Chart"
+      >
+        Chart
+      </button>
+    </div>
+    <div
+      data-height="782"
+      data-testid="pivot-tree-view"
+    >
+      Tree View
+    </div>
+  </div>
+</div>
+`;
