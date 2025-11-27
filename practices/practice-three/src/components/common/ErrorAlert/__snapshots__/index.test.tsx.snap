@@ -1,36 +1,5 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ErrorAlert should match snapshot with additional classes 1`] = `
-<div>
-  <div
-    class="w-full mt-3 "
-  >
-    <div
-      class="border border-red-500 rounded-xl px-6 py-4 bg-white text-center shadow-md mt-4 mb-2"
-    >
-      <div
-        class="flex flex-col items-center justify-center gap-2"
-      >
-        <div
-          data-testid="MdError-icon"
-        >
-          Error Icon
-        </div>
-        <ul
-          class="text-red-600 text-sm list-none mt-2"
-        >
-          <li
-            class="font-medium text-left"
-          >
-            Error
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`ErrorAlert should match snapshot with all props combined 1`] = `
 <div>
   <div
@@ -42,11 +11,10 @@ exports[`ErrorAlert should match snapshot with all props combined 1`] = `
       <div
         class="flex flex-col items-center justify-center gap-2"
       >
-        <div
-          data-testid="MdError-icon"
-        >
-          Error Icon
-        </div>
+        <svg
+          class="text-red-600 text-4xl"
+          data-testid="error-icon"
+        />
         <p
           class="text-red-600 font-bold text-lg"
         >
@@ -72,37 +40,6 @@ exports[`ErrorAlert should match snapshot with all props combined 1`] = `
 </div>
 `;
 
-exports[`ErrorAlert should match snapshot with centerScreen enabled 1`] = `
-<div>
-  <div
-    class="w-full mt-3 flex items-center justify-center"
-  >
-    <div
-      class="border border-red-500 rounded-xl px-6 py-4 bg-white text-center shadow-md "
-    >
-      <div
-        class="flex flex-col items-center justify-center gap-2"
-      >
-        <div
-          data-testid="MdError-icon"
-        >
-          Error Icon
-        </div>
-        <ul
-          class="text-red-600 text-sm list-none mt-2"
-        >
-          <li
-            class="font-medium text-left"
-          >
-            Error
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`ErrorAlert should match snapshot with multiple errors 1`] = `
 <div>
   <div
@@ -114,11 +51,10 @@ exports[`ErrorAlert should match snapshot with multiple errors 1`] = `
       <div
         class="flex flex-col items-center justify-center gap-2"
       >
-        <div
-          data-testid="MdError-icon"
-        >
-          Error Icon
-        </div>
+        <svg
+          class="text-red-600 text-4xl"
+          data-testid="error-icon"
+        />
         <ul
           class="text-red-600 text-sm list-none mt-2"
         >
@@ -155,11 +91,10 @@ exports[`ErrorAlert should match snapshot with single error 1`] = `
       <div
         class="flex flex-col items-center justify-center gap-2"
       >
-        <div
-          data-testid="MdError-icon"
-        >
-          Error Icon
-        </div>
+        <svg
+          class="text-red-600 text-4xl"
+          data-testid="error-icon"
+        />
         <ul
           class="text-red-600 text-sm list-none mt-2"
         >
@@ -186,11 +121,10 @@ exports[`ErrorAlert should match snapshot with title 1`] = `
       <div
         class="flex flex-col items-center justify-center gap-2"
       >
-        <div
-          data-testid="MdError-icon"
-        >
-          Error Icon
-        </div>
+        <svg
+          class="text-red-600 text-4xl"
+          data-testid="error-icon"
+        />
         <p
           class="text-red-600 font-bold text-lg"
         >

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import IconButton from ".";
+import { fa } from "@/icons/fa";
 
 const meta: Meta<typeof IconButton> = {
   title: "Components/IconButton",
@@ -9,25 +10,31 @@ const meta: Meta<typeof IconButton> = {
     docs: {
       description: {
         component:
-          "A small, icon-only button commonly used in tables, cards, or grid layouts. Supports both `onClick` and `onMouseDown` (required when used inside **react-grid-layout** due to event capturing issues). Uses Font Awesome `<i>` tags for icons.",
+          "A small, icon-only button commonly used in tables, cards, or grid layouts. Supports both `onClick` and `onMouseDown` (required when used inside **react-grid-layout** due to event capturing issues). Uses FontAwesomeIcon for rendering SVG icons.",
       },
     },
   },
   tags: ["autodocs"],
   argTypes: {
-    iconStyles: {
-      control: "text",
-      description:
-        "Font Awesome icon classes (e.g. 'fas fa-edit', 'fas fa-trash-alt')",
+    icon: {
+      description: "FontAwesome icon definition (e.g. fa.faPencil)",
       table: {
-        type: { summary: "string" },
-        defaultValue: { summary: "''" },
+        type: { summary: "IconDefinition" },
       },
+      control: false,
     },
     ariaLabel: {
       control: "text",
       description:
         "Accessible label for screen readers and keyboard users (highly recommended)",
+      table: {
+        type: { summary: "string" },
+        defaultValue: { summary: "''" },
+      },
+    },
+    iconStyles: {
+      control: "text",
+      description: "Custom Tailwind/CSS classes for the icon",
       table: {
         type: { summary: "string" },
         defaultValue: { summary: "''" },
@@ -84,7 +91,7 @@ type Story = StoryObj<typeof IconButton>;
 // Basic Icons
 export const Edit: Story = {
   args: {
-    iconStyles: "fas fa-edit",
+    icon: fa.faPencil,
     ariaLabel: "Edit",
   },
   parameters: {
@@ -98,8 +105,9 @@ export const Edit: Story = {
 
 export const Delete: Story = {
   args: {
-    iconStyles: "fas fa-trash-alt text-red-600 hover:text-red-700",
+    icon: fa.faTrash,
     ariaLabel: "Delete",
+    iconStyles: "text-red-600 hover:text-red-700",
   },
   parameters: {
     docs: {
@@ -113,8 +121,9 @@ export const Delete: Story = {
 
 export const Copy: Story = {
   args: {
-    iconStyles: "fas fa-copy text-blue-600 hover:text-blue-700",
+    icon: fa.faCopy,
     ariaLabel: "Copy",
+    iconStyles: "text-blue-600 hover:text-blue-700",
   },
   parameters: {
     docs: {
@@ -128,8 +137,9 @@ export const Copy: Story = {
 
 export const Close: Story = {
   args: {
-    iconStyles: "fas fa-times text-gray-600 hover:text-gray-800",
+    icon: fa.faX,
     ariaLabel: "Close",
+    iconStyles: "text-gray-600 hover:text-gray-800",
   },
   parameters: {
     docs: {
@@ -144,8 +154,9 @@ export const Close: Story = {
 // Disabled State
 export const Disabled: Story = {
   args: {
-    iconStyles: "fas fa-edit text-gray-400",
+    icon: fa.faPencil,
     ariaLabel: "Edit (disabled)",
+    iconStyles: "text-gray-400",
     disabled: true,
   },
   parameters: {
@@ -161,10 +172,11 @@ export const Disabled: Story = {
 // Custom Styling
 export const WithHoverBackground: Story = {
   args: {
-    iconStyles: "fas fa-ellipsis-v text-gray-600",
+    icon: fa.faEllipsisVertical,
+    ariaLabel: "More actions",
+    iconStyles: "text-gray-600",
     buttonStyles:
       "p-1 w-[26px] h-[26px] flex justify-center items-center rounded-full hover:bg-gray-200 transition-colors",
-    ariaLabel: "More actions",
   },
   parameters: {
     docs: {
@@ -181,18 +193,21 @@ export const TableActions: Story = {
   render: () => (
     <div className="flex items-center gap-2">
       <IconButton
-        iconStyles="fas fa-edit text-gray-600 hover:text-blue-600"
+        icon={fa.faPencil}
         ariaLabel="Edit"
+        iconStyles="text-gray-600 hover:text-blue-600"
         onClick={() => alert("Edit clicked")}
       />
       <IconButton
-        iconStyles="fas fa-copy text-gray-600 hover:text-green-600"
+        icon={fa.faCopy}
         ariaLabel="Duplicate"
+        iconStyles="text-gray-600 hover:text-green-600"
         onClick={() => alert("Duplicate clicked")}
       />
       <IconButton
-        iconStyles="fas fa-trash-alt text-gray-600 hover:text-red-600"
+        icon={fa.faTrash}
         ariaLabel="Delete"
+        iconStyles="text-gray-600 hover:text-red-600"
         onMouseDown={() => alert("Delete (mouse down)")}
       />
     </div>
@@ -212,28 +227,38 @@ export const AllCommonActions: Story = {
   render: () => (
     <div className="flex gap-6 flex-wrap">
       <div className="flex flex-col items-center gap-2">
-        <IconButton iconStyles="fas fa-edit" ariaLabel="Edit" />
+        <IconButton icon={fa.faPencil} ariaLabel="Edit" />
         <span className="text-xs text-gray-600">Edit</span>
       </div>
       <div className="flex flex-col items-center gap-2">
         <IconButton
-          iconStyles="fas fa-trash-alt text-red-600"
+          icon={fa.faTrash}
           ariaLabel="Delete"
+          iconStyles="text-red-600"
         />
         <span className="text-xs text-gray-600">Delete</span>
       </div>
       <div className="flex flex-col items-center gap-2">
-        <IconButton iconStyles="fas fa-copy text-blue-600" ariaLabel="Copy" />
+        <IconButton
+          icon={fa.faCopy}
+          ariaLabel="Copy"
+          iconStyles="text-blue-600"
+        />
         <span className="text-xs text-gray-600">Copy</span>
       </div>
       <div className="flex flex-col items-center gap-2">
-        <IconButton iconStyles="fas fa-times text-gray-600" ariaLabel="Close" />
+        <IconButton
+          icon={fa.faX}
+          ariaLabel="Close"
+          iconStyles="text-gray-600"
+        />
         <span className="text-xs text-gray-600">Close</span>
       </div>
       <div className="flex flex-col items-center gap-2">
         <IconButton
-          iconStyles="fas fa-ellipsis-v text-gray-600"
+          icon={fa.faEllipsisVertical}
           ariaLabel="More"
+          iconStyles="text-gray-600"
         />
         <span className="text-xs text-gray-600">More</span>
       </div>
@@ -256,31 +281,39 @@ export const AllStates: Story = {
       <div>
         <h3 className="text-sm font-semibold mb-3">Normal States</h3>
         <div className="flex gap-3">
-          <IconButton iconStyles="fas fa-edit" ariaLabel="Edit" />
+          <IconButton icon={fa.faPencil} ariaLabel="Edit" />
           <IconButton
-            iconStyles="fas fa-trash-alt text-red-600"
+            icon={fa.faTrash}
             ariaLabel="Delete"
+            iconStyles="text-red-600"
           />
-          <IconButton iconStyles="fas fa-copy text-blue-600" ariaLabel="Copy" />
+          <IconButton
+            icon={fa.faCopy}
+            ariaLabel="Copy"
+            iconStyles="text-blue-600"
+          />
         </div>
       </div>
       <div>
         <h3 className="text-sm font-semibold mb-3">With Hover Background</h3>
         <div className="flex gap-3">
           <IconButton
-            iconStyles="fas fa-edit text-gray-600"
-            buttonStyles="p-1 w-[26px] h-[26px] flex justify-center items-center rounded-full hover:bg-gray-200 transition-colors"
+            icon={fa.faPencil}
             ariaLabel="Edit"
+            iconStyles="text-gray-600"
+            buttonStyles="p-1 w-[26px] h-[26px] flex justify-center items-center rounded-full hover:bg-gray-200 transition-colors"
           />
           <IconButton
-            iconStyles="fas fa-trash-alt text-red-600"
-            buttonStyles="p-1 w-[26px] h-[26px] flex justify-center items-center rounded-full hover:bg-red-100 transition-colors"
+            icon={fa.faTrash}
             ariaLabel="Delete"
+            iconStyles="text-red-600"
+            buttonStyles="p-1 w-[26px] h-[26px] flex justify-center items-center rounded-full hover:bg-red-100 transition-colors"
           />
           <IconButton
-            iconStyles="fas fa-copy text-blue-600"
-            buttonStyles="p-1 w-[26px] h-[26px] flex justify-center items-center rounded-full hover:bg-blue-100 transition-colors"
+            icon={fa.faCopy}
             ariaLabel="Copy"
+            iconStyles="text-blue-600"
+            buttonStyles="p-1 w-[26px] h-[26px] flex justify-center items-center rounded-full hover:bg-blue-100 transition-colors"
           />
         </div>
       </div>
@@ -288,18 +321,21 @@ export const AllStates: Story = {
         <h3 className="text-sm font-semibold mb-3">Disabled States</h3>
         <div className="flex gap-3">
           <IconButton
-            iconStyles="fas fa-edit text-gray-400"
+            icon={fa.faPencil}
             ariaLabel="Edit"
+            iconStyles="text-gray-400"
             disabled
           />
           <IconButton
-            iconStyles="fas fa-trash-alt text-gray-400"
+            icon={fa.faTrash}
             ariaLabel="Delete"
+            iconStyles="text-gray-400"
             disabled
           />
           <IconButton
-            iconStyles="fas fa-copy text-gray-400"
+            icon={fa.faCopy}
             ariaLabel="Copy"
+            iconStyles="text-gray-400"
             disabled
           />
         </div>
@@ -311,6 +347,76 @@ export const AllStates: Story = {
       description: {
         story:
           "Complete overview of all icon button states: normal, hover effects, and disabled",
+      },
+    },
+  },
+};
+
+// Size Variations
+export const SizeVariations: Story = {
+  render: () => (
+    <div className="flex flex-col gap-8">
+      <div>
+        <h3 className="text-sm font-semibold mb-3">Small (Default)</h3>
+        <div className="flex gap-3">
+          <IconButton icon={fa.faPencil} ariaLabel="Edit" />
+          <IconButton icon={fa.faTrash} ariaLabel="Delete" />
+          <IconButton icon={fa.faCopy} ariaLabel="Copy" />
+        </div>
+      </div>
+      <div>
+        <h3 className="text-sm font-semibold mb-3">Medium</h3>
+        <div className="flex gap-3">
+          <IconButton
+            icon={fa.faPencil}
+            ariaLabel="Edit"
+            buttonStyles="p-2 w-[40px] h-[40px] flex justify-center items-center rounded-full"
+            iconStyles="fa-lg"
+          />
+          <IconButton
+            icon={fa.faTrash}
+            ariaLabel="Delete"
+            buttonStyles="p-2 w-[40px] h-[40px] flex justify-center items-center rounded-full"
+            iconStyles="fa-lg"
+          />
+          <IconButton
+            icon={fa.faCopy}
+            ariaLabel="Copy"
+            buttonStyles="p-2 w-[40px] h-[40px] flex justify-center items-center rounded-full"
+            iconStyles="fa-lg"
+          />
+        </div>
+      </div>
+      <div>
+        <h3 className="text-sm font-semibold mb-3">Large</h3>
+        <div className="flex gap-3">
+          <IconButton
+            icon={fa.faPencil}
+            ariaLabel="Edit"
+            buttonStyles="p-3 w-[52px] h-[52px] flex justify-center items-center rounded-full"
+            iconStyles="fa-2x"
+          />
+          <IconButton
+            icon={fa.faTrash}
+            ariaLabel="Delete"
+            buttonStyles="p-3 w-[52px] h-[52px] flex justify-center items-center rounded-full"
+            iconStyles="fa-2x"
+          />
+          <IconButton
+            icon={fa.faCopy}
+            ariaLabel="Copy"
+            buttonStyles="p-3 w-[52px] h-[52px] flex justify-center items-center rounded-full"
+            iconStyles="fa-2x"
+          />
+        </div>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Icon button size variations: small (default), medium, and large",
       },
     },
   },
