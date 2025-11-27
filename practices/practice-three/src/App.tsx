@@ -168,7 +168,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <div
         className="w-screen min-h-screen relative bg-cover bg-center overflow-hidden h-screen select-none"
-        style={{ backgroundImage: `url('/images/background-desktop.jpg')` }}
+        style={{ backgroundImage: `url('/images/background-desktop.webp')` }}
         onMouseDown={handleBackgroundMouseDown}
       >
         <div className="absolute inset-x-0 top-0 bottom-[44px]">

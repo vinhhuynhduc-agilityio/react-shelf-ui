@@ -66,7 +66,7 @@ export const Selected: Story = {
 
 export const Custom: Story = {
   args: {
-    image: "/images/kanban.png",
+    image: "/images/kanban.webp",
     title: "Kanban",
     keyIcon: DESKTOP_ICONS[3].key,
   },

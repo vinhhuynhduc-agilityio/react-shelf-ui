@@ -125,11 +125,11 @@ describe("FileContextMenu", () => {
   it("should render different file items correctly", () => {
     const differentFile: FileItem = {
       id: "file-002",
-      name: "image.png",
+      name: "image.webp",
       size: 1024,
-      type: "image/png",
+      type: "image/webp",
       parentId: "folder-001",
-      imageUrl: "https://example.com/image.png",
+      imageUrl: "https://example.com/image.webp",
     };
 
     render(<FileContextMenu {...defaultProps} item={differentFile} />);

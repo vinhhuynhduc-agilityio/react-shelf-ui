@@ -24,7 +24,7 @@ const mockedUseWindowStore = useWindowStore as jest.MockedFunction<
 describe("WindowHeader", () => {
   const defaultProps = {
     windowKey: "spreadsheet" as WindowKey,
-    src: "/images/spreadsheet.png",
+    src: "/images/spreadsheet.webp",
     title: "Spreadsheet",
     onClose: jest.fn(),
     onMaximize: jest.fn(),
@@ -46,7 +46,7 @@ describe("WindowHeader", () => {
 
     expect(screen.getByAltText("Spreadsheet")).toHaveAttribute(
       "src",
-      "/images/spreadsheet.png"
+      "/images/spreadsheet.webp"
     );
     expect(screen.getByText("Spreadsheet")).toBeInTheDocument();
   });

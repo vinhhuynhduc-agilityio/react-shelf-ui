@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 import { DesktopIcon } from "@/components/common/DesktopIcon";
 
 describe("DesktopIcon", () => {
-  const IMAGE = "/images/icon.png";
+  const IMAGE = "/images/icon.webp";
   const TITLE = "My App";
   const KEY = "spreadsheet";
 
