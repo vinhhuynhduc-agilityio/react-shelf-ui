@@ -54,8 +54,9 @@ exports[`PivotTreeView matches snapshot 1`] = `
       <span
         class="ml-[10px] cursor-pointer"
       >
-        <i
-          class="fa-solid fa-sort-down text-[#94A1B3]"
+        <svg
+          class="text-[#94A1B3]"
+          data-testid="icon-svg"
         />
       </span>
     </div>

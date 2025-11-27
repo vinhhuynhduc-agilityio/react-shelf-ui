@@ -9,6 +9,12 @@ jest.mock("@/helpers", () => ({
   getBasicInfo: jest.fn(),
 }));
 
+jest.mock("@/components", () => ({
+  Icon: ({ className }: { className?: string }) => (
+    <svg data-testid="icon-svg" className={className} />
+  ),
+}));
+
 describe("PreviewPanel", () => {
   const mockFiles: FileItem[] = [
     {

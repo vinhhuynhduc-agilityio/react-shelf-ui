@@ -29,6 +29,9 @@ jest.mock("@/constant", () => ({
 }));
 
 jest.mock("@/components/common", () => ({
+  Icon: ({ className }: { className?: string }) => (
+    <svg data-testid="icon-svg" className={className} />
+  ),
   DesktopIcon: ({
     image,
     title,

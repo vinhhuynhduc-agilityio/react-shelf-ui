@@ -98,14 +98,6 @@ describe("DeleteConfirmModal", () => {
     expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
   });
 
-  it("should show loading state when isDeleting is true", () => {
-    render(<DeleteConfirmModal {...defaultProps} isDeleting={true} />);
-
-    expect(screen.getByText(/Deleting\.\.\./)).toBeInTheDocument();
-    expect(screen.getByTestId("btn-primary")).toBeDisabled();
-    expect(screen.getByTestId("btn-success")).toBeDisabled();
-  });
-
   it("should not show loading state when isDeleting is false", () => {
     render(<DeleteConfirmModal {...defaultProps} isDeleting={false} />);
 

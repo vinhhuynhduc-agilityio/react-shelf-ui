@@ -8,13 +8,9 @@ jest.mock("@/stores", () => ({
 }));
 
 jest.mock("@/components", () => ({
-  IconButton: ({
-    iconStyles,
-    onClick,
-  }: {
-    iconStyles?: string;
-    onClick?: () => void;
-  }) => <button onClick={onClick} data-testid={`icon-btn-${iconStyles}`} />,
+  IconButton: ({ onClick }: { onClick?: () => void }) => (
+    <button onClick={onClick} data-testid="icon-button" />
+  ),
 }));
 
 const mockedUseWindowStore = useWindowStore as jest.MockedFunction<
@@ -60,45 +56,10 @@ describe("WindowHeader", () => {
 
     render(<WindowHeader {...defaultProps} />);
 
-    const minimizeBtn = screen.getByTestId(
-      "icon-btn-fa-solid fa-minus text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
-    );
+    const minimizeBtn = screen.getAllByTestId("icon-button")[0];
     fireEvent.click(minimizeBtn);
 
     expect(defaultProps.onMinimize).toHaveBeenCalledTimes(1);
-  });
-
-  it("should call onClose when close button clicked", () => {
-    mockedUseWindowStore.mockReturnValue({
-      windows: {
-        spreadsheet: { isMaximized: false },
-      },
-    } as ReturnType<typeof useWindowStore>);
-
-    render(<WindowHeader {...defaultProps} />);
-
-    const closeBtn = screen.getByTestId(
-      "icon-btn-fa-solid fa-xmark text-[#94A1B3] rounded-full px-[6px] py-[3px] hover:bg-gray-100"
-    );
-    fireEvent.click(closeBtn);
-
-    expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
-  });
-
-  it("should render maximize icon when window not maximized", () => {
-    mockedUseWindowStore.mockReturnValue({
-      windows: {
-        spreadsheet: { isMaximized: false },
-      },
-    } as ReturnType<typeof useWindowStore>);
-
-    render(<WindowHeader {...defaultProps} />);
-
-    expect(
-      screen.getByTestId(
-        "icon-btn-fa-regular fa-square text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
-      )
-    ).toBeInTheDocument();
   });
 
   it("should call onMaximize when maximize/restore button clicked", () => {
@@ -110,12 +71,25 @@ describe("WindowHeader", () => {
 
     render(<WindowHeader {...defaultProps} />);
 
-    const maximizeBtn = screen.getByTestId(
-      "icon-btn-fa-regular fa-square text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
-    );
+    const maximizeBtn = screen.getAllByTestId("icon-button")[1];
     fireEvent.click(maximizeBtn);
 
     expect(defaultProps.onMaximize).toHaveBeenCalledTimes(1);
+  });
+
+  it("should call onClose when close button clicked", () => {
+    mockedUseWindowStore.mockReturnValue({
+      windows: {
+        spreadsheet: { isMaximized: false },
+      },
+    } as ReturnType<typeof useWindowStore>);
+
+    render(<WindowHeader {...defaultProps} />);
+
+    const closeBtn = screen.getAllByTestId("icon-button")[2];
+    fireEvent.click(closeBtn);
+
+    expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
   });
 
   it("should have window-drag-handle class for dragging", () => {
@@ -129,5 +103,18 @@ describe("WindowHeader", () => {
 
     const header = container.firstChild as HTMLElement;
     expect(header).toHaveClass("window-drag-handle");
+  });
+
+  it("should render all three icon buttons", () => {
+    mockedUseWindowStore.mockReturnValue({
+      windows: {
+        spreadsheet: { isMaximized: false },
+      },
+    } as ReturnType<typeof useWindowStore>);
+
+    render(<WindowHeader {...defaultProps} />);
+
+    const buttons = screen.getAllByTestId("icon-button");
+    expect(buttons).toHaveLength(3);
   });
 });

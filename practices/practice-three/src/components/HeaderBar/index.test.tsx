@@ -4,28 +4,14 @@ import { HeaderBar } from ".";
 // Mock IconButton component
 jest.mock("@/components", () => ({
   IconButton: ({
-    iconStyles,
-    buttonStyles,
     onClick,
     disabled,
   }: {
-    iconStyles: string;
-    buttonStyles: string;
     onClick?: () => void;
     disabled?: boolean;
   }) => (
-    <button
-      data-testid="icon-button"
-      className={buttonStyles}
-      onClick={onClick}
-      disabled={disabled}
-      style={{
-        background: buttonStyles.includes("bg-[#daddeb]")
-          ? "#daddeb"
-          : "#F4F5F9",
-      }}
-    >
-      <i className={iconStyles} data-testid="icon" />
+    <button data-testid="icon-button" onClick={onClick} disabled={disabled}>
+      <svg data-testid="icon-svg" />
     </button>
   ),
 }));

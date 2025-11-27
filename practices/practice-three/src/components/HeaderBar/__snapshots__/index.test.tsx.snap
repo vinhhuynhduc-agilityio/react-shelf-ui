@@ -25,13 +25,10 @@ exports[`HeaderBar Snapshots should match snapshot when disabled 1`] = `
           value=""
         />
         <button
-          class="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
           data-testid="icon-button"
-          style="background: rgb(244, 245, 249);"
         >
-          <i
-            class="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
-            data-testid="icon"
+          <svg
+            data-testid="icon-svg"
           />
         </button>
       </div>
@@ -40,14 +37,11 @@ exports[`HeaderBar Snapshots should match snapshot when disabled 1`] = `
       class="flex items-center space-x-1 mr-[12px]"
     >
       <button
-        class="p-1 flex justify-center items-center w-[60px] h-[38px] transition-colors hover:bg-[#E4E6F0] bg-[#F4F5F9]"
         data-testid="icon-button"
         disabled=""
-        style="background: rgb(244, 245, 249);"
       >
-        <i
-          class="fa-solid fa-eye text-[#1CA1C1] text-sm"
-          data-testid="icon"
+        <svg
+          data-testid="icon-svg"
         />
       </button>
     </div>
@@ -80,13 +74,10 @@ exports[`HeaderBar Snapshots should match snapshot when fetching 1`] = `
           value=""
         />
         <button
-          class="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
           data-testid="icon-button"
-          style="background: rgb(244, 245, 249);"
         >
-          <i
-            class="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
-            data-testid="icon"
+          <svg
+            data-testid="icon-svg"
           />
         </button>
       </div>
@@ -95,14 +86,11 @@ exports[`HeaderBar Snapshots should match snapshot when fetching 1`] = `
       class="flex items-center space-x-1 mr-[12px]"
     >
       <button
-        class="p-1 flex justify-center items-center w-[60px] h-[38px] transition-colors hover:bg-[#E4E6F0] bg-[#F4F5F9]"
         data-testid="icon-button"
         disabled=""
-        style="background: rgb(244, 245, 249);"
       >
-        <i
-          class="fa-solid fa-eye text-[#1CA1C1] text-sm"
-          data-testid="icon"
+        <svg
+          data-testid="icon-svg"
         />
       </button>
     </div>
@@ -134,13 +122,10 @@ exports[`HeaderBar Snapshots should match snapshot with default props 1`] = `
           value=""
         />
         <button
-          class="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
           data-testid="icon-button"
-          style="background: rgb(244, 245, 249);"
         >
-          <i
-            class="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
-            data-testid="icon"
+          <svg
+            data-testid="icon-svg"
           />
         </button>
       </div>
@@ -149,13 +134,10 @@ exports[`HeaderBar Snapshots should match snapshot with default props 1`] = `
       class="flex items-center space-x-1 mr-[12px]"
     >
       <button
-        class="p-1 flex justify-center items-center w-[60px] h-[38px] transition-colors hover:bg-[#E4E6F0] bg-[#F4F5F9]"
         data-testid="icon-button"
-        style="background: rgb(244, 245, 249);"
       >
-        <i
-          class="fa-solid fa-eye text-[#1CA1C1] text-sm"
-          data-testid="icon"
+        <svg
+          data-testid="icon-svg"
         />
       </button>
     </div>
@@ -187,13 +169,10 @@ exports[`HeaderBar Snapshots should match snapshot with preview mode active 1`] 
           value=""
         />
         <button
-          class="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
           data-testid="icon-button"
-          style="background: rgb(244, 245, 249);"
         >
-          <i
-            class="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
-            data-testid="icon"
+          <svg
+            data-testid="icon-svg"
           />
         </button>
       </div>
@@ -202,13 +181,10 @@ exports[`HeaderBar Snapshots should match snapshot with preview mode active 1`] 
       class="flex items-center space-x-1 mr-[12px]"
     >
       <button
-        class="p-1 flex justify-center items-center w-[60px] h-[38px] transition-colors hover:bg-[#E4E6F0] bg-[#daddeb]"
         data-testid="icon-button"
-        style="background: rgb(218, 221, 235);"
       >
-        <i
-          class="fa-solid fa-eye text-[#1CA1C1] text-sm"
-          data-testid="icon"
+        <svg
+          data-testid="icon-svg"
         />
       </button>
     </div>
@@ -240,13 +216,10 @@ exports[`HeaderBar Snapshots should match snapshot with search query 1`] = `
           value="test file"
         />
         <button
-          class="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
           data-testid="icon-button"
-          style="background: rgb(244, 245, 249);"
         >
-          <i
-            class="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
-            data-testid="icon"
+          <svg
+            data-testid="icon-svg"
           />
         </button>
       </div>
@@ -255,13 +228,10 @@ exports[`HeaderBar Snapshots should match snapshot with search query 1`] = `
       class="flex items-center space-x-1 mr-[12px]"
     >
       <button
-        class="p-1 flex justify-center items-center w-[60px] h-[38px] transition-colors hover:bg-[#E4E6F0] bg-[#F4F5F9]"
         data-testid="icon-button"
-        style="background: rgb(244, 245, 249);"
       >
-        <i
-          class="fa-solid fa-eye text-[#1CA1C1] text-sm"
-          data-testid="icon"
+        <svg
+          data-testid="icon-svg"
         />
       </button>
     </div>

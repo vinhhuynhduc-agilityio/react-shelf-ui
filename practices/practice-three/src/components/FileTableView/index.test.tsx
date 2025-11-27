@@ -67,18 +67,8 @@ jest.mock("@/components", () => ({
       ))}
     </nav>
   ),
-  IconButton: ({
-    onClick,
-    iconStyles,
-  }: {
-    onClick?: (e: React.MouseEvent) => void;
-    iconStyles?: string;
-  }) => (
-    <button
-      onClick={onClick}
-      data-testid={`icon-btn-${iconStyles}`}
-      aria-label="back"
-    />
+  IconButton: ({ onClick }: { onClick?: (e: React.MouseEvent) => void }) => (
+    <button onClick={onClick} data-testid="icon-btn-back" aria-label="back" />
   ),
 }));
 
@@ -192,9 +182,7 @@ describe("FileTableView", () => {
       />
     );
 
-    const backBtn = screen.getByTestId(
-      "icon-btn-fa-solid fa-chevron-left fa-sm text-[#94A1B3]"
-    );
+    const backBtn = screen.getByTestId("icon-btn-back");
     fireEvent.click(backBtn);
 
     expect(defaultProps.onClearSearch).toHaveBeenCalledTimes(1);

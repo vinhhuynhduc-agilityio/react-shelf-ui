@@ -34,6 +34,9 @@ jest.mock("antd", () => ({
 }));
 
 jest.mock("@/components", () => ({
+  Icon: ({ className }: { className?: string }) => (
+    <svg data-testid="icon-svg" className={className} />
+  ),
   Button: ({
     children,
     onClick,

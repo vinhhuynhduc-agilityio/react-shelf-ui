@@ -24,7 +24,9 @@ describe("SingleSelect", () => {
     render(<SingleSelect {...defaultProps} />);
 
     expect(screen.getByText("Banana")).toBeInTheDocument();
-    expect(document.querySelector("i.fa-chevron-down")).toBeInTheDocument();
+
+    const svg = document.querySelector("svg");
+    expect(svg).toBeInTheDocument();
   });
 
   it("should open dropdown and display all options", () => {
