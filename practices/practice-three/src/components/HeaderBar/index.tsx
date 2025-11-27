@@ -48,6 +48,7 @@ export const HeaderBar = memo(
               iconStyles="text-[#94A1B3] text-sm"
               buttonStyles="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
               onClick={handleSearchClick}
+              aria-label="Search files and folders"
             />
           </div>
         </div>
@@ -61,6 +62,7 @@ export const HeaderBar = memo(
             iconStyles="text-[#1CA1C1] text-sm"
             onClick={onTogglePreview}
             disabled={isDisabled || isFetching}
+            aria-label="Toggle preview mode"
           />
         </div>
       </div>

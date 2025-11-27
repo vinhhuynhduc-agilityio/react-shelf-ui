@@ -78,6 +78,7 @@ const Taskbar = memo(({ onToggleSearch }: TaskbarProps) => {
             iconStyles="fa-lg text-[#FFFFFF] text-sm"
             buttonStyles="flex justify-center items-center w-full h-full focus:outline-none"
             onClick={onToggleSearch}
+            aria-label="Open search menu"
           />
         </div>
         {openKeys.map((key) => {
@@ -95,6 +96,7 @@ const Taskbar = memo(({ onToggleSearch }: TaskbarProps) => {
                 title={icon.title}
                 onClick={() => handleTaskClick(key)}
                 className="h-[36px] px-2 flex items-center cursor-pointer"
+                aria-label={icon.title}
               >
                 <img src={icon.image} alt="" className="h-[26px] w-[26px]" />
               </button>

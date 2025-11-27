@@ -51,6 +51,7 @@ const WindowHeader = memo(
             icon={fa.faMinus}
             iconStyles="text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
             onClick={onMinimize}
+            aria-label="Minimize window"
           />
           <IconButton
             icon={isMaximized ? fa.faWindowRestore : fa.faSquare}
@@ -60,11 +61,13 @@ const WindowHeader = memo(
                 : "text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
             }
             onClick={onMaximize}
+            aria-label={isMaximized ? "Restore window" : "Maximize window"}
           />
           <IconButton
             icon={fa.faXmark}
             iconStyles="text-[#94A1B3] rounded-full px-[6px] py-[3px] hover:bg-gray-100"
             onClick={onClose}
+            aria-label="Close window"
           />
         </div>
       </div>

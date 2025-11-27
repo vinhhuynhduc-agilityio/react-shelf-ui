@@ -64,6 +64,7 @@ export const FileTableView = ({
               onClick={onClearSearch}
               iconStyles="fa-sm text-[#94A1B3]"
               buttonStyles="p-1 w-[38px] h-[38px] flex justify-center items-center rounded-full hover:bg-[#F4F5F9] mr-1"
+              ariaLabel="Clear search and go back"
             />
             <span>Search results in {searchPath}</span>
           </div>
