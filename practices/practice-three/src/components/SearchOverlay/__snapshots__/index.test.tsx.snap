@@ -14,8 +14,9 @@ exports[`SearchOverlay should match snapshot after icon clicked 1`] = `
         type="text"
         value=""
       />
-      <i
-        class="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm absolute right-4 top-1/2 -translate-y-1/2"
+      <svg
+        class="text-[#94A1B3] text-sm absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+        data-testid="icon-svg"
       />
     </div>
     <div
@@ -88,8 +89,9 @@ exports[`SearchOverlay should match snapshot on initial load 1`] = `
         type="text"
         value=""
       />
-      <i
-        class="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm absolute right-4 top-1/2 -translate-y-1/2"
+      <svg
+        class="text-[#94A1B3] text-sm absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+        data-testid="icon-svg"
       />
     </div>
     <div
@@ -162,8 +164,9 @@ exports[`SearchOverlay should match snapshot with search input filled 1`] = `
         type="text"
         value="File"
       />
-      <i
-        class="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm absolute right-4 top-1/2 -translate-y-1/2"
+      <svg
+        class="text-[#94A1B3] text-sm absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+        data-testid="icon-svg"
       />
     </div>
     <div

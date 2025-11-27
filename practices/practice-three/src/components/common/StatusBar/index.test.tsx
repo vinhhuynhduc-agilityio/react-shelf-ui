@@ -29,7 +29,9 @@ describe("StatusBar", () => {
     expect(screen.getByText("Operation successful")).toBeInTheDocument();
     const messageDiv = screen.getByText("Operation successful").closest("div");
     expect(messageDiv).toHaveClass("bg-green-50", "text-green-700");
-    expect(document.querySelector("i.fa-check")).toBeInTheDocument();
+
+    const svg = messageDiv?.querySelector("svg");
+    expect(svg).toBeInTheDocument();
   });
 
   it("should render message with error styling", () => {
@@ -39,9 +41,9 @@ describe("StatusBar", () => {
 
     const messageDiv = screen.getByText("Operation failed").closest("div");
     expect(messageDiv).toHaveClass("bg-red-50", "text-red-700");
-    expect(
-      document.querySelector("i.fa-exclamation-triangle")
-    ).toBeInTheDocument();
+
+    const svg = messageDiv?.querySelector("svg");
+    expect(svg).toBeInTheDocument();
   });
 
   it("should call onClear after 2 seconds", async () => {

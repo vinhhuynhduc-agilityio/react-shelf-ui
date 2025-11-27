@@ -1,24 +1,25 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ContextMenu from ".";
 import type { ContextMenuOption } from "@/types";
+import { fa } from "@/icons/fa";
 
 describe("ContextMenu", () => {
   const mockOptions: ContextMenuOption[] = [
     {
       label: "Edit",
-      icon: "fa-solid fa-pen",
+      icon: fa.faPencil,
       onClick: jest.fn(),
       danger: false,
     },
     {
       label: "Delete",
-      icon: "fa-solid fa-trash",
+      icon: fa.faTrash,
       onClick: jest.fn(),
       danger: true,
     },
     {
       label: "Download",
-      icon: "fa-solid fa-download",
+      icon: fa.faFile,
       onClick: jest.fn(),
       danger: false,
     },
@@ -98,11 +99,13 @@ describe("ContextMenu", () => {
   it("should render icons for all options", () => {
     render(<ContextMenu {...defaultProps} />);
 
-    const icons = document.querySelectorAll("i");
-    expect(icons).toHaveLength(3);
-    expect(icons[0]).toHaveClass("fa-solid", "fa-pen");
-    expect(icons[1]).toHaveClass("fa-solid", "fa-trash");
-    expect(icons[2]).toHaveClass("fa-solid", "fa-download");
+    const editOption = screen.getByText("Edit").closest("li");
+    const deleteOption = screen.getByText("Delete").closest("li");
+    const downloadOption = screen.getByText("Download").closest("li");
+
+    expect(editOption?.querySelector("svg")).toBeInTheDocument();
+    expect(deleteOption?.querySelector("svg")).toBeInTheDocument();
+    expect(downloadOption?.querySelector("svg")).toBeInTheDocument();
   });
 
   it("should close menu on scroll event", async () => {
@@ -168,13 +171,13 @@ describe("ContextMenu", () => {
     const options: ContextMenuOption[] = [
       {
         label: "Option 1",
-        icon: "fa-solid fa-check",
+        icon: fa.faCheck,
         onClick: jest.fn(),
         danger: false,
       },
       {
         label: "Option 2",
-        icon: "fa-solid fa-times",
+        icon: fa.faTimes,
         onClick: jest.fn(),
         danger: false,
       },

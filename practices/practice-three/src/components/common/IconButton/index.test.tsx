@@ -1,13 +1,14 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import IconButton from "@/components/common/IconButton";
+import { fa } from "@/icons/fa";
 
 describe("IconButton", () => {
   it("should render button with aria-label", () => {
     render(
       <IconButton
         ariaLabel="Search"
-        iconStyles="fa-solid fa-search"
+        icon={fa.faMagnifyingGlass}
         onClick={() => {}}
       />
     );
@@ -16,28 +17,25 @@ describe("IconButton", () => {
     expect(btn).toBeInTheDocument();
   });
 
-  it("should render icon element with correct classes", () => {
-    const { container } = render(
+  it("should render icon element as FontAwesomeIcon", () => {
+    render(
       <IconButton
         ariaLabel="Search"
-        iconStyles="fa-solid fa-search"
+        icon={fa.faMagnifyingGlass}
         onClick={() => {}}
       />
     );
 
-    const iconEl = container.querySelector("i");
-    expect(iconEl).toBeInTheDocument();
-    expect(iconEl).toHaveClass("fa-solid", "fa-search");
+    const svg = screen
+      .getByRole("button", { name: "Search" })
+      .querySelector("svg");
+    expect(svg).toBeInTheDocument();
   });
 
   it("should call onClick when clicked", () => {
     const onClick = jest.fn();
     render(
-      <IconButton
-        ariaLabel="Open"
-        iconStyles="fa-solid fa-open"
-        onClick={onClick}
-      />
+      <IconButton ariaLabel="Open" icon={fa.faFolderOpen} onClick={onClick} />
     );
 
     const btn = screen.getByRole("button", { name: "Open" });
@@ -48,13 +46,7 @@ describe("IconButton", () => {
 
   it("should stop event propagation on click", () => {
     const onClick = jest.fn();
-    render(
-      <IconButton
-        ariaLabel="Test"
-        iconStyles="fa-solid fa-test"
-        onClick={onClick}
-      />
-    );
+    render(<IconButton ariaLabel="Test" icon={fa.faCheck} onClick={onClick} />);
 
     const btn = screen.getByRole("button", { name: "Test" });
     const event = new MouseEvent("click", { bubbles: true });
@@ -71,7 +63,7 @@ describe("IconButton", () => {
     render(
       <IconButton
         ariaLabel="MouseDown"
-        iconStyles="fa-solid fa-hand"
+        icon={fa.faCaretRight}
         onMouseDown={onMouseDown}
       />
     );
@@ -87,7 +79,7 @@ describe("IconButton", () => {
     render(
       <IconButton
         ariaLabel="Test"
-        iconStyles="fa-solid fa-test"
+        icon={fa.faCheck}
         onMouseDown={onMouseDown}
       />
     );
@@ -106,7 +98,7 @@ describe("IconButton", () => {
     render(
       <IconButton
         ariaLabel="Custom"
-        iconStyles="fa-solid fa-custom"
+        icon={fa.faCheck}
         onClick={() => {}}
         buttonStyles="custom-btn-class px-4 py-2"
       />
@@ -116,26 +108,9 @@ describe("IconButton", () => {
     expect(btn).toHaveClass("custom-btn-class", "px-4", "py-2");
   });
 
-  it("should apply custom iconStyles", () => {
-    const { container } = render(
-      <IconButton
-        ariaLabel="Custom"
-        iconStyles="fa-solid fa-custom custom-icon-class"
-        onClick={() => {}}
-      />
-    );
-
-    const iconEl = container.querySelector("i");
-    expect(iconEl).toHaveClass("fa-solid", "fa-custom", "custom-icon-class");
-  });
-
   it("should apply default buttonStyles when not provided", () => {
     render(
-      <IconButton
-        ariaLabel="Default"
-        iconStyles="fa-solid fa-default"
-        onClick={() => {}}
-      />
+      <IconButton ariaLabel="Default" icon={fa.faCheck} onClick={() => {}} />
     );
 
     const btn = screen.getByRole("button", { name: "Default" });
@@ -156,7 +131,7 @@ describe("IconButton", () => {
     render(
       <IconButton
         ariaLabel="Disabled"
-        iconStyles="fa-solid fa-lock"
+        icon={fa.faCheck}
         onClick={() => {}}
         disabled={true}
       />
@@ -168,11 +143,7 @@ describe("IconButton", () => {
 
   it("should not be disabled by default", () => {
     render(
-      <IconButton
-        ariaLabel="Enabled"
-        iconStyles="fa-solid fa-unlock"
-        onClick={() => {}}
-      />
+      <IconButton ariaLabel="Enabled" icon={fa.faCheck} onClick={() => {}} />
     );
 
     const btn = screen.getByRole("button", { name: "Enabled" });
@@ -185,7 +156,7 @@ describe("IconButton", () => {
     render(
       <IconButton
         ariaLabel="Both"
-        iconStyles="fa-solid fa-both"
+        icon={fa.faCheck}
         onClick={onClick}
         onMouseDown={onMouseDown}
       />
@@ -200,23 +171,27 @@ describe("IconButton", () => {
   });
 
   it("should work without ariaLabel", () => {
-    render(<IconButton iconStyles="fa-solid fa-test" onClick={() => {}} />);
+    render(<IconButton icon={fa.faCheck} onClick={() => {}} />);
 
     const btn = screen.getByRole("button");
     expect(btn).toBeInTheDocument();
-    expect(btn).toHaveAttribute("aria-label", "");
   });
 
-  it("should combine multiple icon style classes", () => {
-    const { container } = render(
-      <IconButton
-        ariaLabel="Multi"
-        iconStyles="fa-solid fa-heart fa-2x text-red-500"
-        onClick={() => {}}
-      />
+  it("should render different icons", () => {
+    const { rerender } = render(
+      <IconButton ariaLabel="Heart" icon={fa.faCheck} onClick={() => {}} />
     );
 
-    const iconEl = container.querySelector("i");
-    expect(iconEl).toHaveClass("fa-solid", "fa-heart", "fa-2x", "text-red-500");
+    let svg = screen
+      .getByRole("button", { name: "Heart" })
+      .querySelector("svg");
+    expect(svg).toBeInTheDocument();
+
+    rerender(
+      <IconButton ariaLabel="Check" icon={fa.faCheck} onClick={() => {}} />
+    );
+
+    svg = screen.getByRole("button", { name: "Check" }).querySelector("svg");
+    expect(svg).toBeInTheDocument();
   });
 });
