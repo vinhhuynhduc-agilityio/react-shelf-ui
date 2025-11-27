@@ -321,7 +321,7 @@ export const getFilteredItems = (
     ];
 
     let items = files
-      .filter((item) => subtreeIds.includes(item.parentId))
+      .filter((item) => subtreeIds.includes(item.parentId!))
       .map((item) => ({ ...item, key: item.id }));
 
     const query = searchQuery.toLowerCase();

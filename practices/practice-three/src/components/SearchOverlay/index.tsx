@@ -25,7 +25,7 @@ const SearchOverlay = ({
   onAppSelect,
   onClose,
 }: SearchOverlayProps) => {
-  const debouncedSearch = useDebounce(searchQuery, 300);
+  const debouncedSearch = useDebounce(searchQuery ?? "", 300);
 
   const filteredIcons = useMemo(() => {
     if (!debouncedSearch.trim()) return DESKTOP_ICONS;

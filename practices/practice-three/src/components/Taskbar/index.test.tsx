@@ -1,117 +1,150 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import Taskbar from "@/components/Taskbar";
-import { DESKTOP_ICONS } from "@/constant";
+import Taskbar from ".";
 import { useWindowStore } from "@/stores";
 
 jest.mock("@/stores", () => ({
   useWindowStore: jest.fn(),
 }));
 
-const mockedUseWindowStore = useWindowStore as unknown as jest.Mock;
+jest.mock("@/constant", () => ({
+  DESKTOP_ICONS: [
+    { key: "spreadsheet", title: "Spreadsheet", image: "/spreadsheet.png" },
+    { key: "calculator", title: "Calculator", image: "/calculator.png" },
+  ],
+}));
+
+jest.mock("@/components/common/IconButton", () => {
+  return function MockIconButton({
+    onClick,
+    iconStyles,
+    buttonStyles,
+  }: {
+    onClick?: () => void;
+    iconStyles?: string;
+    buttonStyles?: string;
+  }) {
+    return (
+      <button onClick={onClick} className={buttonStyles}>
+        <i className={iconStyles} />
+      </button>
+    );
+  };
+});
+
+const mockedUseWindowStore = useWindowStore as jest.MockedFunction<
+  typeof useWindowStore
+>;
 
 describe("Taskbar", () => {
-  afterEach(() => {
+  const defaultStoreState = {
+    windows: {
+      spreadsheet: { isOpen: true, isMinimized: false },
+      calculator: { isOpen: true, isMinimized: false },
+    },
+    zIndexOrder: ["spreadsheet", "calculator"],
+    setZIndexOrder: jest.fn(),
+    minimizeWindow: jest.fn(),
+    restoreWindow: jest.fn(),
+  };
+
+  const mockOnToggleSearch = jest.fn();
+
+  beforeEach(() => {
     jest.clearAllMocks();
+    mockedUseWindowStore.mockImplementation((selector: unknown) => {
+      const fn = selector as (state: typeof defaultStoreState) => unknown;
+      return fn(defaultStoreState) as ReturnType<typeof useWindowStore>;
+    });
   });
 
-  it("renders a task button for each open window", () => {
-    mockedUseWindowStore.mockImplementation(() => ({
-      windows: {
-        spreadsheet: { isOpen: true, isMinimized: false },
-        pivot: { isOpen: true, isMinimized: false },
-        kanban: { isOpen: false, isMinimized: false },
-        filemanager: { isOpen: false, isMinimized: false },
-      },
-      zIndexOrder: ["spreadsheet", "pivot"],
-      setZIndexOrder: jest.fn(),
-      minimizeWindow: jest.fn(),
-      restoreWindow: jest.fn(),
-    }));
+  it("should render taskbar with menu and open windows", () => {
+    render(<Taskbar onToggleSearch={mockOnToggleSearch} />);
 
-    render(<Taskbar onToggleSearch={jest.fn()} />);
-
-    const spreadsheetMeta = DESKTOP_ICONS.find((i) => i.key === "spreadsheet")!;
-    const pivotMeta = DESKTOP_ICONS.find((i) => i.key === "pivot")!;
-
-    expect(screen.getByTitle(spreadsheetMeta.title)).toBeInTheDocument();
-    expect(screen.getByTitle(pivotMeta.title)).toBeInTheDocument();
+    const buttons = screen.getAllByRole("button");
+    expect(buttons.length).toBeGreaterThanOrEqual(3); // menu + 2 windows
   });
 
-  it("clicking minimized task calls restoreWindow and setZIndexOrder", () => {
-    const setZIndexOrder = jest.fn();
-    const restoreWindow = jest.fn();
-    mockedUseWindowStore.mockImplementation(() => ({
-      windows: {
-        spreadsheet: { isOpen: true, isMinimized: true },
-        pivot: { isOpen: false, isMinimized: false },
-        kanban: { isOpen: false, isMinimized: false },
-        filemanager: { isOpen: false, isMinimized: false },
-      },
-      zIndexOrder: ["pivot"], // topMost not spreadsheet
-      setZIndexOrder,
-      minimizeWindow: jest.fn(),
-      restoreWindow,
-    }));
+  it("should call onToggleSearch when menu button clicked", () => {
+    render(<Taskbar onToggleSearch={mockOnToggleSearch} />);
 
-    render(<Taskbar onToggleSearch={jest.fn()} />);
+    const menuButton = screen.getAllByRole("button")[0];
+    fireEvent.click(menuButton);
 
-    const spreadsheetMeta = DESKTOP_ICONS.find((i) => i.key === "spreadsheet")!;
-    const btn = screen.getByTitle(spreadsheetMeta.title);
-    fireEvent.click(btn);
-
-    expect(restoreWindow).toHaveBeenCalledWith("spreadsheet");
-    expect(setZIndexOrder).toHaveBeenCalledWith("spreadsheet");
+    expect(mockOnToggleSearch).toHaveBeenCalled();
   });
 
-  it("clicking visible but behind task brings it to front (setZIndexOrder)", () => {
-    const setZIndexOrder = jest.fn();
-    mockedUseWindowStore.mockImplementation(() => ({
-      windows: {
-        spreadsheet: { isOpen: true, isMinimized: false },
-        pivot: { isOpen: true, isMinimized: false },
-        kanban: { isOpen: false, isMinimized: false },
-        filemanager: { isOpen: false, isMinimized: false },
-      },
-      zIndexOrder: ["spreadsheet"], // topMost is spreadsheet
-      setZIndexOrder,
-      minimizeWindow: jest.fn(),
-      restoreWindow: jest.fn(),
-    }));
+  it("should bring minimized window to front and restore when clicked", () => {
+    mockedUseWindowStore.mockImplementation((selector: unknown) => {
+      const fn = selector as (state: typeof defaultStoreState) => unknown;
+      return fn({
+        ...defaultStoreState,
+        windows: {
+          spreadsheet: { isOpen: true, isMinimized: true },
+          calculator: { isOpen: true, isMinimized: false },
+        },
+      }) as ReturnType<typeof useWindowStore>;
+    });
 
-    render(<Taskbar onToggleSearch={jest.fn()} />);
+    render(<Taskbar onToggleSearch={mockOnToggleSearch} />);
 
-    // pivot is visible but not top-most (not last in zIndexOrder)
-    const pivotMeta = DESKTOP_ICONS.find((i) => i.key === "pivot")!;
-    const btn = screen.getByTitle(pivotMeta.title);
-    screen.debug(btn);
-    fireEvent.click(btn);
+    const spreadsheetButton = screen.getByTitle("Spreadsheet");
+    fireEvent.click(spreadsheetButton);
 
-    expect(setZIndexOrder).toHaveBeenCalledWith("pivot");
+    expect(defaultStoreState.restoreWindow).toHaveBeenCalledWith("spreadsheet");
+    expect(defaultStoreState.setZIndexOrder).toHaveBeenCalledWith(
+      "spreadsheet"
+    );
   });
 
-  it("clicking top-most visible task minimizes it", () => {
-    const setZIndexOrder = jest.fn();
-    const minimizeWindow = jest.fn();
-    mockedUseWindowStore.mockImplementation(() => ({
-      windows: {
-        spreadsheet: { isOpen: true, isMinimized: false },
-        pivot: { isOpen: false, isMinimized: false },
-        kanban: { isOpen: false, isMinimized: false },
-        filemanager: { isOpen: false, isMinimized: false },
-      },
-      zIndexOrder: ["spreadsheet"], // topMost is spreadsheet
-      setZIndexOrder,
-      minimizeWindow,
-      restoreWindow: jest.fn(),
-    }));
+  it("should bring window to front when clicked and not topmost", () => {
+    mockedUseWindowStore.mockImplementation((selector: unknown) => {
+      const fn = selector as (state: typeof defaultStoreState) => unknown;
+      return fn({
+        ...defaultStoreState,
+        zIndexOrder: ["calculator", "spreadsheet"],
+      }) as ReturnType<typeof useWindowStore>;
+    });
 
-    render(<Taskbar onToggleSearch={jest.fn()} />);
+    render(<Taskbar onToggleSearch={mockOnToggleSearch} />);
 
-    const spreadsheetMeta = DESKTOP_ICONS.find((i) => i.key === "spreadsheet")!;
-    const btn = screen.getByTitle(spreadsheetMeta.title);
-    fireEvent.click(btn);
+    const calculatorButton = screen.getByTitle("Calculator");
+    fireEvent.click(calculatorButton);
 
-    expect(minimizeWindow).toHaveBeenCalledWith("spreadsheet");
+    expect(defaultStoreState.setZIndexOrder).toHaveBeenCalledWith("calculator");
+    expect(defaultStoreState.minimizeWindow).not.toHaveBeenCalled();
+  });
+
+  it("should minimize topmost window when clicked", () => {
+    render(<Taskbar onToggleSearch={mockOnToggleSearch} />);
+
+    const calculatorButton = screen.getByTitle("Calculator");
+    fireEvent.click(calculatorButton);
+
+    expect(defaultStoreState.minimizeWindow).toHaveBeenCalledWith("calculator");
+  });
+
+  it("should only show open windows", () => {
+    mockedUseWindowStore.mockImplementation((selector: unknown) => {
+      const fn = selector as (state: typeof defaultStoreState) => unknown;
+      return fn({
+        ...defaultStoreState,
+        windows: {
+          spreadsheet: { isOpen: true, isMinimized: false },
+          calculator: { isOpen: false, isMinimized: false },
+        },
+      }) as ReturnType<typeof useWindowStore>;
+    });
+
+    render(<Taskbar onToggleSearch={mockOnToggleSearch} />);
+
+    expect(screen.getByTitle("Spreadsheet")).toBeInTheDocument();
+    expect(screen.queryByTitle("Calculator")).not.toBeInTheDocument();
+  });
+
+  it("should not highlight inactive window", () => {
+    render(<Taskbar onToggleSearch={mockOnToggleSearch} />);
+
+    const spreadsheetDiv = screen.getByTitle("Spreadsheet").closest("div");
+    expect(spreadsheetDiv).not.toHaveClass("bg-white/10");
   });
 });

@@ -47,6 +47,7 @@ const MultiSelect = ({
         className="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-[#1CA1C1]"
         tabIndex={0}
         onClick={() => setIsOpen(!isOpen)}
+        data-testid="multiselect-input"
       >
         {selected.map((tag) => (
           <span
@@ -58,12 +59,16 @@ const MultiSelect = ({
               buttonStyles="p-1 flex justify-center items-center rounded-full w-[18px] h-[18px] bg-[#94A1B3]"
               onClick={() => removeTag(tag)}
               iconStyles="fa-solid fa-times fa-xs mt-[2px] text-[#f2f2f2]"
+              ariaLabel={`Remove ${tag}`}
             />
           </span>
         ))}
       </div>
       {isOpen && (
-        <div className="absolute z-10 w-full bg-white border border-[#DADEE0] rounded-[2px] max-h-40 overflow-auto">
+        <div
+          className="absolute z-10 w-full bg-white border border-[#DADEE0] rounded-[2px] max-h-40 overflow-auto"
+          data-testid="multiselect-dropdown"
+        >
           {options.map((opt) => (
             <label
               key={opt}
@@ -74,6 +79,7 @@ const MultiSelect = ({
                 checked={selected.includes(opt)}
                 onChange={() => toggleOption(opt)}
                 className="mr-2 accent-[#1CA1C1]"
+                aria-label={opt}
               />
               <span className="mb-[3px]">{opt}</span>
             </label>

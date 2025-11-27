@@ -1,0 +1,244 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Sidebar should match snapshot on initial load 1`] = `
+<div>
+  <div
+    class="w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]"
+  >
+    <div
+      class="flex items-center justify-center w-full mt-[8px] mb-[8px]"
+    >
+      <button
+        class="w-[calc(100%-32px)]"
+        data-testid="add-new-button"
+        variant="primary"
+      >
+        Add New
+      </button>
+    </div>
+    <div
+      data-testid="dropdown"
+    />
+    <div
+      class="relative flex-1"
+    >
+      <div
+        data-testid="tree"
+      >
+        <div
+          data-testid="tree-node-root"
+          style="padding-left: 20px;"
+        >
+          Root
+        </div>
+        <div
+          data-testid="tree-node-folder1"
+          style="padding-left: 20px;"
+        >
+          Folder 1
+        </div>
+        <div
+          data-testid="tree-node-folder2"
+          style="padding-left: 20px;"
+        >
+          Folder 2
+        </div>
+      </div>
+      <div
+        class="absolute bottom-0 left-0 right-0"
+      >
+        <div
+          data-testid="status-bar"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Sidebar should match snapshot with different tree structure 1`] = `
+<div>
+  <div
+    class="w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]"
+  >
+    <div
+      class="flex items-center justify-center w-full mt-[8px] mb-[8px]"
+    >
+      <button
+        class="w-[calc(100%-32px)]"
+        data-testid="add-new-button"
+        variant="primary"
+      >
+        Add New
+      </button>
+    </div>
+    <div
+      data-testid="dropdown"
+    />
+    <div
+      class="relative flex-1"
+    >
+      <div
+        data-testid="tree"
+      >
+        <div
+          data-testid="tree-node-root"
+          style="padding-left: 20px;"
+        >
+          Root
+        </div>
+      </div>
+      <div
+        class="absolute bottom-0 left-0 right-0"
+      >
+        <div
+          data-testid="status-bar"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Sidebar should match snapshot with dropdown open 1`] = `
+<div>
+  <div
+    class="w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]"
+  >
+    <div
+      class="flex items-center justify-center w-full mt-[8px] mb-[8px]"
+    >
+      <button
+        class="w-[calc(100%-32px)]"
+        data-testid="add-new-button"
+        variant="primary"
+      >
+        Add New
+      </button>
+    </div>
+    <div
+      data-testid="dropdown"
+    >
+      <div
+        data-testid="dropdown-menu"
+      >
+        <div
+          data-testid="dropdown-option-create-folder"
+        >
+          New Folder
+        </div>
+        <div
+          data-testid="dropdown-option-upload-folder"
+        >
+          Upload Folder
+        </div>
+        <div
+          data-testid="dropdown-option-delete-folder"
+        >
+          Delete Folder
+        </div>
+      </div>
+    </div>
+    <div
+      class="relative flex-1"
+    >
+      <div
+        data-testid="tree"
+      >
+        <div
+          data-testid="tree-node-root"
+          style="padding-left: 20px;"
+        >
+          Root
+        </div>
+        <div
+          data-testid="tree-node-folder1"
+          style="padding-left: 20px;"
+        >
+          Folder 1
+        </div>
+        <div
+          data-testid="tree-node-folder2"
+          style="padding-left: 20px;"
+        >
+          Folder 2
+        </div>
+      </div>
+      <div
+        class="absolute bottom-0 left-0 right-0"
+      >
+        <div
+          data-testid="status-bar"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Sidebar should match snapshot with status bar visible 1`] = `
+<div>
+  <div
+    class="w-[250px] flex flex-col bg-[#FFFFFF] mt-[10px] mr-[10px] rounded-[2px] border border-[#DADEE0] text-[#475466]"
+  >
+    <div
+      class="flex items-center justify-center w-full mt-[8px] mb-[8px]"
+    >
+      <button
+        class="w-[calc(100%-32px)]"
+        data-testid="add-new-button"
+        variant="primary"
+      >
+        Add New
+      </button>
+    </div>
+    <div
+      data-testid="dropdown"
+    />
+    <div
+      class="relative flex-1"
+    >
+      <div
+        data-testid="tree"
+      >
+        <div
+          data-testid="tree-node-root"
+          style="padding-left: 20px;"
+        >
+          Root
+        </div>
+        <div
+          data-testid="tree-node-folder1"
+          style="padding-left: 20px;"
+        >
+          Folder 1
+        </div>
+        <div
+          data-testid="tree-node-folder2"
+          style="padding-left: 20px;"
+        >
+          Folder 2
+        </div>
+      </div>
+      <div
+        class="absolute bottom-0 left-0 right-0"
+      >
+        <div
+          data-testid="status-bar"
+        >
+          <div>
+            <span>
+              Operation completed
+            </span>
+            <button
+              data-testid="status-bar-clear"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

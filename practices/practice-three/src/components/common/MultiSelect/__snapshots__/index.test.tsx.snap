@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`MultiSelect Snapshots should match snapshot with default state 1`] = `
+<div>
+  <div
+    class="relative"
+  >
+    <div
+      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-[#1CA1C1]"
+      tabindex="0"
+    />
+  </div>
+</div>
+`;
+
+exports[`MultiSelect Snapshots should match snapshot with empty selection 1`] = `
+<div>
+  <div
+    class="relative"
+  >
+    <div
+      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-[#1CA1C1]"
+      tabindex="0"
+    />
+  </div>
+</div>
+`;
+
+exports[`MultiSelect Snapshots should match snapshot with open dropdown 1`] = `
+<div>
+  <div
+    class="relative"
+  >
+    <div
+      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-[#1CA1C1]"
+      tabindex="0"
+    />
+  </div>
+</div>
+`;
+
+exports[`MultiSelect Snapshots should match snapshot with selections 1`] = `
+<div>
+  <div
+    class="relative"
+  >
+    <div
+      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-[#1CA1C1]"
+      tabindex="0"
+    >
+      <span
+        class="bg-[rgba(228,230,240,0.8)] text-[#475466] text-sm font-normal leading-[24px] px-[6px] py-0 rounded-[12px] flex items-center gap-1"
+      >
+        Option 1
+        <button
+          class="fa-solid fa-times fa-xs mt-[2px] text-[#f2f2f2]"
+          data-testid="remove-button"
+        />
+      </span>
+      <span
+        class="bg-[rgba(228,230,240,0.8)] text-[#475466] text-sm font-normal leading-[24px] px-[6px] py-0 rounded-[12px] flex items-center gap-1"
+      >
+        Option 2
+        <button
+          class="fa-solid fa-times fa-xs mt-[2px] text-[#f2f2f2]"
+          data-testid="remove-button"
+        />
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`MultiSelect should match snapshot with default state 1`] = `
+<div>
+  <div
+    class="relative"
+  >
+    <div
+      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-[#1CA1C1]"
+      tabindex="0"
+    />
+  </div>
+</div>
+`;

@@ -1,0 +1,1571 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`PreviewPanel should match snapshot after switching file items 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-1/2"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        Image.jpg
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Image.jpg"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Author
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            John
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot after switching items 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-1/2"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        Image.jpg
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Image.jpg"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Created
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            2024-01-01
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot after switching to folder 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-1/2"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        Folder
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Folder"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Author
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            John
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot with all basic info 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        Document.pdf
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Document.pdf"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Created
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            2024-01-01
+          </span>
+        </div>
+      </div>
+      <div
+        class="h-[923px] border-t border-[#ebedf0] mt-[24px] ml-[14px]"
+      >
+        <div
+          class="flex items-center"
+        >
+          <span
+            class="flex items-center justify-center rounded-full border border-[#94A1B3] w-[12.5px] h-[12.5px]"
+          >
+            <i
+              class="fa-solid fa-info fa-2xs"
+            />
+          </span>
+          <span
+            class="font-medium w-[40%] p-[6px]"
+          >
+            Extra Info
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          />
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            author
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            John
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            version
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1.0
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot with complex extra info 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        Document.pdf
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Document.pdf"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Author
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            John
+          </span>
+        </div>
+      </div>
+      <div
+        class="h-[923px] border-t border-[#ebedf0] mt-[24px] ml-[14px]"
+      >
+        <div
+          class="flex items-center"
+        >
+          <span
+            class="flex items-center justify-center rounded-full border border-[#94A1B3] w-[12.5px] h-[12.5px]"
+          >
+            <i
+              class="fa-solid fa-info fa-2xs"
+            />
+          </span>
+          <span
+            class="font-medium w-[40%] p-[6px]"
+          >
+            Extra Info
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          />
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            author
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            John Doe
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            version
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            2.1
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            department
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            Engineering
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            status
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            approved
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot with different height 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 1000px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        Document.pdf
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Document.pdf"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Created
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            2024-01-01
+          </span>
+        </div>
+      </div>
+      <div
+        class="h-[923px] border-t border-[#ebedf0] mt-[24px] ml-[14px]"
+      >
+        <div
+          class="flex items-center"
+        >
+          <span
+            class="flex items-center justify-center rounded-full border border-[#94A1B3] w-[12.5px] h-[12.5px]"
+          >
+            <i
+              class="fa-solid fa-info fa-2xs"
+            />
+          </span>
+          <span
+            class="font-medium w-[40%] p-[6px]"
+          >
+            Extra Info
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          />
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            author
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            John
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            version
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1.0
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot with empty extra info 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        Document.pdf
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Document.pdf"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Created
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            2024-01-01
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot with extra info 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        Document.pdf
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Document.pdf"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Created
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            2024-01-01
+          </span>
+        </div>
+      </div>
+      <div
+        class="h-[923px] border-t border-[#ebedf0] mt-[24px] ml-[14px]"
+      >
+        <div
+          class="flex items-center"
+        >
+          <span
+            class="flex items-center justify-center rounded-full border border-[#94A1B3] w-[12.5px] h-[12.5px]"
+          >
+            <i
+              class="fa-solid fa-info fa-2xs"
+            />
+          </span>
+          <span
+            class="font-medium w-[40%] p-[6px]"
+          >
+            Extra Info
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          />
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            author
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            John
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            version
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1.0
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot with folder type 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-1/2"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        MyFolder
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="MyFolder"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Author
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            John
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot with information section 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        Document.pdf
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Document.pdf"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Created
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            2024-01-01
+          </span>
+        </div>
+      </div>
+      <div
+        class="h-[923px] border-t border-[#ebedf0] mt-[24px] ml-[14px]"
+      >
+        <div
+          class="flex items-center"
+        >
+          <span
+            class="flex items-center justify-center rounded-full border border-[#94A1B3] w-[12.5px] h-[12.5px]"
+          >
+            <i
+              class="fa-solid fa-info fa-2xs"
+            />
+          </span>
+          <span
+            class="font-medium w-[40%] p-[6px]"
+          >
+            Extra Info
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          />
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            author
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            John
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            version
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1.0
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot with no selected item 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-full"
+    >
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Preview"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot with null imageUrl 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-1/2"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        Document.pdf
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Document.pdf"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Author
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            John
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot with selected file item 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        Document.pdf
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Document.pdf"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Author
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            John
+          </span>
+        </div>
+      </div>
+      <div
+        class="h-[923px] border-t border-[#ebedf0] mt-[24px] ml-[14px]"
+      >
+        <div
+          class="flex items-center"
+        >
+          <span
+            class="flex items-center justify-center rounded-full border border-[#94A1B3] w-[12.5px] h-[12.5px]"
+          >
+            <i
+              class="fa-solid fa-info fa-2xs"
+            />
+          </span>
+          <span
+            class="font-medium w-[40%] p-[6px]"
+          >
+            Extra Info
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          />
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            author
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            John
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            version
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1.0
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot with selected item 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        Document.pdf
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Document.pdf"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Created
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            2024-01-01
+          </span>
+        </div>
+      </div>
+      <div
+        class="h-[923px] border-t border-[#ebedf0] mt-[24px] ml-[14px]"
+      >
+        <div
+          class="flex items-center"
+        >
+          <span
+            class="flex items-center justify-center rounded-full border border-[#94A1B3] w-[12.5px] h-[12.5px]"
+          >
+            <i
+              class="fa-solid fa-info fa-2xs"
+            />
+          </span>
+          <span
+            class="font-medium w-[40%] p-[6px]"
+          >
+            Extra Info
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          />
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            author
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            John
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px] truncate"
+          >
+            version
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1.0
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PreviewPanel should match snapshot without extra info 1`] = `
+<div>
+  <div
+    class="w-[470px] flex flex-col bg-[#EBEDF0] rounded-[2px] mt-[10px] ml-[10px] overflow-auto"
+    style="height: 800px;"
+  >
+    <div
+      class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-1/2"
+    >
+      <h3
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+      >
+        Document.pdf
+      </h3>
+      <div
+        class="h-[calc(100%-42px)]"
+      >
+        <img
+          alt="Document.pdf"
+          class="h-full w-full"
+          src="/preview/document.jpg"
+        />
+      </div>
+    </div>
+    <div
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+    >
+      <h4
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+      >
+        Information
+      </h4>
+      <div
+        class="h-[130px]"
+      >
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Size
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            1 KB
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Type
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            PDF
+          </span>
+        </div>
+        <div
+          class="flex"
+        >
+          <span
+            class="font-medium w-[40%] text-right p-[6px]"
+          >
+            Created
+          </span>
+          <span
+            class="w-[60%] p-[6px]"
+          >
+            2024-01-01
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,137 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`KanbanPage should match snapshot after modal opened 1`] = `
+<div>
+  <div
+    class="w-full h-full flex flex-col bg-[#EBEDF0] overflow-hidden"
+  >
+    <div
+      class="flex mt-[10px] ml-[10px] mr-[10px] h-[42px] gap-[10px]"
+    >
+      <div
+        class="flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] border border-[#DADEE0] bg-[#ffffff] truncate"
+      >
+        <button
+          data-testid="add-item-button"
+        >
+          +
+        </button>
+        New
+      </div>
+      <div
+        class="flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] border border-[#DADEE0] bg-[#ffffff] truncate"
+      >
+        Work
+      </div>
+      <div
+        class="flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] border border-[#DADEE0] bg-[#ffffff] truncate"
+      >
+        Test
+      </div>
+      <div
+        class="flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] border border-[#DADEE0] bg-[#ffffff] truncate"
+      >
+        Done
+      </div>
+    </div>
+    <div
+      class="flex-1 overflow-x-hidden relative top-0"
+    >
+      <div
+        data-testid="grid-layout"
+      >
+        <div>
+          <div
+            class="bg-white border-l-3 border-l-[#1CA1C1] flex flex-col cursor-pointer item-drag-handle"
+          >
+            <div
+              data-testid="kanban-card"
+            >
+              Task 1
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            class="bg-white border-l-3 border-l-[#1CA1C1] flex flex-col cursor-pointer item-drag-handle"
+          >
+            <div
+              data-testid="kanban-card"
+            >
+              Task 2
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`KanbanPage should match snapshot on initial load 1`] = `
+<div>
+  <div
+    class="w-full h-full flex flex-col bg-[#EBEDF0] overflow-hidden"
+  >
+    <div
+      class="flex mt-[10px] ml-[10px] mr-[10px] h-[42px] gap-[10px]"
+    >
+      <div
+        class="flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] border border-[#DADEE0] bg-[#ffffff] truncate"
+      >
+        <button
+          data-testid="add-item-button"
+        >
+          +
+        </button>
+        New
+      </div>
+      <div
+        class="flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] border border-[#DADEE0] bg-[#ffffff] truncate"
+      >
+        Work
+      </div>
+      <div
+        class="flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] border border-[#DADEE0] bg-[#ffffff] truncate"
+      >
+        Test
+      </div>
+      <div
+        class="flex flex-1 items-center pl-[12px] text-base font-medium text-[#475466] tracking-normal leading-[42px] border border-[#DADEE0] bg-[#ffffff] truncate"
+      >
+        Done
+      </div>
+    </div>
+    <div
+      class="flex-1 overflow-x-hidden relative top-0"
+    >
+      <div
+        data-testid="grid-layout"
+      >
+        <div>
+          <div
+            class="bg-white border-l-3 border-l-[#1CA1C1] flex flex-col cursor-pointer item-drag-handle"
+          >
+            <div
+              data-testid="kanban-card"
+            >
+              Task 1
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            class="bg-white border-l-3 border-l-[#1CA1C1] flex flex-col cursor-pointer item-drag-handle"
+          >
+            <div
+              data-testid="kanban-card"
+            >
+              Task 2
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

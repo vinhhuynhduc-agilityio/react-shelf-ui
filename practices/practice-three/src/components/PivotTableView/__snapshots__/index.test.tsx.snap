@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`PivotTableView matches snapshot 1`] = `
+<div>
+  <div
+    data-testid="data-table"
+  >
+    <span>
+      Columns: 
+      2
+    </span>
+    <span>
+      Data: 
+      2
+    </span>
+    <span>
+      Height: 
+      500
+    </span>
+    <span>
+      Loading: 
+      false
+    </span>
+    <span>
+      Fetching: 
+      false
+    </span>
+  </div>
+</div>
+`;

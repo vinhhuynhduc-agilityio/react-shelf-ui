@@ -5,7 +5,7 @@ export interface FileItem {
   name: string;
   size: number | null;
   type: string | null;
-  parentId: string;
+  parentId: string | null;
   imageUrl?: string;
   extraInfo?: { [key: string]: string };
 }

@@ -31,7 +31,10 @@ const ModalContent = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50 p-4"
+      data-testid="modal-overlay"
+    >
       {/* Overlay */}
       <div className="fixed inset-0 bg-black/20" />
       {/* Modal Content */}
@@ -41,6 +44,7 @@ const ModalContent = ({
           "relative overflow-hidden bg-[#FFFFFF] shadow-lg",
           className
         )}
+        data-testid="modal-content"
       >
         {/* Header */}
         <div
@@ -49,6 +53,7 @@ const ModalContent = ({
             hideCloseButton && "shadow-[inset_0_4px_0_0_#1CA1C1]"
           )}
           style={{ height: headerHeight }}
+          data-testid="modal-header"
         >
           <h2
             className={clsx(

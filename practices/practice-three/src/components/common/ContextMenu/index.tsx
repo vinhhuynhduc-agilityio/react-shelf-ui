@@ -1,8 +1,6 @@
 import { createPortal } from "react-dom";
 import { useEffect, useRef } from "react";
 import clsx from "clsx";
-
-// types
 import { ContextMenuOption } from "@/types";
 
 interface ContextMenuProps {
@@ -23,17 +21,26 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   const menuRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
+    if (!visible) return;
+
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         onClose();
       }
     };
 
-    if (visible) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    const handleScroll = () => onClose();
+    const handleResize = () => onClose();
 
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("scroll", handleScroll, true);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll, true);
+      window.removeEventListener("resize", handleResize);
+    };
   }, [visible, onClose]);
 
   if (!visible) return null;

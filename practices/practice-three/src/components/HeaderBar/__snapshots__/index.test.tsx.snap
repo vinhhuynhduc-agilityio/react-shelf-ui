@@ -1,0 +1,270 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`HeaderBar Snapshots should match snapshot when disabled 1`] = `
+<div>
+  <div
+    class="flex items-center h-[56px] flex-shrink-0 w-full rounded-[2px] border border-[#DADEE0] text-[#475466] bg-[#FFFFFF]"
+  >
+    <div
+      class="flex flex-1 items-center ml-[12px]"
+    >
+      <span
+        class="font-medium mr-4 text-[#475466]"
+      >
+        Files
+      </span>
+      <div
+        class="flex-1 max-w-[300px] min-w-[10px] flex items-center h-[32px] relative overflow-hidden"
+      >
+        <input
+          class="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#475466] text-sm px-2 focus:outline-none w-full h-full"
+          disabled=""
+          name="search"
+          placeholder="Search files and folders"
+          type="text"
+          value=""
+        />
+        <button
+          class="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
+          data-testid="icon-button"
+          style="background: rgb(244, 245, 249);"
+        >
+          <i
+            class="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
+            data-testid="icon"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="flex items-center space-x-1 mr-[12px]"
+    >
+      <button
+        class="p-1 flex justify-center items-center w-[60px] h-[38px] transition-colors hover:bg-[#E4E6F0] bg-[#F4F5F9]"
+        data-testid="icon-button"
+        disabled=""
+        style="background: rgb(244, 245, 249);"
+      >
+        <i
+          class="fa-solid fa-eye text-[#1CA1C1] text-sm"
+          data-testid="icon"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`HeaderBar Snapshots should match snapshot when fetching 1`] = `
+<div>
+  <div
+    class="flex items-center h-[56px] flex-shrink-0 w-full rounded-[2px] border border-[#DADEE0] text-[#475466] bg-[#FFFFFF]"
+  >
+    <div
+      class="flex flex-1 items-center ml-[12px]"
+    >
+      <span
+        class="font-medium mr-4 text-[#475466]"
+      >
+        Files
+      </span>
+      <div
+        class="flex-1 max-w-[300px] min-w-[10px] flex items-center h-[32px] relative overflow-hidden"
+      >
+        <input
+          class="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#475466] text-sm px-2 focus:outline-none w-full h-full"
+          disabled=""
+          name="search"
+          placeholder="Search files and folders"
+          type="text"
+          value=""
+        />
+        <button
+          class="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
+          data-testid="icon-button"
+          style="background: rgb(244, 245, 249);"
+        >
+          <i
+            class="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
+            data-testid="icon"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="flex items-center space-x-1 mr-[12px]"
+    >
+      <button
+        class="p-1 flex justify-center items-center w-[60px] h-[38px] transition-colors hover:bg-[#E4E6F0] bg-[#F4F5F9]"
+        data-testid="icon-button"
+        disabled=""
+        style="background: rgb(244, 245, 249);"
+      >
+        <i
+          class="fa-solid fa-eye text-[#1CA1C1] text-sm"
+          data-testid="icon"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`HeaderBar Snapshots should match snapshot with default props 1`] = `
+<div>
+  <div
+    class="flex items-center h-[56px] flex-shrink-0 w-full rounded-[2px] border border-[#DADEE0] text-[#475466] bg-[#FFFFFF]"
+  >
+    <div
+      class="flex flex-1 items-center ml-[12px]"
+    >
+      <span
+        class="font-medium mr-4 text-[#475466]"
+      >
+        Files
+      </span>
+      <div
+        class="flex-1 max-w-[300px] min-w-[10px] flex items-center h-[32px] relative overflow-hidden"
+      >
+        <input
+          class="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#475466] text-sm px-2 focus:outline-none w-full h-full"
+          name="search"
+          placeholder="Search files and folders"
+          type="text"
+          value=""
+        />
+        <button
+          class="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
+          data-testid="icon-button"
+          style="background: rgb(244, 245, 249);"
+        >
+          <i
+            class="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
+            data-testid="icon"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="flex items-center space-x-1 mr-[12px]"
+    >
+      <button
+        class="p-1 flex justify-center items-center w-[60px] h-[38px] transition-colors hover:bg-[#E4E6F0] bg-[#F4F5F9]"
+        data-testid="icon-button"
+        style="background: rgb(244, 245, 249);"
+      >
+        <i
+          class="fa-solid fa-eye text-[#1CA1C1] text-sm"
+          data-testid="icon"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`HeaderBar Snapshots should match snapshot with preview mode active 1`] = `
+<div>
+  <div
+    class="flex items-center h-[56px] flex-shrink-0 w-full rounded-[2px] border border-[#DADEE0] text-[#475466] bg-[#FFFFFF]"
+  >
+    <div
+      class="flex flex-1 items-center ml-[12px]"
+    >
+      <span
+        class="font-medium mr-4 text-[#475466]"
+      >
+        Files
+      </span>
+      <div
+        class="flex-1 max-w-[300px] min-w-[10px] flex items-center h-[32px] relative overflow-hidden"
+      >
+        <input
+          class="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#475466] text-sm px-2 focus:outline-none w-full h-full"
+          name="search"
+          placeholder="Search files and folders"
+          type="text"
+          value=""
+        />
+        <button
+          class="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
+          data-testid="icon-button"
+          style="background: rgb(244, 245, 249);"
+        >
+          <i
+            class="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
+            data-testid="icon"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="flex items-center space-x-1 mr-[12px]"
+    >
+      <button
+        class="p-1 flex justify-center items-center w-[60px] h-[38px] transition-colors hover:bg-[#E4E6F0] bg-[#daddeb]"
+        data-testid="icon-button"
+        style="background: rgb(218, 221, 235);"
+      >
+        <i
+          class="fa-solid fa-eye text-[#1CA1C1] text-sm"
+          data-testid="icon"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`HeaderBar Snapshots should match snapshot with search query 1`] = `
+<div>
+  <div
+    class="flex items-center h-[56px] flex-shrink-0 w-full rounded-[2px] border border-[#DADEE0] text-[#475466] bg-[#FFFFFF]"
+  >
+    <div
+      class="flex flex-1 items-center ml-[12px]"
+    >
+      <span
+        class="font-medium mr-4 text-[#475466]"
+      >
+        Files
+      </span>
+      <div
+        class="flex-1 max-w-[300px] min-w-[10px] flex items-center h-[32px] relative overflow-hidden"
+      >
+        <input
+          class="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#475466] text-sm px-2 focus:outline-none w-full h-full"
+          name="search"
+          placeholder="Search files and folders"
+          type="text"
+          value="test file"
+        />
+        <button
+          class="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
+          data-testid="icon-button"
+          style="background: rgb(244, 245, 249);"
+        >
+          <i
+            class="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
+            data-testid="icon"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="flex items-center space-x-1 mr-[12px]"
+    >
+      <button
+        class="p-1 flex justify-center items-center w-[60px] h-[38px] transition-colors hover:bg-[#E4E6F0] bg-[#F4F5F9]"
+        data-testid="icon-button"
+        style="background: rgb(244, 245, 249);"
+      >
+        <i
+          class="fa-solid fa-eye text-[#1CA1C1] text-sm"
+          data-testid="icon"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;

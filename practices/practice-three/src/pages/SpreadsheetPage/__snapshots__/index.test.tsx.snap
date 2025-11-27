@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SpreadsheetPage should match snapshot on initial load 1`] = `
+<div>
+  <div
+    class="flex-1"
+  >
+    <div
+      data-testid="fortune-workbook"
+    >
+      <div
+        data-testid="workbook-data"
+      >
+        [{"name":"Sheet1","celldata":[],"row":50,"column":26}]
+      </div>
+      <div
+        data-testid="toolbar-items"
+      >
+        ["undo","redo","|","font","font-size","|","bold","italic","underline","strike-through","font-color","background","border","|","horizontal-align","vertical-align","text-wrap","merge-cell","|"]
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`SpreadsheetPage should match snapshot with all props configured 1`] = `
+<div>
+  <div
+    class="flex-1"
+  >
+    <div
+      data-testid="fortune-workbook"
+    >
+      <div
+        data-testid="workbook-data"
+      >
+        [{"name":"Sheet1","celldata":[],"row":50,"column":26}]
+      </div>
+      <div
+        data-testid="toolbar-items"
+      >
+        ["undo","redo","|","font","font-size","|","bold","italic","underline","strike-through","font-color","background","border","|","horizontal-align","vertical-align","text-wrap","merge-cell","|"]
+      </div>
+    </div>
+  </div>
+</div>
+`;
