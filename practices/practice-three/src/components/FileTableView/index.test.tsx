@@ -104,11 +104,11 @@ describe("FileTableView", () => {
 
   const sampleFile2: FileItem & { key: string } = {
     id: "file-002",
-    name: "image.png",
+    name: "image.webp",
     size: 1024,
-    type: "image/png",
+    type: "image/webp",
     parentId: "folder-001",
-    imageUrl: "https://example.com/image.png",
+    imageUrl: "https://example.com/image.webp",
     key: "file-002",
   };
 
@@ -153,7 +153,7 @@ describe("FileTableView", () => {
 
     expect(rows[0]).toHaveTextContent("Documents");
     expect(rows[1]).toHaveTextContent("document.pdf");
-    expect(rows[2]).toHaveTextContent("image.png");
+    expect(rows[2]).toHaveTextContent("image.webp");
   });
 
   it("should render breadcrumb in normal mode", () => {

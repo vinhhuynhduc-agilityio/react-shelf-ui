@@ -147,7 +147,7 @@ describe("filemanager helpers", () => {
     it("maps code extensions correctly", () => {
       expect(mapExtension("js")).toEqual({
         type: "code",
-        imageUrl: "/images/blank-white-image.png",
+        imageUrl: "/images/blank-white-image.webp",
       });
     });
 

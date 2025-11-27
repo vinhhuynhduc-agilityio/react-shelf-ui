@@ -8,22 +8,22 @@ jest.mock("@/constant", () => ({
     {
       key: "spreadsheet" as WindowKey,
       title: "Spreadsheet",
-      image: "/icons/spreadsheet.png",
+      image: "/icons/spreadsheet.webp",
     },
     {
       key: "filemanager" as WindowKey,
       title: "File Manager",
-      image: "/icons/filemanager.png",
+      image: "/icons/filemanager.webp",
     },
     {
       key: "pivot" as WindowKey,
       title: "Pivot",
-      image: "/icons/pivot.png",
+      image: "/icons/pivot.webp",
     },
     {
       key: "kanban" as WindowKey,
       title: "Kanban",
-      image: "/icons/kanban.png",
+      image: "/icons/kanban.webp",
     },
   ],
 }));

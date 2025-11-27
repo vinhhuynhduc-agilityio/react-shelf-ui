@@ -8,8 +8,8 @@ jest.mock("@/stores", () => ({
 
 jest.mock("@/constant", () => ({
   DESKTOP_ICONS: [
-    { key: "spreadsheet", title: "Spreadsheet", image: "/spreadsheet.png" },
-    { key: "calculator", title: "Calculator", image: "/calculator.png" },
+    { key: "spreadsheet", title: "Spreadsheet", image: "/spreadsheet.webp" },
+    { key: "calculator", title: "Calculator", image: "/calculator.webp" },
   ],
 }));
 

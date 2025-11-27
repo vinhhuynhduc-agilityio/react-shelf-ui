@@ -21,16 +21,16 @@ export const WINDOW_KEYS = {
 export const DESKTOP_ICONS = [
   {
     key: WINDOW_KEYS.SPREADSHEET,
-    image: "images/spreadsheet.png",
+    image: "images/spreadsheet.webp",
     title: "Spreadsheet",
   },
   {
     key: WINDOW_KEYS.FILE_MANAGER,
-    image: "images/file-manager.png",
+    image: "images/file-manager.webp",
     title: "File Manager",
   },
-  { key: WINDOW_KEYS.PIVOT, image: "images/pivot.png", title: "Pivot" },
-  { key: WINDOW_KEYS.KANBAN, image: "images/kanban.png", title: "Kanban" },
+  { key: WINDOW_KEYS.PIVOT, image: "images/pivot.webp", title: "Pivot" },
+  { key: WINDOW_KEYS.KANBAN, image: "images/kanban.webp", title: "Kanban" },
 ];
 
 export interface WindowConfig {
@@ -42,22 +42,22 @@ export interface WindowConfig {
 export const WINDOW_CONFIGS: Record<WindowKey, WindowConfig> = {
   spreadsheet: {
     title: "Spreadsheet",
-    src: "/images/spreadsheet.png",
+    src: "/images/spreadsheet.webp",
     Page: SpreadsheetPage,
   },
   pivot: {
     title: "Pivot",
-    src: "/images/pivot.png",
+    src: "/images/pivot.webp",
     Page: PivotPage,
   },
   kanban: {
     title: "Kanban",
-    src: "/images/kanban.png",
+    src: "/images/kanban.webp",
     Page: KanbanPage,
   },
   filemanager: {
     title: "File Manager",
-    src: "/images/file-manager.png",
+    src: "/images/file-manager.webp",
     Page: FilemanagerPage,
   },
 };

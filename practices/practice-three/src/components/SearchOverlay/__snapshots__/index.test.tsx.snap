@@ -27,7 +27,7 @@ exports[`SearchOverlay should match snapshot after icon clicked 1`] = `
       >
         <img
           alt="Spreadsheet"
-          src="/icons/spreadsheet.png"
+          src="/icons/spreadsheet.webp"
         />
         <span>
           Spreadsheet
@@ -39,7 +39,7 @@ exports[`SearchOverlay should match snapshot after icon clicked 1`] = `
       >
         <img
           alt="File Manager"
-          src="/icons/filemanager.png"
+          src="/icons/filemanager.webp"
         />
         <span>
           File Manager
@@ -51,7 +51,7 @@ exports[`SearchOverlay should match snapshot after icon clicked 1`] = `
       >
         <img
           alt="Pivot"
-          src="/icons/pivot.png"
+          src="/icons/pivot.webp"
         />
         <span>
           Pivot
@@ -63,7 +63,7 @@ exports[`SearchOverlay should match snapshot after icon clicked 1`] = `
       >
         <img
           alt="Kanban"
-          src="/icons/kanban.png"
+          src="/icons/kanban.webp"
         />
         <span>
           Kanban
@@ -101,7 +101,7 @@ exports[`SearchOverlay should match snapshot on initial load 1`] = `
       >
         <img
           alt="Spreadsheet"
-          src="/icons/spreadsheet.png"
+          src="/icons/spreadsheet.webp"
         />
         <span>
           Spreadsheet
@@ -113,7 +113,7 @@ exports[`SearchOverlay should match snapshot on initial load 1`] = `
       >
         <img
           alt="File Manager"
-          src="/icons/filemanager.png"
+          src="/icons/filemanager.webp"
         />
         <span>
           File Manager
@@ -125,7 +125,7 @@ exports[`SearchOverlay should match snapshot on initial load 1`] = `
       >
         <img
           alt="Pivot"
-          src="/icons/pivot.png"
+          src="/icons/pivot.webp"
         />
         <span>
           Pivot
@@ -137,7 +137,7 @@ exports[`SearchOverlay should match snapshot on initial load 1`] = `
       >
         <img
           alt="Kanban"
-          src="/icons/kanban.png"
+          src="/icons/kanban.webp"
         />
         <span>
           Kanban
@@ -175,7 +175,7 @@ exports[`SearchOverlay should match snapshot with search input filled 1`] = `
       >
         <img
           alt="File Manager"
-          src="/icons/filemanager.png"
+          src="/icons/filemanager.webp"
         />
         <span>
           File Manager

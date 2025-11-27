@@ -88,7 +88,7 @@ export const getBasicInfo = (
 const extensionMap = {
   "txt css js ts html json sql": {
     type: "code",
-    imageUrl: "/images/blank-white-image.png",
+    imageUrl: "/images/blank-white-image.webp",
   },
   "db php less": {
     type: "code",
@@ -96,7 +96,7 @@ const extensionMap = {
   },
   "doc xls xlsx": {
     type: "document",
-    imageUrl: "/images/blank-white-image.png",
+    imageUrl: "/images/blank-white-image.webp",
   },
   pdf: { type: "document", imageUrl: "/images/pdf-placeholder-image.svg" },
   "jpg png jpeg gif svg webp": {

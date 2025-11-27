@@ -116,7 +116,7 @@ describe("BaseWindow", () => {
   const defaultProps = {
     windowKey: "spreadsheet" as WindowKey,
     title: "Spreadsheet",
-    src: "/images/spreadsheet.png",
+    src: "/images/spreadsheet.webp",
     children: <div>Window Content</div>,
   };
 
@@ -156,7 +156,7 @@ describe("BaseWindow", () => {
 
     const headerImg = screen.getByAltText("Spreadsheet") as HTMLImageElement;
     expect(headerImg).toBeInTheDocument();
-    expect(headerImg.src).toContain("/images/spreadsheet.png");
+    expect(headerImg.src).toContain("/images/spreadsheet.webp");
   });
 
   it("should render DraggableWindow with correct props", () => {
