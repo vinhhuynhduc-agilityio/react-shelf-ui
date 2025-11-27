@@ -10,7 +10,10 @@ import { DESKTOP_ICONS } from "@/constant";
 import type { WindowKey } from "@/types";
 
 // Components
-import { DesktopIcon } from "@/components/common";
+import { DesktopIcon, Icon } from "@/components/common";
+
+// Icons
+import { fa } from "@/icons/fa";
 
 interface SearchOverlayProps {
   searchQuery: string;
@@ -45,7 +48,10 @@ const SearchOverlay = ({
           onChange={(e) => onSearchChange(e.target.value)}
           className="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#475466] text-sm px-2 focus:outline-none w-full h-full bg-white"
         />
-        <i className="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm absolute right-4 top-1/2 -translate-y-1/2"></i>
+        <Icon
+          icon={fa.faMagnifyingGlass}
+          className="text-[#94A1B3] text-sm absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+        />
       </div>
 
       <div className="flex justify-center items-center gap-8 flex-wrap max-w-5xl px-4">

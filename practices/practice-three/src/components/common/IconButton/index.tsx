@@ -1,3 +1,5 @@
+import { Icon } from "@/components/common/Icon";
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { memo } from "react";
 
 interface IconButtonProps {
@@ -10,6 +12,7 @@ interface IconButtonProps {
   iconStyles?: string;
   ariaLabel?: string;
   disabled?: boolean;
+  icon: IconDefinition;
 }
 
 const IconButton = memo(
@@ -20,6 +23,7 @@ const IconButton = memo(
     iconStyles = "",
     ariaLabel = "",
     disabled = false,
+    icon,
   }: IconButtonProps) => {
     return (
       <button
@@ -39,7 +43,7 @@ const IconButton = memo(
         }}
         aria-label={ariaLabel}
       >
-        <i className={`${iconStyles}`}></i>
+        <Icon icon={icon} className={iconStyles} />
       </button>
     );
   }

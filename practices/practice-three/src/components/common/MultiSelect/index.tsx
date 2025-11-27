@@ -4,6 +4,9 @@ import clsx from "clsx";
 // components
 import { IconButton } from "@/components";
 
+// icons
+import { fa } from "@/icons/fa";
+
 interface MultiSelectProps {
   options: string[];
   selected: string[];
@@ -56,9 +59,10 @@ const MultiSelect = ({
           >
             {tag}
             <IconButton
+              icon={fa.faTimes}
               buttonStyles="p-1 flex justify-center items-center rounded-full w-[18px] h-[18px] bg-[#94A1B3]"
               onClick={() => removeTag(tag)}
-              iconStyles="fa-solid fa-times fa-xs mt-[2px] text-[#f2f2f2]"
+              iconStyles="fa-xs mt-[2px] text-[#f2f2f2]"
               ariaLabel={`Remove ${tag}`}
             />
           </span>

@@ -7,6 +7,9 @@ import { DataTable, Breadcrumb, IconButton } from "@/components";
 // types
 import type { FileItem } from "@/types";
 
+// icons
+import { fa } from "@/icons/fa";
+
 interface FileTableViewProps {
   filteredItems: (FileItem & { key: string })[];
   columns: ColumnsType<FileItem>;
@@ -57,8 +60,9 @@ export const FileTableView = ({
         {isSearchMode && debouncedSearch.trim() ? (
           <div className="flex items-center w-full text-md ml-1">
             <IconButton
+              icon={fa.faChevronLeft}
               onClick={onClearSearch}
-              iconStyles="fa-solid fa-chevron-left fa-sm text-[#94A1B3]"
+              iconStyles="fa-sm text-[#94A1B3]"
               buttonStyles="p-1 w-[38px] h-[38px] flex justify-center items-center rounded-full hover:bg-[#F4F5F9] mr-1"
             />
             <span>Search results in {searchPath}</span>

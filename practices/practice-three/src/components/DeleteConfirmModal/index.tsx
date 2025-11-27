@@ -1,5 +1,6 @@
 // components
-import { Button, Modal } from "@/components";
+import { Button, Icon, Modal } from "@/components";
+import { fa } from "@/icons/fa";
 
 // types
 import type { FileItem } from "@/types";
@@ -56,7 +57,7 @@ export const DeleteConfirmModal = ({
           >
             {isDeleting ? (
               <>
-                <i className="fa-solid fa-spinner fa-spin mr-2"></i>
+                <Icon icon={fa.faSpinner} className="fa-spin mr-2" />
                 Deleting...
               </>
             ) : (

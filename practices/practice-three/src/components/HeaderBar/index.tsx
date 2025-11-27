@@ -4,6 +4,9 @@ import { memo, useCallback } from "react";
 // Components
 import { IconButton } from "@/components";
 
+// Icons
+import { fa } from "@/icons/fa";
+
 interface HeaderBarProps {
   searchQuery: string;
   isDisabled: boolean;
@@ -41,7 +44,8 @@ export const HeaderBar = memo(
               disabled={isDisabled || isFetching}
             />
             <IconButton
-              iconStyles="fa-solid fa-magnifying-glass text-[#94A1B3] text-sm"
+              icon={fa.faMagnifyingGlass}
+              iconStyles="text-[#94A1B3] text-sm"
               buttonStyles="p-1 flex justify-center items-center rounded-full w-[22px] h-[22px] absolute right-[3px] bg-[#FFFFFF]"
               onClick={handleSearchClick}
             />
@@ -49,11 +53,12 @@ export const HeaderBar = memo(
         </div>
         <div className="flex items-center space-x-1 mr-[12px]">
           <IconButton
+            icon={fa.faEye}
             buttonStyles={clsx(
               "p-1 flex justify-center items-center w-[60px] h-[38px] transition-colors hover:bg-[#E4E6F0]",
               previewMode ? "bg-[#daddeb]" : "bg-[#F4F5F9]"
             )}
-            iconStyles="fa-solid fa-eye text-[#1CA1C1] text-sm"
+            iconStyles="text-[#1CA1C1] text-sm"
             onClick={onTogglePreview}
             disabled={isDisabled || isFetching}
           />

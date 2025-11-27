@@ -2,6 +2,7 @@ import { createPortal } from "react-dom";
 import { useEffect, useRef } from "react";
 import clsx from "clsx";
 import { ContextMenuOption } from "@/types";
+import { Icon } from "@/components";
 
 interface ContextMenuProps {
   visible: boolean;
@@ -63,13 +64,15 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
             opt.danger ? "text-red-600" : "text-[#475466]"
           )}
         >
-          <i
-            className={clsx(
-              opt.icon,
-              "mr-2",
-              opt.danger ? "text-red-600" : "text-[#94A1B3]"
-            )}
-          ></i>
+          {opt.icon && (
+            <Icon
+              icon={opt.icon}
+              className={clsx(
+                "mr-2",
+                opt.danger ? "text-red-600" : "text-[#94A1B3]"
+              )}
+            />
+          )}
           {opt.label}
         </li>
       ))}
