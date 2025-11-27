@@ -258,55 +258,6 @@ export const TitleAlignment: Story = {
 };
 
 // ============================================
-// Hide Close Button Demo Component
-// ============================================
-const HideCloseButtonDemo = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="w-full space-y-4">
-      <div className="bg-yellow-50 p-3 rounded border border-yellow-300">
-        <p className="text-sm text-yellow-900 font-medium">
-          This modal has no close button - must use the action button or click
-          outside
-        </p>
-      </div>
-
-      <button
-        onClick={() => setIsOpen(true)}
-        className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors font-medium"
-      >
-        Open Modal Without Close Button
-      </button>
-
-      <Modal
-        isOpen={isOpen}
-        title="Modal Without Close Button"
-        onClose={() => setIsOpen(false)}
-        hideCloseButton={true}
-      >
-        <div className="space-y-3">
-          <p className="text-sm text-gray-700">
-            This modal has no close button in the header. The header shows a
-            blue bottom border instead.
-          </p>
-          <p className="text-sm text-gray-700">
-            You can close it by clicking the button below or clicking outside
-            the modal.
-          </p>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="w-full px-3 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors font-medium text-sm"
-          >
-            Close Modal
-          </button>
-        </div>
-      </Modal>
-    </div>
-  );
-};
-
-// ============================================
 // Custom Width Demo Component
 // ============================================
 const CustomWidthDemo = () => {

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useState, useRef } from "react";
 import Dropdown from ".";
 import { DropdownOption } from "@/types";
+import { fa } from "@/icons/fa";
 
 const meta: Meta<typeof Dropdown> = {
   title: "Components/Dropdown",
@@ -61,26 +62,26 @@ const meta: Meta<typeof Dropdown> = {
 export default meta;
 type Story = StoryObj<typeof Dropdown>;
 
-// Mock options
+// Mock options with FontAwesome icons
 const menuOptions: DropdownOption[] = [
-  { key: "edit", label: "Edit", icon: "fa-pen" },
-  { key: "copy", label: "Copy", icon: "fa-copy" },
-  { key: "delete", label: "Delete", icon: "fa-trash" },
-  { key: "share", label: "Share", icon: "fa-share" },
+  { key: "edit", label: "Edit", icon: fa.faPencil },
+  { key: "copy", label: "Copy", icon: fa.faCopy },
+  { key: "delete", label: "Delete", icon: fa.faTrash },
+  { key: "share", label: "Share", icon: fa.faShare },
 ];
 
 const fileOptions: DropdownOption[] = [
-  { key: "new", label: "New File", icon: "fa-file" },
-  { key: "open", label: "Open File", icon: "fa-folder-open" },
-  { key: "save", label: "Save", icon: "fa-floppy-disk" },
-  { key: "export", label: "Export", icon: "fa-download" },
+  { key: "new", label: "New File", icon: fa.faFile },
+  { key: "open", label: "Open File", icon: fa.faFolderOpen },
+  { key: "save", label: "Save", icon: fa.faFloppyDisk },
+  { key: "export", label: "Export", icon: fa.faDownload },
 ];
 
 const userOptions: DropdownOption[] = [
-  { key: "profile", label: "My Profile", icon: "fa-user" },
-  { key: "settings", label: "Settings", icon: "fa-gear" },
-  { key: "notifications", label: "Notifications", icon: "fa-bell" },
-  { key: "logout", label: "Logout", icon: "fa-sign-out" },
+  { key: "profile", label: "My Profile", icon: fa.faUser },
+  { key: "settings", label: "Settings", icon: fa.faGear },
+  { key: "notifications", label: "Notifications", icon: fa.faBell },
+  { key: "logout", label: "Logout", icon: fa.faArrowRightFromBracket },
 ];
 
 // Basic Dropdown Demo Component
@@ -224,6 +225,38 @@ export const UserMenu: Story = {
       description: {
         story:
           "Dropdown with user profile options. Typical use case for user menus in header/navbar.",
+      },
+    },
+  },
+};
+
+// All Scenarios Demo
+const AllScenariosDemo = () => {
+  return (
+    <div className="flex flex-col gap-12">
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Basic Menu</h3>
+        <BasicDemo />
+      </div>
+      <div>
+        <h3 className="text-lg font-semibold mb-4">File Operations</h3>
+        <FileOperationsDemo />
+      </div>
+      <div>
+        <h3 className="text-lg font-semibold mb-4">User Menu</h3>
+        <UserMenuDemo />
+      </div>
+    </div>
+  );
+};
+
+export const AllScenarios: Story = {
+  render: () => <AllScenariosDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Complete overview of different dropdown scenarios: basic menu, file operations, and user profile menu.",
       },
     },
   },

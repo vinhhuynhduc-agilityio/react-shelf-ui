@@ -1,4 +1,5 @@
-import { MdError } from "react-icons/md";
+import { Icon } from "@/components";
+import { fa } from "@/icons/fa";
 
 interface ErrorAlertProps {
   title?: string;
@@ -26,9 +27,10 @@ const ErrorAlert: React.FC<ErrorAlertProps> = ({
         className={`border border-red-500 rounded-xl px-6 py-4 bg-white text-center shadow-md ${additionalClasses}`}
       >
         <div className="flex flex-col items-center justify-center gap-2">
-          <MdError
+          <Icon
+            icon={fa.faCircleExclamation}
             className="text-red-600 text-4xl"
-            data-testid="MdError-icon"
+            data-testid="error-icon"
           />
           {title && <p className="text-red-600 font-bold text-lg">{title}</p>}
           <ul className="text-red-600 text-sm list-none mt-2">

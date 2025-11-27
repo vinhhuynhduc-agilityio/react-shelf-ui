@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React, { useState, useRef } from "react";
 import ContextMenu from ".";
 import { ContextMenuOption } from "@/types";
+import { fa } from "@/icons/fa";
 
 const meta: Meta<typeof ContextMenu> = {
   title: "Components/ContextMenu",
@@ -69,17 +70,17 @@ type Story = StoryObj<typeof ContextMenu>;
 const basicOptions: ContextMenuOption[] = [
   {
     label: "Edit",
-    icon: "fas fa-pencil",
+    icon: fa.faPencil,
     onClick: () => alert("Edit clicked"),
   },
   {
     label: "Copy",
-    icon: "fas fa-copy",
+    icon: fa.faCopy,
     onClick: () => alert("Copy clicked"),
   },
   {
     label: "Delete",
-    icon: "fas fa-trash-alt",
+    icon: fa.faTrash,
     onClick: () => alert("Delete clicked"),
     danger: true,
   },
@@ -88,22 +89,22 @@ const basicOptions: ContextMenuOption[] = [
 const fileOptions: ContextMenuOption[] = [
   {
     label: "Open",
-    icon: "fas fa-folder-open",
+    icon: fa.faFolderOpen,
     onClick: () => alert("Open clicked"),
   },
   {
     label: "Rename",
-    icon: "fas fa-pencil-alt",
+    icon: fa.faPencil,
     onClick: () => alert("Rename clicked"),
   },
   {
     label: "Download",
-    icon: "fas fa-download",
+    icon: fa.faDownload,
     onClick: () => alert("Download clicked"),
   },
   {
     label: "Delete",
-    icon: "fas fa-trash-alt",
+    icon: fa.faTrash,
     onClick: () => alert("Delete clicked"),
     danger: true,
   },
@@ -112,17 +113,17 @@ const fileOptions: ContextMenuOption[] = [
 const shareOptions: ContextMenuOption[] = [
   {
     label: "Share",
-    icon: "fas fa-share-alt",
+    icon: fa.faShare,
     onClick: () => alert("Share clicked"),
   },
   {
     label: "Make Public",
-    icon: "fas fa-globe",
+    icon: fa.faGlobe,
     onClick: () => alert("Make Public clicked"),
   },
   {
     label: "View Permissions",
-    icon: "fas fa-lock",
+    icon: fa.faLock,
     onClick: () => alert("View Permissions clicked"),
   },
 ];
@@ -283,7 +284,7 @@ const SingleOptionDemo = () => {
           options={[
             {
               label: "Delete",
-              icon: "fas fa-trash-alt",
+              icon: fa.faTrash,
               onClick: () => alert("Delete clicked"),
               danger: true,
             },
@@ -337,47 +338,47 @@ const ManyOptionsDemo = () => {
           options={[
             {
               label: "Open",
-              icon: "fas fa-folder-open",
+              icon: fa.faFolderOpen,
               onClick: () => alert("Open"),
             },
             {
               label: "Edit",
-              icon: "fas fa-pencil",
+              icon: fa.faPencil,
               onClick: () => alert("Edit"),
             },
             {
               label: "Copy",
-              icon: "fas fa-copy",
+              icon: fa.faCopy,
               onClick: () => alert("Copy"),
             },
             {
               label: "Paste",
-              icon: "fas fa-paste",
+              icon: fa.faPaste,
               onClick: () => alert("Paste"),
             },
             {
               label: "Cut",
-              icon: "fas fa-cut",
+              icon: fa.faCut,
               onClick: () => alert("Cut"),
             },
             {
               label: "Duplicate",
-              icon: "fas fa-clone",
+              icon: fa.faClone,
               onClick: () => alert("Duplicate"),
             },
             {
               label: "Download",
-              icon: "fas fa-download",
+              icon: fa.faDownload,
               onClick: () => alert("Download"),
             },
             {
               label: "Share",
-              icon: "fas fa-share-alt",
+              icon: fa.faShare,
               onClick: () => alert("Share"),
             },
             {
               label: "Delete",
-              icon: "fas fa-trash-alt",
+              icon: fa.faTrash,
               onClick: () => alert("Delete"),
               danger: true,
             },
