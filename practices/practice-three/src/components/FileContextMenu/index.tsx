@@ -1,6 +1,9 @@
 // components
 import { ContextMenu } from "@/components";
 
+// icons
+import { fa } from "@/icons/fa";
+
 // types
 import type { FileItem } from "@/types";
 
@@ -28,12 +31,12 @@ export const FileContextMenu = ({
   const options = [
     {
       label: "Rename",
-      icon: "fa-solid fa-pencil",
+      icon: fa.faPencil,
       onClick: onRename,
     },
     {
       label: "Delete",
-      icon: "fa-solid fa-trash",
+      icon: fa.faTrash,
       danger: true,
       onClick: onDelete,
     },

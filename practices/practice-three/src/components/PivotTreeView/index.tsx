@@ -7,7 +7,10 @@ import { generateTreeData, generatePivotTreeColumns } from "@/helpers";
 import { CustomExpandIconProps, Pivot } from "@/types";
 
 // Components
-import { DataTable, ErrorAlert } from "@/components";
+import { DataTable, ErrorAlert, Icon } from "@/components";
+
+// Icons
+import { fa } from "@/icons/fa";
 
 interface PivotTreeViewProps {
   pivot: Pivot[];
@@ -53,9 +56,9 @@ const PivotTreeView = ({
         onClick={(e) => onExpand(record, e)}
       >
         {expanded ? (
-          <i className="fa-solid fa-sort-down text-[#94A1B3]" />
+          <Icon icon={fa.faSortDown} className="text-[#94A1B3]" />
         ) : (
-          <i className="fa-solid fa-caret-right text-[#94A1B3]" />
+          <Icon icon={fa.faCaretRight} className="text-[#94A1B3]" />
         )}
       </span>
     );

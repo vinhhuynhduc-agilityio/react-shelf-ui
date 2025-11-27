@@ -22,6 +22,12 @@ import {
 // services
 import { saveAllFileFileManager } from "@/services";
 
+// components
+import { Icon } from "@/components";
+
+// icons
+import { fa } from "@/icons/fa";
+
 // Get icon URL based on type or undefined
 export const getPreviewImageSrc = (item: FileItem | null) => {
   if (!item) return "/images/folder-placeholder-image.svg";
@@ -258,7 +264,7 @@ export const buildFileTree = (
     .map((item) => ({
       title: (
         <span>
-          <i className="fa-solid fa-folder fa-lg mr-[5px] text-[#94A1B3]" />
+          <Icon icon={fa.faFolder} className="fa-lg mr-[5px] text-[#94A1B3]" />
           {item.name}
         </span>
       ),
@@ -278,7 +284,7 @@ export const getFileTreeData = (files: FileItem[]): DataNode[] => {
     {
       title: (
         <span>
-          <i className="fa-solid fa-folder fa-lg mr-[5px] text-[#94A1B3]" />
+          <Icon icon={fa.faFolder} className="fa-lg mr-[5px] text-[#94A1B3]" />
           My Files
         </span>
       ),
@@ -346,12 +352,13 @@ export const fileTableColumns: ColumnsType<FileItem> = [
     key: "name",
     render: (text: string, record: FileItem) => (
       <span>
-        <i
-          className={`fa-solid ${
+        <Icon
+          icon={record.type === "folder" ? fa.faFolder : fa.faFile}
+          className={
             record.type === "folder"
-              ? "fa-folder text-[#1f88dd]"
-              : "fa-file text-[#b3cae1]"
-          } fa-lg mr-[10px] ml-[5px]`}
+              ? "text-[#1f88dd] fa-lg mr-[10px] ml-[5px]"
+              : "text-[#b3cae1] fa-lg mr-[10px] ml-[5px]"
+          }
         />
         {text}
       </span>

@@ -14,6 +14,9 @@ import type { WindowKey } from "@/types";
 // Components
 import IconButton from "@/components/common/IconButton";
 
+// Icons
+import { fa } from "@/icons/fa";
+
 interface TaskbarProps {
   onToggleSearch: () => void;
 }
@@ -71,7 +74,8 @@ const Taskbar = memo(({ onToggleSearch }: TaskbarProps) => {
       <div className="flex items-center gap-2">
         <div className="h-full w-[42px] flex justify-center items-center hover:bg-white/10">
           <IconButton
-            iconStyles="fa-solid fa-bars fa-lg text-[#FFFFFF] text-sm"
+            icon={fa.faBars}
+            iconStyles="fa-lg text-[#FFFFFF] text-sm"
             buttonStyles="flex justify-center items-center w-full h-full focus:outline-none"
             onClick={onToggleSearch}
           />

@@ -1,3 +1,5 @@
+import { Icon } from "@/components/common/Icon";
+import { fa } from "@/icons/fa";
 import clsx from "clsx";
 import { useEffect } from "react";
 
@@ -26,12 +28,10 @@ const StatusBar: React.FC<StatusBarProps> = ({ message, type, onClear }) => {
           : "bg-red-50 text-red-700"
       )}
     >
-      <i
-        className={clsx(
-          "fa-solid mr-2",
-          type === "success" ? "fa-check" : "fa-exclamation-triangle"
-        )}
-      ></i>
+      <Icon
+        icon={type === "success" ? fa.faCheck : fa.faExclamationTriangle}
+        className="mr-2"
+      />
       {message}
     </div>
   );

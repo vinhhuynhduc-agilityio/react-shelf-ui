@@ -3,6 +3,12 @@ import { ColumnsType } from "antd/es/table";
 // Types
 import { DataSourceItem, Pivot, TreeData, TreeDataChild } from "@/types";
 
+// Components
+import { Icon } from "@/components";
+
+// Icons
+import { fa } from "@/icons/fa";
+
 export const getUniqueSortedYears = (pivot: Pivot[]): number[] =>
   Array.from(new Set(pivot.map((item) => item.year))).sort((a, b) => a - b) ||
   [];
@@ -108,11 +114,7 @@ export const generatePivotTreeColumns = (
     {
       title: (
         <span>
-          form{" "}
-          <i
-            className="fa-solid fa-greater-than"
-            style={{ color: "#94A1B3" }}
-          />{" "}
+          form <Icon icon={fa.faGreaterThan} className="fa-xs text-[#94A1B3]" />{" "}
           name
         </span>
       ),
@@ -123,15 +125,9 @@ export const generatePivotTreeColumns = (
       render: (text: string, record: TreeData) => {
         const isParent = record.children && record.children.length > 0;
         const icon = isParent ? (
-          <i
-            className="fa-solid fa-folder-open fa-lg"
-            style={{ color: "#DADEE0" }}
-          ></i>
+          <Icon icon={fa.faFolderOpen} className="fa-lg text-[#DADEE0]" />
         ) : (
-          <i
-            className="fa-solid fa-file fa-lg"
-            style={{ color: "#DADEE0" }}
-          ></i>
+          <Icon icon={fa.faFile} className="fa-lg text-[#DADEE0]" />
         );
         const marginLeft = isParent ? "ml-[12px]" : "ml-[42px]";
 

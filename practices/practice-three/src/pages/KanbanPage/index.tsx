@@ -49,6 +49,9 @@ import {
 // Services
 import { saveKanbanBoard } from "@/services";
 
+// Icons
+import { fa } from "@/icons/fa";
+
 const KanbanPage = () => {
   const queryClient = useQueryClient();
 
@@ -313,8 +316,9 @@ const KanbanPage = () => {
         >
           {idx === 0 && (
             <IconButton
+              icon={fa.faCirclePlus}
               onClick={handleAddItem}
-              iconStyles="fa-solid fa-circle-plus fa-sm text-gray-500 mr-2"
+              iconStyles="fa-sm text-gray-500 mr-2"
             />
           )}
           {status}

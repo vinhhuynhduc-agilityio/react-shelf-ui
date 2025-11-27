@@ -9,6 +9,9 @@ import { WindowKey } from "@/types";
 // Components
 import { IconButton } from "@/components";
 
+// Icons
+import { fa } from "@/icons/fa";
+
 interface WindowHeaderProps {
   windowKey: WindowKey;
   title: string;
@@ -45,19 +48,22 @@ const WindowHeader = memo(
         </div>
         <div className="flex items-center justify-center space-x-2 absolute right-0 mr-3 bg-white">
           <IconButton
-            iconStyles="fa-solid fa-minus text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
+            icon={fa.faMinus}
+            iconStyles="text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
             onClick={onMinimize}
           />
           <IconButton
+            icon={isMaximized ? fa.faWindowRestore : fa.faSquare}
             iconStyles={
               isMaximized
-                ? "fa-regular fa-window-restore text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
-                : "fa-regular fa-square text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
+                ? "text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
+                : "text-[#94A1B3] rounded-full px-[4px] py-[3px] hover:bg-gray-100"
             }
             onClick={onMaximize}
           />
           <IconButton
-            iconStyles="fa-solid fa-xmark text-[#94A1B3] rounded-full px-[6px] py-[3px] hover:bg-gray-100"
+            icon={fa.faXmark}
+            iconStyles="text-[#94A1B3] rounded-full px-[6px] py-[3px] hover:bg-gray-100"
             onClick={onClose}
           />
         </div>

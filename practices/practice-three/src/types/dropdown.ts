@@ -1,7 +1,9 @@
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+
 export interface DropdownOption {
   label: string;
   key: string;
-  icon?: string;
+  icon: IconDefinition;
 }
 
 export interface DropdownProps {

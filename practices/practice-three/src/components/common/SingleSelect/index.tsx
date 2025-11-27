@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import clsx from "clsx";
+import { Icon } from "@/components/common/Icon";
+import { fa } from "@/icons/fa";
 
 interface SingleSelectProps {
   options: string[];
@@ -95,7 +97,7 @@ const SingleSelect = ({
         onClick={handleToggle}
       >
         {value}
-        <i className="fa-solid fa-chevron-down ml-2 text-[#94A1B3]" />
+        <Icon icon={fa.faChevronDown} className="ml-2 text-[#94A1B3]" />
       </div>
       {dropdownContent && createPortal(dropdownContent, document.body)}
     </div>

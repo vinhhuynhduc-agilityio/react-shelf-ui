@@ -1,6 +1,16 @@
 import clsx from "clsx";
+
+// Helpers
 import { getPreviewImageSrc, getBasicInfo } from "@/helpers";
+
+// Types
 import type { FileItem } from "@/types";
+
+// Icons
+import { fa } from "@/icons/fa";
+
+// Components
+import { Icon } from "@/components";
 
 interface PreviewPanelProps {
   selectedItem: FileItem | null;
@@ -69,7 +79,7 @@ export const PreviewPanel = ({
             <div className="h-[923px] border-t border-[#ebedf0] mt-[24px] ml-[14px]">
               <div className="flex items-center">
                 <span className="flex items-center justify-center rounded-full border border-[#94A1B3] w-[12.5px] h-[12.5px]">
-                  <i className="fa-solid fa-info fa-2xs"></i>
+                  <Icon icon={fa.faInfo} className="fa-2xs" />
                 </span>
                 <span className="font-medium w-[40%] p-[6px]">Extra Info</span>
                 <span className="w-[60%] p-[6px]"></span>

@@ -1,7 +1,10 @@
 import { memo, useCallback } from "react";
 
 // Components
-import { IconButton } from "@/components";
+import { Icon, IconButton } from "@/components";
+
+// Icons
+import { fa } from "@/icons/fa";
 
 interface KanbanCardProps {
   task: {
@@ -24,7 +27,7 @@ export const KanbanCard = memo(({ task, onEdit }: KanbanCardProps) => {
           {task.title}
         </p>
         <div className="flex justify-center items-center w-[32px] h-[32px] absolute right-[8px] hover:shadow-[0_0_2px_1px_#1CA1C1] bg-[rgba(228,230,240,0.8)] rounded-full">
-          <i className="fa-solid fa-user fa-lg text-[#94a1b3]" />
+          <Icon icon={fa.faUser} className="fa-lg text-[#94a1b3]" />
         </div>
       </div>
       <div className="flex justify-between pl-[8px] pr-[8px] mb-[6px] items-center truncate">
@@ -39,8 +42,9 @@ export const KanbanCard = memo(({ task, onEdit }: KanbanCardProps) => {
           ))}
         </div>
         <IconButton
+          icon={fa.faPencil}
           onMouseDown={handleEdit}
-          iconStyles="fa-solid fa-pencil fa-xs text-[#94a1b3] hover:text-[#1CA1C1]"
+          iconStyles="fa-xs text-[#94a1b3] hover:text-[#1CA1C1]"
         />
       </div>
     </>

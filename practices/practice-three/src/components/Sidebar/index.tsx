@@ -4,13 +4,16 @@ import { Tree } from "antd";
 import type { DataNode } from "antd/es/tree";
 
 // components
-import { Button, Dropdown, StatusBar } from "@/components";
+import { Button, Dropdown, Icon, StatusBar } from "@/components";
 
 // constant
 import { dropdownOptions } from "@/constant";
 
 // types
 import type { DropdownOption } from "@/types";
+
+// icons
+import { fa } from "@/icons/fa";
 
 interface SidebarProps {
   treeData: DataNode[];
@@ -70,7 +73,7 @@ export const Sidebar = ({
         >
           {isDisabled ? (
             <>
-              <i className="fa-solid fa-spinner fa-spin mr-2"></i>
+              <Icon icon={fa.faSpinner} className="mr-2 fa-spin" />
               {isUploadingFolder
                 ? "Uploading folder..."
                 : isDeletingFolder

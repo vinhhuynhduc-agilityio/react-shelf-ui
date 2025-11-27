@@ -5,6 +5,9 @@ import clsx from "clsx";
 // components
 import IconButton from "@/components/common/IconButton";
 
+// icons
+import { fa } from "@/icons/fa";
+
 interface ModalProps {
   isOpen: boolean;
   title: string;
@@ -67,8 +70,9 @@ const ModalContent = ({
 
           {!hideCloseButton && (
             <IconButton
+              icon={fa.faX}
               onClick={onClose}
-              iconStyles="fa-solid fa-x fa-xs text-[#94A1B3] hover:text-[#1CA1C1] text-lg leading-none px-3 py-4 rounded-full"
+              iconStyles="fa-xs text-[#94A1B3] hover:text-[#1CA1C1] text-lg leading-none px-3 py-4 rounded-full"
             />
           )}
         </div>

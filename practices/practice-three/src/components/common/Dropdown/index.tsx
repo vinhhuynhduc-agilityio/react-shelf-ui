@@ -4,6 +4,9 @@ import { createPortal } from "react-dom";
 // types
 import { DropdownOption, DropdownProps } from "@/types";
 
+// components
+import { Icon } from "@/components";
+
 type DropdownPosition = { top: number; left: number; width: number };
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -102,9 +105,10 @@ const Dropdown: React.FC<DropdownProps> = ({
           className="px-4 py-[8px] text-[#475466] hover:bg-[#F4F5F9] cursor-pointer flex items-center"
           onClick={handleSelectOption(option)}
         >
-          <i
-            className={`fa-solid ${option.icon} mr-2 text-[#94A1B3] w-[20px] h-[20px]`}
-          ></i>
+          <Icon
+            icon={option.icon}
+            className="mr-2 text-[#94A1B3] w-[20px] h-[20px]`"
+          />
           {option.label}
         </li>
       ))}

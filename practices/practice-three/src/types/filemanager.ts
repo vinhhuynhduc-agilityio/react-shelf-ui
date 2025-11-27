@@ -1,3 +1,4 @@
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Key } from "react";
 
 export interface FileItem {
@@ -26,7 +27,7 @@ export interface BreadcrumbItem {
 
 export interface ContextMenuOption {
   label: string;
-  icon: string;
+  icon: IconDefinition;
   onClick: () => void;
   danger?: boolean;
 }
