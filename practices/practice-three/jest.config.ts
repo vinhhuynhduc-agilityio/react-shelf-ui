@@ -20,6 +20,8 @@ const jestConfig: JestConfigWithTsJest = {
   coveragePathIgnorePatterns: [
     "<rootDir>/src/constants/",
     "<rootDir>/src/pages/index.ts",
+    "<rootDir>/src/components/index.ts",
+    "<rootDir>/src/components/common/index.ts",
   ],
 };
 

@@ -1,0 +1,94 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`DataTable should match snapshot with data 1`] = `
+<div>
+  <table
+    data-testid="data-table"
+  >
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Email
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          John
+        </td>
+        <td>
+          john@example.com
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Jane
+        </td>
+        <td>
+          jane@example.com
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`DataTable should match snapshot with empty data 1`] = `
+<div>
+  <table
+    data-testid="data-table"
+  >
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Email
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          colspan="2"
+        >
+          No data
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`DataTable should match snapshot with loading state 1`] = `
+<div>
+  <table
+    data-testid="data-table"
+  >
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Email
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          colspan="2"
+        >
+          Loading...
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

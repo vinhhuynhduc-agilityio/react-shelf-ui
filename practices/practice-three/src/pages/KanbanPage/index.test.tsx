@@ -1,7 +1,8 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import KanbanPage from ".";
 
+// Setup ResizeObserver
 beforeAll(() => {
   global.ResizeObserver = class ResizeObserver {
     constructor(private cb: ResizeObserverCallback) {}
@@ -15,10 +16,17 @@ afterAll(() => {
   Reflect.deleteProperty(globalThis, "ResizeObserver");
 });
 
+// Mocks
+const mockQueryClient = {
+  invalidateQueries: jest.fn(),
+  setQueryData: jest.fn(),
+  getQueryData: jest.fn(),
+};
+
 jest.mock("@tanstack/react-query", () => ({
-  useQueryClient: jest.fn(() => ({
-    invalidateQueries: jest.fn(),
-  })),
+  useQueryClient: () => mockQueryClient,
+  useQuery: jest.fn(),
+  useMutation: jest.fn(),
 }));
 
 jest.mock("@/hook", () => ({
@@ -36,21 +44,19 @@ jest.mock("@/components", () => ({
     onClick,
     variant,
   }: {
-    children: React.ReactNode;
+    children: string;
     onClick: () => void;
     variant: string;
   }) => (
-    <button onClick={onClick} data-testid={`button-${variant}`}>
+    <button onClick={onClick} data-testid={`btn-${variant}`} role="button">
       {children}
     </button>
   ),
-  ErrorAlert: ({ title, errors }: { title: string; errors: string[] }) => (
-    <div data-testid="error-alert">
-      {title}: {errors.join(", ")}
-    </div>
+  ErrorAlert: ({ title }: { title: string }) => (
+    <div data-testid="error-alert">{title}</div>
   ),
   IconButton: ({ onClick }: { onClick: () => void }) => (
-    <button onClick={onClick} data-testid="add-item-button">
+    <button onClick={onClick} data-testid="add-btn">
       +
     </button>
   ),
@@ -58,27 +64,24 @@ jest.mock("@/components", () => ({
     task,
     onEdit,
   }: {
-    task: { id: string; title: string; tags: string[] };
-    onEdit: () => void;
+    task: { id: string; title: string };
+    onEdit: (id: string) => void;
   }) => (
-    <div onClick={onEdit} data-testid="kanban-card">
+    <div onClick={() => onEdit(task.id)} data-testid={`card-${task.id}`}>
       {task.title}
     </div>
   ),
   Modal: ({
     isOpen,
-    title,
     onClose,
     children,
   }: {
     isOpen: boolean;
-    title: string;
     onClose: () => void;
     children: React.ReactNode;
   }) =>
     isOpen ? (
       <div data-testid="modal">
-        <h2>{title}</h2>
         {children}
         <button onClick={onClose} data-testid="modal-close">
           Close
@@ -89,33 +92,29 @@ jest.mock("@/components", () => ({
     selected,
     onChange,
   }: {
-    options: string[];
     selected: string[];
-    onChange: (value: string[]) => void;
+    onChange: (tags: string[]) => void;
   }) => (
-    <div data-testid="multi-select" onClick={() => onChange([...selected])}>
-      {selected.join(", ")}
-    </div>
+    <input
+      data-testid="tags-input"
+      value={selected.join(",")}
+      onChange={(e) => onChange(e.target.value.split(","))}
+    />
   ),
   SingleSelect: ({
     value,
     onChange,
   }: {
-    options: string[];
     value: string;
-    onChange: (value: string) => void;
-    className: string;
+    onChange: (status: string) => void;
   }) => (
     <select
+      data-testid="status-select"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      data-testid="single-select"
     >
-      <option value="">Select</option>
       <option value="New">New</option>
       <option value="Work">Work</option>
-      <option value="Test">Test</option>
-      <option value="Done">Done</option>
     </select>
   ),
 }));
@@ -125,14 +124,18 @@ jest.mock("react-grid-layout", () => ({
   default: ({
     children,
     onLayoutChange,
+    onDragStop,
   }: {
-    children: React.ReactNode[];
-    onLayoutChange: () => void;
+    children: React.ReactNode;
+    onLayoutChange: (layout: unknown[]) => void;
+    onDragStop: () => void;
   }) => (
-    <div data-testid="grid-layout" onClick={onLayoutChange}>
-      {children?.map((child, idx) => (
-        <div key={idx}>{child}</div>
-      ))}
+    <div
+      data-testid="grid-layout"
+      onClick={() => onLayoutChange([])}
+      onDragEnd={onDragStop}
+    >
+      {children}
     </div>
   ),
 }));
@@ -143,7 +146,7 @@ jest.mock("antd", () => ({
 }));
 
 jest.mock("uuid", () => ({
-  v4: jest.fn(() => "mock-id-123"),
+  v4: jest.fn(() => "uuid-123"),
 }));
 
 jest.mock("@/helpers", () => ({
@@ -153,9 +156,9 @@ jest.mock("@/helpers", () => ({
     prevLayout: [],
   })),
   generateLayout: jest.fn(() => []),
-  removeTaskFromBoard: jest.fn((board) => board),
-  syncLayoutToBoard: jest.fn((layout, board) => board),
-  updateKanbanItems: jest.fn((board) => board),
+  removeTaskFromBoard: jest.fn((board: unknown) => board),
+  syncLayoutToBoard: jest.fn((layout: unknown, board: unknown) => board),
+  updateKanbanItems: jest.fn((board: unknown) => board),
 }));
 
 jest.mock("@/services", () => ({
@@ -179,17 +182,38 @@ import {
 
 describe("KanbanPage", () => {
   const mockBoard = [
-    { id: "col-1", progressStatus: "New", taskIds: [], taskOrders: {} },
-    { id: "col-2", progressStatus: "Work", taskIds: [], taskOrders: {} },
+    {
+      id: "col-1",
+      progressStatus: "New",
+      taskIds: ["1"],
+      taskOrders: { "1": 0 },
+    },
+    {
+      id: "col-2",
+      progressStatus: "Work",
+      taskIds: ["2"],
+      taskOrders: { "2": 0 },
+    },
+    { id: "col-3", progressStatus: "Test", taskIds: [], taskOrders: {} },
+    { id: "col-4", progressStatus: "Done", taskIds: [], taskOrders: {} },
   ];
 
   const mockTasks = [
-    { id: "task-1", title: "Task 1", tags: ["webix"] },
-    { id: "task-2", title: "Task 2", tags: ["jet"] },
+    { id: "1", title: "Task 1", tags: ["webix"] },
+    { id: "2", title: "Task 2", tags: ["jet"] },
   ];
+
+  const mockAddTask = jest.fn();
+  const mockUpdateTask = jest.fn();
+  const mockDeleteTask = jest.fn();
+  const mockUpdateBoardColumn = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
+    Object.defineProperty(HTMLElement.prototype, "clientWidth", {
+      configurable: true,
+      value: 1200,
+    });
 
     (useBoardQuery as jest.Mock).mockReturnValue({
       data: mockBoard,
@@ -205,18 +229,15 @@ describe("KanbanPage", () => {
       error: null,
     });
 
-    (useAddTask as jest.Mock).mockReturnValue({ mutate: jest.fn() });
-    (useUpdateTask as jest.Mock).mockReturnValue({ mutate: jest.fn() });
-    (useDeleteTask as jest.Mock).mockReturnValue({ mutate: jest.fn() });
-    (useUpdateBoardColumn as jest.Mock).mockReturnValue({ mutate: jest.fn() });
-
-    Object.defineProperty(HTMLElement.prototype, "clientWidth", {
-      configurable: true,
-      value: 1200,
+    (useAddTask as jest.Mock).mockReturnValue({ mutate: mockAddTask });
+    (useUpdateTask as jest.Mock).mockReturnValue({ mutate: mockUpdateTask });
+    (useDeleteTask as jest.Mock).mockReturnValue({ mutate: mockDeleteTask });
+    (useUpdateBoardColumn as jest.Mock).mockReturnValue({
+      mutate: mockUpdateBoardColumn,
     });
   });
 
-  it("should render kanban board with headers", () => {
+  it("should render all status columns", () => {
     render(<KanbanPage />);
 
     expect(screen.getByText("New")).toBeInTheDocument();
@@ -225,13 +246,14 @@ describe("KanbanPage", () => {
     expect(screen.getByText("Done")).toBeInTheDocument();
   });
 
-  it("should match snapshot on initial load", () => {
-    const { container } = render(<KanbanPage />);
+  it("should render kanban cards from data", () => {
+    render(<KanbanPage />);
 
-    expect(container).toMatchSnapshot();
+    expect(screen.getByText("Task 1")).toBeInTheDocument();
+    expect(screen.getByText("Task 2")).toBeInTheDocument();
   });
 
-  it("should display loading state when fetching", () => {
+  it("should show loading spinner when fetching", () => {
     (useBoardQuery as jest.Mock).mockReturnValue({
       data: [],
       isFetching: true,
@@ -244,43 +266,131 @@ describe("KanbanPage", () => {
     expect(screen.getByTestId("spinner")).toBeInTheDocument();
   });
 
-  it("should render grid layout when data is ready", () => {
+  it("should show error alert on error", () => {
+    (useBoardQuery as jest.Mock).mockReturnValue({
+      data: [],
+      isFetching: false,
+      isError: true,
+      error: { message: "Failed to load" },
+    });
+
+    render(<KanbanPage />);
+
+    expect(screen.getByTestId("error-alert")).toBeInTheDocument();
+  });
+
+  it("should render grid layout when data ready", () => {
     render(<KanbanPage />);
 
     expect(screen.getByTestId("grid-layout")).toBeInTheDocument();
   });
 
-  it("should render all kanban cards", () => {
+  it("should render add button in New column", () => {
     render(<KanbanPage />);
 
-    const cards = screen.getAllByTestId("kanban-card");
-    expect(cards.length).toBeGreaterThan(0);
+    expect(screen.getByTestId("add-btn")).toBeInTheDocument();
   });
 
-  it("should handle multiple board columns", () => {
+  it("should open modal when clicking card", () => {
     render(<KanbanPage />);
 
-    expect(screen.getByText("New")).toBeInTheDocument();
-    expect(screen.getByText("Work")).toBeInTheDocument();
-    expect(screen.getByText("Test")).toBeInTheDocument();
-    expect(screen.getByText("Done")).toBeInTheDocument();
+    const card = screen.getByTestId("card-1");
+    fireEvent.click(card);
+
+    expect(screen.getByTestId("modal")).toBeInTheDocument();
   });
 
-  it("should render add item button", () => {
+  it("should close modal when clicking close button", () => {
     render(<KanbanPage />);
 
-    expect(screen.getByTestId("add-item-button")).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId("card-1"));
+    expect(screen.getByTestId("modal")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("modal-close"));
+    expect(screen.queryByTestId("modal")).not.toBeInTheDocument();
   });
 
-  it("should render card titles from mock data", () => {
+  it("should update task title in modal", () => {
     render(<KanbanPage />);
 
-    expect(screen.getByText("Task 1")).toBeInTheDocument();
-    expect(screen.getByText("Task 2")).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId("card-1"));
+
+    const titleInput = screen.getByDisplayValue("Task 1") as HTMLInputElement;
+    fireEvent.change(titleInput, { target: { value: "Updated Task" } });
+
+    expect(titleInput.value).toBe("Updated Task");
   });
 
-  it("should match snapshot after modal opened", () => {
+  it("should update task tags in modal", () => {
+    render(<KanbanPage />);
+
+    fireEvent.click(screen.getByTestId("card-1"));
+
+    const tagsInput = screen.getByTestId("tags-input") as HTMLInputElement;
+    fireEvent.change(tagsInput, { target: { value: "webix,jet,easy" } });
+
+    expect(tagsInput.value).toBe("webix,jet,easy");
+  });
+
+  it("should change task status in modal", () => {
+    render(<KanbanPage />);
+
+    fireEvent.click(screen.getByTestId("card-1"));
+
+    const statusSelect = screen.getByTestId(
+      "status-select"
+    ) as HTMLSelectElement;
+    fireEvent.change(statusSelect, { target: { value: "Work" } });
+
+    expect(statusSelect.value).toBe("Work");
+  });
+
+  it("should save task changes", () => {
+    render(<KanbanPage />);
+
+    fireEvent.click(screen.getByTestId("card-1"));
+
+    // Change task title
+    const titleInput = screen.getByDisplayValue("Task 1") as HTMLInputElement;
+    fireEvent.change(titleInput, { target: { value: "Updated Task" } });
+
+    // Change task status
+    const statusSelect = screen.getByTestId(
+      "status-select"
+    ) as HTMLSelectElement;
+    fireEvent.change(statusSelect, { target: { value: "Work" } });
+
+    // Use correct variant for save button
+    const saveButton = screen.getAllByRole("button", { name: /save/i })[0];
+    fireEvent.click(saveButton);
+
+    expect(mockUpdateTask).toHaveBeenCalled();
+  });
+
+  it("should remove task when clicking remove button", () => {
+    render(<KanbanPage />);
+
+    fireEvent.click(screen.getByTestId("card-1"));
+
+    // Use correct variant for remove button
+    const removeButton = screen.getAllByRole("button", { name: /remove/i })[0];
+    fireEvent.click(removeButton);
+
+    expect(mockDeleteTask).toHaveBeenCalled();
+  });
+
+  it("should add new task when clicking add button", () => {
+    render(<KanbanPage />);
+
+    fireEvent.click(screen.getByTestId("add-btn"));
+
+    expect(mockAddTask).toHaveBeenCalled();
+  });
+
+  it("should match snapshot with modal open", () => {
     const { container } = render(<KanbanPage />);
+
+    fireEvent.click(screen.getByTestId("card-1"));
 
     expect(container).toMatchSnapshot();
   });
