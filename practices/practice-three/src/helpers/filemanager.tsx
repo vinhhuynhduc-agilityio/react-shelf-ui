@@ -419,22 +419,16 @@ export const parseFolderStructure = (fileList: FileList) => {
 
 export const createRootFolder = async (
   params: CreateRootFolderParams
-): Promise<string> => {
-  const {
-    rootName,
-    selectedFolder,
-    files,
-    setFiles,
-    setStatusBar,
-    addItemAsync,
-  } = params;
+): Promise<{ serverRootId: string; rootItem: FileItem } | null> => {
+  const { rootName, selectedFolder, files, setStatusBar, addItemAsync } =
+    params;
 
   const existingRoot = files.find(
     (i) => i.parentId === selectedFolder && i.name === rootName
   );
   if (existingRoot) {
     setStatusBar({ message: "Folder name already exists", type: "error" });
-    return "";
+    return null;
   }
 
   const rootClientId = uuidv4();
@@ -447,25 +441,20 @@ export const createRootFolder = async (
     imageUrl: "/images/folder-detail-placeholder.svg",
   };
 
-  setFiles((prev) => [...prev, rootItem]);
-
-  let serverRootId: string;
   try {
     const data = await addItemAsync(rootItem);
-    serverRootId = data.id;
+    return { serverRootId: data.id, rootItem };
   } catch {
-    setFiles((prev) => prev.filter((i) => i.id !== rootClientId));
     setStatusBar({ message: "Failed to create root folder", type: "error" });
-    return "";
+    return null;
   }
-
-  return serverRootId;
 };
 
-export const createSubfolders = async (params: CreateSubfoldersParams) => {
-  const { sortedPaths, parentMap, setFiles, setStatusBar, addItemAsync } =
-    params;
-
+export const createSubfolders = async (
+  params: CreateSubfoldersParams
+): Promise<FileItem[]> => {
+  const { sortedPaths, parentMap, setStatusBar, addItemAsync } = params;
+  const subfolderItems: FileItem[] = [];
   for (const path of sortedPaths) {
     const dirName = path.split("/").pop()!;
     const parentPath = path.split("/").slice(0, -1).join("/");
@@ -481,22 +470,22 @@ export const createSubfolders = async (params: CreateSubfoldersParams) => {
       imageUrl: "/images/folder-detail-placeholder.svg",
     };
 
-    setFiles((prev) => [...prev, dirItem]);
+    subfolderItems.push(dirItem);
 
     try {
       const data = await addItemAsync(dirItem);
       parentMap[path] = data.id;
     } catch {
-      setFiles((prev) => prev.filter((i) => i.id !== clientId));
       setStatusBar({ message: "Failed to create subfolder", type: "error" });
-      return;
+      return subfolderItems;
     }
   }
+
+  return subfolderItems;
 };
 
 export const collectAndUploadFiles = async (params: CollectAndUploadParams) => {
-  const { fileList, parentMap, serverRootId, files, setFiles, addItemAsync } =
-    params;
+  const { fileList, parentMap, serverRootId, files, addItemAsync } = params;
 
   const listFile: FileItem[] = [];
 
@@ -529,9 +518,10 @@ export const collectAndUploadFiles = async (params: CollectAndUploadParams) => {
   }
 
   if (listFile.length > 0) {
-    setFiles((prev) => [...prev, ...listFile]);
     await saveAllFileFileManager({ listFile, addItem: addItemAsync });
   }
+
+  return listFile;
 };
 
 export const uploadFolderWithStructure = async (params: UploadFolderParams) => {
@@ -552,35 +542,36 @@ export const uploadFolderWithStructure = async (params: UploadFolderParams) => {
 
   try {
     const { rootName, sortedPaths } = parseFolderStructure(fileList);
-
-    const serverRootId = await createRootFolder({
+    const rootResult = await createRootFolder({
       rootName,
       selectedFolder,
       files,
-      setFiles,
       setStatusBar,
       addItemAsync,
     });
-    if (!serverRootId) return;
+    if (!rootResult) return;
+
+    const { serverRootId, rootItem } = rootResult;
 
     const parentMap: Record<string, string> = { "": serverRootId };
 
-    await createSubfolders({
+    const subfolderItems = await createSubfolders({
       sortedPaths,
       parentMap,
-      setFiles,
       setStatusBar,
       addItemAsync,
     });
 
-    await collectAndUploadFiles({
+    const fileItems = await collectAndUploadFiles({
       fileList,
       parentMap,
       serverRootId,
       files,
-      setFiles,
       addItemAsync,
     });
+
+    const allNewItems = [rootItem, ...subfolderItems, ...fileItems];
+    setFiles((prev) => [...prev, ...allNewItems]);
 
     setStatusBar({ message: "Folder uploaded successfully", type: "success" });
   } finally {
