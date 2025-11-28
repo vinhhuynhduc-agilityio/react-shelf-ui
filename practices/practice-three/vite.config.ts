@@ -7,13 +7,17 @@ import path from "path";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss(), preload()],
-
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
+      "@": path.resolve(__dirname, "src"), // Base alias for `src`
     },
   },
   esbuild: {
     target: "es2020",
+  },
+  server: {
+    watch: {
+      ignored: ["**/db.json"], // Ignore changes in db.json
+    },
   },
 });
