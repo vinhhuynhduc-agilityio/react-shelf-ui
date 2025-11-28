@@ -48,7 +48,6 @@ export interface CreateRootFolderParams {
   rootName: string;
   selectedFolder: string;
   files: FileItem[];
-  setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>;
   setStatusBar: (
     status: { message: string; type: "success" | "error" } | null
   ) => void;
@@ -58,7 +57,6 @@ export interface CreateRootFolderParams {
 export interface CreateSubfoldersParams {
   sortedPaths: string[];
   parentMap: Record<string, string>;
-  setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>;
   setStatusBar: (
     status: { message: string; type: "success" | "error" } | null
   ) => void;
@@ -70,7 +68,6 @@ export interface CollectAndUploadParams {
   parentMap: Record<string, string>;
   serverRootId: string;
   files: FileItem[];
-  setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>;
   addItemAsync: (item: FileItem) => Promise<{ id: string }>;
 }
 
