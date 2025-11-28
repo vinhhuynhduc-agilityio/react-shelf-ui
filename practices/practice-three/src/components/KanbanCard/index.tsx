@@ -45,6 +45,7 @@ export const KanbanCard = memo(({ task, onEdit }: KanbanCardProps) => {
           icon={fa.faPencil}
           onMouseDown={handleEdit}
           iconStyles="fa-xs text-[#94a1b3] hover:text-[#1CA1C1]"
+          aria-label="Edit task"
         />
       </div>
     </>

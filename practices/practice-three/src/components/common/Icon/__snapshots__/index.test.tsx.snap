@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Icon should match snapshot 1`] = `
+<div>
+  <svg
+    class="text-red-600"
+    data-testid="icon"
+  />
+</div>
+`;
+
+exports[`Icon should match snapshot with className 1`] = `
+<div>
+  <svg
+    class="text-red-600 text-lg"
+    data-icon="trash"
+    data-testid="icon-element"
+  />
+</div>
+`;
+
+exports[`Icon should match snapshot with default props 1`] = `
+<div>
+  <svg
+    data-icon="pencil"
+    data-testid="icon-element"
+  />
+</div>
+`;
+
+exports[`Icon should match snapshot with onClick 1`] = `
+<div>
+  <svg
+    data-icon="pencil"
+    data-testid="icon-element"
+  />
+</div>
+`;

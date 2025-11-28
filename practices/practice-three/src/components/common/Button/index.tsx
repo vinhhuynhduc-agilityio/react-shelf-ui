@@ -10,6 +10,7 @@ interface ButtonProps {
   variant?: "success" | "primary" | "segment";
   active?: boolean;
   ref?: React.Ref<HTMLButtonElement>;
+  ariaLabel?: string;
 }
 
 const Button = ({
@@ -21,6 +22,7 @@ const Button = ({
   className = "",
   active = false,
   ref,
+  ariaLabel = "",
 }: ButtonProps) => {
   const baseClasses =
     "inline-flex items-center justify-center rounded-[2px] font-medium transition-colors duration-200 shadow-none px-3 cursor-pointer disabled:cursor-not-allowed border-none";
@@ -43,6 +45,7 @@ const Button = ({
       disabled={disabled}
       className={clsx(baseClasses, variantClasses[variant], className)}
       ref={ref}
+      aria-label={ariaLabel}
     >
       {children}
     </button>

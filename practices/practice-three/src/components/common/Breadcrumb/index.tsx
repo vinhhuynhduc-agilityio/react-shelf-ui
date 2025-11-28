@@ -34,6 +34,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = memo(
                     "text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal",
                     "focus:outline-none focus:underline"
                   )}
+                  aria-label={`Navigate to ${item.name}`}
                 >
                   {item.name}
                 </button>
