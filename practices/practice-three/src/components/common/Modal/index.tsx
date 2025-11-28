@@ -73,7 +73,7 @@ const ModalContent = ({
               icon={fa.faX}
               onClick={onClose}
               iconStyles="fa-xs text-[#94A1B3] hover:text-[#1CA1C1] text-lg leading-none px-3 py-4 rounded-full"
-              aria-label="Close modal"
+              ariaLabel="Close modal"
             />
           )}
         </div>

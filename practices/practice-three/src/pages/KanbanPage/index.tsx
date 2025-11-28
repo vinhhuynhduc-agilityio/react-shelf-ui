@@ -319,7 +319,7 @@ const KanbanPage = () => {
               icon={fa.faCirclePlus}
               onClick={handleAddItem}
               iconStyles="fa-sm text-gray-500 mr-2"
-              aria-label="Add new task"
+              ariaLabel="Add new task"
             />
           )}
           {status}

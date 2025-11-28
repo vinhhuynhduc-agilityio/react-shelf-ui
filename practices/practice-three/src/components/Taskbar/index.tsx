@@ -78,7 +78,7 @@ const Taskbar = memo(({ onToggleSearch }: TaskbarProps) => {
             iconStyles="fa-lg text-[#FFFFFF] text-sm"
             buttonStyles="flex justify-center items-center w-full h-full focus:outline-none"
             onClick={onToggleSearch}
-            aria-label="Open search menu"
+            ariaLabel="Open search menu"
           />
         </div>
         {openKeys.map((key) => {
