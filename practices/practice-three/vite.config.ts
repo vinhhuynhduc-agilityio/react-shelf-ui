@@ -17,4 +17,37 @@ export default defineConfig({
   esbuild: {
     target: "es2020",
   },
+
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "zustand"],
+          icons: [
+            "@fortawesome/react-fontawesome",
+            "@fortawesome/free-solid-svg-icons",
+          ],
+        },
+      },
+    },
+
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+      format: {
+        comments: false,
+      },
+    },
+
+    chunkSizeWarningLimit: 1000,
+    sourcemap: false,
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096,
+    assetsDir: "assets",
+    outDir: "dist",
+    emptyOutDir: true,
+  },
 });
