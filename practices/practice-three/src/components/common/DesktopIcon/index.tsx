@@ -41,9 +41,6 @@ export const DesktopIcon = ({
         src={image}
         alt={title}
         className="w-[50px] h-[50px] object-contain"
-        fetchPriority="high"
-        loading="eager"
-        decoding="async"
       />
       <span
         className="mt-2 text-white text-[14px] font-normal leading-tight max-w-[85px] text-center truncate"
