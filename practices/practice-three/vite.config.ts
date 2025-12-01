@@ -15,9 +15,4 @@ export default defineConfig({
   esbuild: {
     target: "es2020",
   },
-  server: {
-    watch: {
-      ignored: ["**/db.json"], // Ignore changes in db.json
-    },
-  },
 });
