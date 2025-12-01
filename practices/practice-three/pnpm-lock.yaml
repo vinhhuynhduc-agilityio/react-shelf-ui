@@ -77,9 +77,6 @@ importers:
       react-icons:
         specifier: ^5.5.0
         version: 5.5.0(react@19.1.1)
-      react-resizable:
-        specifier: ^3.0.5
-        version: 3.0.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react-rnd:
         specifier: ^10.5.2
         version: 10.5.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
