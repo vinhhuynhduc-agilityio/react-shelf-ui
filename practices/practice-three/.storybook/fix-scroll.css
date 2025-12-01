@@ -1,0 +1,7 @@
+body {
+  /* Force enable scrolling in Storybook only.
+     Required because the main app CSS sets `body { overflow: hidden; }`
+     to prevent unwanted page scroll during folder upload via webkitdirectory input.
+     TODO: Replace this !important with a cleaner solution later */
+  overflow: auto !important;
+}
