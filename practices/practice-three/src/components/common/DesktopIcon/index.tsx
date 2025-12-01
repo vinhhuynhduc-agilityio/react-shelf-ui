@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import clsx from "clsx";
 
 // Types
@@ -8,20 +9,34 @@ interface DesktopIconProps {
   title: string;
   keyIcon: WindowKey;
   isSelected?: boolean;
-  onIconClick: (keyIcon: WindowKey) => void;
   cursorPointer?: boolean;
+  onIconClick: (keyIcon: WindowKey) => void;
+  onDoubleClick: (keyIcon: WindowKey) => void;
 }
 
 export const DesktopIcon = ({
   image,
   title,
   keyIcon,
-  onIconClick,
   isSelected = false,
   cursorPointer = false,
+  onIconClick,
+  onDoubleClick,
 }: DesktopIconProps) => {
+  const timer = useRef<NodeJS.Timeout | null>(null);
+
   const handleMouseDown = () => {
-    onIconClick(keyIcon);
+    if (timer.current) {
+      clearTimeout(timer.current);
+      timer.current = null;
+      onDoubleClick(keyIcon);
+    } else {
+      onIconClick(keyIcon);
+
+      timer.current = setTimeout(() => {
+        timer.current = null;
+      }, 300);
+    }
   };
 
   return (

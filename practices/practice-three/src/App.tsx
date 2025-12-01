@@ -91,7 +91,9 @@ const App = () => {
     if (selectedIcon !== key) {
       setSelectedIcon(key);
     }
+  };
 
+  const handleIconDoubleClick = (key: WindowKey) => {
     const state =
       key === SPREADSHEET
         ? spreadsheet
@@ -133,8 +135,9 @@ const App = () => {
           image={icon.image}
           title={icon.title}
           keyIcon={icon.key}
-          onIconClick={handleIconClick}
           isSelected={selectedIcon === icon.key}
+          onIconClick={handleIconClick}
+          onDoubleClick={handleIconDoubleClick}
         />
       </div>
     ));
