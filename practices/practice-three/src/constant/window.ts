@@ -33,7 +33,7 @@ export const DESKTOP_ICONS = [
   { key: WINDOW_KEYS.KANBAN, image: "images/kanban.webp", title: "Kanban" },
 ];
 
-export interface WindowConfig {
+interface WindowConfig {
   title: string;
   src: string;
   Page: ComponentType;

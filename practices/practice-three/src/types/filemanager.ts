@@ -32,18 +32,6 @@ export interface ContextMenuOption {
   danger?: boolean;
 }
 
-export interface CreateRootParams {
-  rootName: string;
-  selectedFolder: string;
-  files: FileItem[];
-  setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>;
-  setExpandedKeys: React.Dispatch<React.SetStateAction<string[]>>;
-  setStatusBar: (
-    status: { message: string; type: "success" | "error" } | null
-  ) => void;
-  addItemAsync: (item: FileItem) => Promise<{ id: string }>;
-}
-
 export interface CreateRootFolderParams {
   rootName: string;
   selectedFolder: string;

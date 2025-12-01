@@ -10,9 +10,3 @@ export interface BoardColumn {
   taskIds: string[];
   taskOrders: Record<string, number>;
 }
-
-export interface KanbanItem extends Task {
-  id: string;
-  progressStatus: string;
-  order: number;
-}

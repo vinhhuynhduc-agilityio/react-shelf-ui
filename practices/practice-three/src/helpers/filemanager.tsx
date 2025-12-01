@@ -167,7 +167,7 @@ export const createNewItem = (
   return itemCreators[key]();
 };
 
-export const generateBase64Image = async (file: File): Promise<string> => {
+const generateBase64Image = async (file: File): Promise<string> => {
   const extension = file.name.split(".").pop()?.toLowerCase() || "";
   const snapshotExtensions = [
     "doc",

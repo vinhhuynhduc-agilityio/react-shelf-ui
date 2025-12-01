@@ -9,7 +9,7 @@ import { emitResizeNextFrame } from "@/helpers";
 
 type Rect = { x: number; y: number; width: number; height: number };
 
-export interface WindowStore {
+interface WindowStore {
   windows: Windows;
   zIndexOrder: WindowKey[];
   frames: Record<WindowKey, Rect>;

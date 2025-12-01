@@ -1,4 +1,4 @@
-export interface WindowState {
+interface WindowState {
   isOpen: boolean;
   isMaximized: boolean;
   isMinimized: boolean;
