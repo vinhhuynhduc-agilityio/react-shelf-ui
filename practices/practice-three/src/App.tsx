@@ -185,7 +185,6 @@ const App = () => {
             allowOverlap={false}
             preventCollision
             draggableHandle=".grid-drag-handle"
-            verticalCompact
             cols={cols}
             maxRows={maxRows}
           >
