@@ -143,7 +143,7 @@ const App = () => {
     ));
 
   const renderWindows = () =>
-    Object.entries(WINDOW_CONFIGS).map(([key, { title, src, Page }]) => {
+    Object.entries(WINDOW_CONFIGS).map(([key, { Page }]) => {
       const state =
         key === SPREADSHEET
           ? spreadsheet
@@ -156,12 +156,7 @@ const App = () => {
       if (!state.isOpen) return null;
 
       return (
-        <BaseWindow
-          key={key}
-          windowKey={key as WindowKey}
-          title={title}
-          src={src}
-        >
+        <BaseWindow key={key} windowKey={key as WindowKey}>
           <Page />
         </BaseWindow>
       );

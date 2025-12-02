@@ -1,5 +1,143 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`PivotPage Rendering should match snapshot on initial load 1`] = `
+<div>
+  <div
+    data-testid="window-header"
+  >
+    <img
+      alt="Pivot"
+      data-testid="window-icon"
+      src="/images/pivot.webp"
+    />
+    <span
+      data-testid="window-title"
+    >
+      Pivot
+    </span>
+    <button
+      data-testid="btn-close"
+    >
+      Close
+    </button>
+    <button
+      data-testid="btn-maximize"
+    >
+      Maximize
+    </button>
+    <button
+      data-testid="btn-minimize"
+    >
+      Minimize
+    </button>
+  </div>
+  <div
+    class="flex-1 h-full w-full overflow-hidden"
+  >
+    <div
+      class="flex justify-end items-center space-x-2 mr-[10px] h-[44px]"
+    >
+      <button
+        class="w-[80px]"
+        data-active="true"
+        data-testid="view-button-Tree"
+      >
+        Tree
+      </button>
+      <button
+        class="w-[80px]"
+        data-active="false"
+        data-testid="view-button-Table"
+      >
+        Table
+      </button>
+      <button
+        class="w-[80px]"
+        data-active="false"
+        data-testid="view-button-Chart"
+      >
+        Chart
+      </button>
+    </div>
+    <div
+      data-height="782"
+      data-testid="pivot-tree-view"
+    >
+      Tree View
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PivotPage View Switching should match snapshot after view switch 1`] = `
+<div>
+  <div
+    data-testid="window-header"
+  >
+    <img
+      alt="Pivot"
+      data-testid="window-icon"
+      src="/images/pivot.webp"
+    />
+    <span
+      data-testid="window-title"
+    >
+      Pivot
+    </span>
+    <button
+      data-testid="btn-close"
+    >
+      Close
+    </button>
+    <button
+      data-testid="btn-maximize"
+    >
+      Maximize
+    </button>
+    <button
+      data-testid="btn-minimize"
+    >
+      Minimize
+    </button>
+  </div>
+  <div
+    class="flex-1 h-full w-full overflow-hidden"
+  >
+    <div
+      class="flex justify-end items-center space-x-2 mr-[10px] h-[44px]"
+    >
+      <button
+        class="w-[80px]"
+        data-active="false"
+        data-testid="view-button-Tree"
+      >
+        Tree
+      </button>
+      <button
+        class="w-[80px]"
+        data-active="true"
+        data-testid="view-button-Table"
+      >
+        Table
+      </button>
+      <button
+        class="w-[80px]"
+        data-active="false"
+        data-testid="view-button-Chart"
+      >
+        Chart
+      </button>
+    </div>
+    <div
+      data-height="782"
+      data-testid="pivot-table-view"
+    >
+      Table View
+    </div>
+  </div>
+</div>
+`;
+
 exports[`PivotPage should match snapshot after view switch 1`] = `
 <div>
   <div

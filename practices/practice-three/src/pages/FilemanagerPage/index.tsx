@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 
 // constant
-import { addConfigs, QUERY_KEY_FILE_MANAGER } from "@/constant";
+import { addConfigs, QUERY_KEY_FILE_MANAGER, WINDOW_KEYS } from "@/constant";
 
 // hook
 import {
@@ -20,6 +20,7 @@ import {
   useDeleteFileItem,
   useFilemanagerQuery,
   useRenameFileItem,
+  useWindowActions,
 } from "@/hook";
 
 // components
@@ -32,6 +33,7 @@ import {
   Sidebar,
   HeaderBar,
   FileTableView,
+  WindowHeader,
 } from "@/components";
 
 // types
@@ -100,6 +102,11 @@ const FilemanagerPage = () => {
   const hasChangedRef = useRef(hasChanged);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const folderInputRef = useRef<HTMLInputElement>(null);
+
+  // hook
+  const { close, maximize, minimize } = useWindowActions(
+    WINDOW_KEYS.FILE_MANAGER
+  );
 
   // React Hook Form
   const {
@@ -574,6 +581,14 @@ const FilemanagerPage = () => {
 
   return (
     <>
+      <WindowHeader
+        windowKey={WINDOW_KEYS.FILE_MANAGER}
+        src="/images/pivot.webp"
+        title="Pivot"
+        onClose={close}
+        onMaximize={maximize}
+        onMinimize={minimize}
+      />
       {isErrorFilemanager ? renderApiError() : renderContent()}
 
       {/* render modals */}

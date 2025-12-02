@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import { DesktopIcon } from "@/components/common/DesktopIcon";
 
 describe("DesktopIcon", () => {
@@ -14,6 +13,7 @@ describe("DesktopIcon", () => {
         title={TITLE}
         keyIcon={KEY}
         onIconClick={() => {}}
+        onDoubleClick={() => {}}
       />
     );
 
@@ -32,6 +32,7 @@ describe("DesktopIcon", () => {
         title={TITLE}
         keyIcon={KEY}
         onIconClick={handler}
+        onDoubleClick={() => {}}
       />
     );
 
@@ -49,6 +50,7 @@ describe("DesktopIcon", () => {
         keyIcon={KEY}
         onIconClick={() => {}}
         isSelected
+        onDoubleClick={() => {}}
       />
     );
 

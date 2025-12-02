@@ -1,17 +1,32 @@
-import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { useWindowStore } from "@/stores";
 import { BaseWindow } from ".";
 import type { WindowKey } from "@/types";
-import * as windowHooks from "@/hook";
-import * as helpers from "@/helpers";
 
-interface WindowStoreState {
-  zIndexOrder: WindowKey[];
-}
-
-jest.mock("@/stores", () => ({
-  useWindowStore: jest.fn(),
+jest.mock("@/components", () => ({
+  DraggableWindow: ({
+    children,
+    windowKey,
+    hidden,
+    zIndex,
+    onMouseDown,
+  }: {
+    children: React.ReactNode;
+    windowKey: WindowKey;
+    hidden: boolean;
+    zIndex: number;
+    onMouseDown: () => void;
+  }) => (
+    <div
+      data-testid="draggable-window"
+      data-window-key={windowKey}
+      data-hidden={hidden}
+      data-z-index={zIndex}
+      onMouseDown={onMouseDown}
+      style={{ display: hidden ? "none" : "block" }}
+    >
+      {children}
+    </div>
+  ),
 }));
 
 jest.mock("@/hook", () => ({
@@ -20,301 +35,398 @@ jest.mock("@/hook", () => ({
   useZIndex: jest.fn(),
 }));
 
+jest.mock("@/stores", () => ({
+  useWindowStore: jest.fn(),
+}));
+
 jest.mock("@/helpers", () => ({
-  clampToViewport: jest.fn(),
+  clampToViewport: jest.fn((frame) => frame),
 }));
 
-jest.mock("@/components", () => ({
-  DraggableWindow: ({
-    children,
-    onMouseDown,
-    hidden,
-    zIndex,
-  }: {
-    children: React.ReactNode;
-    onMouseDown: () => void;
-    hidden: boolean;
-    zIndex: number;
-  }) => (
-    <div
-      data-testid="draggable-window"
-      data-hidden={hidden}
-      data-z-index={zIndex}
-      onMouseDown={onMouseDown}
-    >
-      {children}
-    </div>
-  ),
-  WindowHeader: ({
-    title,
-    src,
-    onClose,
-    onMaximize,
-    onMinimize,
-  }: {
-    title: string;
-    src: string;
-    onClose: () => void;
-    onMaximize: () => void;
-    onMinimize: () => void;
-  }) => (
-    <div data-testid="window-header">
-      <img src={src} alt={title} />
-      <h2>{title}</h2>
-      <button data-testid="minimize-btn" onClick={onMinimize}>
-        Minimize
-      </button>
-      <button data-testid="maximize-btn" onClick={onMaximize}>
-        Maximize
-      </button>
-      <button data-testid="close-btn" onClick={onClose}>
-        Close
-      </button>
-    </div>
-  ),
-}));
-
-const mockedUseWindowStore = useWindowStore as jest.MockedFunction<
-  typeof useWindowStore
->;
-const mockedUseWindowState = windowHooks.useWindowState as jest.MockedFunction<
-  typeof windowHooks.useWindowState
->;
-const mockedUseWindowActions =
-  windowHooks.useWindowActions as jest.MockedFunction<
-    typeof windowHooks.useWindowActions
-  >;
-const mockedUseZIndex = windowHooks.useZIndex as jest.MockedFunction<
-  typeof windowHooks.useZIndex
->;
-const mockedClampToViewport = helpers.clampToViewport as jest.MockedFunction<
-  typeof helpers.clampToViewport
->;
+import { useWindowState, useWindowActions, useZIndex } from "@/hook";
+import { useWindowStore } from "@/stores";
+import { clampToViewport } from "@/helpers";
 
 describe("BaseWindow", () => {
-  const defaultWindowState = {
-    frame: { x: 0, y: 0, width: 400, height: 300 },
-    isMinimized: false,
-    isMaximized: false,
-    isOpen: true,
+  const mockFrame = {
+    x: 100,
+    y: 100,
+    width: 800,
+    height: 600,
   };
 
-  const defaultWindowActions = {
-    toggle: jest.fn(),
-    close: jest.fn(),
-    minimize: jest.fn(),
-    maximize: jest.fn(),
-    restore: jest.fn(),
+  const mockWindowState = {
+    frame: mockFrame,
+    isMinimized: false,
+    isMaximized: false,
+  };
+
+  const mockWindowActions = {
     updateFrame: jest.fn(),
   };
 
-  const defaultZIndex = {
+  const mockZIndex = {
     zIndex: 10,
     bringToFront: jest.fn(),
   };
 
-  const defaultProps = {
-    windowKey: "spreadsheet" as WindowKey,
-    title: "Spreadsheet",
-    src: "/images/spreadsheet.webp",
-    children: <div>Window Content</div>,
+  const mockWindowStoreState = {
+    zIndexOrder: ["spreadsheet", "filemanager"],
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
 
-    mockedUseWindowState.mockReturnValue(defaultWindowState);
-    mockedUseWindowActions.mockReturnValue(defaultWindowActions);
-    mockedUseZIndex.mockReturnValue(defaultZIndex);
-    mockedClampToViewport.mockReturnValue(defaultWindowState.frame);
-
-    // Setup useWindowStore with getState method
-    const mockStoreState: WindowStoreState = {
-      zIndexOrder: ["spreadsheet"],
-    };
-
-    mockedUseWindowStore.mockImplementation((selector: unknown) => {
-      const fn = selector as (state: WindowStoreState) => unknown;
-      return fn(mockStoreState) as unknown as ReturnType<typeof useWindowStore>;
-    });
-
-    // Mock getState as a static method - typed properly
-    const getStateFn = (): WindowStoreState => mockStoreState;
-    (mockedUseWindowStore.getState as jest.Mock) = jest.fn(getStateFn);
-  });
-
-  it("should render window header and children", () => {
-    render(<BaseWindow {...defaultProps} />);
-
-    expect(screen.getByTestId("window-header")).toBeInTheDocument();
-    expect(screen.getByText("Spreadsheet")).toBeInTheDocument();
-    expect(screen.getByText("Window Content")).toBeInTheDocument();
-  });
-
-  it("should render window header with correct props", () => {
-    render(<BaseWindow {...defaultProps} />);
-
-    const headerImg = screen.getByAltText("Spreadsheet") as HTMLImageElement;
-    expect(headerImg).toBeInTheDocument();
-    expect(headerImg.src).toContain("/images/spreadsheet.webp");
-  });
-
-  it("should render DraggableWindow with correct props", () => {
-    render(<BaseWindow {...defaultProps} />);
-
-    const draggableWindow = screen.getByTestId("draggable-window");
-    expect(draggableWindow).toHaveAttribute("data-z-index", "10");
-    expect(draggableWindow).toHaveAttribute("data-hidden", "false");
-  });
-
-  it("should hide window when isMinimized is true", () => {
-    mockedUseWindowState.mockReturnValue({
-      ...defaultWindowState,
-      isMinimized: true,
-    });
-
-    render(<BaseWindow {...defaultProps} />);
-
-    const draggableWindow = screen.getByTestId("draggable-window");
-    expect(draggableWindow).toHaveAttribute("data-hidden", "true");
-  });
-
-  it("should call minimize when minimize button clicked", () => {
-    render(<BaseWindow {...defaultProps} />);
-
-    fireEvent.click(screen.getByTestId("minimize-btn"));
-
-    expect(defaultWindowActions.minimize).toHaveBeenCalled();
-  });
-
-  it("should call maximize when maximize button clicked", () => {
-    render(<BaseWindow {...defaultProps} />);
-
-    fireEvent.click(screen.getByTestId("maximize-btn"));
-
-    expect(defaultWindowActions.maximize).toHaveBeenCalled();
-  });
-
-  it("should call close when close button clicked", () => {
-    render(<BaseWindow {...defaultProps} />);
-
-    fireEvent.click(screen.getByTestId("close-btn"));
-
-    expect(defaultWindowActions.close).toHaveBeenCalled();
-  });
-
-  it("should not call bringToFront when window is already topmost", () => {
-    // Setup: Make spreadsheet the topmost window
-    const mockStoreState: WindowStoreState = {
-      zIndexOrder: ["pivot", "spreadsheet"],
-    };
-
-    mockedUseWindowStore.mockImplementation((selector: unknown) => {
-      const fn = selector as (state: WindowStoreState) => unknown;
-      return fn(mockStoreState) as unknown as ReturnType<typeof useWindowStore>;
-    });
-
-    const getStateFn = (): WindowStoreState => ({
-      ...mockStoreState,
-      zIndexOrder: ["pivot", "spreadsheet"],
-    });
-    (mockedUseWindowStore.getState as jest.Mock) = jest.fn(getStateFn);
-
-    render(<BaseWindow {...defaultProps} />);
-
-    fireEvent.mouseDown(screen.getByTestId("draggable-window"));
-
-    expect(defaultZIndex.bringToFront).not.toHaveBeenCalled();
-  });
-
-  it("should add resize listener on mount when not maximized", () => {
-    const addEventListenerSpy = jest.spyOn(window, "addEventListener");
-
-    render(<BaseWindow {...defaultProps} />);
-
-    expect(addEventListenerSpy).toHaveBeenCalledWith(
-      "resize",
-      expect.any(Function)
+    (useWindowState as jest.Mock).mockReturnValue(mockWindowState);
+    (useWindowActions as jest.Mock).mockReturnValue(mockWindowActions);
+    (useZIndex as jest.Mock).mockReturnValue(mockZIndex);
+    (useWindowStore as unknown as jest.Mock).mockReturnValue(
+      mockWindowStoreState
     );
-
-    addEventListenerSpy.mockRestore();
+    (clampToViewport as jest.Mock).mockImplementation((frame) => frame);
   });
 
-  it("should not add resize listener when maximized", () => {
-    mockedUseWindowState.mockReturnValue({
-      ...defaultWindowState,
-      isMaximized: true,
-    });
-
-    const addEventListenerSpy = jest.spyOn(window, "addEventListener");
-
-    render(<BaseWindow {...defaultProps} />);
-
-    expect(addEventListenerSpy).not.toHaveBeenCalledWith(
-      "resize",
-      expect.any(Function)
-    );
-
-    addEventListenerSpy.mockRestore();
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
-  it("should remove resize listener on unmount", () => {
-    const removeEventListenerSpy = jest.spyOn(window, "removeEventListener");
-
-    const { unmount } = render(<BaseWindow {...defaultProps} />);
-
-    unmount();
-
-    expect(removeEventListenerSpy).toHaveBeenCalledWith(
-      "resize",
-      expect.any(Function)
-    );
-
-    removeEventListenerSpy.mockRestore();
-  });
-
-  it("should clamp frame to viewport on window resize", async () => {
-    const clampedFrame = { x: 10, y: 10, width: 400, height: 300 };
-    mockedClampToViewport.mockReturnValue(clampedFrame);
-
-    render(<BaseWindow {...defaultProps} />);
-
-    fireEvent.resize(window);
-
-    await waitFor(() => {
-      expect(mockedClampToViewport).toHaveBeenCalledWith(
-        defaultWindowState.frame
+  describe("Rendering", () => {
+    it("should render base window container", () => {
+      render(
+        <BaseWindow windowKey="spreadsheet">
+          <div>Test Content</div>
+        </BaseWindow>
       );
-      expect(defaultWindowActions.updateFrame).toHaveBeenCalledWith(
+
+      expect(screen.getByTestId("draggable-window")).toBeInTheDocument();
+    });
+
+    it("should render children content", () => {
+      render(
+        <BaseWindow windowKey="filemanager">
+          <div data-testid="test-content">Test Content</div>
+        </BaseWindow>
+      );
+
+      expect(screen.getByTestId("test-content")).toBeInTheDocument();
+      expect(screen.getByText("Test Content")).toBeInTheDocument();
+    });
+
+    it("should render multiple children", () => {
+      render(
+        <BaseWindow windowKey="kanban">
+          <div data-testid="child-1">Child 1</div>
+          <div data-testid="child-2">Child 2</div>
+          <div data-testid="child-3">Child 3</div>
+        </BaseWindow>
+      );
+
+      expect(screen.getByTestId("child-1")).toBeInTheDocument();
+      expect(screen.getByTestId("child-2")).toBeInTheDocument();
+      expect(screen.getByTestId("child-3")).toBeInTheDocument();
+    });
+  });
+
+  describe("Window State", () => {
+    it("should call useWindowState with correct windowKey", () => {
+      render(
+        <BaseWindow windowKey="spreadsheet">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      expect(useWindowState).toHaveBeenCalledWith("spreadsheet");
+    });
+
+    it("should call useWindowActions with correct windowKey", () => {
+      render(
+        <BaseWindow windowKey="filemanager">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      expect(useWindowActions).toHaveBeenCalledWith("filemanager");
+    });
+
+    it("should call useZIndex with correct windowKey", () => {
+      render(
+        <BaseWindow windowKey="pivot">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      expect(useZIndex).toHaveBeenCalledWith("pivot");
+    });
+
+    it("should work with all valid WindowKey types", () => {
+      const windowKeys: WindowKey[] = [
         "spreadsheet",
-        clampedFrame
+        "filemanager",
+        "pivot",
+        "kanban",
+      ];
+
+      windowKeys.forEach((key) => {
+        jest.clearAllMocks();
+        (useWindowState as jest.Mock).mockReturnValue(mockWindowState);
+        (useWindowActions as jest.Mock).mockReturnValue(mockWindowActions);
+        (useZIndex as jest.Mock).mockReturnValue(mockZIndex);
+
+        render(
+          <BaseWindow windowKey={key}>
+            <div>Content</div>
+          </BaseWindow>
+        );
+
+        expect(useWindowState).toHaveBeenCalledWith(key);
+        expect(useWindowActions).toHaveBeenCalledWith(key);
+        expect(useZIndex).toHaveBeenCalledWith(key);
+      });
+    });
+  });
+
+  describe("Window Visibility", () => {
+    it("should hide window when isMinimized is true", () => {
+      (useWindowState as jest.Mock).mockReturnValue({
+        ...mockWindowState,
+        isMinimized: true,
+      });
+
+      render(
+        <BaseWindow windowKey="spreadsheet">
+          <div>Content</div>
+        </BaseWindow>
       );
+
+      const draggableWindow = screen.getByTestId("draggable-window");
+      expect(draggableWindow).toHaveAttribute("data-hidden", "true");
+      expect(draggableWindow).toHaveStyle({ display: "none" });
+    });
+
+    it("should show window when isMinimized is false", () => {
+      render(
+        <BaseWindow windowKey="filemanager">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      const draggableWindow = screen.getByTestId("draggable-window");
+      expect(draggableWindow).toHaveAttribute("data-hidden", "false");
+      expect(draggableWindow).toHaveStyle({ display: "block" });
+    });
+
+    it("should pass correct zIndex to DraggableWindow", () => {
+      render(
+        <BaseWindow windowKey="pivot">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      const draggableWindow = screen.getByTestId("draggable-window");
+      expect(draggableWindow).toHaveAttribute("data-z-index", "10");
     });
   });
 
-  it("should not update frame if clamped values are same", async () => {
-    mockedClampToViewport.mockReturnValue(defaultWindowState.frame);
+  describe("Window Resize", () => {
+    it("should not update frame when isMaximized is true", () => {
+      (useWindowState as jest.Mock).mockReturnValue({
+        ...mockWindowState,
+        isMaximized: true,
+      });
 
-    render(<BaseWindow {...defaultProps} />);
+      render(
+        <BaseWindow windowKey="filemanager">
+          <div>Content</div>
+        </BaseWindow>
+      );
 
-    fireEvent.resize(window);
+      fireEvent.resize(window);
 
-    await waitFor(() => {
-      expect(defaultWindowActions.updateFrame).not.toHaveBeenCalled();
+      expect(mockWindowActions.updateFrame).not.toHaveBeenCalled();
+    });
+
+    it("should call clampToViewport on window resize", async () => {
+      render(
+        <BaseWindow windowKey="pivot">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      fireEvent.resize(window);
+
+      await waitFor(() => {
+        expect(clampToViewport).toHaveBeenCalledWith(mockFrame);
+      });
+    });
+
+    it("should call updateFrame when frame needs adjustment", async () => {
+      const newFrame = {
+        x: 150,
+        y: 150,
+        width: 900,
+        height: 700,
+      };
+
+      (clampToViewport as jest.Mock).mockReturnValue(newFrame);
+
+      render(
+        <BaseWindow windowKey="kanban">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      fireEvent.resize(window);
+
+      await waitFor(() => {
+        expect(mockWindowActions.updateFrame).toHaveBeenCalledWith(
+          "kanban",
+          newFrame
+        );
+      });
+    });
+
+    it("should remove resize listener on unmount", () => {
+      const removeEventListenerSpy = jest.spyOn(window, "removeEventListener");
+
+      const { unmount } = render(
+        <BaseWindow windowKey="spreadsheet">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      unmount();
+
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        "resize",
+        expect.any(Function)
+      );
+
+      removeEventListenerSpy.mockRestore();
     });
   });
 
-  it("should memoize component when props unchanged", () => {
-    const { rerender } = render(<BaseWindow {...defaultProps} />);
+  describe("Props", () => {
+    it("should accept windowKey prop with valid WindowKey type", () => {
+      render(
+        <BaseWindow windowKey="filemanager">
+          <div>Content</div>
+        </BaseWindow>
+      );
 
-    const firstRender = screen.getByTestId("window-header");
-    const firstRenderId = firstRender.getAttribute("data-testid");
+      expect(useWindowState).toHaveBeenCalledWith("filemanager");
+    });
 
-    rerender(<BaseWindow {...defaultProps} />);
+    it("should accept children prop", () => {
+      render(
+        <BaseWindow windowKey="pivot">
+          <div data-testid="custom-child">Custom Child</div>
+        </BaseWindow>
+      );
 
-    const secondRender = screen.getByTestId("window-header");
-    const secondRenderId = secondRender.getAttribute("data-testid");
+      expect(screen.getByTestId("custom-child")).toBeInTheDocument();
+    });
 
-    expect(firstRenderId).toBe(secondRenderId);
+    it("should pass windowKey to DraggableWindow", () => {
+      render(
+        <BaseWindow windowKey="kanban">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      const draggableWindow = screen.getByTestId("draggable-window");
+      expect(draggableWindow).toHaveAttribute("data-window-key", "kanban");
+    });
+  });
+
+  describe("Memoization", () => {
+    it("should not re-render if windowKey is the same", () => {
+      const { rerender } = render(
+        <BaseWindow windowKey="spreadsheet">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      const initialCallCount = (useWindowState as jest.Mock).mock.calls.length;
+
+      rerender(
+        <BaseWindow windowKey="spreadsheet">
+          <div>Updated Content</div>
+        </BaseWindow>
+      );
+
+      expect(
+        (useWindowState as jest.Mock).mock.calls.length
+      ).toBeLessThanOrEqual(initialCallCount + 1);
+    });
+
+    it("should re-render if windowKey changes", () => {
+      const { rerender } = render(
+        <BaseWindow windowKey="spreadsheet">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      rerender(
+        <BaseWindow windowKey="filemanager">
+          <div>Updated Content</div>
+        </BaseWindow>
+      );
+
+      expect(useWindowState).toHaveBeenCalledWith("filemanager");
+    });
+  });
+
+  describe("Layout", () => {
+    it("should render DraggableWindow as container", () => {
+      render(
+        <BaseWindow windowKey="pivot">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      expect(screen.getByTestId("draggable-window")).toBeInTheDocument();
+    });
+
+    it("should have flex column layout", () => {
+      const { container } = render(
+        <BaseWindow windowKey="kanban">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      const contentDiv = container.querySelector(".flex.flex-col");
+      expect(contentDiv).toBeInTheDocument();
+    });
+
+    it("should have overflow hidden", () => {
+      const { container } = render(
+        <BaseWindow windowKey="filemanager">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      const contentDiv = container.querySelector(".overflow-hidden");
+      expect(contentDiv).toBeInTheDocument();
+    });
+
+    it("should have white background with shadow", () => {
+      const { container } = render(
+        <BaseWindow windowKey="spreadsheet">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      const contentDiv = container.querySelector(".bg-white.shadow-lg");
+      expect(contentDiv).toBeInTheDocument();
+    });
+  });
+
+  describe("Edge Cases", () => {
+    it("should handle empty children", () => {
+      render(<BaseWindow windowKey="filemanager">Test</BaseWindow>);
+
+      expect(screen.getByTestId("draggable-window")).toBeInTheDocument();
+      expect(screen.getByText("Test")).toBeInTheDocument();
+    });
   });
 });

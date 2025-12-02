@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import { Sidebar } from ".";
 import type { DataNode } from "antd/es/tree";
 import type { DropdownOption } from "@/types";

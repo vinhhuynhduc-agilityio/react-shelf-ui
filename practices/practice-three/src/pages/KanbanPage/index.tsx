@@ -19,10 +19,16 @@ import {
   Modal,
   MultiSelect,
   SingleSelect,
+  WindowHeader,
 } from "@/components";
 
 // Constants
-import { QUERY_KEY_BOARD, QUERY_KEY_TASKS, STATUSES } from "@/constant";
+import {
+  QUERY_KEY_BOARD,
+  QUERY_KEY_TASKS,
+  STATUSES,
+  WINDOW_KEYS,
+} from "@/constant";
 
 // Hooks
 import {
@@ -32,6 +38,7 @@ import {
   useBoardQuery,
   useTasksQuery,
   useUpdateBoardColumn,
+  useWindowActions,
 } from "@/hook";
 
 // Types
@@ -76,6 +83,9 @@ const KanbanPage = () => {
     tags: [] as string[],
     progressStatus: "",
   });
+
+  // hook
+  const { close, maximize, minimize } = useWindowActions(WINDOW_KEYS.KANBAN);
 
   // API
   const {
@@ -421,23 +431,33 @@ const KanbanPage = () => {
   );
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-full flex flex-col bg-[#EBEDF0] overflow-hidden"
-    >
-      {renderHeaders()}
-      {isFetching && renderLoading()}
-      {hasError && renderError()}
-      {isReady && renderContent()}
-
-      <Modal
-        isOpen={isModalOpen}
-        title="Edit card"
-        onClose={() => setIsModalOpen(false)}
+    <>
+      <WindowHeader
+        windowKey={WINDOW_KEYS.KANBAN}
+        src="/images/kanban.webp"
+        title="Kanban"
+        onClose={close}
+        onMaximize={maximize}
+        onMinimize={minimize}
+      />
+      <div
+        ref={containerRef}
+        className="w-full h-full flex flex-col bg-[#EBEDF0] overflow-hidden"
       >
-        {renderModalBody()}
-      </Modal>
-    </div>
+        {renderHeaders()}
+        {isFetching && renderLoading()}
+        {hasError && renderError()}
+        {isReady && renderContent()}
+
+        <Modal
+          isOpen={isModalOpen}
+          title="Edit card"
+          onClose={() => setIsModalOpen(false)}
+        >
+          {renderModalBody()}
+        </Modal>
+      </div>
+    </>
   );
 };
 

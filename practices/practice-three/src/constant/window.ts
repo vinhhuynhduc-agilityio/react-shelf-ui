@@ -34,30 +34,20 @@ export const DESKTOP_ICONS = [
 ];
 
 interface WindowConfig {
-  title: string;
-  src: string;
   Page: ComponentType;
 }
 
 export const WINDOW_CONFIGS: Record<WindowKey, WindowConfig> = {
   spreadsheet: {
-    title: "Spreadsheet",
-    src: "/images/spreadsheet.webp",
     Page: SpreadsheetPage,
   },
   pivot: {
-    title: "Pivot",
-    src: "/images/pivot.webp",
     Page: PivotPage,
   },
   kanban: {
-    title: "Kanban",
-    src: "/images/kanban.webp",
     Page: KanbanPage,
   },
   filemanager: {
-    title: "File Manager",
-    src: "/images/file-manager.webp",
     Page: FilemanagerPage,
   },
 };

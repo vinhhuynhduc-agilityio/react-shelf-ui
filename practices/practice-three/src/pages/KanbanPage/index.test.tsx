@@ -1,8 +1,6 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import KanbanPage from ".";
 
-// Setup ResizeObserver
 beforeAll(() => {
   global.ResizeObserver = class ResizeObserver {
     constructor(private cb: ResizeObserverCallback) {}
@@ -16,7 +14,6 @@ afterAll(() => {
   Reflect.deleteProperty(globalThis, "ResizeObserver");
 });
 
-// Mocks
 const mockQueryClient = {
   invalidateQueries: jest.fn(),
   setQueryData: jest.fn(),
@@ -25,8 +22,6 @@ const mockQueryClient = {
 
 jest.mock("@tanstack/react-query", () => ({
   useQueryClient: () => mockQueryClient,
-  useQuery: jest.fn(),
-  useMutation: jest.fn(),
 }));
 
 jest.mock("@/hook", () => ({
@@ -36,6 +31,7 @@ jest.mock("@/hook", () => ({
   useUpdateTask: jest.fn(),
   useDeleteTask: jest.fn(),
   useUpdateBoardColumn: jest.fn(),
+  useWindowActions: jest.fn(),
 }));
 
 jest.mock("@/components", () => ({
@@ -48,7 +44,7 @@ jest.mock("@/components", () => ({
     onClick: () => void;
     variant: string;
   }) => (
-    <button onClick={onClick} data-testid={`btn-${variant}`} role="button">
+    <button onClick={onClick} data-testid={`btn-${variant}`}>
       {children}
     </button>
   ),
@@ -117,6 +113,33 @@ jest.mock("@/components", () => ({
       <option value="Work">Work</option>
     </select>
   ),
+  WindowHeader: ({
+    src,
+    title,
+    onClose,
+    onMaximize,
+    onMinimize,
+  }: {
+    src: string;
+    title: string;
+    onClose: () => void;
+    onMaximize: () => void;
+    onMinimize: () => void;
+  }) => (
+    <div data-testid="window-header">
+      <img src={src} alt={title} data-testid="window-icon" />
+      <span data-testid="window-title">{title}</span>
+      <button data-testid="btn-close" onClick={onClose}>
+        Close
+      </button>
+      <button data-testid="btn-maximize" onClick={onMaximize}>
+        Maximize
+      </button>
+      <button data-testid="btn-minimize" onClick={onMinimize}>
+        Minimize
+      </button>
+    </div>
+  ),
 }));
 
 jest.mock("react-grid-layout", () => ({
@@ -169,6 +192,7 @@ jest.mock("@/constant", () => ({
   QUERY_KEY_BOARD: ["board"],
   QUERY_KEY_TASKS: ["tasks"],
   STATUSES: ["New", "Work", "Test", "Done"],
+  WINDOW_KEYS: { KANBAN: "kanban" },
 }));
 
 import {
@@ -178,6 +202,7 @@ import {
   useUpdateTask,
   useDeleteTask,
   useUpdateBoardColumn,
+  useWindowActions,
 } from "@/hook";
 
 describe("KanbanPage", () => {
@@ -203,6 +228,12 @@ describe("KanbanPage", () => {
     { id: "2", title: "Task 2", tags: ["jet"] },
   ];
 
+  const mockWindowActions = {
+    close: jest.fn(),
+    maximize: jest.fn(),
+    minimize: jest.fn(),
+  };
+
   const mockAddTask = jest.fn();
   const mockUpdateTask = jest.fn();
   const mockDeleteTask = jest.fn();
@@ -210,6 +241,7 @@ describe("KanbanPage", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+
     Object.defineProperty(HTMLElement.prototype, "clientWidth", {
       configurable: true,
       value: 1200,
@@ -235,163 +267,225 @@ describe("KanbanPage", () => {
     (useUpdateBoardColumn as jest.Mock).mockReturnValue({
       mutate: mockUpdateBoardColumn,
     });
+
+    (useWindowActions as jest.Mock).mockReturnValue(mockWindowActions);
   });
 
-  it("should render all status columns", () => {
-    render(<KanbanPage />);
+  describe("Initial Render", () => {
+    it("should render WindowHeader with correct title and icon", () => {
+      render(<KanbanPage />);
 
-    expect(screen.getByText("New")).toBeInTheDocument();
-    expect(screen.getByText("Work")).toBeInTheDocument();
-    expect(screen.getByText("Test")).toBeInTheDocument();
-    expect(screen.getByText("Done")).toBeInTheDocument();
-  });
-
-  it("should render kanban cards from data", () => {
-    render(<KanbanPage />);
-
-    expect(screen.getByText("Task 1")).toBeInTheDocument();
-    expect(screen.getByText("Task 2")).toBeInTheDocument();
-  });
-
-  it("should show loading spinner when fetching", () => {
-    (useBoardQuery as jest.Mock).mockReturnValue({
-      data: [],
-      isFetching: true,
-      isError: false,
-      error: null,
+      expect(screen.getByTestId("window-title")).toHaveTextContent("Kanban");
+      expect(screen.getByTestId("window-icon")).toHaveAttribute(
+        "src",
+        "/images/kanban.webp"
+      );
     });
 
-    render(<KanbanPage />);
+    it("should render all status columns", () => {
+      render(<KanbanPage />);
 
-    expect(screen.getByTestId("spinner")).toBeInTheDocument();
-  });
-
-  it("should show error alert on error", () => {
-    (useBoardQuery as jest.Mock).mockReturnValue({
-      data: [],
-      isFetching: false,
-      isError: true,
-      error: { message: "Failed to load" },
+      expect(screen.getByText("New")).toBeInTheDocument();
+      expect(screen.getByText("Work")).toBeInTheDocument();
+      expect(screen.getByText("Test")).toBeInTheDocument();
+      expect(screen.getByText("Done")).toBeInTheDocument();
     });
 
-    render(<KanbanPage />);
+    it("should render kanban cards from data", () => {
+      render(<KanbanPage />);
 
-    expect(screen.getByTestId("error-alert")).toBeInTheDocument();
+      expect(screen.getByText("Task 1")).toBeInTheDocument();
+      expect(screen.getByText("Task 2")).toBeInTheDocument();
+    });
+
+    it("should render grid layout", () => {
+      render(<KanbanPage />);
+
+      expect(screen.getByTestId("grid-layout")).toBeInTheDocument();
+    });
   });
 
-  it("should render grid layout when data ready", () => {
-    render(<KanbanPage />);
+  describe("Loading and Error States", () => {
+    it("should show loading spinner when fetching", () => {
+      (useBoardQuery as jest.Mock).mockReturnValue({
+        data: [],
+        isFetching: true,
+        isError: false,
+        error: null,
+      });
 
-    expect(screen.getByTestId("grid-layout")).toBeInTheDocument();
+      render(<KanbanPage />);
+
+      expect(screen.getByTestId("spinner")).toBeInTheDocument();
+    });
+
+    it("should show error alert on board error", () => {
+      (useBoardQuery as jest.Mock).mockReturnValue({
+        data: [],
+        isFetching: false,
+        isError: true,
+        error: { message: "Failed to load board" },
+      });
+
+      render(<KanbanPage />);
+
+      expect(screen.getByTestId("error-alert")).toBeInTheDocument();
+    });
+
+    it("should show error alert on tasks error", () => {
+      (useTasksQuery as jest.Mock).mockReturnValue({
+        data: [],
+        isFetching: false,
+        isError: true,
+        error: { message: "Failed to load tasks" },
+      });
+
+      render(<KanbanPage />);
+
+      expect(screen.getByTestId("error-alert")).toBeInTheDocument();
+    });
   });
 
-  it("should render add button in New column", () => {
-    render(<KanbanPage />);
+  describe("WindowHeader Actions", () => {
+    it("should call close action when close button clicked", () => {
+      render(<KanbanPage />);
 
-    expect(screen.getByTestId("add-btn")).toBeInTheDocument();
+      fireEvent.click(screen.getByTestId("btn-close"));
+
+      expect(mockWindowActions.close).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call maximize action when maximize button clicked", () => {
+      render(<KanbanPage />);
+
+      fireEvent.click(screen.getByTestId("btn-maximize"));
+
+      expect(mockWindowActions.maximize).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call minimize action when minimize button clicked", () => {
+      render(<KanbanPage />);
+
+      fireEvent.click(screen.getByTestId("btn-minimize"));
+
+      expect(mockWindowActions.minimize).toHaveBeenCalledTimes(1);
+    });
   });
 
-  it("should open modal when clicking card", () => {
-    render(<KanbanPage />);
+  describe("Card Interaction", () => {
+    it("should open modal when clicking card", () => {
+      render(<KanbanPage />);
 
-    const card = screen.getByTestId("card-1");
-    fireEvent.click(card);
+      fireEvent.click(screen.getByTestId("card-1"));
 
-    expect(screen.getByTestId("modal")).toBeInTheDocument();
+      expect(screen.getByTestId("modal")).toBeInTheDocument();
+    });
+
+    it("should close modal when clicking close button", () => {
+      render(<KanbanPage />);
+
+      fireEvent.click(screen.getByTestId("card-1"));
+      expect(screen.getByTestId("modal")).toBeInTheDocument();
+
+      fireEvent.click(screen.getByTestId("modal-close"));
+      expect(screen.queryByTestId("modal")).not.toBeInTheDocument();
+    });
+
+    it("should display task details in modal", async () => {
+      render(<KanbanPage />);
+
+      fireEvent.click(screen.getByTestId("card-1"));
+
+      await waitFor(() => {
+        expect(screen.getByDisplayValue("Task 1")).toBeInTheDocument();
+      });
+    });
   });
 
-  it("should close modal when clicking close button", () => {
-    render(<KanbanPage />);
+  describe("Modal Form Changes", () => {
+    it("should update task title in modal", async () => {
+      render(<KanbanPage />);
 
-    fireEvent.click(screen.getByTestId("card-1"));
-    expect(screen.getByTestId("modal")).toBeInTheDocument();
+      fireEvent.click(screen.getByTestId("card-1"));
 
-    fireEvent.click(screen.getByTestId("modal-close"));
-    expect(screen.queryByTestId("modal")).not.toBeInTheDocument();
+      const titleInput = screen.getByDisplayValue("Task 1") as HTMLInputElement;
+      fireEvent.change(titleInput, { target: { value: "Updated Task" } });
+
+      expect(titleInput.value).toBe("Updated Task");
+    });
+
+    it("should update task tags in modal", async () => {
+      render(<KanbanPage />);
+
+      fireEvent.click(screen.getByTestId("card-1"));
+
+      const tagsInput = screen.getByTestId("tags-input") as HTMLInputElement;
+      fireEvent.change(tagsInput, { target: { value: "webix,jet,easy" } });
+
+      expect(tagsInput.value).toBe("webix,jet,easy");
+    });
+
+    it("should change task status in modal", async () => {
+      render(<KanbanPage />);
+
+      fireEvent.click(screen.getByTestId("card-1"));
+
+      const statusSelect = screen.getByTestId(
+        "status-select"
+      ) as HTMLSelectElement;
+      fireEvent.change(statusSelect, { target: { value: "Work" } });
+
+      expect(statusSelect.value).toBe("Work");
+    });
   });
 
-  it("should update task title in modal", () => {
-    render(<KanbanPage />);
+  describe("Task Operations", () => {
+    it("should add new task when clicking add button", () => {
+      render(<KanbanPage />);
 
-    fireEvent.click(screen.getByTestId("card-1"));
+      fireEvent.click(screen.getByTestId("add-btn"));
 
-    const titleInput = screen.getByDisplayValue("Task 1") as HTMLInputElement;
-    fireEvent.change(titleInput, { target: { value: "Updated Task" } });
+      expect(mockAddTask).toHaveBeenCalled();
+    });
 
-    expect(titleInput.value).toBe("Updated Task");
-  });
+    it("should save task changes", () => {
+      render(<KanbanPage />);
 
-  it("should update task tags in modal", () => {
-    render(<KanbanPage />);
+      fireEvent.click(screen.getByTestId("card-1"));
 
-    fireEvent.click(screen.getByTestId("card-1"));
+      // Change task title
+      const titleInput = screen.getByDisplayValue("Task 1") as HTMLInputElement;
+      fireEvent.change(titleInput, { target: { value: "Updated Task" } });
 
-    const tagsInput = screen.getByTestId("tags-input") as HTMLInputElement;
-    fireEvent.change(tagsInput, { target: { value: "webix,jet,easy" } });
+      // Change task status
+      const statusSelect = screen.getByTestId(
+        "status-select"
+      ) as HTMLSelectElement;
+      fireEvent.change(statusSelect, { target: { value: "Work" } });
 
-    expect(tagsInput.value).toBe("webix,jet,easy");
-  });
+      // Use correct variant for save button
+      const saveButton = screen.getAllByRole("button", { name: /save/i })[0];
+      fireEvent.click(saveButton);
 
-  it("should change task status in modal", () => {
-    render(<KanbanPage />);
+      expect(mockUpdateTask).toHaveBeenCalled();
+    });
 
-    fireEvent.click(screen.getByTestId("card-1"));
+    it("should remove task when clicking remove button", () => {
+      render(<KanbanPage />);
 
-    const statusSelect = screen.getByTestId(
-      "status-select"
-    ) as HTMLSelectElement;
-    fireEvent.change(statusSelect, { target: { value: "Work" } });
+      fireEvent.click(screen.getByTestId("card-1"));
 
-    expect(statusSelect.value).toBe("Work");
-  });
+      fireEvent.click(screen.getAllByTestId("btn-success")[0]);
 
-  it("should save task changes", () => {
-    render(<KanbanPage />);
+      expect(mockDeleteTask).toHaveBeenCalled();
+    });
 
-    fireEvent.click(screen.getByTestId("card-1"));
+    it("should match snapshot with modal open", () => {
+      const { container } = render(<KanbanPage />);
 
-    // Change task title
-    const titleInput = screen.getByDisplayValue("Task 1") as HTMLInputElement;
-    fireEvent.change(titleInput, { target: { value: "Updated Task" } });
+      fireEvent.click(screen.getByTestId("card-1"));
 
-    // Change task status
-    const statusSelect = screen.getByTestId(
-      "status-select"
-    ) as HTMLSelectElement;
-    fireEvent.change(statusSelect, { target: { value: "Work" } });
-
-    // Use correct variant for save button
-    const saveButton = screen.getAllByRole("button", { name: /save/i })[0];
-    fireEvent.click(saveButton);
-
-    expect(mockUpdateTask).toHaveBeenCalled();
-  });
-
-  it("should remove task when clicking remove button", () => {
-    render(<KanbanPage />);
-
-    fireEvent.click(screen.getByTestId("card-1"));
-
-    // Use correct variant for remove button
-    const removeButton = screen.getAllByRole("button", { name: /remove/i })[0];
-    fireEvent.click(removeButton);
-
-    expect(mockDeleteTask).toHaveBeenCalled();
-  });
-
-  it("should add new task when clicking add button", () => {
-    render(<KanbanPage />);
-
-    fireEvent.click(screen.getByTestId("add-btn"));
-
-    expect(mockAddTask).toHaveBeenCalled();
-  });
-
-  it("should match snapshot with modal open", () => {
-    const { container } = render(<KanbanPage />);
-
-    fireEvent.click(screen.getByTestId("card-1"));
-
-    expect(container).toMatchSnapshot();
+      expect(container).toMatchSnapshot();
+    });
   });
 });

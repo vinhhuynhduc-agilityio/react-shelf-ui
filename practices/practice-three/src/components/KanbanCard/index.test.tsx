@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import { KanbanCard } from "@/components/KanbanCard";
 
 jest.mock("@/components", () => ({

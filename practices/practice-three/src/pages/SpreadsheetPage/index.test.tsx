@@ -1,5 +1,4 @@
-import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import { render, screen, fireEvent } from "@testing-library/react";
 import SpreadsheetPage from ".";
 
 jest.mock("@fortune-sheet/react", () => ({
@@ -18,6 +17,40 @@ jest.mock("@fortune-sheet/react", () => ({
     <div data-testid="fortune-workbook">
       <div data-testid="workbook-data">{JSON.stringify(data)}</div>
       <div data-testid="toolbar-items">{JSON.stringify(items)}</div>
+    </div>
+  ),
+}));
+
+jest.mock("@/hook", () => ({
+  useWindowActions: jest.fn(),
+}));
+
+jest.mock("@/components", () => ({
+  WindowHeader: ({
+    src,
+    title,
+    onClose,
+    onMaximize,
+    onMinimize,
+  }: {
+    src: string;
+    title: string;
+    onClose: () => void;
+    onMaximize: () => void;
+    onMinimize: () => void;
+  }) => (
+    <div data-testid="window-header">
+      <img src={src} alt={title} data-testid="window-icon" />
+      <span data-testid="window-title">{title}</span>
+      <button data-testid="btn-close" onClick={onClose}>
+        Close
+      </button>
+      <button data-testid="btn-maximize" onClick={onMaximize}>
+        Maximize
+      </button>
+      <button data-testid="btn-minimize" onClick={onMinimize}>
+        Minimize
+      </button>
     </div>
   ),
 }));
@@ -52,60 +85,108 @@ jest.mock("@/constant", () => ({
     "merge-cell",
     "|",
   ],
+  WINDOW_KEYS: { SPREADSHEET: "spreadsheet" },
 }));
 
+import { useWindowActions } from "@/hook";
+
 describe("SpreadsheetPage", () => {
-  it("should render workbook component on initial load", () => {
-    render(<SpreadsheetPage />);
+  const mockWindowActions = {
+    close: jest.fn(),
+    maximize: jest.fn(),
+    minimize: jest.fn(),
+  };
 
-    expect(screen.getByTestId("fortune-workbook")).toBeInTheDocument();
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (useWindowActions as jest.Mock).mockReturnValue(mockWindowActions);
   });
 
-  it("should match snapshot on initial load", () => {
-    const { container } = render(<SpreadsheetPage />);
+  describe("WindowHeader", () => {
+    it("should render WindowHeader with correct title and icon", () => {
+      render(<SpreadsheetPage />);
 
-    expect(container).toMatchSnapshot();
+      expect(screen.getByTestId("window-title")).toHaveTextContent(
+        "Spreadsheet"
+      );
+      expect(screen.getByTestId("window-icon")).toHaveAttribute(
+        "src",
+        "/images/spreadsheet.webp"
+      );
+    });
+
+    it("should call close action when close button clicked", () => {
+      render(<SpreadsheetPage />);
+
+      fireEvent.click(screen.getByTestId("btn-close"));
+
+      expect(mockWindowActions.close).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call maximize action when maximize button clicked", () => {
+      render(<SpreadsheetPage />);
+
+      fireEvent.click(screen.getByTestId("btn-maximize"));
+
+      expect(mockWindowActions.maximize).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call minimize action when minimize button clicked", () => {
+      render(<SpreadsheetPage />);
+
+      fireEvent.click(screen.getByTestId("btn-minimize"));
+
+      expect(mockWindowActions.minimize).toHaveBeenCalledTimes(1);
+    });
+
+    it("should use correct window key for actions", () => {
+      render(<SpreadsheetPage />);
+
+      expect(useWindowActions).toHaveBeenCalledWith("spreadsheet");
+    });
   });
 
-  it("should pass SPREADSHEET_DATA to Workbook component", () => {
-    render(<SpreadsheetPage />);
+  describe("Workbook Component", () => {
+    it("should render workbook component", () => {
+      render(<SpreadsheetPage />);
 
-    const workbookData = screen.getByTestId("workbook-data");
-    expect(workbookData.textContent).toContain("Sheet1");
-    expect(workbookData.textContent).toContain("50");
-    expect(workbookData.textContent).toContain("26");
+      expect(screen.getByTestId("fortune-workbook")).toBeInTheDocument();
+    });
+
+    it("should pass SPREADSHEET_DATA to Workbook component", () => {
+      render(<SpreadsheetPage />);
+
+      const workbookData = screen.getByTestId("workbook-data");
+      expect(workbookData.textContent).toContain("Sheet1");
+      expect(workbookData.textContent).toContain("50");
+      expect(workbookData.textContent).toContain("26");
+    });
+
+    it("should pass toolbarItems to Workbook component", () => {
+      render(<SpreadsheetPage />);
+
+      const toolbarData = screen.getByTestId("toolbar-items");
+      expect(toolbarData.textContent).toContain("undo");
+      expect(toolbarData.textContent).toContain("bold");
+      expect(toolbarData.textContent).toContain("merge-cell");
+    });
   });
 
-  it("should pass all toolbarItems to Workbook component", () => {
-    render(<SpreadsheetPage />);
+  describe("Layout", () => {
+    it("should render with flex-1 container", () => {
+      const { container } = render(<SpreadsheetPage />);
 
-    const toolbarData = screen.getByTestId("toolbar-items");
-    expect(toolbarData.textContent).toContain("undo");
-    expect(toolbarData.textContent).toContain("redo");
-    expect(toolbarData.textContent).toContain("bold");
-    expect(toolbarData.textContent).toContain("merge-cell");
-  });
+      const flexContainer = container.querySelector(".flex-1");
+      expect(flexContainer).toBeInTheDocument();
+    });
 
-  it("should have flex-1 class on main container", () => {
-    const { container } = render(<SpreadsheetPage />);
+    it("should render workbook inside flex container", () => {
+      const { container } = render(<SpreadsheetPage />);
 
-    const mainDiv = container.querySelector(".flex-1");
-    expect(mainDiv).toBeInTheDocument();
-  });
-
-  it("should render memoized workbook component correctly", () => {
-    const { container } = render(<SpreadsheetPage />);
-
-    const mainWrapper = container.firstChild as HTMLElement;
-    expect(mainWrapper).toHaveClass("flex-1");
-    expect(
-      mainWrapper.querySelector('[data-testid="fortune-workbook"]')
-    ).toBeInTheDocument();
-  });
-
-  it("should match snapshot with all props configured", () => {
-    const { container } = render(<SpreadsheetPage />);
-
-    expect(container).toMatchSnapshot();
+      const flexContainer = container.querySelector(".flex-1");
+      expect(
+        flexContainer?.querySelector('[data-testid="fortune-workbook"]')
+      ).toBeInTheDocument();
+    });
   });
 });

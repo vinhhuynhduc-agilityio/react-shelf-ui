@@ -1,5 +1,4 @@
 import { render } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import { Icon } from ".";
 import { fa } from "@/icons/fa";
 

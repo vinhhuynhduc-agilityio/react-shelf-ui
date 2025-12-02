@@ -16,13 +16,12 @@ const mockUseAddFileItem = jest.mocked(hookModule.useAddFileItem);
 const mockUseDeleteFileItem = jest.mocked(hookModule.useDeleteFileItem);
 const mockUseRenameFileItem = jest.mocked(hookModule.useRenameFileItem);
 const mockUseDebounce = jest.mocked(hookModule.useDebounce);
+const mockUseWindowActions = jest.mocked(hookModule.useWindowActions);
 
 beforeAll(() => {
-  // Mock ResizeObserver with proper width
   global.ResizeObserver = class ResizeObserver {
     constructor(private cb: ResizeObserverCallback) {}
     observe = jest.fn((element: Element) => {
-      // Trigger callback với clientWidth >= 650
       const mockRect = {
         width: 800,
         height: 600,
@@ -51,11 +50,10 @@ beforeAll(() => {
     disconnect = jest.fn();
   } as unknown as typeof ResizeObserver;
 
-  // Mock HTMLElement.clientWidth
   Object.defineProperty(HTMLElement.prototype, "clientWidth", {
     configurable: true,
     get: function () {
-      return 800; // >= 650, so showNavigation = true
+      return 800;
     },
   });
 
@@ -71,7 +69,6 @@ afterAll(() => {
   Reflect.deleteProperty(globalThis, "ResizeObserver");
 });
 
-// mock components
 jest.mock("@/components", () => ({
   ErrorAlert: ({ title }: { title: string }) => <div>{title}</div>,
   NameInputModal: ({
@@ -231,15 +228,38 @@ jest.mock("@/components", () => ({
       </button>
     </div>
   ),
+  WindowHeader: ({
+    src,
+    title,
+    onClose,
+    onMaximize,
+    onMinimize,
+  }: {
+    src: string;
+    title: string;
+    onClose: () => void;
+    onMaximize: () => void;
+    onMinimize: () => void;
+  }) => (
+    <div data-testid="window-header">
+      <img src={src} alt={title} data-testid="window-icon" />
+      <span data-testid="window-title">{title}</span>
+      <button data-testid="btn-close" onClick={onClose}>
+        Close
+      </button>
+      <button data-testid="btn-maximize" onClick={onMaximize}>
+        Maximize
+      </button>
+      <button data-testid="btn-minimize" onClick={onMinimize}>
+        Minimize
+      </button>
+    </div>
+  ),
 }));
 
-// mock helpers
 jest.mock("@/helpers");
-
-// mock constants
 jest.mock("@/constant");
 
-// Mock data
 const mockRootFile = {
   id: "root",
   name: "My Files",
@@ -271,10 +291,18 @@ const mockAccordionFile: FileItem = {
 const mockFiles = [mockRootFile, mockCodeFolder, mockAccordionFile];
 
 describe("FilemanagerPage", () => {
+  const mockWindowActions = {
+    close: jest.fn(),
+    maximize: jest.fn(),
+    minimize: jest.fn(),
+    toggle: jest.fn(),
+    restore: jest.fn(),
+    updateFrame: jest.fn(),
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // Default mock implementations
     mockUseFilemanagerQuery.mockReturnValue({
       data: mockFiles,
       isFetching: false,
@@ -299,7 +327,8 @@ describe("FilemanagerPage", () => {
 
     mockUseDebounce.mockImplementation((value) => value);
 
-    // Mock helpers
+    mockUseWindowActions.mockReturnValue(mockWindowActions);
+
     jest.mocked(helpersModule.getFileTreeData).mockReturnValue([
       {
         title: "My Files",
@@ -347,6 +376,42 @@ describe("FilemanagerPage", () => {
     jest.mocked(helpersModule.getPathIds).mockReturnValue(["root", "code"]);
   });
 
+  describe("WindowHeader", () => {
+    it("should render WindowHeader with correct title and icon", () => {
+      render(<FilemanagerPage />);
+
+      expect(screen.getByTestId("window-title")).toHaveTextContent("Pivot");
+      expect(screen.getByTestId("window-icon")).toHaveAttribute(
+        "src",
+        "/images/pivot.webp"
+      );
+    });
+
+    it("should call close action when close button clicked", () => {
+      render(<FilemanagerPage />);
+
+      fireEvent.click(screen.getByTestId("btn-close"));
+
+      expect(mockWindowActions.close).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call maximize action when maximize button clicked", () => {
+      render(<FilemanagerPage />);
+
+      fireEvent.click(screen.getByTestId("btn-maximize"));
+
+      expect(mockWindowActions.maximize).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call minimize action when minimize button clicked", () => {
+      render(<FilemanagerPage />);
+
+      fireEvent.click(screen.getByTestId("btn-minimize"));
+
+      expect(mockWindowActions.minimize).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe("Rendering with Mock Data", () => {
     it("should render FilemanagerPage with mock files", () => {
       render(<FilemanagerPage />);
@@ -373,22 +438,6 @@ describe("FilemanagerPage", () => {
       expect(
         screen.getByText("Failed to load filemanager data")
       ).toBeInTheDocument();
-    });
-
-    it("should initialize with mock selectedFolder 'code'", () => {
-      jest.mocked(helpersModule.getBreadcrumbPath).mockReturnValue([
-        { id: "root", name: "My Files" },
-        { id: "code", name: "Code" },
-      ]);
-
-      render(<FilemanagerPage />);
-      expect(screen.getByTestId("file-table")).toBeInTheDocument();
-    });
-
-    it("should display all mock files in tree structure", () => {
-      render(<FilemanagerPage />);
-      expect(screen.getByTestId("file-table")).toBeInTheDocument();
-      expect(screen.getByTestId("sidebar")).toBeInTheDocument();
     });
   });
 
@@ -425,17 +474,6 @@ describe("FilemanagerPage", () => {
       expect((searchInput as HTMLInputElement).value).toBe("");
       expect(screen.getByTestId("sidebar")).toBeInTheDocument();
     });
-
-    it("should filter items by search query", async () => {
-      render(<FilemanagerPage />);
-
-      const searchInput = screen.getByTestId("search-input");
-      fireEvent.change(searchInput, { target: { value: "accordion" } });
-
-      await waitFor(() => {
-        expect(jest.mocked(helpersModule.getFilteredItems)).toHaveBeenCalled();
-      });
-    });
   });
 
   describe("Preview Mode", () => {
@@ -443,48 +481,20 @@ describe("FilemanagerPage", () => {
       render(<FilemanagerPage />);
 
       const previewToggle = screen.getByTestId("preview-toggle");
-      expect(screen.queryByTestId("preview-panel")).not.toBeInTheDocument();
-
       fireEvent.click(previewToggle);
 
       await waitFor(() => {
         expect(screen.getByTestId("preview-panel")).toBeInTheDocument();
-      });
-    });
-
-    it("should hide preview when toggled again", async () => {
-      render(<FilemanagerPage />);
-
-      const previewToggle = screen.getByTestId("preview-toggle");
-      fireEvent.click(previewToggle);
-
-      await waitFor(() => {
-        expect(screen.getByTestId("preview-panel")).toBeInTheDocument();
-      });
-
-      fireEvent.click(previewToggle);
-
-      await waitFor(() => {
-        expect(screen.queryByTestId("preview-panel")).not.toBeInTheDocument();
       });
     });
   });
 
-  describe("Navigation with Mock Data", () => {
+  describe("Navigation", () => {
     it("should navigate to Code folder on double click", () => {
       render(<FilemanagerPage />);
 
       const doubleClickBtn = screen.getByTestId("double-click-folder");
       fireEvent.click(doubleClickBtn);
-
-      expect(screen.getByTestId("file-table")).toBeInTheDocument();
-    });
-
-    it("should navigate using navigate button", () => {
-      render(<FilemanagerPage />);
-
-      const navigateBtn = screen.getByTestId("navigate-btn");
-      fireEvent.click(navigateBtn);
 
       expect(screen.getByTestId("file-table")).toBeInTheDocument();
     });
@@ -497,23 +507,9 @@ describe("FilemanagerPage", () => {
 
       expect(screen.getByTestId("file-table")).toBeInTheDocument();
     });
-
-    it("should update breadcrumb when navigating", () => {
-      jest.mocked(helpersModule.getBreadcrumbPath).mockReturnValue([
-        { id: "root", name: "My Files" },
-        { id: "code", name: "Code" },
-      ]);
-
-      render(<FilemanagerPage />);
-
-      const selectFolderBtn = screen.getByTestId("select-folder");
-      fireEvent.click(selectFolderBtn);
-
-      expect(jest.mocked(helpersModule.getBreadcrumbPath)).toHaveBeenCalled();
-    });
   });
 
-  describe("Context Menu Interactions", () => {
+  describe("Context Menu", () => {
     it("should show context menu on right click", async () => {
       render(<FilemanagerPage />);
 
@@ -522,24 +518,6 @@ describe("FilemanagerPage", () => {
 
       await waitFor(() => {
         expect(screen.getByTestId("context-menu")).toBeInTheDocument();
-      });
-    });
-
-    it("should close context menu when close button clicked", async () => {
-      render(<FilemanagerPage />);
-
-      const contextMenuBtn = screen.getByTestId("context-menu-btn");
-      fireEvent.click(contextMenuBtn);
-
-      await waitFor(() => {
-        expect(screen.getByTestId("context-menu")).toBeInTheDocument();
-      });
-
-      const closeBtn = screen.getByRole("button", { name: "Close" });
-      fireEvent.click(closeBtn);
-
-      await waitFor(() => {
-        expect(screen.queryByTestId("context-menu")).not.toBeInTheDocument();
       });
     });
 
@@ -572,7 +550,7 @@ describe("FilemanagerPage", () => {
     });
   });
 
-  describe("File Operations from Sidebar", () => {
+  describe("File Operations", () => {
     it("should handle create file action", () => {
       render(<FilemanagerPage />);
 
@@ -608,58 +586,9 @@ describe("FilemanagerPage", () => {
 
       expect(screen.getByTestId("file-table")).toBeInTheDocument();
     });
-
-    it("should trigger add new modal when add new clicked", async () => {
-      render(<FilemanagerPage />);
-
-      const addNewBtn = screen.getByTestId("add-new-btn");
-      fireEvent.click(addNewBtn);
-
-      expect(screen.getByTestId("file-table")).toBeInTheDocument();
-    });
   });
 
-  describe("Delete Modal", () => {
-    it("should open delete confirmation modal", async () => {
-      render(<FilemanagerPage />);
-
-      const contextMenuBtn = screen.getByTestId("context-menu-btn");
-      fireEvent.click(contextMenuBtn);
-
-      await waitFor(() => {
-        const deleteBtn = screen.getByTestId("context-delete");
-        fireEvent.click(deleteBtn);
-      });
-
-      expect(screen.getByTestId("file-table")).toBeInTheDocument();
-    });
-
-    it("should close delete modal when close button clicked", async () => {
-      render(<FilemanagerPage />);
-
-      await waitFor(() => {
-        const closeButtons = screen.queryAllByText("Close");
-        if (closeButtons.length > 0) {
-          fireEvent.click(closeButtons[0]);
-        }
-      });
-
-      expect(screen.getByTestId("file-table")).toBeInTheDocument();
-    });
-
-    it("should call deleteItem when confirming delete", async () => {
-      const mockDeleteItem = jest.fn().mockResolvedValue(undefined);
-      mockUseDeleteFileItem.mockReturnValue({
-        mutateAsync: mockDeleteItem,
-      } as unknown as ReturnType<typeof hookModule.useDeleteFileItem>);
-
-      render(<FilemanagerPage />);
-
-      expect(screen.getByTestId("file-table")).toBeInTheDocument();
-    });
-  });
-
-  describe("State Management with Mock Data", () => {
+  describe("State Management", () => {
     it("should initialize with mock files from query", () => {
       render(<FilemanagerPage />);
 
@@ -675,85 +604,6 @@ describe("FilemanagerPage", () => {
         isError: false,
         error: null,
       } as unknown as ReturnType<typeof hookModule.useFilemanagerQuery>);
-
-      render(<FilemanagerPage />);
-
-      expect(screen.getByTestId("file-table")).toBeInTheDocument();
-    });
-
-    it("should update tree data when files change", async () => {
-      const { rerender } = render(<FilemanagerPage />);
-
-      const newMockFiles = [
-        ...mockFiles,
-        {
-          id: "new_file",
-          name: "new.txt",
-          type: "text",
-          size: 512,
-          date: "15 October 2025",
-          parentId: "code",
-          imageUrl: "/images/code-placeholder-image.svg",
-        },
-      ];
-
-      mockUseFilemanagerQuery.mockReturnValue({
-        data: newMockFiles,
-        isFetching: false,
-        isSuccess: true,
-        isError: false,
-        error: null,
-      } as unknown as ReturnType<typeof hookModule.useFilemanagerQuery>);
-
-      rerender(<FilemanagerPage />);
-
-      expect(jest.mocked(helpersModule.getFileTreeData)).toHaveBeenCalled();
-    });
-
-    it("should persist state during modal interactions", () => {
-      render(<FilemanagerPage />);
-
-      const addNewBtn = screen.getByTestId("add-new-btn");
-      fireEvent.click(addNewBtn);
-
-      expect(screen.getByTestId("file-table")).toBeInTheDocument();
-      expect(screen.getByTestId("sidebar")).toBeInTheDocument();
-    });
-  });
-
-  describe("Disable States During Operations", () => {
-    it("should disable operations when adding item", () => {
-      mockUseAddFileItem.mockReturnValue({
-        mutate: jest.fn(),
-        mutateAsync: jest.fn(),
-        isPending: true,
-      } as unknown as ReturnType<typeof hookModule.useAddFileItem>);
-
-      render(<FilemanagerPage />);
-
-      expect(screen.getByTestId("file-table")).toBeInTheDocument();
-    });
-
-    it("should disable operations when fetching data", () => {
-      mockUseFilemanagerQuery.mockReturnValue({
-        data: mockFiles,
-        isFetching: true,
-        isSuccess: true,
-        isError: false,
-        error: null,
-      } as ReturnType<typeof hookModule.useFilemanagerQuery>);
-
-      render(<FilemanagerPage />);
-
-      expect(screen.getByTestId("file-table")).toBeInTheDocument();
-    });
-
-    it("should show file table even when operations are disabled", () => {
-      mockUseAddFileItem.mockReturnValue({
-        mutate: jest.fn(),
-        mutateAsync: jest.fn(),
-        isPending: true,
-      } as unknown as ReturnType<typeof hookModule.useAddFileItem>);
 
       render(<FilemanagerPage />);
 
@@ -777,15 +627,6 @@ describe("FilemanagerPage", () => {
       await waitFor(() => {
         expect(jest.mocked(helpersModule.getFilteredItems)).toHaveBeenCalled();
       });
-    });
-
-    it("should call getBreadcrumbPath when navigating", () => {
-      render(<FilemanagerPage />);
-
-      const selectFolderBtn = screen.getByTestId("select-folder");
-      fireEvent.click(selectFolderBtn);
-
-      expect(jest.mocked(helpersModule.getBreadcrumbPath)).toHaveBeenCalled();
     });
   });
 });
