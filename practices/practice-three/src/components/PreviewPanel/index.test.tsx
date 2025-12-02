@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import { PreviewPanel } from ".";
 import * as helpers from "@/helpers";
 import type { FileItem } from "@/types";

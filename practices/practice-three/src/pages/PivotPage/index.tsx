@@ -1,16 +1,22 @@
 import { useState, useLayoutEffect, useRef } from "react";
 
 // Components
-import { Button, ChartView, PivotTableView, PivotTreeView } from "@/components";
+import {
+  Button,
+  ChartView,
+  PivotTableView,
+  PivotTreeView,
+  WindowHeader,
+} from "@/components";
 
 // Hook
-import { usePivotQuery } from "@/hook";
+import { usePivotQuery, useWindowActions } from "@/hook";
 
 // Types
 import { ViewType } from "@/types";
 
 // Constant
-import { VIEW } from "@/constant";
+import { VIEW, WINDOW_KEYS } from "@/constant";
 
 const PivotPage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -20,6 +26,8 @@ const PivotPage = () => {
   const [tableHeight, setTableHeight] = useState<number>(0);
 
   // hook
+  const { close, maximize, minimize } = useWindowActions(WINDOW_KEYS.PIVOT);
+
   const {
     data: pivot = [],
     isLoading,
@@ -82,10 +90,20 @@ const PivotPage = () => {
   };
 
   return (
-    <div className="flex-1 h-full w-full overflow-hidden" ref={containerRef}>
-      {renderViewButtons()}
-      {renderCurrentView()}
-    </div>
+    <>
+      <WindowHeader
+        windowKey={WINDOW_KEYS.PIVOT}
+        src="/images/pivot.webp"
+        title="Pivot"
+        onClose={close}
+        onMaximize={maximize}
+        onMinimize={minimize}
+      />
+      <div className="flex-1 h-full w-full overflow-hidden" ref={containerRef}>
+        {renderViewButtons()}
+        {renderCurrentView()}
+      </div>
+    </>
   );
 };
 

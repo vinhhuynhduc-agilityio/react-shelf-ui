@@ -1,5 +1,4 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import { NameInputModal } from "@/components/NameInputModal";
 import { useForm } from "react-hook-form";
 import type { FormData } from "@/types";

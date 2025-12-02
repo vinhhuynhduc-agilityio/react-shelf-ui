@@ -1,7 +1,7 @@
 import { memo, ReactNode, useCallback, useLayoutEffect } from "react";
 
 // component
-import { DraggableWindow, WindowHeader } from "@/components";
+import { DraggableWindow } from "@/components";
 
 // types
 import type { WindowKey } from "@/types";
@@ -17,16 +17,13 @@ import { clampToViewport } from "@/helpers";
 
 interface BaseWindowProps {
   windowKey: WindowKey;
-  title: string;
-  src: string;
   children: ReactNode;
 }
 
 export const BaseWindow = memo(
-  ({ windowKey, title, src, children }: BaseWindowProps) => {
+  ({ windowKey, children }: BaseWindowProps) => {
     const { frame, isMinimized, isMaximized } = useWindowState(windowKey);
-    const { close, maximize, minimize, updateFrame } =
-      useWindowActions(windowKey);
+    const { updateFrame } = useWindowActions(windowKey);
     const { zIndex, bringToFront } = useZIndex(windowKey);
 
     const handleMouseDown = useCallback(() => {
@@ -65,23 +62,12 @@ export const BaseWindow = memo(
         onMouseDown={handleMouseDown}
       >
         <div className="bg-white shadow-lg text-[#475466] w-full h-full flex flex-col overflow-hidden">
-          <WindowHeader
-            windowKey={windowKey}
-            src={src}
-            title={title}
-            onClose={close}
-            onMaximize={maximize}
-            onMinimize={minimize}
-          />
           {children}
         </div>
       </DraggableWindow>
     );
   },
-  (prev, next) =>
-    prev.windowKey === next.windowKey &&
-    prev.title === next.title &&
-    prev.src === next.src
+  (prev, next) => prev.windowKey === next.windowKey
 );
 
 BaseWindow.displayName = "BaseWindow";
