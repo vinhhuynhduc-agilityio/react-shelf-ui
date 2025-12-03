@@ -23,8 +23,10 @@ interface FortuneSheetCell {
     s: Array<{
       v: string;
       bl: number;
+      it: number;
     }>;
   };
+  it?: number;
 }
 
 interface FortuneSheetData {
@@ -67,11 +69,20 @@ const SpreadsheetPage = () => {
         if (cell.ct && cell.ct.s) {
           const richText = cell.ct.s.map((segment) => ({
             text: segment.v,
-            font: { bold: segment.bl === 1 },
+            font: {
+              bold: segment.bl === 1,
+              italic: segment.it === 1,
+            },
           }));
           excelCell.value = { richText };
-        } else if (cell.bl === 1) {
-          excelCell.font = { bold: true };
+        } else {
+          // Fallback for cells without rich text
+          if (cell.bl === 1) excelCell.font = { bold: true };
+          if (cell.it === 1)
+            excelCell.font = {
+              ...(excelCell.font || {}),
+              italic: true,
+            };
         }
       });
     });
