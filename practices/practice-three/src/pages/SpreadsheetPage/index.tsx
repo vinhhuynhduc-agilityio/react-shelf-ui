@@ -18,6 +18,13 @@ type FortuneSheetRow = Array<FortuneSheetCell | null>;
 interface FortuneSheetCell {
   m?: string;
   v?: string | number | boolean | null;
+  bl?: number;
+  ct?: {
+    s: Array<{
+      v: string;
+      bl: number;
+    }>;
+  };
 }
 
 interface FortuneSheetData {
@@ -53,6 +60,19 @@ const SpreadsheetPage = () => {
         // Convert v to string when needed – Excel accepts string | number
         excelCell.value =
           cell.m ?? ((cell.v != null ? String(cell.v) : "") as string | number);
+
+        // === RICH TEXT & BASIC FORMATTING ===
+        // Use cell.ct.s for per-character formatting (bold, italic, color, etc.)
+        // Fallback to cell-level properties (bl, it, fc, etc.) when rich text is not present
+        if (cell.ct && cell.ct.s) {
+          const richText = cell.ct.s.map((segment) => ({
+            text: segment.v,
+            font: { bold: segment.bl === 1 },
+          }));
+          excelCell.value = { richText };
+        } else if (cell.bl === 1) {
+          excelCell.font = { bold: true };
+        }
       });
     });
 
@@ -99,7 +119,6 @@ const SpreadsheetPage = () => {
           ref={workbookRef}
           showSheetTabs={false}
           toolbarItems={toolbarItems}
-          showToolbar={true}
           cellContextMenu={[]}
         />
       </div>

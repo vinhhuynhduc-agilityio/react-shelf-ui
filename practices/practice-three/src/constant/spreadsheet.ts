@@ -28,3 +28,7 @@ export const toolbarItems = [
   "merge-cell",
   "|",
 ];
+
+export const SPREADSHEET_DATA = [
+  { name: "Sheet1", celldata: [], row: 5, column: 5 },
+];
