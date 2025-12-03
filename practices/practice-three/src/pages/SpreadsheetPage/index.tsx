@@ -24,9 +24,11 @@ interface FortuneSheetCell {
       v: string;
       bl: number;
       it: number;
+      un: number;
     }>;
   };
   it?: number;
+  un?: number;
 }
 
 interface FortuneSheetData {
@@ -72,6 +74,7 @@ const SpreadsheetPage = () => {
             font: {
               bold: segment.bl === 1,
               italic: segment.it === 1,
+              underline: segment.un === 1,
             },
           }));
           excelCell.value = { richText };
@@ -79,10 +82,9 @@ const SpreadsheetPage = () => {
           // Fallback for cells without rich text
           if (cell.bl === 1) excelCell.font = { bold: true };
           if (cell.it === 1)
-            excelCell.font = {
-              ...(excelCell.font || {}),
-              italic: true,
-            };
+            excelCell.font = { ...(excelCell.font || {}), italic: true };
+          if (cell.un === 1)
+            excelCell.font = { ...(excelCell.font || {}), underline: true };
         }
       });
     });
