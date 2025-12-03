@@ -40,6 +40,7 @@ interface FortuneSheetCell {
   fs?: number;
   ff?: string;
   fc?: string;
+  bg?: string;
 }
 
 interface FortuneSheetData {
@@ -103,7 +104,7 @@ const SpreadsheetPage = () => {
             ...(cell.it === 1 && { italic: true }),
             ...(cell.un === 1 && { underline: true }),
             ...(cell.cl === 1 && { strike: true }),
-            ...(cell.fs && { size: cell.fs }),
+            ...{ size: cell.fs || 10 },
             ...{ name: cell.ff ?? "Times New Roman" },
             ...(cell.fc && {
               color: {
@@ -115,6 +116,15 @@ const SpreadsheetPage = () => {
           if (Object.keys(updatedFont).length > 0) {
             excelCell.font = updatedFont;
           }
+        }
+
+        // === CELL BACKGROUND (FILL) ===
+        if (cell.bg) {
+          excelCell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: colorToArgb(cell.bg) },
+          };
         }
       });
     });

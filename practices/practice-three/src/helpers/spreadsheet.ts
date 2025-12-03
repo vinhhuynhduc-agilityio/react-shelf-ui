@@ -1,26 +1,30 @@
-export const colorToArgb = (color = "") => {
+export const colorToArgb = (color?: string): string => {
   if (!color) return "FF000000";
 
-  if (color.startsWith("rgb(")) {
-    const nums = color
-      .slice(4, -1)
+  const c = color.trim().toLowerCase();
+
+  if (c.startsWith("rgb")) {
+    const nums = c
+      .slice(c.indexOf("(") + 1, c.indexOf(")"))
       .replace(/\s/g, "")
       .split(",")
-      .map((n) => parseInt(n, 10));
+      .slice(0, 3)
+      .map((n) => parseInt(n, 10))
+      .map((n) => n.toString(16).padStart(2, "0").toUpperCase())
+      .join("");
 
-    return (
-      "FF" +
-      nums.map((n) => n.toString(16).padStart(2, "0").toUpperCase()).join("")
-    );
+    return "FF" + nums;
   }
 
   // Hex
-  let hex = color.replace("#", "");
+  let hex = c.replace("#", "");
   if (hex.length === 3) {
     hex = hex
       .split("")
-      .map((c) => c + c)
+      .map((ch) => ch + ch)
       .join("");
   }
-  return "FF" + hex.padEnd(6, "0").toUpperCase();
+  hex = hex.padEnd(6, "0").slice(0, 6);
+
+  return "FF" + hex.toUpperCase();
 };
