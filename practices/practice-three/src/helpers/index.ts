@@ -5,3 +5,4 @@ export * from "./api";
 export * from "./pivot";
 export * from "./kanbans";
 export * from "./filemanager";
+export * from "./spreadsheet";

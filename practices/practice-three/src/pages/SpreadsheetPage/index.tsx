@@ -13,6 +13,9 @@ import { useWindowActions } from "@/hook";
 // components
 import { WindowHeader } from "@/components";
 
+// helper
+import { colorToArgb } from "@/helpers";
+
 type FortuneSheetRow = Array<FortuneSheetCell | null>;
 
 interface FortuneSheetCell {
@@ -28,6 +31,7 @@ interface FortuneSheetCell {
       cl: number;
       fs?: number;
       ff?: string;
+      fc?: string;
     }>;
   };
   it?: number;
@@ -35,6 +39,7 @@ interface FortuneSheetCell {
   cl?: number;
   fs?: number;
   ff?: string;
+  fc?: string;
 }
 
 interface FortuneSheetData {
@@ -84,23 +89,32 @@ const SpreadsheetPage = () => {
               strike: segment.cl === 1,
               size: segment.fs || 10,
               name: cell.ff || "Times New Roman",
+              color: {
+                argb: colorToArgb(segment.fc),
+              },
             },
           }));
           excelCell.value = { richText };
         } else {
           // Fallback for cells without rich text
-          if (cell.bl === 1) excelCell.font = { bold: true };
-          if (cell.it === 1)
-            excelCell.font = { ...(excelCell.font || {}), italic: true };
-          if (cell.un === 1)
-            excelCell.font = { ...(excelCell.font || {}), underline: true };
-          if (cell.cl === 1)
-            excelCell.font = { ...(excelCell.font || {}), strike: true };
-          excelCell.font = {
+          const updatedFont = {
             ...(excelCell.font || {}),
-            size: cell.fs ?? 10,
-            name: cell.ff ?? "Times New Roman",
+            ...(cell.bl === 1 && { bold: true }),
+            ...(cell.it === 1 && { italic: true }),
+            ...(cell.un === 1 && { underline: true }),
+            ...(cell.cl === 1 && { strike: true }),
+            ...(cell.fs && { size: cell.fs }),
+            ...{ name: cell.ff ?? "Times New Roman" },
+            ...(cell.fc && {
+              color: {
+                argb: colorToArgb(cell.fc),
+              },
+            }),
           };
+
+          if (Object.keys(updatedFont).length > 0) {
+            excelCell.font = updatedFont;
+          }
         }
       });
     });
