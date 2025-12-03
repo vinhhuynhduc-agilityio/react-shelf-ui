@@ -13,11 +13,34 @@ import { useWindowActions } from "@/hook";
 // components
 import { WindowHeader } from "@/components";
 
+// helper
+import { colorToArgb } from "@/helpers";
+
 type FortuneSheetRow = Array<FortuneSheetCell | null>;
 
 interface FortuneSheetCell {
   m?: string;
   v?: string | number | boolean | null;
+  bl?: number;
+  ct?: {
+    s: Array<{
+      v: string;
+      bl: number;
+      it: number;
+      un: number;
+      cl: number;
+      fs?: number;
+      ff?: string;
+      fc?: string;
+    }>;
+  };
+  it?: number;
+  un?: number;
+  cl?: number;
+  fs?: number;
+  ff?: string;
+  fc?: string;
+  bg?: string;
 }
 
 interface FortuneSheetData {
@@ -53,6 +76,56 @@ const SpreadsheetPage = () => {
         // Convert v to string when needed – Excel accepts string | number
         excelCell.value =
           cell.m ?? ((cell.v != null ? String(cell.v) : "") as string | number);
+
+        // === RICH TEXT & BASIC FORMATTING ===
+        // Use cell.ct.s for per-character formatting (bold, italic, color, etc.)
+        // Fallback to cell-level properties (bl, it, fc, etc.) when rich text is not present
+        if (cell.ct && cell.ct.s) {
+          const richText = cell.ct.s.map((segment) => ({
+            text: segment.v,
+            font: {
+              bold: segment.bl === 1,
+              italic: segment.it === 1,
+              underline: segment.un === 1,
+              strike: segment.cl === 1,
+              size: segment.fs || 10,
+              name: cell.ff || "Times New Roman",
+              color: {
+                argb: colorToArgb(segment.fc),
+              },
+            },
+          }));
+          excelCell.value = { richText };
+        } else {
+          // Fallback for cells without rich text
+          const updatedFont = {
+            ...(excelCell.font || {}),
+            ...(cell.bl === 1 && { bold: true }),
+            ...(cell.it === 1 && { italic: true }),
+            ...(cell.un === 1 && { underline: true }),
+            ...(cell.cl === 1 && { strike: true }),
+            ...{ size: cell.fs || 10 },
+            ...{ name: cell.ff ?? "Times New Roman" },
+            ...(cell.fc && {
+              color: {
+                argb: colorToArgb(cell.fc),
+              },
+            }),
+          };
+
+          if (Object.keys(updatedFont).length > 0) {
+            excelCell.font = updatedFont;
+          }
+        }
+
+        // === CELL BACKGROUND (FILL) ===
+        if (cell.bg) {
+          excelCell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: colorToArgb(cell.bg) },
+          };
+        }
       });
     });
 
@@ -99,7 +172,6 @@ const SpreadsheetPage = () => {
           ref={workbookRef}
           showSheetTabs={false}
           toolbarItems={toolbarItems}
-          showToolbar={true}
           cellContextMenu={[]}
         />
       </div>
