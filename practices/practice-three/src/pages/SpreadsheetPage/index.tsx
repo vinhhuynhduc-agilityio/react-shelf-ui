@@ -97,6 +97,21 @@ const SpreadsheetPage = () => {
             fgColor: { argb: colorToArgb(cell.bg) },
           };
         }
+
+        // === CELL ALIGNMENT ===
+        const updatedAlignment = {
+          ...(excelCell.alignment || {}),
+          ...(cell.ht && {
+            horizontal: (["center", "left", "right"] as const)[cell.ht],
+          }),
+          ...(cell.vt && {
+            vertical: (["middle", "top", "bottom"] as const)[Number(cell.vt)],
+          }),
+        };
+
+        if (Object.keys(updatedAlignment).length > 0) {
+          excelCell.alignment = updatedAlignment;
+        }
       });
     });
 
