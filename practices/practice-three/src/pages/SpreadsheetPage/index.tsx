@@ -14,39 +14,10 @@ import { useWindowActions } from "@/hook";
 import { WindowHeader } from "@/components";
 
 // helper
-import { colorToArgb } from "@/helpers";
+import { applyBordersFromConfig, colorToArgb } from "@/helpers";
 
-type FortuneSheetRow = Array<FortuneSheetCell | null>;
-
-interface FortuneSheetCell {
-  m?: string;
-  v?: string | number | boolean | null;
-  bl?: number;
-  ct?: {
-    s: Array<{
-      v: string;
-      bl: number;
-      it: number;
-      un: number;
-      cl: number;
-      fs?: number;
-      ff?: string;
-      fc?: string;
-    }>;
-  };
-  it?: number;
-  un?: number;
-  cl?: number;
-  fs?: number;
-  ff?: string;
-  fc?: string;
-  bg?: string;
-}
-
-interface FortuneSheetData {
-  name?: string;
-  data: FortuneSheetRow[];
-}
+// types
+import { FortuneSheetCell, FortuneSheetData, FortuneSheetRow } from "@/types";
 
 const MemoizedWorkbook = memo(Workbook);
 
@@ -126,8 +97,26 @@ const SpreadsheetPage = () => {
             fgColor: { argb: colorToArgb(cell.bg) },
           };
         }
+
+        // === CELL ALIGNMENT ===
+        const updatedAlignment = {
+          ...(excelCell.alignment || {}),
+          ...(cell.ht && {
+            horizontal: (["center", "left", "right"] as const)[cell.ht],
+          }),
+          ...(cell.vt && {
+            vertical: (["middle", "top", "bottom"] as const)[Number(cell.vt)],
+          }),
+        };
+
+        if (Object.keys(updatedAlignment).length > 0) {
+          excelCell.alignment = updatedAlignment;
+        }
       });
     });
+
+    // Apply all borders in one clean call
+    applyBordersFromConfig(ws, sheet.config, colorToArgb);
 
     // Convert the entire workbook to a binary buffer (the actual .xlsx file)
     const buffer = await workbook.xlsx.writeBuffer();
