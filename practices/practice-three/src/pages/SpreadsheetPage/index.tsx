@@ -107,6 +107,8 @@ const SpreadsheetPage = () => {
           ...(cell.vt && {
             vertical: (["middle", "top", "bottom"] as const)[Number(cell.vt)],
           }),
+          // Text control
+          ...(cell.tb === "2" && { wrapText: true }),
         };
 
         if (Object.keys(updatedAlignment).length > 0) {

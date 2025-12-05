@@ -24,6 +24,7 @@ export interface FortuneSheetCell {
   bg?: string;
   ht?: number;
   vt?: number;
+  tb?: "0" | "1" | "2";
 }
 
 export type FortuneSheetRow = (FortuneSheetCell | null)[];
