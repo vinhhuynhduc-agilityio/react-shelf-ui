@@ -1,4 +1,4 @@
-import { memo, useRef } from "react";
+import { memo, useRef, useState } from "react";
 import { Workbook, WorkbookInstance } from "@fortune-sheet/react";
 import "@fortune-sheet/react/dist/index.css";
 import { saveAs } from "file-saver";
@@ -11,7 +11,7 @@ import { SPREADSHEET_DATA, toolbarItems, WINDOW_KEYS } from "@/constant";
 import { useWindowActions } from "@/hook";
 
 // components
-import { WindowHeader } from "@/components";
+import { WindowHeader, UnsavedChangesModal } from "@/components";
 
 // helper
 import { applyBordersFromConfig, colorToArgb } from "@/helpers";
@@ -26,6 +26,10 @@ const SpreadsheetPage = () => {
     WINDOW_KEYS.SPREADSHEET
   );
   const workbookRef = useRef<WorkbookInstance>(null);
+
+  // State to track if there are unsaved changes
+  const [hasChanges, setHasChanges] = useState(false);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
 
   //  Export a single FortuneSheet to a real .xlsx file
   const exportToXLSX = async (sheet: FortuneSheetData) => {
@@ -133,18 +137,32 @@ const SpreadsheetPage = () => {
   };
 
   const handleClose = () => {
-    const shouldSave = window.confirm(
-      "Do you want to save changes before closing?"
-    );
+    if (hasChanges) {
+      setIsSaveModalOpen(true);
+    } else {
+      close();
+    }
+  };
 
-    if (shouldSave && workbookRef.current) {
+  const handleYes = async () => {
+    if (workbookRef.current) {
       const sheets = workbookRef.current.getAllSheets();
       if (sheets[0] && sheets[0].data) {
-        exportToXLSX(sheets[0] as FortuneSheetData);
+        await exportToXLSX(sheets[0] as FortuneSheetData);
       }
     }
 
+    setIsSaveModalOpen(false);
     close();
+  };
+
+  const handleNo = () => {
+    setIsSaveModalOpen(false);
+    close();
+  };
+
+  const handleCancel = () => {
+    setIsSaveModalOpen(false);
   };
 
   return (
@@ -164,8 +182,18 @@ const SpreadsheetPage = () => {
           showSheetTabs={false}
           toolbarItems={toolbarItems}
           cellContextMenu={[]}
+          onChange={() => setHasChanges(true)}
         />
       </div>
+
+      {/* Save Modal */}
+      <UnsavedChangesModal
+        isOpen={isSaveModalOpen}
+        fileName="Spreadsheet"
+        onSave={handleYes}
+        onDiscard={handleNo}
+        onCancel={handleCancel}
+      />
     </>
   );
 };
