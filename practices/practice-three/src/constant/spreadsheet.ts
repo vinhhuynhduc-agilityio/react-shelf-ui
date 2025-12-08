@@ -25,7 +25,6 @@ export const toolbarItems = [
   "horizontal-align",
   "vertical-align",
   "text-wrap",
-  "merge-cell",
   "|",
 ];
 
