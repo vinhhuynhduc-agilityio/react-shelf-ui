@@ -14,7 +14,11 @@ import { useWindowActions } from "@/hook";
 import { WindowHeader, UnsavedChangesModal } from "@/components";
 
 // helper
-import { applyBordersFromConfig, colorToArgb } from "@/helpers";
+import {
+  applyBordersFromConfig,
+  applyFortuneSheetCellToExcel,
+  colorToArgb,
+} from "@/helpers";
 
 // types
 import { FortuneSheetCell, FortuneSheetData, FortuneSheetRow } from "@/types";
@@ -46,78 +50,7 @@ const SpreadsheetPage = () => {
         if (!cell) return;
 
         const excelCell = ws.getCell(rowIndex + 1, colIndex + 1);
-
-        // Use the displayed value (m) if present, otherwise fall back to raw value (v)
-        // Convert v to string when needed – Excel accepts string | number
-        excelCell.value =
-          cell.m ?? ((cell.v != null ? String(cell.v) : "") as string | number);
-
-        // === RICH TEXT & BASIC FORMATTING ===
-        // Use cell.ct.s for per-character formatting (bold, italic, color, etc.)
-        // Fallback to cell-level properties (bl, it, fc, etc.) when rich text is not present
-        if (cell.ct && cell.ct.s) {
-          const richText = cell.ct.s.map((segment) => ({
-            text: segment.v,
-            font: {
-              bold: segment.bl === 1,
-              italic: segment.it === 1,
-              underline: segment.un === 1,
-              strike: segment.cl === 1,
-              size: segment.fs || 10,
-              name: cell.ff || "Times New Roman",
-              color: {
-                argb: colorToArgb(segment.fc),
-              },
-            },
-          }));
-          excelCell.value = { richText };
-        } else {
-          // Fallback for cells without rich text
-          const updatedFont = {
-            ...(excelCell.font || {}),
-            ...(cell.bl === 1 && { bold: true }),
-            ...(cell.it === 1 && { italic: true }),
-            ...(cell.un === 1 && { underline: true }),
-            ...(cell.cl === 1 && { strike: true }),
-            ...{ size: cell.fs || 10 },
-            ...{ name: cell.ff ?? "Times New Roman" },
-            ...(cell.fc && {
-              color: {
-                argb: colorToArgb(cell.fc),
-              },
-            }),
-          };
-
-          if (Object.keys(updatedFont).length > 0) {
-            excelCell.font = updatedFont;
-          }
-        }
-
-        // === CELL BACKGROUND (FILL) ===
-        if (cell.bg) {
-          excelCell.fill = {
-            type: "pattern",
-            pattern: "solid",
-            fgColor: { argb: colorToArgb(cell.bg) },
-          };
-        }
-
-        // === CELL ALIGNMENT ===
-        const updatedAlignment = {
-          ...(excelCell.alignment || {}),
-          ...(cell.ht && {
-            horizontal: (["center", "left", "right"] as const)[cell.ht],
-          }),
-          ...(cell.vt && {
-            vertical: (["middle", "top", "bottom"] as const)[Number(cell.vt)],
-          }),
-          // Text control
-          ...(cell.tb === "2" && { wrapText: true }),
-        };
-
-        if (Object.keys(updatedAlignment).length > 0) {
-          excelCell.alignment = updatedAlignment;
-        }
+        applyFortuneSheetCellToExcel(excelCell, cell);
       });
     });
 
