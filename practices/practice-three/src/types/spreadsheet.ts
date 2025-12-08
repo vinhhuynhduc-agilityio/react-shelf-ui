@@ -23,7 +23,7 @@ export interface FortuneSheetCell {
   cl?: 1;
   bg?: string;
   ht?: number;
-  vt?: number;
+  vt?: "0" | "1" | "2";
   tb?: "0" | "1" | "2";
 }
 
