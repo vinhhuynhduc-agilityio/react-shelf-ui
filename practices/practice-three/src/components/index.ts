@@ -1,15 +1,11 @@
 export * from "./common";
+export * from "./Modal";
+export * from "./Table";
 export { default as Taskbar } from "./Taskbar";
-export { default as PivotTableView } from "./PivotTableView";
-export { default as PivotTreeView } from "./PivotTreeView";
 export { default as ChartView } from "./ChartView";
 export { default as SearchOverlay } from "./SearchOverlay";
-export { NameInputModal } from "./NameInputModal";
-export { DeleteConfirmModal } from "./DeleteConfirmModal";
 export { FileContextMenu } from "./FileContextMenu";
 export { PreviewPanel } from "./PreviewPanel";
 export { Sidebar } from "./Sidebar";
 export { HeaderBar } from "./HeaderBar";
-export { FileTableView } from "./FileTableView";
 export { KanbanCard } from "./KanbanCard";
-export { default as UnsavedChangesModal } from "./UnsavedChangesModal";
