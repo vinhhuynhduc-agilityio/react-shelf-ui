@@ -53,6 +53,7 @@ jest.mock("@/components", () => ({
       </button>
     </div>
   ),
+  UnsavedChangesModal: () => <div data-testid="unsaved-modal" />,
 }));
 
 jest.mock("@/constant", () => ({

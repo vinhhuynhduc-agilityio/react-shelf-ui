@@ -11,7 +11,7 @@ interface DesktopIconProps {
   isSelected?: boolean;
   cursorPointer?: boolean;
   onIconClick: (keyIcon: WindowKey) => void;
-  onDoubleClick: (keyIcon: WindowKey) => void;
+  onDoubleClick?: (keyIcon: WindowKey) => void;
 }
 
 export const DesktopIcon = ({
@@ -29,7 +29,7 @@ export const DesktopIcon = ({
     if (timer.current) {
       clearTimeout(timer.current);
       timer.current = null;
-      onDoubleClick(keyIcon);
+      onDoubleClick?.(keyIcon);
     } else {
       onIconClick(keyIcon);
 

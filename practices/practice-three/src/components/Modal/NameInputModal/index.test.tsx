@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { NameInputModal } from "@/components/NameInputModal";
 import { useForm } from "react-hook-form";
 import type { FormData } from "@/types";
+import { NameInputModal } from ".";
 
 jest.mock("@/components", () => ({
   Modal: ({
