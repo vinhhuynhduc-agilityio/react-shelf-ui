@@ -26,47 +26,13 @@ const SpreadsheetPage = () => {
     WINDOW_KEYS.SPREADSHEET
   );
   const workbookRef = useRef<WorkbookInstance>(null);
+  const hasUserEdited = useRef(false);
 
-  // State to track if there are unsaved changes
-  const [hasChanges, setHasChanges] = useState(false);
+  // State
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
 
-  //  Export a single FortuneSheet to a real .xlsx file
-  const exportToXLSX = async (sheet: FortuneSheetData) => {
-    // Create a new Excel workbook in memory
-    const workbook = new ExcelJS.Workbook();
-
-    // Add a worksheet – use the original sheet name if available
-    const ws = workbook.addWorksheet(sheet.name || "Sheet1");
-
-    sheet.data.forEach((row: FortuneSheetRow, rowIndex: number) => {
-      if (!Array.isArray(row)) return;
-
-      row.forEach((cell: FortuneSheetCell | null, colIndex: number) => {
-        if (!cell) return;
-
-        const excelCell = ws.getCell(rowIndex + 1, colIndex + 1);
-        applyFortuneSheetCellToExcel(excelCell, cell);
-      });
-    });
-
-    // Apply all borders in one clean call
-    applyBordersFromConfig(ws, sheet.config, colorToArgb);
-
-    // Convert the entire workbook to a binary buffer (the actual .xlsx file)
-    const buffer = await workbook.xlsx.writeBuffer();
-
-    // Wrap the buffer in a Blob with correct MIME type
-    const blob = new Blob([buffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-
-    // Trigger browser download with a nice filename
-    saveAs(blob, "spreadsheet.xlsx");
-  };
-
   const handleClose = () => {
-    if (hasChanges) {
+    if (hasUserEdited.current) {
       setIsSaveModalOpen(true);
     } else {
       close();
