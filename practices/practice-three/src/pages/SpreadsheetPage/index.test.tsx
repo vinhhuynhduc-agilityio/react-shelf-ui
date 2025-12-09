@@ -1,7 +1,10 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import SpreadsheetPage from ".";
+import { useWindowActions } from "@/hook";
+import { saveAs } from "file-saver";
+import { exportToXLSX } from "@/helpers";
 
 jest.mock("@fortune-sheet/react", () => {
   const Workbook = React.forwardRef(
@@ -11,28 +14,54 @@ jest.mock("@fortune-sheet/react", () => {
         toolbarItems,
         showSheetTabs,
         cellContextMenu,
-        onChange,
+        onOp,
       }: {
         data: unknown[];
         toolbarItems: string[];
         showSheetTabs: boolean;
         cellContextMenu: unknown[];
-        onChange: () => void;
+        onOp: () => void;
       },
       ref: React.Ref<HTMLDivElement> | undefined
-    ) => (
-      <div data-testid="fortune-workbook" ref={ref}>
-        <div data-testid="workbook-data">{JSON.stringify(data)}</div>
-        <div data-testid="toolbar-items">{JSON.stringify(toolbarItems)}</div>
-        <div data-testid="show-sheet-tabs">{String(showSheetTabs)}</div>
-        <div data-testid="cell-context-menu">
-          {JSON.stringify(cellContextMenu)}
+    ) => {
+      const divRef = React.useRef<HTMLDivElement>(null);
+      React.useImperativeHandle(ref, () => {
+        const element = divRef.current as HTMLDivElement & {
+          getAllSheets: () => Array<{
+            name: string;
+            celldata: [];
+            row: number;
+            column: number;
+            data: (null | null)[][];
+            config: Record<string, unknown>;
+          }>;
+        };
+        element.getAllSheets = () => [
+          {
+            name: "Sheet1",
+            celldata: [],
+            row: 50,
+            column: 26,
+            data: [[null, null]],
+            config: {},
+          },
+        ];
+        return element;
+      });
+      return (
+        <div data-testid="fortune-workbook" ref={divRef}>
+          <div data-testid="workbook-data">{JSON.stringify(data)}</div>
+          <div data-testid="toolbar-items">{JSON.stringify(toolbarItems)}</div>
+          <div data-testid="show-sheet-tabs">{String(showSheetTabs)}</div>
+          <div data-testid="cell-context-menu">
+            {JSON.stringify(cellContextMenu)}
+          </div>
+          <button data-testid="btn-change-workbook" onClick={onOp}>
+            Change
+          </button>
         </div>
-        <button data-testid="btn-change-workbook" onClick={onChange}>
-          Change
-        </button>
-      </div>
-    )
+      );
+    }
   );
 
   Workbook.displayName = "Workbook";
@@ -92,18 +121,54 @@ jest.mock("@/components", () => ({
   }) =>
     isOpen && (
       <div data-testid="unsaved-changes-modal" data-file-name={fileName}>
-        <p>Unsaved changes in {fileName}</p>
+        <p>
+          Do you want to save the changes you made to &quot;{fileName}&quot;?
+        </p>
         <button data-testid="btn-save" onClick={onSave}>
-          Save
+          Yes
         </button>
         <button data-testid="btn-discard" onClick={onDiscard}>
-          Discard
+          No
         </button>
         <button data-testid="btn-cancel" onClick={onCancel}>
           Cancel
         </button>
       </div>
     ),
+  SpreadsheetWorkbook: React.forwardRef<
+    {
+      getAllSheets: () => Array<{
+        name: string;
+        celldata: [];
+        row: number;
+        column: number;
+        data: (null | null)[][];
+        config: Record<string, unknown>;
+      }>;
+    },
+    { onUserEdit: () => void }
+  >(({ onUserEdit }, ref) => {
+    React.useImperativeHandle(ref, () => ({
+      getAllSheets: () => [
+        {
+          name: "Sheet1",
+          celldata: [],
+          row: 50,
+          column: 26,
+          data: [[null, null]],
+          config: {},
+        },
+      ],
+    }));
+
+    return (
+      <div data-testid="spreadsheet-workbook" className="flex-1">
+        <button data-testid="btn-trigger-edit" onClick={onUserEdit}>
+          Trigger Edit
+        </button>
+      </div>
+    );
+  }),
 }));
 
 jest.mock("@/constant", () => ({
@@ -145,14 +210,24 @@ jest.mock("file-saver", () => ({
   }),
 }));
 
+jest.mock("exceljs", () => ({
+  __esModule: true,
+  default: class MockWorkbook {
+    addWorksheet = jest.fn().mockReturnValue({
+      getCell: jest.fn().mockReturnValue({}),
+    });
+    xlsx = {
+      writeBuffer: jest.fn().mockResolvedValue(new ArrayBuffer(0)),
+    };
+  },
+}));
+
 jest.mock("@/helpers", () => ({
+  exportToXLSX: jest.fn().mockResolvedValue(undefined),
   applyBordersFromConfig: jest.fn(),
   applyFortuneSheetCellToExcel: jest.fn(),
   colorToArgb: jest.fn((color) => color),
 }));
-
-import { useWindowActions } from "@/hook";
-import { saveAs } from "file-saver";
 
 describe("SpreadsheetPage", () => {
   const mockWindowActions = {
@@ -175,7 +250,7 @@ describe("SpreadsheetPage", () => {
       render(<SpreadsheetPage />);
 
       expect(screen.getByTestId("window-header")).toBeInTheDocument();
-      expect(screen.getByTestId("fortune-workbook")).toBeInTheDocument();
+      expect(screen.getByTestId("spreadsheet-workbook")).toBeInTheDocument();
     });
 
     it("should render without UnsavedChangesModal initially", () => {
@@ -186,14 +261,11 @@ describe("SpreadsheetPage", () => {
       ).not.toBeInTheDocument();
     });
 
-    it("should render flex container with flex-1 class", () => {
+    it("should render with correct layout structure", () => {
       const { container } = render(<SpreadsheetPage />);
 
       const flexContainer = container.querySelector(".flex-1");
       expect(flexContainer).toBeInTheDocument();
-      expect(
-        flexContainer?.querySelector('[data-testid="fortune-workbook"]')
-      ).toBeInTheDocument();
     });
   });
 
@@ -260,50 +332,31 @@ describe("SpreadsheetPage", () => {
     });
   });
 
-  describe("Workbook Configuration", () => {
-    it("should pass SPREADSHEET_DATA to Workbook", () => {
+  describe("SpreadsheetWorkbook Configuration", () => {
+    it("should render SpreadsheetWorkbook component", () => {
       render(<SpreadsheetPage />);
 
-      const workbookData = screen.getByTestId("workbook-data");
-      expect(workbookData.textContent).toContain("Sheet1");
-      expect(workbookData.textContent).toContain("50");
-      expect(workbookData.textContent).toContain("26");
+      expect(screen.getByTestId("spreadsheet-workbook")).toBeInTheDocument();
     });
 
-    it("should pass toolbarItems to Workbook", () => {
+    it("should pass onUserEdit callback to SpreadsheetWorkbook", () => {
       render(<SpreadsheetPage />);
 
-      const toolbarData = screen.getByTestId("toolbar-items");
-      expect(toolbarData.textContent).toContain("undo");
-      expect(toolbarData.textContent).toContain("redo");
-      expect(toolbarData.textContent).toContain("bold");
-      expect(toolbarData.textContent).toContain("italic");
-      expect(toolbarData.textContent).toContain("merge-cell");
-    });
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
 
-    it("should set showSheetTabs to false", () => {
-      render(<SpreadsheetPage />);
+      // After triggering edit, closing should show modal
+      fireEvent.click(screen.getByTestId("btn-close"));
 
-      const sheetTabs = screen.getByTestId("show-sheet-tabs");
-      expect(sheetTabs.textContent).toBe("false");
-    });
-
-    it("should pass empty cellContextMenu", () => {
-      render(<SpreadsheetPage />);
-
-      const contextMenu = screen.getByTestId("cell-context-menu");
-      expect(contextMenu.textContent).toBe("[]");
+      expect(screen.getByTestId("unsaved-changes-modal")).toBeInTheDocument();
     });
   });
 
   describe("Change Tracking", () => {
-    it("should set hasChanges to true when Workbook onChange is called", () => {
+    it("should track user edits via onUserEdit callback", () => {
       render(<SpreadsheetPage />);
 
-      const changeButton = screen.getByTestId("btn-change-workbook");
-      fireEvent.click(changeButton);
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
 
-      // Now closing should show modal
       fireEvent.click(screen.getByTestId("btn-close"));
 
       expect(screen.getByTestId("unsaved-changes-modal")).toBeInTheDocument();
@@ -312,36 +365,92 @@ describe("SpreadsheetPage", () => {
     it("should show UnsavedChangesModal when closing with unsaved changes", () => {
       render(<SpreadsheetPage />);
 
-      // Simulate a change
-      fireEvent.click(screen.getByTestId("btn-change-workbook"));
-
-      // Try to close
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
       fireEvent.click(screen.getByTestId("btn-close"));
 
       expect(screen.getByTestId("unsaved-changes-modal")).toBeInTheDocument();
       expect(screen.getByTestId("unsaved-changes-modal")).toHaveAttribute(
         "data-file-name",
-        "Spreadsheet"
+        "Untitled spreadsheet"
       );
     });
 
     it("should display correct file name in modal", () => {
       render(<SpreadsheetPage />);
 
-      fireEvent.click(screen.getByTestId("btn-change-workbook"));
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
       fireEvent.click(screen.getByTestId("btn-close"));
 
       expect(
-        screen.getByText(/Unsaved changes in Spreadsheet/)
+        screen.getByText(
+          /Do you want to save the changes you made to "Untitled spreadsheet"\?/
+        )
       ).toBeInTheDocument();
     });
   });
 
-  describe("UnsavedChangesModal - Discard", () => {
-    it("should close window when Discard is clicked", () => {
+  describe("handleClose", () => {
+    it("should call close when no unsaved changes", () => {
       render(<SpreadsheetPage />);
 
-      fireEvent.click(screen.getByTestId("btn-change-workbook"));
+      fireEvent.click(screen.getByTestId("btn-close"));
+
+      expect(mockWindowActions.close).toHaveBeenCalledTimes(1);
+      expect(
+        screen.queryByTestId("unsaved-changes-modal")
+      ).not.toBeInTheDocument();
+    });
+
+    it("should show modal when there are unsaved changes", () => {
+      render(<SpreadsheetPage />);
+
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
+      fireEvent.click(screen.getByTestId("btn-close"));
+
+      expect(screen.getByTestId("unsaved-changes-modal")).toBeInTheDocument();
+      expect(mockWindowActions.close).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("handleYes", () => {
+    it("should call exportToXLSX with sheet data", async () => {
+      render(<SpreadsheetPage />);
+
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
+      fireEvent.click(screen.getByTestId("btn-close"));
+      fireEvent.click(screen.getByTestId("btn-save"));
+
+      await waitFor(() => {
+        expect(exportToXLSX).toHaveBeenCalledWith(
+          expect.objectContaining({
+            name: "Sheet1",
+            data: [[null, null]],
+          })
+        );
+      });
+    });
+
+    it("should close modal and window after saving", async () => {
+      render(<SpreadsheetPage />);
+
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
+      fireEvent.click(screen.getByTestId("btn-close"));
+      fireEvent.click(screen.getByTestId("btn-save"));
+
+      await waitFor(() => {
+        expect(mockWindowActions.close).toHaveBeenCalledTimes(1);
+        expect(
+          screen.queryByTestId("unsaved-changes-modal")
+        ).not.toBeInTheDocument();
+      });
+    });
+  });
+
+  describe("UnsavedChangesModal - Discard", () => {
+    it("should close window when No (Discard) is clicked", () => {
+      render(<SpreadsheetPage />);
+
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
       fireEvent.click(screen.getByTestId("btn-close"));
 
       const discardButton = screen.getByTestId("btn-discard");
@@ -350,10 +459,10 @@ describe("SpreadsheetPage", () => {
       expect(mockWindowActions.close).toHaveBeenCalled();
     });
 
-    it("should close modal when Discard is clicked", () => {
+    it("should close modal when No (Discard) is clicked", () => {
       render(<SpreadsheetPage />);
 
-      fireEvent.click(screen.getByTestId("btn-change-workbook"));
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
       fireEvent.click(screen.getByTestId("btn-close"));
 
       expect(screen.getByTestId("unsaved-changes-modal")).toBeInTheDocument();
@@ -365,12 +474,12 @@ describe("SpreadsheetPage", () => {
       ).not.toBeInTheDocument();
     });
 
-    it("should not save when Discard is clicked", () => {
+    it("should not call saveAs when No (Discard) is clicked", () => {
       (saveAs as unknown as jest.Mock).mockClear();
 
       render(<SpreadsheetPage />);
 
-      fireEvent.click(screen.getByTestId("btn-change-workbook"));
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
       fireEvent.click(screen.getByTestId("btn-close"));
 
       fireEvent.click(screen.getByTestId("btn-discard"));
@@ -379,26 +488,54 @@ describe("SpreadsheetPage", () => {
     });
   });
 
-  describe("Memoization", () => {
-    it("should use MemoizedWorkbook for performance", () => {
-      const { rerender } = render(<SpreadsheetPage />);
+  describe("UnsavedChangesModal - Cancel", () => {
+    it("should not close window when Cancel is clicked", () => {
+      render(<SpreadsheetPage />);
 
-      expect(screen.getByTestId("fortune-workbook")).toBeInTheDocument();
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
+      fireEvent.click(screen.getByTestId("btn-close"));
 
-      // Re-render with same props
-      rerender(<SpreadsheetPage />);
+      fireEvent.click(screen.getByTestId("btn-cancel"));
 
-      expect(screen.getByTestId("fortune-workbook")).toBeInTheDocument();
+      expect(mockWindowActions.close).not.toHaveBeenCalled();
+    });
+
+    it("should close modal when Cancel is clicked", () => {
+      render(<SpreadsheetPage />);
+
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
+      fireEvent.click(screen.getByTestId("btn-close"));
+
+      expect(screen.getByTestId("unsaved-changes-modal")).toBeInTheDocument();
+
+      fireEvent.click(screen.getByTestId("btn-cancel"));
+
+      expect(
+        screen.queryByTestId("unsaved-changes-modal")
+      ).not.toBeInTheDocument();
+    });
+
+    it("should allow continuing editing after Cancel", () => {
+      render(<SpreadsheetPage />);
+
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
+      fireEvent.click(screen.getByTestId("btn-close"));
+      fireEvent.click(screen.getByTestId("btn-cancel"));
+
+      expect(screen.getByTestId("spreadsheet-workbook")).toBeInTheDocument();
+      expect(
+        screen.queryByTestId("unsaved-changes-modal")
+      ).not.toBeInTheDocument();
     });
   });
 
   describe("Edge Cases", () => {
-    it("should handle multiple changes before close", () => {
+    it("should handle multiple edits before close", () => {
       render(<SpreadsheetPage />);
 
-      fireEvent.click(screen.getByTestId("btn-change-workbook"));
-      fireEvent.click(screen.getByTestId("btn-change-workbook"));
-      fireEvent.click(screen.getByTestId("btn-change-workbook"));
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
 
       fireEvent.click(screen.getByTestId("btn-close"));
 
@@ -409,7 +546,7 @@ describe("SpreadsheetPage", () => {
       render(<SpreadsheetPage />);
 
       fireEvent.click(screen.getByTestId("btn-maximize"));
-      fireEvent.click(screen.getByTestId("btn-change-workbook"));
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
       fireEvent.click(screen.getByTestId("btn-close"));
 
       expect(screen.getByTestId("unsaved-changes-modal")).toBeInTheDocument();
@@ -419,18 +556,18 @@ describe("SpreadsheetPage", () => {
       render(<SpreadsheetPage />);
 
       fireEvent.click(screen.getByTestId("btn-minimize"));
-      fireEvent.click(screen.getByTestId("btn-change-workbook"));
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
       fireEvent.click(screen.getByTestId("btn-close"));
 
       expect(screen.getByTestId("unsaved-changes-modal")).toBeInTheDocument();
     });
   });
 
-  describe("Integration", () => {
-    it("should handle complete workflow: change -> close -> discard -> close", () => {
+  describe("Integration Workflows", () => {
+    it("should handle workflow: edit -> close -> discard -> closed", () => {
       render(<SpreadsheetPage />);
 
-      fireEvent.click(screen.getByTestId("btn-change-workbook"));
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
       fireEvent.click(screen.getByTestId("btn-close"));
 
       expect(screen.getByTestId("unsaved-changes-modal")).toBeInTheDocument();
@@ -443,10 +580,10 @@ describe("SpreadsheetPage", () => {
       ).not.toBeInTheDocument();
     });
 
-    it("should handle workflow: change -> close -> cancel -> continue editing", () => {
+    it("should handle workflow: edit -> close -> cancel -> continue editing", () => {
       render(<SpreadsheetPage />);
 
-      fireEvent.click(screen.getByTestId("btn-change-workbook"));
+      fireEvent.click(screen.getByTestId("btn-trigger-edit"));
       fireEvent.click(screen.getByTestId("btn-close"));
 
       expect(screen.getByTestId("unsaved-changes-modal")).toBeInTheDocument();
@@ -454,7 +591,18 @@ describe("SpreadsheetPage", () => {
       fireEvent.click(screen.getByTestId("btn-cancel"));
 
       expect(mockWindowActions.close).not.toHaveBeenCalled();
-      expect(screen.getByTestId("fortune-workbook")).toBeInTheDocument();
+      expect(screen.getByTestId("spreadsheet-workbook")).toBeInTheDocument();
+    });
+
+    it("should handle workflow: close without edit -> no modal", () => {
+      render(<SpreadsheetPage />);
+
+      fireEvent.click(screen.getByTestId("btn-close"));
+
+      expect(mockWindowActions.close).toHaveBeenCalled();
+      expect(
+        screen.queryByTestId("unsaved-changes-modal")
+      ).not.toBeInTheDocument();
     });
   });
 });

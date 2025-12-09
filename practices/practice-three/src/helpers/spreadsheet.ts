@@ -1,8 +1,14 @@
-import ExcelJS from "exceljs";
 import type { BorderStyle, Worksheet } from "exceljs";
+import { saveAs } from "file-saver";
+import ExcelJS from "exceljs";
 
 // types
-import { FortuneSheetCell, FortuneSheetConfig } from "@/types";
+import {
+  FortuneSheetCell,
+  FortuneSheetConfig,
+  FortuneSheetData,
+  FortuneSheetRow,
+} from "@/types";
 
 export const colorToArgb = (color?: string): string => {
   if (!color) return "FF000000";
@@ -217,4 +223,38 @@ export const applyFortuneSheetCellToExcel = (
   if (Object.keys(updatedAlignment).length > 0) {
     excelCell.alignment = updatedAlignment;
   }
+};
+
+//  Export a single FortuneSheet to a real .xlsx file
+export const exportToXLSX = async (sheet: FortuneSheetData) => {
+  // Create a new Excel workbook in memory
+  const workbook = new ExcelJS.Workbook();
+
+  // Add a worksheet – use the original sheet name if available
+  const ws = workbook.addWorksheet(sheet.name || "Sheet1");
+
+  sheet.data.forEach((row: FortuneSheetRow, rowIndex: number) => {
+    if (!Array.isArray(row)) return;
+
+    row.forEach((cell: FortuneSheetCell | null, colIndex: number) => {
+      if (!cell) return;
+
+      const excelCell = ws.getCell(rowIndex + 1, colIndex + 1);
+      applyFortuneSheetCellToExcel(excelCell, cell);
+    });
+  });
+
+  // Apply all borders in one clean call
+  applyBordersFromConfig(ws, sheet.config, colorToArgb);
+
+  // Convert the entire workbook to a binary buffer (the actual .xlsx file)
+  const buffer = await workbook.xlsx.writeBuffer();
+
+  // Wrap the buffer in a Blob with correct MIME type
+  const blob = new Blob([buffer], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  });
+
+  // Trigger browser download with a nice filename
+  saveAs(blob, "spreadsheet.xlsx");
 };

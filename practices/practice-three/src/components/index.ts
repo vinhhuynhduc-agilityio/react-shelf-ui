@@ -9,3 +9,4 @@ export { PreviewPanel } from "./PreviewPanel";
 export { Sidebar } from "./Sidebar";
 export { HeaderBar } from "./HeaderBar";
 export { KanbanCard } from "./KanbanCard";
+export { default as SpreadsheetWorkbook } from "./SpreadsheetWorkbook";

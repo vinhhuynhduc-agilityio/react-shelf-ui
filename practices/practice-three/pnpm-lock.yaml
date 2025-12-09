@@ -26,9 +26,12 @@ importers:
       '@fortawesome/react-fontawesome':
         specifier: ^3.1.0
         version: 3.1.0(@fortawesome/fontawesome-svg-core@7.1.0)(react@19.1.1)
+      '@fortune-sheet/core':
+        specifier: ^1.0.4
+        version: 1.0.4
       '@fortune-sheet/react':
-        specifier: ^1.0.2
-        version: 1.0.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: ^1.0.4
+        version: 1.0.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@tanstack/react-query':
         specifier: ^5.85.5
         version: 5.85.5(react@19.1.1)
@@ -949,14 +952,14 @@ packages:
       '@fortawesome/fontawesome-svg-core': ~6 || ~7
       react: ^18.0.0 || ^19.0.0
 
-  '@fortune-sheet/core@1.0.2':
-    resolution: {integrity: sha512-eIZCOFXlFNhxHlaLJImLsC0aRoKQv0oA0DWgC5RyLA6031gHAA1sBltUggsdf71lcvJW4/xeZFKGeFpxxkc81A==}
+  '@fortune-sheet/core@1.0.4':
+    resolution: {integrity: sha512-CDnUVebfvtT++CymNRw0qnY4sz6zYO3KZazlH+nG6otkRkZ05Bvt7NXqVhmKKSSxIvJR4R6h50abu/dVGBpjpw==}
 
   '@fortune-sheet/formula-parser@0.2.13':
     resolution: {integrity: sha512-za2ZVQ5ZfMSPCtL8MdqhCthPip7AoeU4MPyd5UDo4RCl9/arrv1Jz0y755mACVVi4suSZxrzWoJGDkLmofoSmw==}
 
-  '@fortune-sheet/react@1.0.2':
-    resolution: {integrity: sha512-6lOH9DuNPZa+P2pPRDWC3OOk++OOSsIuT4RFY8S+NC+LTpNBg2S4eCrg6uCH9YFeBmauR8Ua1ZRYCvMDjMTyZA==}
+  '@fortune-sheet/react@1.0.4':
+    resolution: {integrity: sha512-v+BU5mmp2hhUe4gRF+vOJ3j8zZkzHU0kzhTZzp+Nn00wA/RArMr+CO+SAluKlCPAsTZgPwmgOEK685WPqJ5XNw==}
     peerDependencies:
       react: '>= 18.2'
       react-dom: '>= 18.2'
@@ -6252,7 +6255,7 @@ snapshots:
       '@fortawesome/fontawesome-svg-core': 7.1.0
       react: 19.1.1
 
-  '@fortune-sheet/core@1.0.2':
+  '@fortune-sheet/core@1.0.4':
     dependencies:
       '@fortune-sheet/formula-parser': 0.2.13
       dayjs: 1.11.13
@@ -6266,9 +6269,9 @@ snapshots:
       '@formulajs/formulajs': 2.9.3
       tiny-emitter: 2.1.0
 
-  '@fortune-sheet/react@1.0.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@fortune-sheet/react@1.0.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@fortune-sheet/core': 1.0.2
+      '@fortune-sheet/core': 1.0.4
       '@types/regenerator-runtime': 0.13.8
       immer: 9.0.21
       lodash: 4.17.21
