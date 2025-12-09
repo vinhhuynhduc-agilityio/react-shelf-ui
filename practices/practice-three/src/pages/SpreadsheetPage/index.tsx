@@ -1,29 +1,25 @@
-import { memo, useRef, useState } from "react";
-import { Workbook, WorkbookInstance } from "@fortune-sheet/react";
+import { useCallback, useRef, useState } from "react";
+import { WorkbookInstance } from "@fortune-sheet/react";
 import "@fortune-sheet/react/dist/index.css";
-import { saveAs } from "file-saver";
-import ExcelJS from "exceljs";
 
 // constant
-import { SPREADSHEET_DATA, toolbarItems, WINDOW_KEYS } from "@/constant";
+import { WINDOW_KEYS } from "@/constant";
 
 // hook
 import { useWindowActions } from "@/hook";
 
 // components
-import { WindowHeader, UnsavedChangesModal } from "@/components";
+import {
+  WindowHeader,
+  UnsavedChangesModal,
+  SpreadsheetWorkbook,
+} from "@/components";
 
 // helper
-import {
-  applyBordersFromConfig,
-  applyFortuneSheetCellToExcel,
-  colorToArgb,
-} from "@/helpers";
+import { exportToXLSX } from "@/helpers";
 
 // types
-import { FortuneSheetCell, FortuneSheetData, FortuneSheetRow } from "@/types";
-
-const MemoizedWorkbook = memo(Workbook);
+import { FortuneSheetData } from "@/types";
 
 const SpreadsheetPage = () => {
   const { close, maximize, minimize } = useWindowActions(
@@ -98,6 +94,10 @@ const SpreadsheetPage = () => {
     setIsSaveModalOpen(false);
   };
 
+  const handleUserEdit = useCallback(() => {
+    hasUserEdited.current = true;
+  }, []);
+
   return (
     <>
       <WindowHeader
@@ -108,21 +108,12 @@ const SpreadsheetPage = () => {
         onMaximize={maximize}
         onMinimize={minimize}
       />
-      <div className="flex-1">
-        <MemoizedWorkbook
-          data={SPREADSHEET_DATA}
-          ref={workbookRef}
-          showSheetTabs={false}
-          toolbarItems={toolbarItems}
-          cellContextMenu={[]}
-          onChange={() => setHasChanges(true)}
-        />
-      </div>
+      <SpreadsheetWorkbook ref={workbookRef} onUserEdit={handleUserEdit} />
 
       {/* Save Modal */}
       <UnsavedChangesModal
         isOpen={isSaveModalOpen}
-        fileName="Spreadsheet"
+        fileName="Untitled spreadsheet"
         onSave={handleYes}
         onDiscard={handleNo}
         onCancel={handleCancel}
