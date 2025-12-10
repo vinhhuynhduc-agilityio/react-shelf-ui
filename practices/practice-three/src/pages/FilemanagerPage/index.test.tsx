@@ -380,10 +380,12 @@ describe("FilemanagerPage", () => {
     it("should render WindowHeader with correct title and icon", () => {
       render(<FilemanagerPage />);
 
-      expect(screen.getByTestId("window-title")).toHaveTextContent("Pivot");
+      expect(screen.getByTestId("window-title")).toHaveTextContent(
+        "File Manager"
+      );
       expect(screen.getByTestId("window-icon")).toHaveAttribute(
         "src",
-        "/images/pivot.webp"
+        "/images/file-manager.webp"
       );
     });
 

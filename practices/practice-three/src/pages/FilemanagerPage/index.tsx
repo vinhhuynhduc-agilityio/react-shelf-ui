@@ -583,8 +583,8 @@ const FilemanagerPage = () => {
     <>
       <WindowHeader
         windowKey={WINDOW_KEYS.FILE_MANAGER}
-        src="/images/pivot.webp"
-        title="Pivot"
+        src="/images/file-manager.webp"
+        title="File Manager"
         onClose={close}
         onMaximize={maximize}
         onMinimize={minimize}
