@@ -83,9 +83,14 @@ const App = () => {
   }, [layout, cols, maxRows]);
 
   const handleToggleSearch = useCallback(() => {
-    setIsSearchOpen((prev) => !prev);
-    if (!isSearchOpen) setSearchQuery("");
-  }, [isSearchOpen]);
+    setIsSearchOpen((prev) => {
+      if (prev) {
+        setSearchQuery("");
+      }
+
+      return !prev;
+    });
+  }, []);
 
   const handleIconClick = (key: WindowKey) => {
     if (selectedIcon !== key) {
@@ -93,7 +98,7 @@ const App = () => {
     }
   };
 
-  const handleIconDoubleClick = (key: WindowKey) => {
+  const openOrFocusWindow = (key: WindowKey) => {
     const state =
       key === SPREADSHEET
         ? spreadsheet
@@ -128,6 +133,16 @@ const App = () => {
     setSelectedIcon(null);
   };
 
+  const handleAppSelect = (key: WindowKey) => {
+    openOrFocusWindow(key);
+    setIsSearchOpen(false);
+  };
+
+  const closeSearch = () => {
+    setIsSearchOpen(false);
+    setSearchQuery("");
+  };
+
   const renderDesktopIcons = () =>
     DESKTOP_ICONS.map((icon) => (
       <div key={icon.key}>
@@ -137,7 +152,7 @@ const App = () => {
           keyIcon={icon.key}
           isSelected={selectedIcon === icon.key}
           onIconClick={handleIconClick}
-          onDoubleClick={handleIconDoubleClick}
+          onDoubleClick={openOrFocusWindow}
         />
       </div>
     ));
@@ -195,11 +210,8 @@ const App = () => {
             <SearchOverlay
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
-              onAppSelect={(key) => {
-                handleIconClick(key);
-                setIsSearchOpen(false);
-              }}
-              onClose={() => setIsSearchOpen(false)}
+              onAppSelect={handleAppSelect}
+              onClose={closeSearch}
             />
           )}
         </div>
