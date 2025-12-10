@@ -22,6 +22,8 @@ const jestConfig: JestConfigWithTsJest = {
     "<rootDir>/src/pages/index.ts",
     "<rootDir>/src/components/index.ts",
     "<rootDir>/src/components/common/index.ts",
+    "<rootDir>/src/components/Table/index.ts",
+    "<rootDir>/src/components/Modal/index.ts",
   ],
 };
 
