@@ -129,7 +129,8 @@ const App = () => {
     e
   ) => {
     const t = e.target as HTMLElement;
-    if (t !== e.currentTarget && t.closest(".desktop-icon")) return;
+    if (t.closest(".desktop-icon")) return;
+
     setSelectedIcon(null);
   };
 
