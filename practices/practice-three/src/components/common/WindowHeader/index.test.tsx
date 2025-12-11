@@ -4,7 +4,21 @@ import WindowHeader from ".";
 import type { WindowKey } from "@/types";
 
 jest.mock("@/stores", () => ({
-  useWindowStore: jest.fn(),
+  useWindowStore: jest.fn(
+    (selector?: (state: Record<string, unknown>) => unknown) => {
+      const mockState = {
+        windows: {
+          spreadsheet: { isMaximized: false },
+          filemanager: { isMaximized: false },
+          pivot: { isMaximized: false },
+          kanban: { isMaximized: false },
+        },
+      };
+      return selector
+        ? selector(mockState as Record<string, unknown>)
+        : mockState;
+    }
+  ),
 }));
 
 jest.mock("@/components", () => ({
@@ -29,15 +43,24 @@ describe("WindowHeader", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Re-setup the mock with selector support
+    (mockedUseWindowStore as unknown as jest.Mock).mockImplementation(
+      (selector: (state: Record<string, unknown>) => unknown) => {
+        const mockState = {
+          windows: {
+            spreadsheet: { isMaximized: false },
+            filemanager: { isMaximized: false },
+            pivot: { isMaximized: false },
+            kanban: { isMaximized: false },
+          },
+        };
+        return selector(mockState as Record<string, unknown>);
+      }
+    );
   });
 
   it("should render title and icon image", () => {
-    mockedUseWindowStore.mockReturnValue({
-      windows: {
-        spreadsheet: { isMaximized: false },
-      },
-    } as ReturnType<typeof useWindowStore>);
-
     render(<WindowHeader {...defaultProps} />);
 
     expect(screen.getByAltText("Spreadsheet")).toHaveAttribute(
@@ -48,12 +71,6 @@ describe("WindowHeader", () => {
   });
 
   it("should call onMinimize when minimize button clicked", () => {
-    mockedUseWindowStore.mockReturnValue({
-      windows: {
-        spreadsheet: { isMaximized: false },
-      },
-    } as ReturnType<typeof useWindowStore>);
-
     render(<WindowHeader {...defaultProps} />);
 
     const minimizeBtn = screen.getAllByTestId("icon-button")[0];
@@ -63,12 +80,6 @@ describe("WindowHeader", () => {
   });
 
   it("should call onMaximize when maximize/restore button clicked", () => {
-    mockedUseWindowStore.mockReturnValue({
-      windows: {
-        spreadsheet: { isMaximized: false },
-      },
-    } as ReturnType<typeof useWindowStore>);
-
     render(<WindowHeader {...defaultProps} />);
 
     const maximizeBtn = screen.getAllByTestId("icon-button")[1];
@@ -78,12 +89,6 @@ describe("WindowHeader", () => {
   });
 
   it("should call onClose when close button clicked", () => {
-    mockedUseWindowStore.mockReturnValue({
-      windows: {
-        spreadsheet: { isMaximized: false },
-      },
-    } as ReturnType<typeof useWindowStore>);
-
     render(<WindowHeader {...defaultProps} />);
 
     const closeBtn = screen.getAllByTestId("icon-button")[2];
@@ -93,12 +98,6 @@ describe("WindowHeader", () => {
   });
 
   it("should have window-drag-handle class for dragging", () => {
-    mockedUseWindowStore.mockReturnValue({
-      windows: {
-        spreadsheet: { isMaximized: false },
-      },
-    } as ReturnType<typeof useWindowStore>);
-
     const { container } = render(<WindowHeader {...defaultProps} />);
 
     const header = container.firstChild as HTMLElement;
@@ -106,15 +105,31 @@ describe("WindowHeader", () => {
   });
 
   it("should render all three icon buttons", () => {
-    mockedUseWindowStore.mockReturnValue({
-      windows: {
-        spreadsheet: { isMaximized: false },
-      },
-    } as ReturnType<typeof useWindowStore>);
+    render(<WindowHeader {...defaultProps} />);
+
+    const buttons = screen.getAllByTestId("icon-button");
+    expect(buttons).toHaveLength(3);
+  });
+
+  it("should display restore icon when window is maximized", () => {
+    // Override the mock for this specific test to return isMaximized: true
+    (mockedUseWindowStore as unknown as jest.Mock).mockImplementationOnce(
+      (selector: (state: Record<string, unknown>) => unknown) => {
+        const mockState = {
+          windows: {
+            spreadsheet: { isMaximized: true },
+          },
+        };
+        return selector(mockState as Record<string, unknown>);
+      }
+    );
 
     render(<WindowHeader {...defaultProps} />);
 
     const buttons = screen.getAllByTestId("icon-button");
     expect(buttons).toHaveLength(3);
+    // Verify that restore button is called when maximized
+    fireEvent.click(buttons[1]);
+    expect(defaultProps.onMaximize).toHaveBeenCalledTimes(1);
   });
 });
