@@ -60,6 +60,9 @@ exports[`PivotTreeView matches snapshot 1`] = `
         />
       </span>
     </div>
+    <div
+      data-testid="custom-expand-icon-no-children"
+    />
   </div>
 </div>
 `;

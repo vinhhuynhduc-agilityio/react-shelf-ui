@@ -35,9 +35,7 @@ jest.mock("@/hook", () => ({
   useZIndex: jest.fn(),
 }));
 
-jest.mock("@/stores", () => ({
-  useWindowStore: jest.fn(),
-}));
+jest.mock("@/stores");
 
 jest.mock("@/helpers", () => ({
   clampToViewport: jest.fn((frame) => frame),
@@ -80,9 +78,11 @@ describe("BaseWindow", () => {
     (useWindowState as jest.Mock).mockReturnValue(mockWindowState);
     (useWindowActions as jest.Mock).mockReturnValue(mockWindowActions);
     (useZIndex as jest.Mock).mockReturnValue(mockZIndex);
-    (useWindowStore as unknown as jest.Mock).mockReturnValue(
-      mockWindowStoreState
-    );
+    
+    // Setup useWindowStore mock with getState method
+    const mockGetState = jest.fn().mockReturnValue(mockWindowStoreState);
+    (useWindowStore as unknown as { getState: jest.Mock }).getState = mockGetState;
+    
     (clampToViewport as jest.Mock).mockImplementation((frame) => frame);
   });
 
@@ -418,6 +418,46 @@ describe("BaseWindow", () => {
 
       const contentDiv = container.querySelector(".bg-white.shadow-lg");
       expect(contentDiv).toBeInTheDocument();
+    });
+  });
+
+  describe("Mouse Down Event", () => {
+    it("should call bringToFront when window is not topmost", () => {
+      // Setup for non-topmost window
+      const mockGetState = jest.fn().mockReturnValue({
+        zIndexOrder: ["spreadsheet", "filemanager"],
+      });
+      (useWindowStore as unknown as { getState: jest.Mock }).getState = mockGetState;
+
+      render(
+        <BaseWindow windowKey="pivot">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      const draggableWindow = screen.getByTestId("draggable-window");
+      fireEvent.mouseDown(draggableWindow);
+
+      expect(mockZIndex.bringToFront).toHaveBeenCalled();
+    });
+
+    it("should not call bringToFront when window is already topmost", () => {
+      // Setup for topmost window
+      const mockGetState = jest.fn().mockReturnValue({
+        zIndexOrder: ["spreadsheet", "filemanager"],
+      });
+      (useWindowStore as unknown as { getState: jest.Mock }).getState = mockGetState;
+
+      render(
+        <BaseWindow windowKey="filemanager">
+          <div>Content</div>
+        </BaseWindow>
+      );
+
+      const draggableWindow = screen.getByTestId("draggable-window");
+      fireEvent.mouseDown(draggableWindow);
+
+      expect(mockZIndex.bringToFront).not.toHaveBeenCalled();
     });
   });
 

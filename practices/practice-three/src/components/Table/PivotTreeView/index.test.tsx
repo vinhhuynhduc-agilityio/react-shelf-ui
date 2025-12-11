@@ -78,6 +78,21 @@ jest.mock("@/components", () => ({
           })}
         </div>
       )}
+
+      {/* Test custom expand icon with no children (should return null) */}
+      {expandable?.expandIcon && (
+        <div data-testid="custom-expand-icon-no-children">
+          {expandable.expandIcon({
+            expanded: false,
+            onExpand: jest.fn(),
+            record: {
+              key: "test-no-children",
+              name: "Test No Children",
+              children: [],
+            },
+          })}
+        </div>
+      )}
     </div>
   ),
   ErrorAlert: ({
@@ -217,6 +232,34 @@ describe("PivotTreeView", () => {
     expect(screen.queryByTestId("expand-icon-europe")).not.toBeInTheDocument();
   });
 
+  it("customExpandIcon returns null when record has no children", () => {
+    const mockDataWithPartialChildren = [
+      {
+        key: "region1",
+        title: "Region 1",
+        children: [{ key: "subregion1", title: "Subregion 1" }],
+      },
+      { key: "region2", title: "Region 2", children: [] }, // Empty children
+    ];
+
+    (helpers.generateTreeData as jest.Mock).mockReturnValue(
+      mockDataWithPartialChildren
+    );
+
+    render(
+      <PivotTreeView
+        pivot={MOCK_PIVOT}
+        tableHeight={600}
+        isLoading={false}
+        isErrorPivot={false}
+      />
+    );
+
+    // Only region1 should have expand icon
+    expect(screen.getByTestId("expand-icon-region1")).toBeInTheDocument();
+    expect(screen.queryByTestId("expand-icon-region2")).not.toBeInTheDocument();
+  });
+
   it("passes custom expand icon correctly", () => {
     render(
       <PivotTreeView
@@ -228,6 +271,74 @@ describe("PivotTreeView", () => {
     );
 
     expect(screen.getByTestId("custom-expand-icon")).toBeInTheDocument();
+  });
+
+  it("custom expand icon returns null when record has empty children array", () => {
+    render(
+      <PivotTreeView
+        pivot={MOCK_PIVOT}
+        tableHeight={600}
+        isLoading={false}
+        isErrorPivot={false}
+      />
+    );
+
+    // The no-children test div should exist but be empty (null rendered)
+    expect(
+      screen.getByTestId("custom-expand-icon-no-children")
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("custom-expand-icon-no-children").innerHTML).toBe(
+      ""
+    );
+  });
+
+  it("renders correct icon based on expanded state", () => {
+    render(
+      <PivotTreeView
+        pivot={MOCK_PIVOT}
+        tableHeight={600}
+        isLoading={false}
+        isErrorPivot={false}
+      />
+    );
+
+    // Initially expanded nodes should show faSortDown icon
+    expect(screen.getByTestId("custom-expand-icon")).toBeInTheDocument();
+
+    // Toggle expand to test collapsed state
+    const asiaButton = screen.getByTestId("expand-icon-asia");
+    fireEvent.click(asiaButton);
+
+    // After collapse, it should show faCaretRight icon
+    expect(screen.getByTestId("custom-expand-icon")).toBeInTheDocument();
+  });
+
+  it("should auto-expand then allow manual collapse", () => {
+    render(
+      <PivotTreeView
+        pivot={MOCK_PIVOT}
+        tableHeight={600}
+        isLoading={false}
+        isErrorPivot={false}
+      />
+    );
+
+    // Initial state should have both items expanded
+    expect(screen.getByTestId("expanded-keys")).toHaveTextContent(
+      "Expanded: asia,europe"
+    );
+
+    // Click to collapse asia
+    fireEvent.click(screen.getByTestId("expand-icon-asia"));
+    expect(screen.getByTestId("expanded-keys")).toHaveTextContent(
+      "Expanded: europe"
+    );
+
+    // Click to expand asia again
+    fireEvent.click(screen.getByTestId("expand-icon-asia"));
+    expect(screen.getByTestId("expanded-keys")).toHaveTextContent(
+      "Expanded: europe,asia"
+    );
   });
 
   it("renders ErrorAlert when there is an error", () => {

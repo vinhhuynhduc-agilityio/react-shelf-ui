@@ -448,26 +448,65 @@ describe("KanbanPage", () => {
       expect(mockAddTask).toHaveBeenCalled();
     });
 
-    it("should save task changes", () => {
+    it("should not save when no changes made to task", () => {
       render(<KanbanPage />);
 
       fireEvent.click(screen.getByTestId("card-1"));
 
-      // Change task title
+      // Don't make any changes, just click save
+      const saveButton = screen.getAllByRole("button", { name: /save/i })[0];
+      fireEvent.click(saveButton);
+
+      expect(mockUpdateTask).not.toHaveBeenCalled();
+    });
+
+    it("should update only title when only title changed", () => {
+      render(<KanbanPage />);
+
+      fireEvent.click(screen.getByTestId("card-1"));
+
+      // Change only title
       const titleInput = screen.getByDisplayValue("Task 1") as HTMLInputElement;
       fireEvent.change(titleInput, { target: { value: "Updated Task" } });
-
-      // Change task status
-      const statusSelect = screen.getByTestId(
-        "status-select"
-      ) as HTMLSelectElement;
-      fireEvent.change(statusSelect, { target: { value: "Work" } });
 
       // Use correct variant for save button
       const saveButton = screen.getAllByRole("button", { name: /save/i })[0];
       fireEvent.click(saveButton);
 
       expect(mockUpdateTask).toHaveBeenCalled();
+    });
+
+    it("should update only tags when only tags changed", () => {
+      render(<KanbanPage />);
+
+      fireEvent.click(screen.getByTestId("card-1"));
+
+      // Change only tags
+      const tagsInput = screen.getByTestId("tags-input") as HTMLInputElement;
+      fireEvent.change(tagsInput, { target: { value: "jet,easy" } });
+
+      // Use correct variant for save button
+      const saveButton = screen.getAllByRole("button", { name: /save/i })[0];
+      fireEvent.click(saveButton);
+
+      expect(mockUpdateTask).toHaveBeenCalled();
+    });
+
+    it("should not save board when only title or tags changed", () => {
+      render(<KanbanPage />);
+
+      fireEvent.click(screen.getByTestId("card-1"));
+
+      // Change only tags
+      const tagsInput = screen.getByTestId("tags-input") as HTMLInputElement;
+      fireEvent.change(tagsInput, { target: { value: "jet,easy" } });
+
+      // Use correct variant for save button
+      const saveButton = screen.getAllByRole("button", { name: /save/i })[0];
+      fireEvent.click(saveButton);
+
+      // updateBoardColumn should not be called when only updating task
+      expect(mockUpdateBoardColumn).not.toHaveBeenCalled();
     });
 
     it("should remove task when clicking remove button", () => {
