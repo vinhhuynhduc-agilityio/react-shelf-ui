@@ -10,7 +10,7 @@ exports[`PreviewPanel should match snapshot after switching items 1`] = `
       class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-1/2"
     >
       <h3
-        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-base truncate border-b border-[#DADEE0] h-[42px]"
       >
         Image.jpg
       </h3>
@@ -25,10 +25,10 @@ exports[`PreviewPanel should match snapshot after switching items 1`] = `
       </div>
     </div>
     <div
-      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-sm w-full"
     >
       <h4
-        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-primary shadow-[inset_0_-2px_#1CA1C1] text-base"
       >
         Information
       </h4>
@@ -93,7 +93,7 @@ exports[`PreviewPanel should match snapshot with all basic info 1`] = `
       class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
     >
       <h3
-        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-base truncate border-b border-[#DADEE0] h-[42px]"
       >
         Document.pdf
       </h3>
@@ -108,10 +108,10 @@ exports[`PreviewPanel should match snapshot with all basic info 1`] = `
       </div>
     </div>
     <div
-      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-sm w-full"
     >
       <h4
-        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-primary shadow-[inset_0_-2px_#1CA1C1] text-base"
       >
         Information
       </h4>
@@ -228,7 +228,7 @@ exports[`PreviewPanel should match snapshot with different height 1`] = `
       class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
     >
       <h3
-        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-base truncate border-b border-[#DADEE0] h-[42px]"
       >
         Document.pdf
       </h3>
@@ -243,10 +243,10 @@ exports[`PreviewPanel should match snapshot with different height 1`] = `
       </div>
     </div>
     <div
-      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-sm w-full"
     >
       <h4
-        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-primary shadow-[inset_0_-2px_#1CA1C1] text-base"
       >
         Information
       </h4>
@@ -363,7 +363,7 @@ exports[`PreviewPanel should match snapshot with empty extra info 1`] = `
       class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
     >
       <h3
-        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-base truncate border-b border-[#DADEE0] h-[42px]"
       >
         Document.pdf
       </h3>
@@ -378,10 +378,10 @@ exports[`PreviewPanel should match snapshot with empty extra info 1`] = `
       </div>
     </div>
     <div
-      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-sm w-full"
     >
       <h4
-        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-primary shadow-[inset_0_-2px_#1CA1C1] text-base"
       >
         Information
       </h4>
@@ -446,7 +446,7 @@ exports[`PreviewPanel should match snapshot with extra info 1`] = `
       class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
     >
       <h3
-        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-base truncate border-b border-[#DADEE0] h-[42px]"
       >
         Document.pdf
       </h3>
@@ -461,10 +461,10 @@ exports[`PreviewPanel should match snapshot with extra info 1`] = `
       </div>
     </div>
     <div
-      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-sm w-full"
     >
       <h4
-        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-primary shadow-[inset_0_-2px_#1CA1C1] text-base"
       >
         Information
       </h4>
@@ -581,7 +581,7 @@ exports[`PreviewPanel should match snapshot with information section 1`] = `
       class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
     >
       <h3
-        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-base truncate border-b border-[#DADEE0] h-[42px]"
       >
         Document.pdf
       </h3>
@@ -596,10 +596,10 @@ exports[`PreviewPanel should match snapshot with information section 1`] = `
       </div>
     </div>
     <div
-      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-sm w-full"
     >
       <h4
-        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-primary shadow-[inset_0_-2px_#1CA1C1] text-base"
       >
         Information
       </h4>
@@ -739,7 +739,7 @@ exports[`PreviewPanel should match snapshot with selected item 1`] = `
       class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-[450px]"
     >
       <h3
-        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-base truncate border-b border-[#DADEE0] h-[42px]"
       >
         Document.pdf
       </h3>
@@ -754,10 +754,10 @@ exports[`PreviewPanel should match snapshot with selected item 1`] = `
       </div>
     </div>
     <div
-      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-sm w-full"
     >
       <h4
-        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-primary shadow-[inset_0_-2px_#1CA1C1] text-base"
       >
         Information
       </h4>
@@ -874,7 +874,7 @@ exports[`PreviewPanel should match snapshot without extra info 1`] = `
       class="border border-[#DADEE0] bg-[#FFFFFF] w-full min-h-[450px] h-1/2"
     >
       <h3
-        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]"
+        class="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-base truncate border-b border-[#DADEE0] h-[42px]"
       >
         Document.pdf
       </h3>
@@ -889,10 +889,10 @@ exports[`PreviewPanel should match snapshot without extra info 1`] = `
       </div>
     </div>
     <div
-      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full"
+      class="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-sm w-full"
     >
       <h4
-        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]"
+        class="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-primary shadow-[inset_0_-2px_#1CA1C1] text-base"
       >
         Information
       </h4>

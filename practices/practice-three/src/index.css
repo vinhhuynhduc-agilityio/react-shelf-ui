@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@theme {
+  /* Colors */
+  --color-primary: #1CA1C1;
+  --color-primary-hover: #1992af;
+  --color-primary-dark: rgb(28, 161, 193);
+  --color-text: #475466;
+  --color-text-secondary: #94A1B3;
+  --color-border: #DADEE0;
+}
+
 html, body, #root {
   height: 100%;
   margin: 0;

@@ -60,7 +60,7 @@ const ModalContent = ({
         >
           <h2
             className={clsx(
-              "flex-1 text-[#475466] font-medium text-[16px] truncate",
+              "flex-1 text-[#475466] font-medium text-base truncate",
               titleAlign === "center" && "text-center",
               titleAlign === "right" && "text-right"
             )}
@@ -72,7 +72,7 @@ const ModalContent = ({
             <IconButton
               icon={fa.faX}
               onClick={onClose}
-              iconStyles="fa-xs text-[#94A1B3] hover:text-[#1CA1C1] text-lg leading-none px-3 py-4 rounded-full"
+              iconStyles="fa-xs text-[#94A1B3] hover:text-primary text-lg leading-none px-3 py-4 rounded-full"
               ariaLabel="Close modal"
             />
           )}

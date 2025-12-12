@@ -58,7 +58,7 @@ export const DesktopIcon = ({
         className="w-[50px] h-[50px] object-contain"
       />
       <span
-        className="mt-2 text-white text-[14px] font-normal leading-tight max-w-[85px] text-center truncate"
+        className="mt-2 text-white text-sm font-normal leading-tight max-w-[85px] text-center truncate"
         style={{
           letterSpacing: "0.2px",
           textShadow: "1px 1px #222, 0px 1px 0px #000",

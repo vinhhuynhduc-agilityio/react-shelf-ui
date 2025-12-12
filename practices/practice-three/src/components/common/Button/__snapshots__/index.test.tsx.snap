@@ -4,7 +4,7 @@ exports[`Button should match snapshot when disabled 1`] = `
 <div>
   <button
     aria-label=""
-    class="inline-flex items-center justify-center rounded-[2px] font-medium transition-colors duration-200 shadow-none px-3 cursor-pointer disabled:cursor-not-allowed border-none bg-[#1CA1C1] text-[#FFFFFF] hover:bg-[#1992af] disabled:bg-[#94A1B3] disabled:text-[#FFFFFF] h-[32px] text-[16px]"
+    class="inline-flex items-center justify-center rounded-[2px] font-medium transition-colors duration-200 shadow-none px-3 cursor-pointer disabled:cursor-not-allowed border-none bg-primary text-[#FFFFFF] hover:bg-[#1992af] disabled:bg-[#94A1B3] disabled:text-[#FFFFFF] h-[32px] text-base"
     disabled=""
     type="button"
   >
@@ -17,7 +17,7 @@ exports[`Button should match snapshot with primary variant 1`] = `
 <div>
   <button
     aria-label=""
-    class="inline-flex items-center justify-center rounded-[2px] font-medium transition-colors duration-200 shadow-none px-3 cursor-pointer disabled:cursor-not-allowed border-none bg-[#1CA1C1] text-[#FFFFFF] hover:bg-[#1992af] disabled:bg-[#94A1B3] disabled:text-[#FFFFFF] h-[32px] text-[16px]"
+    class="inline-flex items-center justify-center rounded-[2px] font-medium transition-colors duration-200 shadow-none px-3 cursor-pointer disabled:cursor-not-allowed border-none bg-primary text-[#FFFFFF] hover:bg-[#1992af] disabled:bg-[#94A1B3] disabled:text-[#FFFFFF] h-[32px] text-base"
     type="button"
   >
     Primary Button
@@ -29,7 +29,7 @@ exports[`Button should match snapshot with success variant 1`] = `
 <div>
   <button
     aria-label=""
-    class="inline-flex items-center justify-center rounded-[2px] font-medium transition-colors duration-200 shadow-none px-3 cursor-pointer disabled:cursor-not-allowed border-none bg-[#F4F5F9] text-[#1CA1C1] hover:bg-[#E4E6F0] disabled:bg-[#F4F5F9] disabled:text-[#94A1B3] h-[32px] text-[16px]"
+    class="inline-flex items-center justify-center rounded-[2px] font-medium transition-colors duration-200 shadow-none px-3 cursor-pointer disabled:cursor-not-allowed border-none bg-[#F4F5F9] text-primary hover:bg-[#E4E6F0] disabled:bg-[#F4F5F9] disabled:text-[#94A1B3] h-[32px] text-base"
     type="button"
   >
     Success Button

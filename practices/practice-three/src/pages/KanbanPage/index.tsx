@@ -341,7 +341,7 @@ const KanbanPage = () => {
   const renderItem = (task: Task) => (
     <div
       key={task.id}
-      className="bg-white border-l-3 border-l-[#1CA1C1] flex flex-col cursor-pointer item-drag-handle"
+      className="bg-white border-l-3 border-l-primary flex flex-col cursor-pointer item-drag-handle"
     >
       <KanbanCard task={task} onEdit={handleEditItem} />
     </div>
@@ -356,7 +356,7 @@ const KanbanPage = () => {
         <textarea
           value={formData.title}
           onChange={(e) => handleFormChange("title", e.target.value)}
-          className="w-full border border-[#DADEE0] rounded-[2px] px-2 py-1 text-sm text-[#475466] h-[70px] focus:outline-none focus:border-[#1CA1C1]"
+          className="w-full border border-[#DADEE0] rounded-[2px] px-2 py-1 text-sm text-[#475466] h-[70px] focus:outline-none focus:border-primary"
         />
       </div>
       <div>

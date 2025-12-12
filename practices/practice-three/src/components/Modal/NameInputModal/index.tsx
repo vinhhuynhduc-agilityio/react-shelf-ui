@@ -58,7 +58,7 @@ export const NameInputModal = ({
               <input
                 {...field}
                 type="text"
-                className="flex-1 border-b border-[#1CA1C1] px-4 py-1 text-[14px] text-[#475466] focus:outline-none mr-4"
+                className="flex-1 border-b border-primary px-4 py-1 text-sm text-[#475466] focus:outline-none mr-4"
                 placeholder={placeholder}
                 autoFocus
                 disabled={isDisabled}

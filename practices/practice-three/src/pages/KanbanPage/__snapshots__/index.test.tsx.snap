@@ -70,7 +70,7 @@ exports[`KanbanPage Task Operations should match snapshot with modal open 1`] = 
         data-testid="grid-layout"
       >
         <div
-          class="bg-white border-l-3 border-l-[#1CA1C1] flex flex-col cursor-pointer item-drag-handle"
+          class="bg-white border-l-3 border-l-primary flex flex-col cursor-pointer item-drag-handle"
         >
           <div
             data-testid="card-1"
@@ -79,7 +79,7 @@ exports[`KanbanPage Task Operations should match snapshot with modal open 1`] = 
           </div>
         </div>
         <div
-          class="bg-white border-l-3 border-l-[#1CA1C1] flex flex-col cursor-pointer item-drag-handle"
+          class="bg-white border-l-3 border-l-primary flex flex-col cursor-pointer item-drag-handle"
         >
           <div
             data-testid="card-2"
@@ -102,7 +102,7 @@ exports[`KanbanPage Task Operations should match snapshot with modal open 1`] = 
             Title
           </label>
           <textarea
-            class="w-full border border-[#DADEE0] rounded-[2px] px-2 py-1 text-sm text-[#475466] h-[70px] focus:outline-none focus:border-[#1CA1C1]"
+            class="w-full border border-[#DADEE0] rounded-[2px] px-2 py-1 text-sm text-[#475466] h-[70px] focus:outline-none focus:border-primary"
           >
             Task 1
           </textarea>
@@ -205,7 +205,7 @@ exports[`KanbanPage should match snapshot with modal open 1`] = `
         data-testid="grid-layout"
       >
         <div
-          class="bg-white border-l-3 border-l-[#1CA1C1] flex flex-col cursor-pointer item-drag-handle"
+          class="bg-white border-l-3 border-l-primary flex flex-col cursor-pointer item-drag-handle"
         >
           <div
             data-testid="card-1"
@@ -214,7 +214,7 @@ exports[`KanbanPage should match snapshot with modal open 1`] = `
           </div>
         </div>
         <div
-          class="bg-white border-l-3 border-l-[#1CA1C1] flex flex-col cursor-pointer item-drag-handle"
+          class="bg-white border-l-3 border-l-primary flex flex-col cursor-pointer item-drag-handle"
         >
           <div
             data-testid="card-2"
@@ -237,7 +237,7 @@ exports[`KanbanPage should match snapshot with modal open 1`] = `
             Title
           </label>
           <textarea
-            class="w-full border border-[#DADEE0] rounded-[2px] px-2 py-1 text-sm text-[#475466] h-[70px] focus:outline-none focus:border-[#1CA1C1]"
+            class="w-full border border-[#DADEE0] rounded-[2px] px-2 py-1 text-sm text-[#475466] h-[70px] focus:outline-none focus:border-primary"
           >
             Task 1
           </textarea>

@@ -29,11 +29,11 @@ const Button = ({
 
   const variantClasses = {
     success:
-      "bg-[#F4F5F9] text-[#1CA1C1] hover:bg-[#E4E6F0] disabled:bg-[#F4F5F9] disabled:text-[#94A1B3] h-[32px] text-[16px]",
+      "bg-[#F4F5F9] text-primary hover:bg-[#E4E6F0] disabled:bg-[#F4F5F9] disabled:text-[#94A1B3] h-[32px] text-base",
     primary:
-      "bg-[#1CA1C1] text-[#FFFFFF] hover:bg-[#1992af] disabled:bg-[#94A1B3] disabled:text-[#FFFFFF] h-[32px] text-[16px]",
+      "bg-primary text-[#FFFFFF] hover:bg-[#1992af] disabled:bg-[#94A1B3] disabled:text-[#FFFFFF] h-[32px] text-base",
     segment: clsx(
-      "h-[26px] text-[#475466] text-[14px]",
+      "h-[26px] text-[#475466] text-sm",
       active && "bg-[rgb(28,161,193)] text-[#FFFFFF]"
     ),
   };

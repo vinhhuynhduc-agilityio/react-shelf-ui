@@ -23,7 +23,7 @@ export const KanbanCard = memo(({ task, onEdit }: KanbanCardProps) => {
   return (
     <>
       <div className="flex justify-between items-center min-h-[24px] overflow-hidden pt-[14px] pr-[8px] pb-[8px] pl-[12px] w-full">
-        <p className="flex-1 min-w-0 text-[14px] font-medium leading-[20px] truncate pr-[48px]">
+        <p className="flex-1 min-w-0 text-sm font-medium leading-[20px] truncate pr-[48px]">
           {task.title}
         </p>
         <div className="flex justify-center items-center w-[32px] h-[32px] absolute right-[8px] hover:shadow-[0_0_2px_1px_#1CA1C1] bg-[rgba(228,230,240,0.8)] rounded-full">
@@ -44,7 +44,7 @@ export const KanbanCard = memo(({ task, onEdit }: KanbanCardProps) => {
         <IconButton
           icon={fa.faPencil}
           onMouseDown={handleEdit}
-          iconStyles="fa-xs text-[#94a1b3] hover:text-[#1CA1C1]"
+          iconStyles="fa-xs text-[#94a1b3] hover:text-primary"
           ariaLabel="Edit task"
         />
       </div>

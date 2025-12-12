@@ -43,7 +43,7 @@ export const PreviewPanel = ({
         )}
       >
         {hasItem && (
-          <h3 className="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-[16px] truncate border-b border-[#DADEE0] h-[42px]">
+          <h3 className="flex items-center px-[12px] py-[3px] text-[#475466] font-medium text-base truncate border-b border-[#DADEE0] h-[42px]">
             {currentItem.name}
           </h3>
         )}
@@ -58,8 +58,8 @@ export const PreviewPanel = ({
 
       {/* Bottom Card: Information */}
       {hasItem && (
-        <div className="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-[14px] w-full">
-          <h4 className="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-[#1CA1C1] shadow-[inset_0_-2px_#1CA1C1] text-[16px]">
+        <div className="flex-1 space-y-2 mt-[10px] bg-[#FFFFFF] border border-[#DADEE0] text-[#475466] text-sm w-full">
+          <h4 className="flex items-center justify-center font-medium border-b border-[#DADEE0] h-[42px] text-primary shadow-[inset_0_-2px_#1CA1C1] text-base">
             Information
           </h4>
           <div className="h-[130px]">

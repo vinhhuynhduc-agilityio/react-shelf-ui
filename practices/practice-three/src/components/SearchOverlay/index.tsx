@@ -46,7 +46,7 @@ const SearchOverlay = ({
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#475466] text-sm px-2 focus:outline-none w-full h-full bg-white"
+          className="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-primary text-[#475466] text-sm px-2 focus:outline-none w-full h-full bg-white"
         />
         <Icon
           icon={fa.faMagnifyingGlass}

@@ -6,7 +6,7 @@ exports[`MultiSelect Snapshots should match snapshot with default state 1`] = `
     class="relative"
   >
     <div
-      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-[#1CA1C1]"
+      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-primary"
       tabindex="0"
     />
   </div>
@@ -19,7 +19,7 @@ exports[`MultiSelect Snapshots should match snapshot with empty selection 1`] = 
     class="relative"
   >
     <div
-      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-[#1CA1C1]"
+      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-primary"
       tabindex="0"
     />
   </div>
@@ -32,7 +32,7 @@ exports[`MultiSelect Snapshots should match snapshot with open dropdown 1`] = `
     class="relative"
   >
     <div
-      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-[#1CA1C1]"
+      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-primary"
       tabindex="0"
     />
   </div>
@@ -45,7 +45,7 @@ exports[`MultiSelect Snapshots should match snapshot with selections 1`] = `
     class="relative"
   >
     <div
-      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-[#1CA1C1]"
+      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-primary"
       tabindex="0"
     >
       <span
@@ -77,7 +77,7 @@ exports[`MultiSelect should match snapshot with default state 1`] = `
     class="relative"
   >
     <div
-      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-[#1CA1C1]"
+      class="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-primary"
       tabindex="0"
     />
   </div>

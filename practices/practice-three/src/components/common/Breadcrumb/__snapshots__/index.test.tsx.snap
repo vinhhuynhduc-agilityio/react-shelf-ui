@@ -8,7 +8,7 @@ exports[`Breadcrumb Accessibility Snapshots should match snapshot with custom st
   >
     <button
       aria-label="Navigate to Home"
-      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+      class="text-[#475466] hover:text-primary transition-colors cursor-pointer text-base font-normal focus:outline-none focus:underline"
     >
       Home
     </button>
@@ -20,7 +20,7 @@ exports[`Breadcrumb Accessibility Snapshots should match snapshot with custom st
     </span>
     <button
       aria-label="Navigate to Documents"
-      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+      class="text-[#475466] hover:text-primary transition-colors cursor-pointer text-base font-normal focus:outline-none focus:underline"
     >
       Documents
     </button>
@@ -32,7 +32,7 @@ exports[`Breadcrumb Accessibility Snapshots should match snapshot with custom st
     </span>
     <button
       aria-label="Navigate to Projects"
-      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+      class="text-[#475466] hover:text-primary transition-colors cursor-pointer text-base font-normal focus:outline-none focus:underline"
     >
       Projects
     </button>
@@ -44,7 +44,7 @@ exports[`Breadcrumb Accessibility Snapshots should match snapshot with custom st
     </span>
     <span
       aria-current="page"
-      class="text-[#475466] text-[16px] font-normal"
+      class="text-[#475466] text-base font-normal"
     >
       React
     </span>
@@ -60,7 +60,7 @@ exports[`Breadcrumb Accessibility Snapshots should match snapshot with default p
   >
     <button
       aria-label="Navigate to Home"
-      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+      class="text-[#475466] hover:text-primary transition-colors cursor-pointer text-base font-normal focus:outline-none focus:underline"
     >
       Home
     </button>
@@ -72,7 +72,7 @@ exports[`Breadcrumb Accessibility Snapshots should match snapshot with default p
     </span>
     <button
       aria-label="Navigate to Documents"
-      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+      class="text-[#475466] hover:text-primary transition-colors cursor-pointer text-base font-normal focus:outline-none focus:underline"
     >
       Documents
     </button>
@@ -84,7 +84,7 @@ exports[`Breadcrumb Accessibility Snapshots should match snapshot with default p
     </span>
     <button
       aria-label="Navigate to Projects"
-      class="text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal focus:outline-none focus:underline"
+      class="text-[#475466] hover:text-primary transition-colors cursor-pointer text-base font-normal focus:outline-none focus:underline"
     >
       Projects
     </button>
@@ -96,7 +96,7 @@ exports[`Breadcrumb Accessibility Snapshots should match snapshot with default p
     </span>
     <span
       aria-current="page"
-      class="text-[#475466] text-[16px] font-normal"
+      class="text-[#475466] text-base font-normal"
     >
       React
     </span>
@@ -112,7 +112,7 @@ exports[`Breadcrumb Accessibility Snapshots should match snapshot with single it
   >
     <span
       aria-current="page"
-      class="text-[#475466] text-[16px] font-normal"
+      class="text-[#475466] text-base font-normal"
     >
       Home
     </span>

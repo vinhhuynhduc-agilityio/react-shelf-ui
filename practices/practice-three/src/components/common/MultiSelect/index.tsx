@@ -47,7 +47,7 @@ const MultiSelect = ({
   return (
     <div ref={ref} className={clsx("relative", className)}>
       <div
-        className="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-[#1CA1C1]"
+        className="w-full h-[32px] border border-[#DADEE0] rounded-[2px] px-2 py-1 flex flex-wrap items-center gap-1 text-sm focus:border-primary"
         tabIndex={0}
         onClick={() => setIsOpen(!isOpen)}
         data-testid="multiselect-input"
@@ -82,7 +82,7 @@ const MultiSelect = ({
                 type="checkbox"
                 checked={selected.includes(opt)}
                 onChange={() => toggleOption(opt)}
-                className="mr-2 accent-[#1CA1C1]"
+                className="mr-2 accent-primary"
                 aria-label={opt}
               />
               <span className="mb-[3px]">{opt}</span>

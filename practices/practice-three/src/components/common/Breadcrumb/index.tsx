@@ -31,7 +31,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = memo(
                 <button
                   onClick={() => onNavigate(item.id)}
                   className={clsx(
-                    "text-[#475466] hover:text-[#1CA1C1] transition-colors cursor-pointer text-[16px] font-normal",
+                    "text-[#475466] hover:text-primary transition-colors cursor-pointer text-base font-normal",
                     "focus:outline-none focus:underline"
                   )}
                   aria-label={`Navigate to ${item.name}`}
@@ -40,7 +40,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = memo(
                 </button>
               ) : (
                 <span
-                  className="text-[#475466] text-[16px] font-normal"
+                  className="text-[#475466] text-base font-normal"
                   aria-current="page"
                 >
                   {item.name}

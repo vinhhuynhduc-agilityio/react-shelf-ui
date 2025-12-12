@@ -38,7 +38,7 @@ export const HeaderBar = memo(
               name="search"
               type="text"
               placeholder="Search files and folders"
-              className="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#475466] text-sm px-2 focus:outline-none w-full h-full"
+              className="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-primary text-[#475466] text-sm px-2 focus:outline-none w-full h-full"
               value={searchQuery}
               onChange={onSearchChange}
               disabled={isDisabled || isFetching}
@@ -59,7 +59,7 @@ export const HeaderBar = memo(
               "p-1 flex justify-center items-center w-[60px] h-[38px] transition-colors hover:bg-[#E4E6F0]",
               previewMode ? "bg-[#daddeb]" : "bg-[#F4F5F9]"
             )}
-            iconStyles="text-[#1CA1C1] text-sm"
+            iconStyles="text-primary text-sm"
             onClick={onTogglePreview}
             disabled={isDisabled || isFetching}
             ariaLabel="Toggle preview mode"

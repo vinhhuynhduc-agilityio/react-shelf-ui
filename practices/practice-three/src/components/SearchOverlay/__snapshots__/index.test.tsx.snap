@@ -9,7 +9,7 @@ exports[`SearchOverlay should match snapshot after icon clicked 1`] = `
       class="relative w-[386px] h-[32px]  mb-16"
     >
       <input
-        class="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#475466] text-sm px-2 focus:outline-none w-full h-full bg-white"
+        class="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-primary text-[#475466] text-sm px-2 focus:outline-none w-full h-full bg-white"
         name="search icons"
         type="text"
         value=""
@@ -84,7 +84,7 @@ exports[`SearchOverlay should match snapshot on initial load 1`] = `
       class="relative w-[386px] h-[32px]  mb-16"
     >
       <input
-        class="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#475466] text-sm px-2 focus:outline-none w-full h-full bg-white"
+        class="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-primary text-[#475466] text-sm px-2 focus:outline-none w-full h-full bg-white"
         name="search icons"
         type="text"
         value=""
@@ -159,7 +159,7 @@ exports[`SearchOverlay should match snapshot with search input filled 1`] = `
       class="relative w-[386px] h-[32px]  mb-16"
     >
       <input
-        class="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-[#1CA1C1] text-[#475466] text-sm px-2 focus:outline-none w-full h-full bg-white"
+        class="flex-1 rounded-[3px] border border-[#CCD7E6] focus:border-primary text-[#475466] text-sm px-2 focus:outline-none w-full h-full bg-white"
         name="search icons"
         type="text"
         value="File"
