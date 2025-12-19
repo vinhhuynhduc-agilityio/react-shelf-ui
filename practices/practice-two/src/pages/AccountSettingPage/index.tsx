@@ -13,7 +13,7 @@ import {
 import { CancelIcon, EditIcon } from "@/components/icons";
 
 // hooks
-import { useUpdateUser } from "@/hooks";
+import { useUpdateUser, useDeleteUser } from "@/hooks";
 
 // constants
 import { DEFAULT_AVATAR } from "@/constants";
@@ -46,6 +46,7 @@ const AccountSettingPage: React.FC = () => {
   });
 
   const { mutate: updateUserBookData, isPending } = useUpdateUser();
+  const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
 
   const onSubmit: SubmitHandler<AccountFormValues> = (data) => {
     if (!currentUser) {
@@ -77,6 +78,18 @@ const AccountSettingPage: React.FC = () => {
 
     if (file) {
       readFileAsBase64(file, setAvatarPreview);
+    }
+  };
+
+  const handleDeleteAccount = () => {
+    if (!currentUser) return;
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete your account? This action cannot be undone."
+    );
+
+    if (confirmDelete) {
+      deleteUser(currentUser.id);
     }
   };
 
@@ -218,13 +231,21 @@ const AccountSettingPage: React.FC = () => {
           disabled={isDisabled}
         />
         {/* Submit Button */}
-        <Button
-          additionalClasses="mt-4"
-          variant="primary"
-          disabled={isDisabled}
-          type="submit"
-          label="Update Profile"
-        />
+        <div className="flex-1 flex gap-4">
+          <Button
+            variant="primary"
+            disabled={isDisabled}
+            type="submit"
+            label="Update Profile"
+          />
+          <Button
+            additionalClasses="bg-red-500 hover:bg-red-600 text-white"
+            disabled={isDeleting || isPending}
+            type="button"
+            onClick={handleDeleteAccount}
+            label="Delete Account"
+          />
+        </div>
       </form>
     </div>
   );

@@ -24,3 +24,9 @@ export const updateUser = async (user: User): Promise<User> => {
 
   return apiRequest("PUT", url, user);
 };
+
+export const removeUser = async (userId: string): Promise<void> => {
+  const url = `${API_BASE_URL}/users/${userId}`;
+
+  return apiRequest("DELETE", url);
+};

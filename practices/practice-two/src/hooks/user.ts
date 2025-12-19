@@ -1,4 +1,5 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 // stores
 import { useToastStore, useUserStore } from "@/stores";
@@ -7,7 +8,7 @@ import { useToastStore, useUserStore } from "@/stores";
 import { User } from "@/types/user";
 
 // services
-import { getUserByEmail, updateUser } from "@/services";
+import { getUserByEmail, updateUser, removeUser } from "@/services";
 
 // helpers
 import { showDefaultErrorToast } from "@/helpers";
@@ -37,6 +38,25 @@ export const useUpdateUser = (): UseMutationResult<User, Error, User> => {
     onSuccess: (userToUpdate) => {
       setUser(userToUpdate);
       showToast(SUCCESS_MESSAGE.PROFILE_UPDATE, "success");
+    },
+    onError: () => showDefaultErrorToast(),
+  });
+};
+
+export const useDeleteUser = (): UseMutationResult<void, Error, string> => {
+  const { logout } = useUserStore();
+  const { showToast } = useToastStore();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: removeUser,
+    onSuccess: () => {
+      logout();
+      showToast(SUCCESS_MESSAGE.ACCOUNT_DELETED, "success");
+      // Redirect to sign-in page after successful account deletion
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     },
     onError: () => showDefaultErrorToast(),
   });
